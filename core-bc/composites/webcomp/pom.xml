@@ -1,13 +1,6 @@
 <?xml version="1.0"?>
-<!--
-This is the Web-composite Maven POM.
-
-
-Template version: 1.5-SNAPSHOT
-Generation time : 2010-11-08 10:07:26 CET
--->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<!-- This is the Web-composite Maven POM. Template version: 1.5-SNAPSHOT Generation time : 2010-11-08 10:07:26 CET -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
@@ -19,7 +12,6 @@ Generation time : 2010-11-08 10:07:26 CET
   <artifactId>vertikala-prioriteringar-core-bc-composite-webcomp</artifactId>
   <packaging>jar</packaging>
   <name>${project.artifactId}</name>
-
 
   <dependencies>
     <dependency>
@@ -33,10 +25,20 @@ Generation time : 2010-11-08 10:07:26 CET
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.apache.myfaces.core</groupId>
-      <artifactId>myfaces-api</artifactId>
-      <version>1.2.7</version>
-      <scope>provided</scope>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
     </dependency>
   </dependencies>
 
