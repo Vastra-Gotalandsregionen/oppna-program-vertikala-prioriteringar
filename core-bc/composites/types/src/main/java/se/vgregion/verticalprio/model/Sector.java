@@ -15,6 +15,8 @@ public class Sector {
 
     private String label;
 
+    private boolean selected;
+
     public String getLabel() {
         return label;
     }
@@ -29,5 +31,13 @@ public class Sector {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
+
+    public boolean isSelected() {
+        return selected;
     }
 }

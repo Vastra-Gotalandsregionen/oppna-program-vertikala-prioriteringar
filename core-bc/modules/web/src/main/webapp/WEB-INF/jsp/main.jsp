@@ -9,50 +9,6 @@
 <title>Insert title here</title>
 </head>
 <body style="height:100%; ">
-
-<div style="width:100%">
-  <div style="background-color:yellow">
-    Header
-  </div>
-  <div style="background-color:orange;width:100px;float:left;">
-    <form action="main" method="POST">
-      <c:forEach items="${sectors}" var="sector">
-          <input type="checkbox" id="${sector.id}" value="${sector.id}" name="sectors"/> 
-          <label for="${sector.id}"> ${sector.label}</label> <br/>
-      </c:forEach>
-      <input type="submit" value="select sector"/>
-    </form>
-  </div>
-  
-  <div style="background-color:#eeeeee;float:left;">
-    <div id="buttons-row">
-      <button>Visa prioriteringsobjekt</button>
-      <button>Dölj/Visa kolumner</button>
-      <button>Kostnad</button>
-      <span id="export-data-buttons">
-        <button>Excel</button>
-        <button>Pdf</button>    
-        <button>Skriv ut</button>        
-      </span>
-      <button>Hjälp</button>
-    </div>
-    <table>
-      <thead>
-        <th>
-          <c:forEach items="${columns}" var="column">
-            <td>${column.label}</td>
-          </c:forEach>
-        </th>
-      </thead>
-      <tbody>
-      </tbody>
-    </table>
-  </div>
-  <div style="background-color:yellow;clear:both">
-    Footer
-  </div>
-</div>
-
-
+<jsp:include page="jsp/main-body.jsp"/>
 </body>
 </html>
