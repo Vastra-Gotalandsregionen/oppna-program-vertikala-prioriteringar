@@ -15,23 +15,24 @@
 <div style="background-color: #eeeeee; left:100px; top:100px; position:absolute;">
 
 <form action="conf-columns">
-<select name="visibleColumns" multiple="true">
+<select name="id" multiple="multiple">
   <c:forEach items="${confCols.visibleColumns}" var="column">
      <c:if test="${column.visible}">
-       <option value="${column.id}">${column.label}</option>
+       <option value="${column.id}" id="${column.id}">${column.label}</option>
      </c:if>
   </c:forEach>
 </select>
 
-<input type="submit" name="command" value="mkVisible"/>
+<input type="submit" name="command" value="dölj"/>
 
-<select name="hiddenColumns" multiple="true">
+<select name="id" multiple="multiple">
   <c:forEach items="${confCols.hiddenColumns}" var="column">
      <c:if test="${!column.visible}">
-       <option value="${column.id}">${column.label}</option>
+       <option value="${column.id}" id="${column.id}">${column.label}</option>
      </c:if>
   </c:forEach>
 </select>
+<input type="submit" name="command" value="visa"/>
 </form>
 
 </div>
