@@ -12,27 +12,29 @@
 <jsp:include page="jsp/main-body.jsp"/>
 <jsp:useBean id="confCols" scope="session" class="se.vgregion.verticalprio.ConfColumnsForm"></jsp:useBean>
 
-<div style="background-color: #eeeeee; left:100px; top:100px; position:absolute;">
+<div style="left:0px; top:0px; height:100%; width:100%; position:absolute; z-index:10;"></div>
+
+<div style="background-color: #eeeeee; left:100px; top:100px; position:absolute; z-index:100;">
 
 <form action="conf-columns">
-<select name="id" multiple="multiple">
-  <c:forEach items="${confCols.visibleColumns}" var="column">
-     <c:if test="${column.visible}">
-       <option value="${column.id}" id="${column.id}">${column.label}</option>
-     </c:if>
-  </c:forEach>
-</select>
-
-<input type="submit" name="command" value="dölj"/>
-
-<select name="id" multiple="multiple">
+<select name="hiddenColumns" multiple="multiple">
   <c:forEach items="${confCols.hiddenColumns}" var="column">
      <c:if test="${!column.visible}">
        <option value="${column.id}" id="${column.id}">${column.label}</option>
      </c:if>
   </c:forEach>
 </select>
-<input type="submit" name="command" value="visa"/>
+
+<input type="submit" name="command" value="show"/>
+
+<select name="visibleColumns" multiple="multiple">
+  <c:forEach items="${confCols.visibleColumns}" var="column">
+     <c:if test="${column.visible}">
+       <option value="${column.id}" id="${column.id}">${column.label}</option>
+     </c:if>
+  </c:forEach>
+</select>
+<input type="submit" name="command" value="hide"/>
 </form>
 
 </div>

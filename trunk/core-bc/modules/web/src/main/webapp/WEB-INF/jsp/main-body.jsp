@@ -2,20 +2,20 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<jsp:useBean id="form" scope="session" class="se.vgregion.verticalprio.MainForm"></jsp:useBean>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
 <div style="width:100%">
   <div style="background-color:yellow">
     Header
   </div>
   <div style="background-color:orange;width:100px;float:left;">
-    <form action="check" method="POST">
+    <form:form action="check" method="POST">
       <c:forEach items="${form.sectors}" var="sector">
         <input style="display:none" id="Sektor${sector.id}" type="submit" name="id" value="${sector.id}" />
         <label for="Sektor${sector.id}"> ${sector.label} ${sector.selected}</label> <br/>
       </c:forEach>
       <input type="submit" value="select sector"/>
-    </form>
+    </form:form>
   </div>
   
   <div style="background-color:#eeeeee;float:left;">
