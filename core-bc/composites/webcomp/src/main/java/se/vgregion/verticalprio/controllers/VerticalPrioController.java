@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import se.vgregion.verticalprio.ConfColumnsForm;
 import se.vgregion.verticalprio.MainForm;
@@ -19,7 +20,7 @@ import se.vgregion.verticalprio.model.Column;
 import se.vgregion.verticalprio.model.Sector;
 
 @Controller
-// @SessionAttributes(value = { "form" })
+@SessionAttributes("form")
 public class VerticalPrioController {
     private static final Log log = LogFactory.getLog(VerticalPrioController.class);
 
@@ -40,7 +41,8 @@ public class VerticalPrioController {
     }
 
     @RequestMapping(value = "/main")
-    public String main(HttpSession session/* Model model, @ModelAttribute(value = "form") MainForm form */) {
+    public String main(HttpSession session/* Model model, @ModelAttribute(value = "form") MainForm form */
+    ) {
         MainForm form = getOrCreateSessionObj(session, "form", MainForm.class);
         initMainForm(form);
         return "main";
@@ -64,12 +66,17 @@ public class VerticalPrioController {
 
     @RequestMapping(value = "/conf-columns")
     public String confColumns(final HttpSession session, @RequestParam String command,
-            @RequestParam List<String> visibleColumns, @RequestParam List<String> hiddenColumns) {
+            @RequestParam(required = false) List<String> visibleColumns,
+            @RequestParam(required = false) List<String> hiddenColumns) {
         ConfColumnsForm columnForm = getOrCreateSessionObj(session, "confCols", ConfColumnsForm.class);
-        if ("mkVisible".equals(command)) {
+        if ("show".equals(command)) {
             colsFromOneListToOtherByIds(hiddenColumns, columnForm.getHiddenColumns(),
                     columnForm.getVisibleColumns());
+        } else if ("hide".equals(command)) {
+            colsFromOneListToOtherByIds(visibleColumns, columnForm.getVisibleColumns(),
+                    columnForm.getHiddenColumns());
         }
+
         return "conf-columns";
     }
 
@@ -90,7 +97,7 @@ public class VerticalPrioController {
 
         MainForm mainForm = getOrCreateSessionObj(session, "form", MainForm.class);
         initMainForm(mainForm);
-        
+
         for (Column column : mainForm.getColumns()) {
             if (column.isVisible()) {
                 columnForm.getVisibleColumns().add(column);

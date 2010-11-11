@@ -40,4 +40,19 @@ public class Column {
     public boolean isVisible() {
         return visible;
     }
+
+    @Override
+    public int hashCode() {
+        return id;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Column)) {
+            return false;
+        }
+        Column other = (Column) obj;
+        return other.id == id;
+    }
+
 }
