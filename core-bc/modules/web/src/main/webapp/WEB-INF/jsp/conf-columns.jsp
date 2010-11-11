@@ -19,22 +19,19 @@
 <form action="conf-columns">
 <select name="hiddenColumns" multiple="multiple">
   <c:forEach items="${confCols.hiddenColumns}" var="column">
-     <c:if test="${!column.visible}">
-       <option value="${column.id}" id="${column.id}">${column.label}</option>
-     </c:if>
+    <option value="${column.id}" id="${column.id}">${column.label}</option>
   </c:forEach>
 </select>
 
-<input type="submit" name="command" value="show"/>
+<input type="submit" name="command" value="show" id="show-selected"/>
+<input type="submit" name="command" value="hide"/>
 
 <select name="visibleColumns" multiple="multiple">
   <c:forEach items="${confCols.visibleColumns}" var="column">
-     <c:if test="${column.visible}">
-       <option value="${column.id}" id="${column.id}">${column.label}</option>
-     </c:if>
+    <option value="${column.id}" id="${column.id}">${column.label}</option>
   </c:forEach>
 </select>
-<input type="submit" name="command" value="hide"/>
+
 </form>
 
 </div>

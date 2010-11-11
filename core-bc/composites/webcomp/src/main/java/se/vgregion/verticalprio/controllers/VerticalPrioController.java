@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,7 +27,7 @@ public class VerticalPrioController {
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public String test() {
-        log.info("in test() method");
+        System.out.println("in test() method");
         return "test";
     }
 
@@ -41,16 +42,28 @@ public class VerticalPrioController {
     }
 
     @RequestMapping(value = "/main")
-    public String main(HttpSession session/* Model model, @ModelAttribute(value = "form") MainForm form */
-    ) {
+    public String main(HttpSession session) {
         MainForm form = getOrCreateSessionObj(session, "form", MainForm.class);
         initMainForm(form);
+        System.out.println("in main method");
         return "main";
     }
 
+    @ModelAttribute("types")
+    public String get1() {
+        System.out.println("in get1 method");
+        String types = "hej";
+        return types;
+    }
+
+    /*
+     * @RequestMapping(value = "/main", method = RequestMethod.GET) public void get2() {
+     * System.out.println("in get2 method"); }
+     */
     private <T> T getOrCreateSessionObj(HttpSession session, String name, Class<T> clazz) {
         try {
             T result = (T) session.getAttribute(name);
+
             if (result == null) {
                 result = clazz.newInstance();
                 session.setAttribute(name, result);
@@ -81,6 +94,9 @@ public class VerticalPrioController {
     }
 
     private void colsFromOneListToOtherByIds(Collection<String> ids, List<Column> from, List<Column> to) {
+        if (ids == null) {
+            return;
+        }
         for (Column col : new ArrayList<Column>(from)) {
             if (ids.contains(col.getId() + "")) {
                 from.remove(col);

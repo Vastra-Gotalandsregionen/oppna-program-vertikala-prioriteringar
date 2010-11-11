@@ -9,6 +9,8 @@
 <title>Insert title here</title>
 </head>
 <body style="height:100%; ">
+${types}
+
 <jsp:include page="jsp/main-body.jsp"/>
 </body>
 </html>

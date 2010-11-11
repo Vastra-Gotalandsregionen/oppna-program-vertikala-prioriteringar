@@ -6,10 +6,10 @@
 
 <div style="width:100%">
   <div style="background-color:yellow">
-    Header
+    Header ${types}
   </div>
   <div style="background-color:orange;width:100px;float:left;">
-    <form:form action="check" method="POST">
+    <form:form commandName="form" action="check" method="POST">
       <c:forEach items="${form.sectors}" var="sector">
         <input style="display:none" id="Sektor${sector.id}" type="submit" name="id" value="${sector.id}" />
         <label for="Sektor${sector.id}"> ${sector.label} ${sector.selected}</label> <br/>
