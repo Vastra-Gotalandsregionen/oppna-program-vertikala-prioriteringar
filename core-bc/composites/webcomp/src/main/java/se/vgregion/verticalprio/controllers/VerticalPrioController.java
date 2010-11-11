@@ -1,6 +1,7 @@
 package se.vgregion.verticalprio.controllers;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -20,95 +21,111 @@ import se.vgregion.verticalprio.model.Sector;
 @Controller
 // @SessionAttributes(value = { "form" })
 public class VerticalPrioController {
-	private static final Log log = LogFactory.getLog(VerticalPrioController.class);
+    private static final Log log = LogFactory.getLog(VerticalPrioController.class);
 
-	@RequestMapping(value = "/test", method = RequestMethod.GET)
-	public String test() {
-		log.info("in test() method");
-		return "test";
-	}
+    @RequestMapping(value = "/test", method = RequestMethod.GET)
+    public String test() {
+        log.info("in test() method");
+        return "test";
+    }
 
-	@RequestMapping(value = "/main")
-	public String main(HttpSession session/* Model model, @ModelAttribute(value = "form") MainForm form */) {
-		MainForm form = getOrCreateSessionObj(session, "form", MainForm.class);
+    private void initMainForm(MainForm form) {
+        if (form.getSectors().isEmpty()) {
+            form.getSectors().addAll(getSectors());
+        }
 
-		if (form.getSectors().isEmpty()) {
-			form.getSectors().addAll(getSectors());
-		}
+        if (form.getColumns().isEmpty()) {
+            form.getColumns().addAll(getColumns());
+        }
+    }
 
-		if (form.getColumns().isEmpty()) {
-			form.getColumns().addAll(getColumns());
-		}
-		return "main";
-	}
+    @RequestMapping(value = "/main")
+    public String main(HttpSession session/* Model model, @ModelAttribute(value = "form") MainForm form */) {
+        MainForm form = getOrCreateSessionObj(session, "form", MainForm.class);
+        initMainForm(form);
+        return "main";
+    }
 
-	private <T> T getOrCreateSessionObj(HttpSession session, String name, Class<T> clazz) {
-		try {
-			T result = (T) session.getAttribute(name);
-			if (result == null) {
-				result = clazz.newInstance();
-				session.setAttribute(name, result);
-			}
+    private <T> T getOrCreateSessionObj(HttpSession session, String name, Class<T> clazz) {
+        try {
+            T result = (T) session.getAttribute(name);
+            if (result == null) {
+                result = clazz.newInstance();
+                session.setAttribute(name, result);
+            }
 
-			return result;
-		} catch (InstantiationException ie) {
-			throw new RuntimeException(ie);
-		} catch (IllegalAccessException iae) {
-			throw new RuntimeException(iae);
-		}
-	}
+            return result;
+        } catch (InstantiationException ie) {
+            throw new RuntimeException(ie);
+        } catch (IllegalAccessException iae) {
+            throw new RuntimeException(iae);
+        }
+    }
 
-	@RequestMapping(value = "/init-conf-columns")
-	public String initConfColumns(final HttpSession session) {
-		ConfColumnsForm columnForm = getOrCreateSessionObj(session, "confCols", ConfColumnsForm.class);
-		columnForm.getHiddenColumns().clear();
-		columnForm.getVisibleColumns().clear();
+    @RequestMapping(value = "/conf-columns")
+    public String confColumns(final HttpSession session, @RequestParam String command,
+            @RequestParam List<String> visibleColumns, @RequestParam List<String> hiddenColumns) {
+        ConfColumnsForm columnForm = getOrCreateSessionObj(session, "confCols", ConfColumnsForm.class);
+        if ("mkVisible".equals(command)) {
+            colsFromOneListToOtherByIds(hiddenColumns, columnForm.getHiddenColumns(),
+                    columnForm.getVisibleColumns());
+        }
+        return "conf-columns";
+    }
 
-		MainForm mainForm = getOrCreateSessionObj(session, "form", MainForm.class);
+    private void colsFromOneListToOtherByIds(Collection<String> ids, List<Column> from, List<Column> to) {
+        for (Column col : new ArrayList<Column>(from)) {
+            if (ids.contains(col.getId() + "")) {
+                from.remove(col);
+                to.add(col);
+            }
+        }
+    }
 
-		for (Column column : mainForm.getColumns()) {
-			if (column.isVisible()) {
-				columnForm.getVisibleColumns().add(column);
-			} else {
-				columnForm.getHiddenColumns().add(column);
-			}
-		}
+    @RequestMapping(value = "/init-conf-columns")
+    public String initConfColumns(final HttpSession session) {
+        ConfColumnsForm columnForm = getOrCreateSessionObj(session, "confCols", ConfColumnsForm.class);
+        columnForm.getHiddenColumns().clear();
+        columnForm.getVisibleColumns().clear();
 
-		return "conf-columns";
-	}
+        MainForm mainForm = getOrCreateSessionObj(session, "form", MainForm.class);
+        initMainForm(mainForm);
+        
+        for (Column column : mainForm.getColumns()) {
+            if (column.isVisible()) {
+                columnForm.getVisibleColumns().add(column);
+            } else {
+                columnForm.getHiddenColumns().add(column);
+            }
+        }
 
-	// @RequestMapping(value = "/conf-columns")
-	public String confColumns(final HttpSession session) {
-		System.out.println("In confColumns");
-		return "main";
-	}
+        return "conf-columns";
+    }
 
-	// @RequestMapping(value = "/check")
-	@RequestMapping(value = "/conf-columns")
-	public String check(final HttpSession session, @RequestParam int[] id) {
-		MainForm form = (MainForm) session.getAttribute("form");
-		for (int i = 0; i < id.length; i++) {
-			int selected = id[i];
-			Sector sector = form.getSectors().get(selected);
-			sector.setSelected(!sector.isSelected());
-		}
-		return "main";
-	}
+    @RequestMapping(value = "/check")
+    public String check(final HttpSession session, @RequestParam Integer id) {
+        // MainForm form = (MainForm) session.getAttribute("form");
+        MainForm form = getOrCreateSessionObj(session, "form", MainForm.class);
 
-	private List<Sector> getSectors() {
-		List<Sector> result = new ArrayList<Sector>();
-		for (int i = 0; i < 25; i++) {
-			result.add(new Sector("Sector #" + i, i));
-		}
-		return result;
-	}
+        Sector sector = form.getSectors().get(id);
+        sector.setSelected(!sector.isSelected());
+        return "main";
+    }
 
-	private List<Column> getColumns() {
-		List<Column> result = new ArrayList<Column>();
-		for (int i = 0; i < 15; i++) {
-			result.add(new Column(i, "Column #" + i));
-		}
-		return result;
-	}
+    private List<Sector> getSectors() {
+        List<Sector> result = new ArrayList<Sector>();
+        for (int i = 0; i < 25; i++) {
+            result.add(new Sector("Sector #" + i, i));
+        }
+        return result;
+    }
+
+    private List<Column> getColumns() {
+        List<Column> result = new ArrayList<Column>();
+        for (int i = 0; i < 15; i++) {
+            result.add(new Column(i, "Column #" + i));
+        }
+        return result;
+    }
 
 }
