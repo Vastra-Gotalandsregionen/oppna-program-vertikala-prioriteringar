@@ -7,7 +7,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
-    <link href="<c:url value="style.jsp" />" rel="stylesheet"  type="text/css" />
+<link href="<c:url value="style.jsp" />" rel="stylesheet"  type="text/css" />
+<style type="text/css">
+.sector-node div {
+  padding-left: 10px;
+}
+</style>
 </head>
 <body style="height:100%; ">
 <jsp:include page="jsp/main-body.jsp"/>

@@ -1,5 +1,8 @@
 package se.vgregion.verticalprio.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Sector {
     // private static final Log log = LogFactory.getLog(Sector.class);
 
@@ -16,6 +19,8 @@ public class Sector {
     private String label;
 
     private boolean selected;
+
+    private List<Sector> children = new ArrayList<Sector>();
 
     public String getLabel() {
         return label;
@@ -39,5 +44,9 @@ public class Sector {
 
     public boolean isSelected() {
         return selected;
+    }
+
+    public List<Sector> getChildren() {
+        return children;
     }
 }
