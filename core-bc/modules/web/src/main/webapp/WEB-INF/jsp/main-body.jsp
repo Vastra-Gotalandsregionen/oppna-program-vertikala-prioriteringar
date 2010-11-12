@@ -36,7 +36,9 @@
       <thead>
         <th>
           <c:forEach items="${form.columns}" var="column">
-            <td>${column.label}</td>
+            <c:if test="${column.visible}">
+              <td>${column.label}</td>
+            </c:if>
           </c:forEach>
         </th>
       </thead>
