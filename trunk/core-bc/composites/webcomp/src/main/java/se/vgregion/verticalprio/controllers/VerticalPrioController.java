@@ -3,12 +3,15 @@ package se.vgregion.verticalprio.controllers;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Properties;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.beanutils.BeanMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import se.vgregion.verticalprio.ConfColumnsForm;
 import se.vgregion.verticalprio.MainForm;
 import se.vgregion.verticalprio.model.Column;
+import se.vgregion.verticalprio.model.Prio;
 import se.vgregion.verticalprio.model.Sector;
 
 @Controller
@@ -40,10 +44,15 @@ public class VerticalPrioController {
         }
     }
 
-    @RequestMapping(value = "/main")
-    public String main(HttpSession session) {
+    private MainForm getMainForm(HttpSession session) {
         MainForm form = getOrCreateSessionObj(session, "form", MainForm.class);
         initMainForm(form);
+        return form;
+    }
+
+    @RequestMapping(value = "/main")
+    public String main(HttpSession session) {
+        MainForm form = getMainForm(session);
         System.out.println("in main method");
         return "main";
     }
@@ -52,6 +61,23 @@ public class VerticalPrioController {
      * @ModelAttribute("types") public String get1() { System.out.println("in get1 method"); String types = "hej";
      * return types; }
      */
+
+    @ModelAttribute("rows")
+    public List<Prio> result(HttpSession session) {
+        List<Prio> prios = new ArrayList<Prio>();
+        MainForm form = getMainForm(session);
+        // Do something qualified with the information in the form to get the data desired.
+        List<Column> columns = form.getColumns();
+        for (int i = 0; i < 100; i++) {
+            Prio prio = new Prio();
+            prios.add(prio);
+            BeanMap bm = new BeanMap(prio);
+            for (Column column : columns) {
+                bm.put(column.getName(), "" + i);
+            }
+        }
+        return prios;
+    }
 
     /*
      * @RequestMapping(value = "/main", method = RequestMethod.GET) public void get2() {
@@ -93,6 +119,8 @@ public class VerticalPrioController {
                 column.setVisible(true);
             }
             return "main";
+        } else if ("cancel".equals(command)) {
+            return "main";
         }
 
         return "conf-columns";
@@ -116,8 +144,7 @@ public class VerticalPrioController {
         columnForm.getHiddenColumns().clear();
         columnForm.getVisibleColumns().clear();
 
-        MainForm mainForm = getOrCreateSessionObj(session, "form", MainForm.class);
-        initMainForm(mainForm);
+        MainForm mainForm = getMainForm(session);
 
         for (Column column : mainForm.getColumns()) {
             if (column.isVisible()) {
@@ -132,12 +159,20 @@ public class VerticalPrioController {
 
     @RequestMapping(value = "/check")
     public String check(final HttpSession session, @RequestParam Integer id) {
-        // MainForm form = (MainForm) session.getAttribute("form");
-        MainForm form = getOrCreateSessionObj(session, "form", MainForm.class);
+        MainForm form = getMainForm(session);
 
-        Sector sector = form.getSectors().get(id);
+        Sector sector = getSectorById(id, form.getSectors());
         sector.setSelected(!sector.isSelected());
         return "main";
+    }
+
+    private Sector getSectorById(int id, List<Sector> sectors) {
+        for (Sector sector : sectors) {
+            if (id == sector.getId()) {
+                return sector;
+            }
+        }
+        return null;
     }
 
     private List<Sector> getSectors() {
@@ -150,9 +185,25 @@ public class VerticalPrioController {
 
     private List<Column> getColumns() {
         List<Column> result = new ArrayList<Column>();
-        for (int i = 0; i < 15; i++) {
-            result.add(new Column(i, "Column #" + i));
+        // for (int i = 0; i < 15; i++) {
+        // result.add(new Column(i, "Column #" + i));
+        // }
+
+        try {
+            Properties namesTexts = new Properties();
+            namesTexts.load(getClass().getResourceAsStream("/column-texts.properties"));
+
+            for (Object key : namesTexts.keySet()) {
+                Column column = new Column();
+                column.setLabel(namesTexts.getProperty(key.toString()));
+                column.setName(key.toString());
+                column.setId(key.hashCode());
+                result.add(column);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+
         return result;
     }
 
