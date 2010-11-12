@@ -57,11 +57,6 @@ public class VerticalPrioController {
         return "main";
     }
 
-    /*
-     * @ModelAttribute("types") public String get1() { System.out.println("in get1 method"); String types = "hej";
-     * return types; }
-     */
-
     @ModelAttribute("rows")
     public List<Prio> result(HttpSession session) {
         List<Prio> prios = new ArrayList<Prio>();
@@ -79,10 +74,6 @@ public class VerticalPrioController {
         return prios;
     }
 
-    /*
-     * @RequestMapping(value = "/main", method = RequestMethod.GET) public void get2() {
-     * System.out.println("in get2 method"); }
-     */
     private <T> T getOrCreateSessionObj(HttpSession session, String name, Class<T> clazz) {
         try {
             T result = (T) session.getAttribute(name);
@@ -171,14 +162,37 @@ public class VerticalPrioController {
             if (id == sector.getId()) {
                 return sector;
             }
+            Sector subSector = getSectorById(id, sector.getChildren());
+            if (subSector != null) {
+                return subSector;
+            }
         }
         return null;
     }
 
+    private int dummySectorCounter = 0;
+
     private List<Sector> getSectors() {
         List<Sector> result = new ArrayList<Sector>();
         for (int i = 0; i < 25; i++) {
-            result.add(new Sector("Sector #" + i, i));
+            Sector sector = new Sector("Sector #" + dummySectorCounter, dummySectorCounter++);
+            result.add(sector);
+            sector.getChildren().addAll(mkSubSectors(3));
+        }
+        return result;
+    }
+
+    private List<Sector> mkSubSectors(int deep) {
+
+        List<Sector> result = new ArrayList<Sector>();
+        if (deep < 1) {
+            return result;
+        }
+
+        for (int i = 0; i < 3; i++) {
+            Sector sector = new Sector("Sub-Sector #" + dummySectorCounter, dummySectorCounter++);
+            result.add(sector);
+            sector.getChildren().addAll(mkSubSectors(deep - 1));
         }
         return result;
     }

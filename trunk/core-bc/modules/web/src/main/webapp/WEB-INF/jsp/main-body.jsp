@@ -2,21 +2,13 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 
 <div style="width: 100%">
 <div style="background-color: yellow">Header ${types}</div>
-<div style="background-color: orange; width: 100px; float: left;"><form:form commandName="form"
+<div style="background-color: orange; min-width: 100px; float: left;"><form:form commandName="form"
   action="check" method="POST">
-  <c:forEach items="${form.sectors}" var="sector">
-    <input style="display: none" id="Sektor${sector.id}" type="submit" name="id" value="${sector.id}" />
-    <label for="Sektor${sector.id}"> ${sector.label}
-      <c:choose>
-        <c:when test="${sector.selected}"> <input type="checkbox" checked="checked"/> </c:when>
-        <c:otherwise> <input type="checkbox"/> </c:otherwise>
-      </c:choose> 
-    </label>
-    <br />
-  </c:forEach>
+  <tags:sectors items="${form.sectors}" />  
 </form:form></div>
 
 <div style="background-color: #eeeeee; float: left;">
@@ -54,4 +46,3 @@
 </div>
 <div style="background-color: yellow; clear: both">Footer</div>
 </div>
-hejKnekt
