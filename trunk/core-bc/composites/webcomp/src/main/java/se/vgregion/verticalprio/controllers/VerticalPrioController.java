@@ -9,7 +9,6 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -49,12 +48,10 @@ public class VerticalPrioController {
         return "main";
     }
 
-    @ModelAttribute("types")
-    public String get1() {
-        System.out.println("in get1 method");
-        String types = "hej";
-        return types;
-    }
+    /*
+     * @ModelAttribute("types") public String get1() { System.out.println("in get1 method"); String types = "hej";
+     * return types; }
+     */
 
     /*
      * @RequestMapping(value = "/main", method = RequestMethod.GET) public void get2() {
@@ -88,6 +85,14 @@ public class VerticalPrioController {
         } else if ("hide".equals(command)) {
             colsFromOneListToOtherByIds(visibleColumns, columnForm.getVisibleColumns(),
                     columnForm.getHiddenColumns());
+        } else if ("save".equals(command)) {
+            for (Column column : columnForm.getHiddenColumns()) {
+                column.setVisible(false);
+            }
+            for (Column column : columnForm.getVisibleColumns()) {
+                column.setVisible(true);
+            }
+            return "main";
         }
 
         return "conf-columns";
