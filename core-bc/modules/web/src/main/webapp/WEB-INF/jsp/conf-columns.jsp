@@ -12,9 +12,9 @@
 <jsp:useBean id="confCols" scope="session" class="se.vgregion.verticalprio.ConfColumnsForm"></jsp:useBean>
 
 <div
-  style="left: 0px; top: 0px; text-align: center; vertical-align: middle; position: absolute; width: 100%; height: 100%;">
+  style="left: 0px; top: 0px; text-align: center; position: absolute; width: 100%; height: 100%;">
 
-<span style="background-color: lime;">
+<span style="background-color: lime; position: absolute; top:50%; left:50%;">
 <form style="display: inline;" action="conf-columns"><select name="hiddenColumns" multiple="multiple">
   <c:forEach items="${confCols.hiddenColumns}" var="column">
     <option value="${column.id}" id="${column.id}">${column.label}</option>
@@ -37,6 +37,10 @@
   <input type="submit" name="command"  style="display: none;"
   value="save" id="save-change" /> 
   <label for="save-change">Ok</label>
+  
+    <input type="submit" name="command"  style="display: none;"
+  value="cancel" id="cancel-change" /> 
+  <label for="save-change">Cancel</label>
 
 </form>
 

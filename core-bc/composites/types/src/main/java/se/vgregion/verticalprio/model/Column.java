@@ -6,6 +6,8 @@ public class Column {
 
     private String label;
 
+    private String name;
+
     private boolean visible = true;
 
     public Column() {
@@ -53,6 +55,14 @@ public class Column {
         }
         Column other = (Column) obj;
         return other.id == id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
 }
