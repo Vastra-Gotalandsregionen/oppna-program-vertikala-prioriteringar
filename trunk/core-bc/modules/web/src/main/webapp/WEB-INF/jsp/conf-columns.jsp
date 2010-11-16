@@ -2,10 +2,9 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
-</head>
+
+<jsp:include page="jsp/head.jsp"/>
+
 <body style="height: 100%;">
 
 <jsp:include page="jsp/main-body.jsp" />
@@ -17,7 +16,7 @@
 <span style="background-color: lime; position: absolute; top:50%; left:50%;">
 <form style="display: inline;" action="conf-columns"><select name="hiddenColumns" multiple="multiple">
   <c:forEach items="${confCols.hiddenColumns}" var="column">
-    <option value="${column.id}" id="${column.id}">${column.label}</option>
+    <option value="${column.name}" id="${column.id}">${column.label}</option>
   </c:forEach>
 </select> 
   <input type="submit" name="command" value="show" id="show-selected" style="display: none;"/>
@@ -29,7 +28,7 @@
   
   <select name="visibleColumns" multiple="multiple">
   <c:forEach items="${confCols.visibleColumns}" var="column">
-    <option value="${column.id}" id="${column.id}">${column.label}</option>
+    <option value="${column.name}" id="${column.id}">${column.label}</option>
   </c:forEach>
 </select>
 
