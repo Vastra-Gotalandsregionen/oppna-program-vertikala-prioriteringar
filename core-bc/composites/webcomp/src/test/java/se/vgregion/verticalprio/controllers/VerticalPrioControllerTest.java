@@ -1,44 +1,98 @@
 package se.vgregion.verticalprio.controllers;
 
-import static org.junit.Assert.fail;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import javax.servlet.http.HttpSession;
+
+import junit.framework.Assert;
+
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.mock.web.MockHttpServletRequest;
+
+import se.vgregion.verticalprio.ConfColumnsForm;
+import se.vgregion.verticalprio.model.Column;
+import se.vgregion.verticalprio.model.Prio;
 
 public class VerticalPrioControllerTest {
-    private static final Log log = LogFactory.getLog(VerticalPrioControllerTest.class);
 
     private VerticalPrioController vpc;
+
+    private MockHttpServletRequest request;
+
+    private HttpSession session;
 
     @Before
     public void setUp() {
         vpc = new VerticalPrioController();
+        request = new MockHttpServletRequest();
+        session = request.getSession();
     }
 
     @Test
     public void main() {
-
+        String defaultResult = vpc.main(session);
+        Assert.assertEquals("main", defaultResult);
     }
 
     @Test
     public void result() {
-        fail("Not yet implemented");
+        List<Prio> prios = vpc.result(session);
+        Assert.assertNotSame(0, prios.size());
     }
 
     @Test
     public void confColumns() {
-        fail("Not yet implemented");
+        List<String> visibleColumns = new ArrayList<String>();
+        visibleColumns.addAll(Arrays.asList(new String[] { "col1", "col2", "col3" }));
+        visibleColumns.addAll(Arrays.asList(new String[] { "col4", "col5", "col6" }));
+
+        List<String> hiddenColumns = new ArrayList<String>();
+
+        vpc.setColumnTextsPropertiesFileName("/column-texts-test.properties");
+        vpc.initConfColumns(session);
+
+        ConfColumnsForm columnForm = (ConfColumnsForm) session.getAttribute("confCols");
+        Assert.assertEquals(0, columnForm.getHiddenColumns().size());
+        Assert.assertEquals(6, columnForm.getVisibleColumns().size());
+
+        String result = vpc.confColumns(session, "hide", visibleColumns, hiddenColumns);
+        columnForm = (ConfColumnsForm) session.getAttribute("confCols");
+        Assert.assertEquals("conf-columns", result);
+
+        Assert.assertEquals(6, columnForm.getHiddenColumns().size());
+        Assert.assertEquals(0, columnForm.getVisibleColumns().size());
+
+        result = vpc.confColumns(session, "show", hiddenColumns, visibleColumns);
+        Assert.assertEquals("conf-columns", result);
+        Assert.assertEquals(0, columnForm.getHiddenColumns().size());
+        Assert.assertEquals(6, columnForm.getVisibleColumns().size());
+
+        result = vpc.confColumns(session, "save", visibleColumns, hiddenColumns);
+        Assert.assertEquals("main", result);
+        for (Column column : columnForm.getVisibleColumns()) {
+            Assert.assertEquals(true, column.isVisible());
+        }
+        for (Column column : columnForm.getHiddenColumns()) {
+            Assert.assertEquals(false, column.isVisible());
+        }
+
+        result = vpc.confColumns(session, "cancel", visibleColumns, hiddenColumns);
+        Assert.assertEquals("main", result);
     }
 
     @Test
     public void initConfColumns() {
-        fail("Not yet implemented");
+        vpc.setColumnTextsPropertiesFileName("/column-texts-test.properties");
+        String result = vpc.initConfColumns(session);
+        Assert.assertEquals("conf-columns", result);
     }
 
     @Test
     public void check() {
-        fail("Not yet implemented");
+        String result = vpc.check(session, 10);
+        Assert.assertEquals("main", result);
     }
 }

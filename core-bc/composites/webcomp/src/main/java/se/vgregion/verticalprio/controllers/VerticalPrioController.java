@@ -28,6 +28,8 @@ import se.vgregion.verticalprio.model.Sector;
 public class VerticalPrioController {
     private static final Log log = LogFactory.getLog(VerticalPrioController.class);
 
+    private String columnTextsPropertiesFileName = "/column-texts.properties";
+
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public String test() {
         System.out.println("in test() method");
@@ -97,10 +99,10 @@ public class VerticalPrioController {
             @RequestParam(required = false) List<String> hiddenColumns) {
         ConfColumnsForm columnForm = getOrCreateSessionObj(session, "confCols", ConfColumnsForm.class);
         if ("show".equals(command)) {
-            colsFromOneListToOtherByIds(hiddenColumns, columnForm.getHiddenColumns(),
+            moveColsFromOneListToOtherByNames(hiddenColumns, columnForm.getHiddenColumns(),
                     columnForm.getVisibleColumns());
         } else if ("hide".equals(command)) {
-            colsFromOneListToOtherByIds(visibleColumns, columnForm.getVisibleColumns(),
+            moveColsFromOneListToOtherByNames(visibleColumns, columnForm.getVisibleColumns(),
                     columnForm.getHiddenColumns());
         } else if ("save".equals(command)) {
             for (Column column : columnForm.getHiddenColumns()) {
@@ -117,12 +119,12 @@ public class VerticalPrioController {
         return "conf-columns";
     }
 
-    private void colsFromOneListToOtherByIds(Collection<String> ids, List<Column> from, List<Column> to) {
-        if (ids == null) {
+    private void moveColsFromOneListToOtherByNames(Collection<String> names, List<Column> from, List<Column> to) {
+        if (names == null) {
             return;
         }
         for (Column col : new ArrayList<Column>(from)) {
-            if (ids.contains(col.getId() + "")) {
+            if (names.contains(col.getName() + "")) {
                 from.remove(col);
                 to.add(col);
             }
@@ -146,6 +148,11 @@ public class VerticalPrioController {
         }
 
         return "conf-columns";
+    }
+
+    @RequestMapping(value = "/select-prio")
+    public String selectPrio(final HttpSession session, @RequestParam Integer selected) {
+        return "select-prio";
     }
 
     @RequestMapping(value = "/check")
@@ -205,7 +212,7 @@ public class VerticalPrioController {
 
         try {
             Properties namesTexts = new Properties();
-            namesTexts.load(getClass().getResourceAsStream("/column-texts.properties"));
+            namesTexts.load(getClass().getResourceAsStream(columnTextsPropertiesFileName));
 
             for (Object key : namesTexts.keySet()) {
                 Column column = new Column();
@@ -219,6 +226,14 @@ public class VerticalPrioController {
         }
 
         return result;
+    }
+
+    String getColumnTextsPropertiesFileName() {
+        return columnTextsPropertiesFileName;
+    }
+
+    void setColumnTextsPropertiesFileName(String columnTextsPropertiesFileName) {
+        this.columnTextsPropertiesFileName = columnTextsPropertiesFileName;
     }
 
 }
