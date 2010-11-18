@@ -3,38 +3,28 @@ package se.vgregion.verticalprio.controllers;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Properties;
 
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.beanutils.BeanMap;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import se.vgregion.verticalprio.ConfColumnsForm;
 import se.vgregion.verticalprio.MainForm;
 import se.vgregion.verticalprio.model.Column;
+import se.vgregion.verticalprio.model.Diagnosis;
 import se.vgregion.verticalprio.model.Prio;
 import se.vgregion.verticalprio.model.Sector;
+import se.vgregion.verticalprio.service.JpaDiagnosisRepository;
 
 @Controller
 @SessionAttributes("form")
-public class VerticalPrioController {
-    private static final Log log = LogFactory.getLog(VerticalPrioController.class);
-
-    private String columnTextsPropertiesFileName = "/column-texts.properties";
-
-    @RequestMapping(value = "/test", method = RequestMethod.GET)
-    public String test() {
-        System.out.println("in test() method");
-        return "test";
-    }
+public class VerticalPrioController extends ControllerBase {
 
     private void initMainForm(MainForm form) {
         if (form.getSectors().isEmpty()) {
@@ -67,6 +57,7 @@ public class VerticalPrioController {
         List<Column> columns = form.getColumns();
         for (int i = 0; i < 100; i++) {
             Prio prio = new Prio();
+            prio.setId(i);
             prios.add(prio);
             BeanMap bm = new BeanMap(prio);
             for (Column column : columns) {
@@ -151,7 +142,12 @@ public class VerticalPrioController {
     }
 
     @RequestMapping(value = "/select-prio")
+    @Transactional
     public String selectPrio(final HttpSession session, @RequestParam Integer selected) {
+        JpaDiagnosisRepository repo = new JpaDiagnosisRepository();
+        repo.persist(new Diagnosis());
+        List<Diagnosis> diagnosises = repo.findAll();
+        System.out.println(diagnosises);
         return "select-prio";
     }
 
@@ -202,38 +198,6 @@ public class VerticalPrioController {
             sector.getChildren().addAll(mkSubSectors(deep - 1));
         }
         return result;
-    }
-
-    private List<Column> getColumns() {
-        List<Column> result = new ArrayList<Column>();
-        // for (int i = 0; i < 15; i++) {
-        // result.add(new Column(i, "Column #" + i));
-        // }
-
-        try {
-            Properties namesTexts = new Properties();
-            namesTexts.load(getClass().getResourceAsStream(columnTextsPropertiesFileName));
-
-            for (Object key : namesTexts.keySet()) {
-                Column column = new Column();
-                column.setLabel(namesTexts.getProperty(key.toString()));
-                column.setName(key.toString());
-                column.setId(key.hashCode());
-                result.add(column);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-        return result;
-    }
-
-    String getColumnTextsPropertiesFileName() {
-        return columnTextsPropertiesFileName;
-    }
-
-    void setColumnTextsPropertiesFileName(String columnTextsPropertiesFileName) {
-        this.columnTextsPropertiesFileName = columnTextsPropertiesFileName;
     }
 
 }

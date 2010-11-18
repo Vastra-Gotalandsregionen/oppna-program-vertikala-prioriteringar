@@ -9,10 +9,9 @@
 
 <jsp:include page="jsp/main-body.jsp" />
 
-<div
-  style="left: 0px; top: 0px; text-align: center; position: absolute; width: 100%; height: 100%;">
+<div class="popup-overlay">
 
-<span style="background-color: lime; position: absolute; top:50%; left:50%;">
+<span class="window">
 
 select-prio.jsp
 

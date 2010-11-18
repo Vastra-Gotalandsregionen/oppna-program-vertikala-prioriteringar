@@ -81,5 +81,35 @@
 #select-prio {
   display: none;
 }
+
+.popup-overlay {
+  left: 0px; 
+  top: 0px; 
+  text-align: center; 
+  position: absolute; 
+  width: 100%; 
+  height: 100%;
+  opacity:0.4;
+  filter:alpha(opacity=40);
+  background-color: black;
+}
+
+.popup-overlay .window {
+  position: relative; 
+  top:40%; 
+  background-color: lime; 
+  background-repeat: repeat;
+  opacity:1.0;
+  filter:alpha(opacity=1);
+}
+
+.popup-overlay .window form { 
+  opacity:1.0;
+  filter:alpha(opacity=1);
+  background-color: white;
+  display: inline;
+  width: 100%;
+  height: 100%;
+}
 </style>
 </head>
