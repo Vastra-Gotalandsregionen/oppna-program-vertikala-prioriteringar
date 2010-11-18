@@ -42,7 +42,7 @@
   <tbody>
     <c:forEach items="${rows}" var="row" varStatus="vs">
       <tr class="${vs.index % 2 == 0 ? 'even' : 'odd'}">
-        <td><input type="radio" name="selected" value="row[id]"/></td>
+        <td><input type="radio" name="selected" value="${row.id}"/></td>
         <c:forEach items="${form.columns}" var="column">
           <c:if test="${column.visible}">
             <td>${row[column.name]}</td> 

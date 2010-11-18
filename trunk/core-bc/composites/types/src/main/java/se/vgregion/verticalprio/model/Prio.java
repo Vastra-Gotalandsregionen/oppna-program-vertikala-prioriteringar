@@ -2,6 +2,8 @@ package se.vgregion.verticalprio.model;
 
 public class Prio {
 
+    int id;
+
     String sectorCouncil = "Sektorsråd";
     String diagnoseText = "Diagnostext";
     String diagnoseCode = "Diagnoskod";
@@ -15,6 +17,14 @@ public class Prio {
     String careLevel = "Vårdnivå";
     String careForm = "Vårdform";
     String healthEconomicEvidence = "Hälsoekonomisk evidens";
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getSectorCouncil() {
         return sectorCouncil;

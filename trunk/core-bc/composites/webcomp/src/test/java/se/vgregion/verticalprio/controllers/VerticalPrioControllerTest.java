@@ -26,7 +26,13 @@ public class VerticalPrioControllerTest {
 
     @Before
     public void setUp() {
-        vpc = new VerticalPrioController();
+        vpc = new VerticalPrioController() {
+            @Override
+            public java.util.Map<String, String> getPrioPropertyTexts() {
+                columnTextsPropertiesFileName = "/column-texts-test.properties";
+                return super.getPrioPropertyTexts();
+            }
+        };
         request = new MockHttpServletRequest();
         session = request.getSession();
     }
@@ -51,7 +57,6 @@ public class VerticalPrioControllerTest {
 
         List<String> hiddenColumns = new ArrayList<String>();
 
-        vpc.setColumnTextsPropertiesFileName("/column-texts-test.properties");
         vpc.initConfColumns(session);
 
         ConfColumnsForm columnForm = (ConfColumnsForm) session.getAttribute("confCols");
@@ -85,7 +90,6 @@ public class VerticalPrioControllerTest {
 
     @Test
     public void initConfColumns() {
-        vpc.setColumnTextsPropertiesFileName("/column-texts-test.properties");
         String result = vpc.initConfColumns(session);
         Assert.assertEquals("conf-columns", result);
     }

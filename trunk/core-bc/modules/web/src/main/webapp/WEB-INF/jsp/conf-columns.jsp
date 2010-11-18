@@ -10,11 +10,10 @@
 <jsp:include page="jsp/main-body.jsp" />
 <jsp:useBean id="confCols" scope="session" class="se.vgregion.verticalprio.ConfColumnsForm"></jsp:useBean>
 
-<div
-  style="left: 0px; top: 0px; text-align: center; position: absolute; width: 100%; height: 100%;">
+<div class="popup-overlay">
 
-<span style="background-color: lime; position: absolute; top:50%; left:50%;">
-<form style="display: inline;" action="conf-columns"><select name="hiddenColumns" multiple="multiple">
+<span class="window">
+<form action="conf-columns"><select name="hiddenColumns" multiple="multiple">
   <c:forEach items="${confCols.hiddenColumns}" var="column">
     <option value="${column.name}" id="${column.id}">${column.label}</option>
   </c:forEach>
