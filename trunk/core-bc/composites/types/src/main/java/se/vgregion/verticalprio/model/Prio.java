@@ -1,8 +1,24 @@
 package se.vgregion.verticalprio.model;
 
-public class Prio {
+import java.util.List;
 
-    int id;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import se.vgregion.dao.domain.patterns.entity.AbstractEntity;
+
+@Entity
+@Table(name = "prio")
+public class Prio extends AbstractEntity<Prio, Long> {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    Long id;
 
     String sectorCouncil = "Sektorsråd";
     String diagnoseText = "Diagnostext";
@@ -18,11 +34,19 @@ public class Prio {
     String careForm = "Vårdform";
     String healthEconomicEvidence = "Hälsoekonomisk evidens";
 
-    public int getId() {
+    @ManyToOne
+    private
+    Sector sector;
+
+    @Transient
+    List<PrioDiagnosisLink> diagnosisLinks;
+
+    @Override
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -128,6 +152,14 @@ public class Prio {
 
     public void setHealthEconomicEvidence(String healthEconomicEvidence) {
         this.healthEconomicEvidence = healthEconomicEvidence;
+    }
+
+    public void setSector(Sector sector) {
+        this.sector = sector;
+    }
+
+    public Sector getSector() {
+        return sector;
     }
 
 }

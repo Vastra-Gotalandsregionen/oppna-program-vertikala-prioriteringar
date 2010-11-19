@@ -7,7 +7,9 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.beanutils.BeanMap;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,14 +19,20 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import se.vgregion.verticalprio.ConfColumnsForm;
 import se.vgregion.verticalprio.MainForm;
 import se.vgregion.verticalprio.model.Column;
-import se.vgregion.verticalprio.model.Diagnosis;
 import se.vgregion.verticalprio.model.Prio;
 import se.vgregion.verticalprio.model.Sector;
-import se.vgregion.verticalprio.service.JpaDiagnosisRepository;
+import se.vgregion.verticalprio.service.PrioRepository;
+import se.vgregion.verticalprio.service.SectorRepository;
 
 @Controller
 @SessionAttributes("form")
 public class VerticalPrioController extends ControllerBase {
+
+    @Autowired
+    private SectorRepository sectorRepository;
+
+    @Autowired
+    private PrioRepository prioRepository;
 
     private void initMainForm(MainForm form) {
         if (form.getSectors().isEmpty()) {
@@ -55,7 +63,7 @@ public class VerticalPrioController extends ControllerBase {
         MainForm form = getMainForm(session);
         // Do something qualified with the information in the form to get the data desired.
         List<Column> columns = form.getColumns();
-        for (int i = 0; i < 100; i++) {
+        for (long i = 0; i < 100; i++) {
             Prio prio = new Prio();
             prio.setId(i);
             prios.add(prio);
@@ -142,12 +150,29 @@ public class VerticalPrioController extends ControllerBase {
     }
 
     @RequestMapping(value = "/select-prio")
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public String selectPrio(final HttpSession session, @RequestParam Integer selected) {
-        JpaDiagnosisRepository repo = new JpaDiagnosisRepository();
-        repo.persist(new Diagnosis());
-        List<Diagnosis> diagnosises = repo.findAll();
-        System.out.println(diagnosises);
+        /*
+         * JpaDiagnosisRepository repo = new JpaDiagnosisRepository(); repo.persist(new Diagnosis());
+         * List<Diagnosis> diagnosises = repo.findAll(); System.out.println(diagnosises);
+         */
+        System.out.println("VerticalPrioController.selectPrio()");
+        List<Sector> sectors = sectorRepository.getTreeRoots();
+        for (Sector sector : sectors.get(0).getChildren()) {
+
+            for (int i = 0; i < 10; i++) {
+                Prio prio = new Prio();
+                prio.setSector(sector);
+                BeanMap bm = new BeanMap(prio);
+                for (Object key : bm.keySet()) {
+                    if (bm.getType(key.toString()).equals(String.class)) {
+                        bm.put(key.toString(), sector.getLabel() + " " + i);
+                    }
+                }
+                prioRepository.store(prio);
+            }
+        }
+
         return "select-prio";
     }
 
@@ -173,16 +198,21 @@ public class VerticalPrioController extends ControllerBase {
         return null;
     }
 
-    private int dummySectorCounter = 0;
+    private long dummySectorCounter = 0;
 
+    @Transactional
     private List<Sector> getSectors() {
-        List<Sector> result = new ArrayList<Sector>();
-        for (int i = 0; i < 25; i++) {
-            Sector sector = new Sector("Sector #" + dummySectorCounter, dummySectorCounter++);
-            result.add(sector);
-            sector.getChildren().addAll(mkSubSectors(3));
-        }
-        return result;
+
+        Collection<Sector> result = sectorRepository.getTreeRoots();
+        return new ArrayList<Sector>(result);
+
+        // List<Sector> result = new ArrayList<Sector>();
+        // for (long i = 0; i < 25; i++) {
+        // Sector sector = new Sector("Sector #" + dummySectorCounter, dummySectorCounter++);
+        // result.add(sector);
+        // sector.getChildren().addAll(mkSubSectors(3));
+        // }
+        // return result;
     }
 
     private List<Sector> mkSubSectors(int deep) {

@@ -1,8 +1,13 @@
 <persistence xmlns="http://java.sun.com/xml/ns/persistence" version="1.0">
 
-  <persistence-unit name="default">
+  <persistence-unit name="vertikal">
+    
     <provider>org.hibernate.ejb.HibernatePersistence</provider>
+    
     <class>se.vgregion.verticalprio.model.Diagnosis</class>
+    <class>se.vgregion.verticalprio.model.PrioDiagnosisLink</class>
+    <class>se.vgregion.verticalprio.model.Prio</class>
+    <class>se.vgregion.verticalprio.model.Sector</class>
   </persistence-unit>
 
 </persistence>

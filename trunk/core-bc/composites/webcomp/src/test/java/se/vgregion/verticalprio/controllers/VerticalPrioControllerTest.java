@@ -45,6 +45,7 @@ public class VerticalPrioControllerTest {
 
     @Test
     public void result() {
+        vpc = new VerticalPrioController();
         List<Prio> prios = vpc.result(session);
         Assert.assertNotSame(0, prios.size());
     }

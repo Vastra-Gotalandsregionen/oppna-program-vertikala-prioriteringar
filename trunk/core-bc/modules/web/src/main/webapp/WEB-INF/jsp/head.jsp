@@ -10,6 +10,10 @@
   padding-left: 10px;
 }
 
+.sectors {
+  padding-right: 10px;
+}
+
 .button-row {
   width: 100%;
 }
@@ -37,6 +41,10 @@
   left: 2em;
 }
 
+.sectorsAndButtons {
+  #white-space: nowrap;
+}
+
 .button-row .export-data-buttons {
   padding-left: 2em;
   padding-right: 2em;
@@ -45,6 +53,7 @@
 .rowsAndButtons {
   background-color: #eeeeee;
   float: left;
+  
 }
 
 .rowsAndButtons table thead td {
