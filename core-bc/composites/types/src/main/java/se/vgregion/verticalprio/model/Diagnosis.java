@@ -5,7 +5,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "vgr_diagnosis")
+@Table(name = "diagnosis")
 public class Diagnosis extends AbstractCode<Diagnosis> {
 
     @ManyToOne

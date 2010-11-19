@@ -4,17 +4,16 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 
-
-
 <div class="main-body">
 <div style="background-color: yellow">Vertikala prioriteringar</div>
-<div class="sectors"><form:form commandName="form"
+<div class="sectorsAndButtons"> 
+<span class="sectors"><form:form commandName="form"
   action="check" method="POST">
   <tags:sectors items="${form.sectors}" />  
-</form:form></div>
+</form:form></span>
 
 <div class="rowsAndButtons">
-<div class="button-row">
+<span class="button-row">
 <label for="select-prio"><button>Visa prioriteringsobjekt</button></label>
 <form action="init-conf-columns"><input class="conf-columns" type="submit" value="Dölj/Visa kolumner" /></form>
 <button class="cost">Kostnad</button>
@@ -24,7 +23,8 @@
 <button class="print">Skriv ut</button>
 </span>
 <button class="help">Hjälp</button>
-</div>
+</span>
+
 
 <form action="select-prio" method="post">
 
@@ -55,5 +55,8 @@
 </form>
 
 </div>
+
+</div>
+
 <div class="footer">Footer</div>
 </div>

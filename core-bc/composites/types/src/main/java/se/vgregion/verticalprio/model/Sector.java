@@ -3,40 +3,31 @@ package se.vgregion.verticalprio.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Sector {
-    // private static final Log log = LogFactory.getLog(Sector.class);
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+@Entity
+@Table(name = "sector")
+public class Sector extends AbstractCode<Sector> {
 
     public Sector() {
     }
 
-    public Sector(String label, int id) {
-        this.label = label;
-        this.id = id;
+    public Sector(String label, Long id) {
+        setLabel(label);
+        setId(id);
     }
 
-    private int id = 0;
-
-    private String label;
-
+    @Transient
     private boolean selected;
 
+    @Transient
     private List<Sector> children = new ArrayList<Sector>();
 
-    public String getLabel() {
-        return label;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
+    @ManyToOne
+    private Sector parent;
 
     public void setSelected(boolean selected) {
         this.selected = selected;
@@ -44,6 +35,14 @@ public class Sector {
 
     public boolean isSelected() {
         return selected;
+    }
+
+    public void setParent(Sector parent) {
+        this.parent = parent;
+    }
+
+    public Sector getParent() {
+        return parent;
     }
 
     public List<Sector> getChildren() {
