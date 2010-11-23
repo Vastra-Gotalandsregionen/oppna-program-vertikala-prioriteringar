@@ -1,4 +1,4 @@
-package se.vgregion.verticalprio.service;
+package se.vgregion.verticalprio.repository;
 
 import java.util.Collection;
 import java.util.List;
@@ -10,7 +10,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import se.vgregion.dao.domain.patterns.repository.db.jpa.DefaultJpaRepository;
-import se.vgregion.verticalprio.model.Sector;
+import se.vgregion.verticalprio.entity.Sector;
+import se.vgregion.verticalprio.repository.SectorRepository;
 
 @Repository
 public class JpaSectorRepository extends DefaultJpaRepository<Sector> implements SectorRepository {

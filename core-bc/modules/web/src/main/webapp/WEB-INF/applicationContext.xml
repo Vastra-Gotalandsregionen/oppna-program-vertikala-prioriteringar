@@ -15,7 +15,7 @@
     </property>
   </bean>
    
-  <bean id="sectorRepository" class="se.vgregion.verticalprio.service.JpaSectorRepository"/>
-  <bean id="prioRepository" class="se.vgregion.verticalprio.service.JpaPrioRepository"/>
+  <bean id="sectorRepository" class="se.vgregion.verticalprio.repository.JpaSectorRepository"/>
+  <bean id="prioRepository" class="se.vgregion.verticalprio.repository.JpaPrioRepository"/>
   
 </beans>

@@ -29,6 +29,5 @@
       <artifactId>dao-framework</artifactId>
       <version>3.3</version>
     </dependency>
-
   </dependencies>
 </project>

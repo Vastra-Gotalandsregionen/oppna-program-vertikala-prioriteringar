@@ -13,8 +13,8 @@ import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import se.vgregion.verticalprio.ConfColumnsForm;
-import se.vgregion.verticalprio.model.Column;
-import se.vgregion.verticalprio.model.Prio;
+import se.vgregion.verticalprio.entity.Column;
+import se.vgregion.verticalprio.entity.Prio;
 
 public class VerticalPrioControllerTest {
 

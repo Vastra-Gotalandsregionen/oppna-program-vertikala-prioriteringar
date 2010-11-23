@@ -1,4 +1,4 @@
-package se.vgregion.verticalprio.model;
+package se.vgregion.verticalprio.entity;
 
 public class Column {
     // private static final Log log = LogFactory.getLog(Column.class);
