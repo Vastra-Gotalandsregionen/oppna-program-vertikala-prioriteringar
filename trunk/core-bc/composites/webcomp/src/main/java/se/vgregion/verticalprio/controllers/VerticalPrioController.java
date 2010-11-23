@@ -203,16 +203,16 @@ public class VerticalPrioController extends ControllerBase {
     @Transactional
     private List<Sector> getSectors() {
 
-        Collection<Sector> result = sectorRepository.getTreeRoots();
-        return new ArrayList<Sector>(result);
+        // Collection<Sector> result = sectorRepository.getTreeRoots();
+        // return new ArrayList<Sector>(result);
 
-        // List<Sector> result = new ArrayList<Sector>();
-        // for (long i = 0; i < 25; i++) {
-        // Sector sector = new Sector("Sector #" + dummySectorCounter, dummySectorCounter++);
-        // result.add(sector);
-        // sector.getChildren().addAll(mkSubSectors(3));
-        // }
-        // return result;
+        List<Sector> result = new ArrayList<Sector>();
+        for (long i = 0; i < 25; i++) {
+            Sector sector = new Sector("Sector #" + dummySectorCounter, dummySectorCounter++);
+            result.add(sector);
+            sector.getChildren().addAll(mkSubSectors(3));
+        }
+        return result;
     }
 
     private List<Sector> mkSubSectors(int deep) {
