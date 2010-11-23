@@ -36,7 +36,7 @@ public class Prio extends AbstractEntity<Prio, Long> {
 
     @ManyToOne
     private
-    Sector sector;
+    SektorRaad sector;
 
     @Transient
     List<PrioDiagnosisLink> diagnosisLinks;
@@ -154,11 +154,11 @@ public class Prio extends AbstractEntity<Prio, Long> {
         this.healthEconomicEvidence = healthEconomicEvidence;
     }
 
-    public void setSector(Sector sector) {
+    public void setSector(SektorRaad sector) {
         this.sector = sector;
     }
 
-    public Sector getSector() {
+    public SektorRaad getSector() {
         return sector;
     }
 

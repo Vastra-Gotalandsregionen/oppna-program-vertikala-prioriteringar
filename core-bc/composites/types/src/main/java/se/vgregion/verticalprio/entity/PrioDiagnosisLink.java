@@ -18,7 +18,7 @@ public class PrioDiagnosisLink extends AbstractEntity<PrioDiagnosisLink, Long> {
     private Long id;
 
     @ManyToOne
-    private Diagnosis diagnosis;
+    private DiagnosKod diagnosis;
 
     @ManyToOne
     private Prio prio;
@@ -32,11 +32,11 @@ public class PrioDiagnosisLink extends AbstractEntity<PrioDiagnosisLink, Long> {
         this.id = id;
     }
 
-    public void setDiagnosis(Diagnosis diagnosis) {
+    public void setDiagnosis(DiagnosKod diagnosis) {
         this.diagnosis = diagnosis;
     }
 
-    public Diagnosis getDiagnosis() {
+    public DiagnosKod getDiagnosis() {
         return diagnosis;
     }
 

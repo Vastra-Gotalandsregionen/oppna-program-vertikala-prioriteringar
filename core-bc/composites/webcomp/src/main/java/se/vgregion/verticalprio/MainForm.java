@@ -4,21 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import se.vgregion.verticalprio.entity.Column;
-import se.vgregion.verticalprio.entity.Sector;
+import se.vgregion.verticalprio.entity.SektorRaad;
 
 public class MainForm {
 
-    private List<Sector> sectors = new ArrayList<Sector>();
+    private List<SektorRaad> sectors = new ArrayList<SektorRaad>();
 
     private List<Column> columns = new ArrayList<Column>();
 
     private String command;
 
-    private void setSectors(List<Sector> sectors) {
+    private void setSectors(List<SektorRaad> sectors) {
         this.sectors = sectors;
     }
 
-    public List<Sector> getSectors() {
+    public List<SektorRaad> getSectors() {
         return sectors;
     }
 
