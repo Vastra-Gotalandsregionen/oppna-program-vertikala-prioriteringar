@@ -1,8 +1,8 @@
 package se.vgregion.verticalprio.repository;
 
 import se.vgregion.dao.domain.patterns.repository.Repository;
-import se.vgregion.verticalprio.entity.Diagnosis;
+import se.vgregion.verticalprio.entity.DiagnosKod;
 
-public interface DiagnosisRepository extends Repository<Diagnosis, Long> {
+public interface DiagnosisRepository extends Repository<DiagnosKod, Long> {
 
 }

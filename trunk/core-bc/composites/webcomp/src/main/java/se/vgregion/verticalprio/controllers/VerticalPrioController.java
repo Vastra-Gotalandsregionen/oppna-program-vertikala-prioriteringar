@@ -20,7 +20,7 @@ import se.vgregion.verticalprio.ConfColumnsForm;
 import se.vgregion.verticalprio.MainForm;
 import se.vgregion.verticalprio.entity.Column;
 import se.vgregion.verticalprio.entity.Prio;
-import se.vgregion.verticalprio.entity.Sector;
+import se.vgregion.verticalprio.entity.SektorRaad;
 import se.vgregion.verticalprio.repository.PrioRepository;
 import se.vgregion.verticalprio.repository.SectorRepository;
 
@@ -157,8 +157,8 @@ public class VerticalPrioController extends ControllerBase {
          * List<Diagnosis> diagnosises = repo.findAll(); System.out.println(diagnosises);
          */
         System.out.println("VerticalPrioController.selectPrio()");
-        List<Sector> sectors = sectorRepository.getTreeRoots();
-        for (Sector sector : sectors.get(0).getChildren()) {
+        List<SektorRaad> sectors = sectorRepository.getTreeRoots();
+        for (SektorRaad sector : sectors.get(0).getChildren()) {
 
             for (int i = 0; i < 10; i++) {
                 Prio prio = new Prio();
@@ -180,17 +180,17 @@ public class VerticalPrioController extends ControllerBase {
     public String check(final HttpSession session, @RequestParam Integer id) {
         MainForm form = getMainForm(session);
 
-        Sector sector = getSectorById(id, form.getSectors());
+        SektorRaad sector = getSectorById(id, form.getSectors());
         sector.setSelected(!sector.isSelected());
         return "main";
     }
 
-    private Sector getSectorById(int id, List<Sector> sectors) {
-        for (Sector sector : sectors) {
+    private SektorRaad getSectorById(int id, List<SektorRaad> sectors) {
+        for (SektorRaad sector : sectors) {
             if (id == sector.getId()) {
                 return sector;
             }
-            Sector subSector = getSectorById(id, sector.getChildren());
+            SektorRaad subSector = getSectorById(id, sector.getChildren());
             if (subSector != null) {
                 return subSector;
             }
@@ -201,29 +201,29 @@ public class VerticalPrioController extends ControllerBase {
     private long dummySectorCounter = 0;
 
     @Transactional
-    private List<Sector> getSectors() {
+    private List<SektorRaad> getSectors() {
 
         // Collection<Sector> result = sectorRepository.getTreeRoots();
         // return new ArrayList<Sector>(result);
 
-        List<Sector> result = new ArrayList<Sector>();
+        List<SektorRaad> result = new ArrayList<SektorRaad>();
         for (long i = 0; i < 25; i++) {
-            Sector sector = new Sector("Sector #" + dummySectorCounter, dummySectorCounter++);
+            SektorRaad sector = new SektorRaad("Sector #" + dummySectorCounter, dummySectorCounter++);
             result.add(sector);
             sector.getChildren().addAll(mkSubSectors(3));
         }
         return result;
     }
 
-    private List<Sector> mkSubSectors(int deep) {
+    private List<SektorRaad> mkSubSectors(int deep) {
 
-        List<Sector> result = new ArrayList<Sector>();
+        List<SektorRaad> result = new ArrayList<SektorRaad>();
         if (deep < 1) {
             return result;
         }
 
         for (int i = 0; i < 3; i++) {
-            Sector sector = new Sector("Sub-Sector #" + dummySectorCounter, dummySectorCounter++);
+            SektorRaad sector = new SektorRaad("Sub-Sector #" + dummySectorCounter, dummySectorCounter++);
             result.add(sector);
             sector.getChildren().addAll(mkSubSectors(deep - 1));
         }
