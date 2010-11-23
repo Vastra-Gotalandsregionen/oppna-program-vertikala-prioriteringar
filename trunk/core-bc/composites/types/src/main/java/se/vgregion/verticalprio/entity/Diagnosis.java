@@ -1,4 +1,4 @@
-package se.vgregion.verticalprio.model;
+package se.vgregion.verticalprio.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;

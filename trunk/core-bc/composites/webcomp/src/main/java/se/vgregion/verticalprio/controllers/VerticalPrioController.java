@@ -18,11 +18,11 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import se.vgregion.verticalprio.ConfColumnsForm;
 import se.vgregion.verticalprio.MainForm;
-import se.vgregion.verticalprio.model.Column;
-import se.vgregion.verticalprio.model.Prio;
-import se.vgregion.verticalprio.model.Sector;
-import se.vgregion.verticalprio.service.PrioRepository;
-import se.vgregion.verticalprio.service.SectorRepository;
+import se.vgregion.verticalprio.entity.Column;
+import se.vgregion.verticalprio.entity.Prio;
+import se.vgregion.verticalprio.entity.Sector;
+import se.vgregion.verticalprio.repository.PrioRepository;
+import se.vgregion.verticalprio.repository.SectorRepository;
 
 @Controller
 @SessionAttributes("form")

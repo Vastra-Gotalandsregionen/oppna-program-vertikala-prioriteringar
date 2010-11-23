@@ -4,10 +4,10 @@
     
     <provider>org.hibernate.ejb.HibernatePersistence</provider>
     
-    <class>se.vgregion.verticalprio.model.Diagnosis</class>
-    <class>se.vgregion.verticalprio.model.PrioDiagnosisLink</class>
-    <class>se.vgregion.verticalprio.model.Prio</class>
-    <class>se.vgregion.verticalprio.model.Sector</class>
+    <class>se.vgregion.verticalprio.entity.Diagnosis</class>
+    <class>se.vgregion.verticalprio.entity.PrioDiagnosisLink</class>
+    <class>se.vgregion.verticalprio.entity.Prio</class>
+    <class>se.vgregion.verticalprio.entity.Sector</class>
   </persistence-unit>
 
 </persistence>

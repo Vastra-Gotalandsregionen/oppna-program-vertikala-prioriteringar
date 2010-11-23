@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import se.vgregion.verticalprio.model.Column;
-import se.vgregion.verticalprio.model.Prio;
+import se.vgregion.verticalprio.entity.Column;
+import se.vgregion.verticalprio.entity.Prio;
 
 public class ControllerBase {
 

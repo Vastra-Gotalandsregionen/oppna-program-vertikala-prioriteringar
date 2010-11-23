@@ -3,8 +3,8 @@ package se.vgregion.verticalprio;
 import java.util.ArrayList;
 import java.util.List;
 
-import se.vgregion.verticalprio.model.Column;
-import se.vgregion.verticalprio.model.Sector;
+import se.vgregion.verticalprio.entity.Column;
+import se.vgregion.verticalprio.entity.Sector;
 
 public class MainForm {
 
