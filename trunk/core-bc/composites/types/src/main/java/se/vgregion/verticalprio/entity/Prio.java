@@ -1,11 +1,14 @@
 package se.vgregion.verticalprio.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -20,26 +23,53 @@ public class Prio extends AbstractEntity<Prio, Long> {
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
 
-    String sectorCouncil = "Sektorsråd";
-    String diagnoseText = "Diagnostext";
-    String diagnoseCode = "Diagnoskod";
-    String measureCode = "Åtgärdskod";
-    String difficultyDegree = "Tillståndets svårighetsgrad";
-    String ranking = "Rangordning";
-    String indicationGaf = "Indikations GAF";
-    String measureRisc = "Risk m. åtgärd";
-    String patientBenefit = "Patientnytta åtgärd - effekt";
-    String patientBenefitEvidence = "Evidens för patientnytta";
-    String careLevel = "Vårdnivå";
-    String careForm = "Vårdform";
-    String healthEconomicEvidence = "Hälsoekonomisk evidens";
+    @Column(name = "vaentetid_veckor")
+    private Integer vaentetidVeckor;
 
     @ManyToOne
-    private
-    SektorRaad sector;
+    @JoinColumn(name = "sektor_raad_id")
+    private SektorRaad sektorRaad;
 
     @Transient
-    List<PrioDiagnosisLink> diagnosisLinks;
+    private List<PrioDiagnosLaenk> prioDiagnosLaenks = new ArrayList<PrioDiagnosLaenk>();
+
+    @Transient
+    private List<AatgaerdsKod> aatgaerdsKods = new ArrayList<AatgaerdsKod>();
+
+    @Transient
+    private List<VaardformsKod> vaardformsKods = new ArrayList<VaardformsKod>();
+
+    @ManyToOne
+    @JoinColumn(name = "tillstaandets_svaarighetsgrad_kod_id")
+    private TillstaandetsSvaarighetsgradKod tillstaandetsSvaarighetsgradKod;
+
+    @ManyToOne
+    @JoinColumn(name = "vaentetids_kod_id")
+    private VaentetidsKod vaentetidsKod;
+
+    @ManyToOne
+    @JoinColumn(name = "rangordnings_kod_id")
+    private RangordningsKod rangordningsKod;
+
+    @ManyToOne
+    @JoinColumn(name = "vaardnivaa_kod_id")
+    private VaardnivaaKod vaardnivaaKod;
+
+    @ManyToOne
+    @JoinColumn(name = "haelsonekonomisk_evidens_kod_id")
+    private HaelsonekonomiskEvidensKod haelsonekonomiskEvidensKod;
+
+    @ManyToOne
+    @JoinColumn(name = "aatgaerds_risk_kod_id")
+    private AatgaerdsRiskKod aatgaerdsRiskKod;
+
+    @ManyToOne
+    @JoinColumn(name = "patientnytto_evidens_kod_id")
+    private PatientnyttoEvidensKod patientnyttoEvidensKod;
+
+    @ManyToOne
+    @JoinColumn(name = "patientnytta_effekt_aatgaerds_kod_id")
+    private PatientnyttaEffektAatgaerdsKod patientnyttaEffektAatgaerdsKod;
 
     @Override
     public Long getId() {
@@ -50,116 +80,100 @@ public class Prio extends AbstractEntity<Prio, Long> {
         this.id = id;
     }
 
-    public String getSectorCouncil() {
-        return sectorCouncil;
+    public void setTillstaandetsSvaarighetsgradKod(TillstaandetsSvaarighetsgradKod tillstaandetsSvaarighetsgrad) {
+        this.tillstaandetsSvaarighetsgradKod = tillstaandetsSvaarighetsgrad;
     }
 
-    public void setSectorCouncil(String sectorCouncil) {
-        this.sectorCouncil = sectorCouncil;
+    public TillstaandetsSvaarighetsgradKod getTillstaandetsSvaarighetsgradKod() {
+        return tillstaandetsSvaarighetsgradKod;
     }
 
-    public String getDiagnoseText() {
-        return diagnoseText;
+    public void setSektorRaad(SektorRaad sektorRaad) {
+        this.sektorRaad = sektorRaad;
     }
 
-    public void setDiagnoseText(String diagnoseText) {
-        this.diagnoseText = diagnoseText;
+    public SektorRaad getSektorRaad() {
+        return sektorRaad;
     }
 
-    public String getDiagnoseCode() {
-        return diagnoseCode;
+    public void setPrioDiagnosLaenks(List<PrioDiagnosLaenk> prioDiagnosLaenks) {
+        this.prioDiagnosLaenks = prioDiagnosLaenks;
     }
 
-    public void setDiagnoseCode(String diagnoseCode) {
-        this.diagnoseCode = diagnoseCode;
+    public List<PrioDiagnosLaenk> getPrioDiagnosLaenks() {
+        return prioDiagnosLaenks;
     }
 
-    public String getMeasureCode() {
-        return measureCode;
+    public List<AatgaerdsKod> getAatgaerdsKods() {
+        return aatgaerdsKods;
     }
 
-    public void setMeasureCode(String measureCode) {
-        this.measureCode = measureCode;
+    public List<VaardformsKod> getVaardformsKods() {
+        return vaardformsKods;
     }
 
-    public String getDifficultyDegree() {
-        return difficultyDegree;
+    public void setVaentetidsKod(VaentetidsKod vaentetidsKod) {
+        this.vaentetidsKod = vaentetidsKod;
     }
 
-    public void setDifficultyDegree(String difficultyDegree) {
-        this.difficultyDegree = difficultyDegree;
+    public VaentetidsKod getVaentetidsKod() {
+        return vaentetidsKod;
     }
 
-    public String getRanking() {
-        return ranking;
+    public void setRangordningsKod(RangordningsKod rangordningsKod) {
+        this.rangordningsKod = rangordningsKod;
     }
 
-    public void setRanking(String ranking) {
-        this.ranking = ranking;
+    public RangordningsKod getRangordningsKod() {
+        return rangordningsKod;
     }
 
-    public String getIndicationGaf() {
-        return indicationGaf;
+    public void setVaardnivaaKod(VaardnivaaKod vaardnivaaKod) {
+        this.vaardnivaaKod = vaardnivaaKod;
     }
 
-    public void setIndicationGaf(String indicationGaf) {
-        this.indicationGaf = indicationGaf;
+    public VaardnivaaKod getVaardnivaaKod() {
+        return vaardnivaaKod;
     }
 
-    public String getMeasureRisc() {
-        return measureRisc;
+    public void setHaelsonekonomiskEvidensKod(HaelsonekonomiskEvidensKod haelsonekonomiskEvidensKod) {
+        this.haelsonekonomiskEvidensKod = haelsonekonomiskEvidensKod;
     }
 
-    public void setMeasureRisc(String measureRisc) {
-        this.measureRisc = measureRisc;
+    public HaelsonekonomiskEvidensKod getHaelsonekonomiskEvidensKod() {
+        return haelsonekonomiskEvidensKod;
     }
 
-    public String getPatientBenefit() {
-        return patientBenefit;
+    public void setAatgaerdsRiskKod(AatgaerdsRiskKod aatgaerdsRiskKod) {
+        this.aatgaerdsRiskKod = aatgaerdsRiskKod;
     }
 
-    public void setPatientBenefit(String patientBenefit) {
-        this.patientBenefit = patientBenefit;
+    public AatgaerdsRiskKod getAatgaerdsRiskKod() {
+        return aatgaerdsRiskKod;
     }
 
-    public String getPatientBenefitEvidence() {
-        return patientBenefitEvidence;
+    public void setPatientnyttoEvidensKod(PatientnyttoEvidensKod patientnyttoEvidensKod) {
+        this.patientnyttoEvidensKod = patientnyttoEvidensKod;
     }
 
-    public void setPatientBenefitEvidence(String patientBenefitEvidence) {
-        this.patientBenefitEvidence = patientBenefitEvidence;
+    public PatientnyttoEvidensKod getPatientnyttoEvidensKod() {
+        return patientnyttoEvidensKod;
     }
 
-    public String getCareLevel() {
-        return careLevel;
+    public void setPatientnyttaEffektAatgaerdsKod(PatientnyttaEffektAatgaerdsKod patientnyttaEffektAatgaerdKod) {
+        this.patientnyttaEffektAatgaerdsKod = patientnyttaEffektAatgaerdKod;
     }
 
-    public void setCareLevel(String careLevel) {
-        this.careLevel = careLevel;
+    public PatientnyttaEffektAatgaerdsKod getPatientnyttaEffektAatgaerdsKod() {
+        return patientnyttaEffektAatgaerdsKod;
     }
 
-    public String getCareForm() {
-        return careForm;
+    public void setVaentetidVeckor(Integer vaentetidVeckor) {
+        this.vaentetidVeckor = vaentetidVeckor;
     }
 
-    public void setCareForm(String careForm) {
-        this.careForm = careForm;
-    }
-
-    public String getHealthEconomicEvidence() {
-        return healthEconomicEvidence;
-    }
-
-    public void setHealthEconomicEvidence(String healthEconomicEvidence) {
-        this.healthEconomicEvidence = healthEconomicEvidence;
-    }
-
-    public void setSector(SektorRaad sector) {
-        this.sector = sector;
-    }
-
-    public SektorRaad getSector() {
-        return sector;
+    public Integer getVaentetidVeckor() {
+        return vaentetidVeckor;
     }
 
 }
