@@ -3,6 +3,6 @@ package se.vgregion.verticalprio.repository;
 import se.vgregion.dao.domain.patterns.repository.Repository;
 import se.vgregion.verticalprio.entity.DiagnosKod;
 
-public interface DiagnosisRepository extends Repository<DiagnosKod, Long> {
+public interface DiagnosRepository extends Repository<DiagnosKod, Long> {
 
 }
