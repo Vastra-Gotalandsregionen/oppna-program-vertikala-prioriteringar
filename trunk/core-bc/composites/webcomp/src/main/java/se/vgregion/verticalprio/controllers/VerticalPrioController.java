@@ -22,14 +22,14 @@ import se.vgregion.verticalprio.entity.Column;
 import se.vgregion.verticalprio.entity.Prio;
 import se.vgregion.verticalprio.entity.SektorRaad;
 import se.vgregion.verticalprio.repository.PrioRepository;
-import se.vgregion.verticalprio.repository.SectorRepository;
+import se.vgregion.verticalprio.repository.SektorRaadRepository;
 
 @Controller
 @SessionAttributes("form")
 public class VerticalPrioController extends ControllerBase {
 
     @Autowired
-    private SectorRepository sectorRepository;
+    private SektorRaadRepository sektorRaadRepository;
 
     @Autowired
     private PrioRepository prioRepository;
@@ -67,10 +67,9 @@ public class VerticalPrioController extends ControllerBase {
             Prio prio = new Prio();
             prio.setId(i);
             prios.add(prio);
-            BeanMap bm = new BeanMap(prio);
-            for (Column column : columns) {
-                bm.put(column.getName(), "" + i);
-            }
+            /*
+             * BeanMap bm = new BeanMap(prio); for (Column column : columns) { bm.put(column.getName(), "" + i); }
+             */
         }
         return prios;
     }
@@ -157,16 +156,16 @@ public class VerticalPrioController extends ControllerBase {
          * List<Diagnosis> diagnosises = repo.findAll(); System.out.println(diagnosises);
          */
         System.out.println("VerticalPrioController.selectPrio()");
-        List<SektorRaad> sectors = sectorRepository.getTreeRoots();
+        List<SektorRaad> sectors = sektorRaadRepository.getTreeRoots();
         for (SektorRaad sector : sectors.get(0).getChildren()) {
 
             for (int i = 0; i < 10; i++) {
                 Prio prio = new Prio();
-                prio.setSector(sector);
+                prio.setSektorRaad(sector);
                 BeanMap bm = new BeanMap(prio);
                 for (Object key : bm.keySet()) {
                     if (bm.getType(key.toString()).equals(String.class)) {
-                        bm.put(key.toString(), sector.getLabel() + " " + i);
+                        bm.put(key.toString(), sector.getCode() + " " + i);
                     }
                 }
                 prioRepository.store(prio);
@@ -203,12 +202,15 @@ public class VerticalPrioController extends ControllerBase {
     @Transactional
     private List<SektorRaad> getSectors() {
 
-        // Collection<Sector> result = sectorRepository.getTreeRoots();
-        // return new ArrayList<Sector>(result);
+        // Collection<SektorRaad> result = sektorRaadRepository.getTreeRoots();
+        // return new ArrayList<SektorRaad>(result);
 
         List<SektorRaad> result = new ArrayList<SektorRaad>();
         for (long i = 0; i < 25; i++) {
-            SektorRaad sector = new SektorRaad("Sector #" + dummySectorCounter, dummySectorCounter++);
+            SektorRaad sector = new SektorRaad();
+            // new SektorRaad("Sector #" + dummySectorCounter, dummySectorCounter++);
+            sector.setCode("Code " + dummySectorCounter);
+            sector.setId(dummySectorCounter++);
             result.add(sector);
             sector.getChildren().addAll(mkSubSectors(3));
         }
@@ -223,11 +225,13 @@ public class VerticalPrioController extends ControllerBase {
         }
 
         for (int i = 0; i < 3; i++) {
-            SektorRaad sector = new SektorRaad("Sub-Sector #" + dummySectorCounter, dummySectorCounter++);
+            SektorRaad sector = new SektorRaad();
+            // new SektorRaad("Sub-Sector #" + dummySectorCounter, dummySectorCounter++);
+            sector.setCode("subsr " + dummySectorCounter);
+            sector.setId(dummySectorCounter++);
             result.add(sector);
             sector.getChildren().addAll(mkSubSectors(deep - 1));
         }
         return result;
     }
-
 }

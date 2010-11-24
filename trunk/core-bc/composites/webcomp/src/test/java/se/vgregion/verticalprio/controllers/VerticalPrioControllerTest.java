@@ -10,12 +10,17 @@ import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import se.vgregion.verticalprio.ConfColumnsForm;
 import se.vgregion.verticalprio.entity.Column;
 import se.vgregion.verticalprio.entity.Prio;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath*:/applicationContext.xml" })
 public class VerticalPrioControllerTest {
 
     private VerticalPrioController vpc;
