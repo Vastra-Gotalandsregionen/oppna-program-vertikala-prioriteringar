@@ -1,5 +1,8 @@
 package se.vgregion.verticalprio.entity;
 
+/**
+ * This is the actual Priority object
+ */
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,19 +12,20 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import se.vgregion.dao.domain.patterns.entity.AbstractEntity;
 
 @Entity
-@Table(name = "prio")
-public class Prio extends AbstractEntity<Prio, Long> {
+@Table(name = "prioriteringsobjekt")
+public class Prioriteringsobjekt extends AbstractEntity<Prioriteringsobjekt, Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    Long id;
+    private Long id;
 
     @Column(name = "vaentetid_veckor")
     private Integer vaentetidVeckor;
@@ -30,14 +34,17 @@ public class Prio extends AbstractEntity<Prio, Long> {
     @JoinColumn(name = "sektor_raad_id")
     private SektorRaad sektorRaad;
 
-    @Transient
-    private List<PrioDiagnosLaenk> prioDiagnosLaenks = new ArrayList<PrioDiagnosLaenk>();
+    @ManyToMany
+    @JoinTable(name = "link_prioriteringsobjekt_diagnos_kod", joinColumns = { @JoinColumn(name = "prio_id") }, inverseJoinColumns = { @JoinColumn(name = "diagnos_kod_id") })
+    private List<DiagnosKod> diagnoser = new ArrayList<DiagnosKod>();
 
-    @Transient
-    private List<AatgaerdsKod> aatgaerdsKods = new ArrayList<AatgaerdsKod>();
+    @ManyToMany
+    @JoinTable(name = "link_prioriteringsobjekt_aatgaerds_kod", joinColumns = { @JoinColumn(name = "prio_id") }, inverseJoinColumns = { @JoinColumn(name = "aatgaerds_kod_id") })
+    private List<AatgaerdsKod> aatgaerdskoder = new ArrayList<AatgaerdsKod>();
 
-    @Transient
-    private List<VaardformsKod> vaardformsKods = new ArrayList<VaardformsKod>();
+    @ManyToMany
+    @JoinTable(name = "link_prioriteringsobjekt_vaardforms_kod", joinColumns = { @JoinColumn(name = "prio_id") }, inverseJoinColumns = { @JoinColumn(name = "vaardforms_kod_id") })
+    private List<VaardformsKod> vaardformskoder = new ArrayList<VaardformsKod>();
 
     @ManyToOne
     @JoinColumn(name = "tillstaandets_svaarighetsgrad_kod_id")
@@ -71,6 +78,17 @@ public class Prio extends AbstractEntity<Prio, Long> {
     @JoinColumn(name = "patientnytta_effekt_aatgaerds_kod_id")
     private PatientnyttaEffektAatgaerdsKod patientnyttaEffektAatgaerdsKod;
 
+    @Column(name = "vaardgivare")
+    private String vaardgivare;
+
+    public String getVaardgivare() {
+        return vaardgivare;
+    }
+
+    public void setVaardgivare(String vaardgivare) {
+        this.vaardgivare = vaardgivare;
+    }
+
     @Override
     public Long getId() {
         return id;
@@ -96,20 +114,28 @@ public class Prio extends AbstractEntity<Prio, Long> {
         return sektorRaad;
     }
 
-    public void setPrioDiagnosLaenks(List<PrioDiagnosLaenk> prioDiagnosLaenks) {
-        this.prioDiagnosLaenks = prioDiagnosLaenks;
+    public List<DiagnosKod> getDiagnoser() {
+        return diagnoser;
     }
 
-    public List<PrioDiagnosLaenk> getPrioDiagnosLaenks() {
-        return prioDiagnosLaenks;
+    public void setDiagnoser(List<DiagnosKod> diagnoser) {
+        this.diagnoser = diagnoser;
     }
 
-    public List<AatgaerdsKod> getAatgaerdsKods() {
-        return aatgaerdsKods;
+    public List<AatgaerdsKod> getAatgaerdskoder() {
+        return aatgaerdskoder;
     }
 
-    public List<VaardformsKod> getVaardformsKods() {
-        return vaardformsKods;
+    public void setAatgaerdskoder(List<AatgaerdsKod> aatgaerdskoder) {
+        this.aatgaerdskoder = aatgaerdskoder;
+    }
+
+    public List<VaardformsKod> getVaardformskoder() {
+        return vaardformskoder;
+    }
+
+    public void setVaardformskoder(List<VaardformsKod> vaardformskoder) {
+        this.vaardformskoder = vaardformskoder;
     }
 
     public void setVaentetidsKod(VaentetidsKod vaentetidsKod) {

@@ -7,6 +7,6 @@ import se.vgregion.verticalprio.entity.SektorRaad;
 
 public interface SektorRaadRepository extends Repository<SektorRaad, Long> {
 
-	public List<SektorRaad> getTreeRoots();
+    public List<SektorRaad> getTreeRoots();
 
 }
