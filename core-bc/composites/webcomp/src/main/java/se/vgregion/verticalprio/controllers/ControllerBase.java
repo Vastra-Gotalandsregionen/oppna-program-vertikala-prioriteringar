@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import se.vgregion.verticalprio.entity.Column;
-import se.vgregion.verticalprio.entity.Prio;
+import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
 
 public class ControllerBase {
 
@@ -21,7 +21,7 @@ public class ControllerBase {
      * Getter for the prioPropertyTexts property. It initializes the map with the value in the property file
      * pointed to by the columnTextsPropertiesFileName attribute (/column-texts.properties).
      * 
-     * @return Names of the {@link Prio} attributes mapped to their labels.
+     * @return Names of the {@link Prioriteringsobjekt} attributes mapped to their labels.
      */
     protected Map<String, String> getPrioPropertyTexts() {
         if (prioPropertyTexts == null) {

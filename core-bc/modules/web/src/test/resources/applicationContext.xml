@@ -27,7 +27,7 @@
   <bean id="patientnyttoEvidensKodRepository" class="se.vgregion.verticalprio.repository.JpaPatientnyttoEvidensKodRepository" />
   <bean id="rangordningsKodRepository" class="se.vgregion.verticalprio.repository.JpaRangordningsKodRepository" />
   <bean id="tillstaandetsSvaarighetsgradKodRepository" class="se.vgregion.verticalprio.repository.JpaTillstaandetsSvaarighetsgradKodRepository" />
-  <bean id="vaardformsKodRepository" class="se.vgregion.verticalprio.repository.JpaVaardformsKodRepository" />
+  <bean name="vaardformsKodRepository" class="se.vgregion.verticalprio.repository.JpaVaardformsKodRepository" />
   <bean id="vaardnivaaKodRepository" class="se.vgregion.verticalprio.repository.JpaVaardnivaaKodRepository" />
   <bean id="vaentetidsKodRepository" class="se.vgregion.verticalprio.repository.JpaVaentetidsKodRepository" />
 

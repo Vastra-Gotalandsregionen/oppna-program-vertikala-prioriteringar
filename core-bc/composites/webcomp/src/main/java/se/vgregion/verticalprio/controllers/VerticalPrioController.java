@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import se.vgregion.verticalprio.ConfColumnsForm;
 import se.vgregion.verticalprio.MainForm;
 import se.vgregion.verticalprio.entity.Column;
-import se.vgregion.verticalprio.entity.Prio;
+import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
 import se.vgregion.verticalprio.entity.SektorRaad;
 import se.vgregion.verticalprio.repository.PrioRepository;
 import se.vgregion.verticalprio.repository.SektorRaadRepository;
@@ -58,13 +58,13 @@ public class VerticalPrioController extends ControllerBase {
     }
 
     @ModelAttribute("rows")
-    public List<Prio> result(HttpSession session) {
-        List<Prio> prios = new ArrayList<Prio>();
+    public List<Prioriteringsobjekt> result(HttpSession session) {
+        List<Prioriteringsobjekt> prios = new ArrayList<Prioriteringsobjekt>();
         MainForm form = getMainForm(session);
         // Do something qualified with the information in the form to get the data desired.
         List<Column> columns = form.getColumns();
         for (long i = 0; i < 100; i++) {
-            Prio prio = new Prio();
+            Prioriteringsobjekt prio = new Prioriteringsobjekt();
             prio.setId(i);
             prios.add(prio);
             /*
@@ -160,7 +160,7 @@ public class VerticalPrioController extends ControllerBase {
         for (SektorRaad sector : sectors.get(0).getChildren()) {
 
             for (int i = 0; i < 10; i++) {
-                Prio prio = new Prio();
+                Prioriteringsobjekt prio = new Prioriteringsobjekt();
                 prio.setSektorRaad(sector);
                 BeanMap bm = new BeanMap(prio);
                 for (Object key : bm.keySet()) {

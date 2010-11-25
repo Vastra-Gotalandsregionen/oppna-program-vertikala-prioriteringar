@@ -16,7 +16,7 @@
       <input type="checkbox" />
     </c:otherwise>
     </c:choose>
-        ${sector.label}  
+        ${sector.code}  
     </label>
   
   <c:if test="${sector.selected}">
