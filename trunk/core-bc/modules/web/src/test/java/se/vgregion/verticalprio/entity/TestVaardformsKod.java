@@ -1,8 +1,11 @@
 package se.vgregion.verticalprio.entity;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.net.URL;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -14,6 +17,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 
 import se.vgregion.verticalprio.repository.VaardformsKodRepository;
+import se.vgregion.verticalprio.util.TextToBeanConverter;
 
 /**
  * @author Claes Lundahl, vgrid=clalu4
@@ -34,6 +38,30 @@ public class TestVaardformsKod extends AbstractTransactionalJUnit4SpringContextT
         a.setDescription("description");
         vaardformsKodRepository.persist(a);
         vaardformsKodRepository.flush();
+
+    }
+
+    private <T> List<T> toBeans(String entityName, Class<T> klass) throws FileNotFoundException {
+        File file = getFileByNameOnClassPath("/dbLoad/" + entityName + ".data");
+        TextToBeanConverter converter = new TextToBeanConverter();
+        List<T> codes = converter.load(new FileInputStream(file), klass);
+        return codes;
+    }
+
+    @Test
+    @Rollback(false)
+    public void loadCodeTables() throws FileNotFoundException {
+        List<VaardformsKod> codes = toBeans("VaardformsKod", VaardformsKod.class);
+        for (VaardformsKod code : codes) {
+            vaardformsKodRepository.persist(code);
+        }
+        vaardformsKodRepository.flush();
+    }
+
+    private File getFileByNameOnClassPath(String name) {
+        URL url = getClass().getResource(name);
+        String path = url.toString().replace("file:/", "");
+        return new File(path);
     }
 
     /**

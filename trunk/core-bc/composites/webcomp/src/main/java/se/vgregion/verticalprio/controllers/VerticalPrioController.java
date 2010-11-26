@@ -151,10 +151,6 @@ public class VerticalPrioController extends ControllerBase {
     @RequestMapping(value = "/select-prio")
     @Transactional(propagation = Propagation.REQUIRED)
     public String selectPrio(final HttpSession session, @RequestParam Integer selected) {
-        /*
-         * JpaDiagnosisRepository repo = new JpaDiagnosisRepository(); repo.persist(new Diagnosis());
-         * List<Diagnosis> diagnosises = repo.findAll(); System.out.println(diagnosises);
-         */
         System.out.println("VerticalPrioController.selectPrio()");
         List<SektorRaad> sectors = sektorRaadRepository.getTreeRoots();
         for (SektorRaad sector : sectors.get(0).getChildren()) {

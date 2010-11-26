@@ -18,17 +18,17 @@
   <bean id="sektorRaadRepository" class="se.vgregion.verticalprio.repository.JpaSektorRaadRepository" />
   <bean id="prioRepository" class="se.vgregion.verticalprio.repository.JpaPrioRepository" />
 
-  <bean id="aatgaerdsKodRepository" class="se.vgregion.verticalprio.repository.JpaAatgaerdsKodRepository" />
-  <bean id="aatgaerdsRiskKodRepository" class="se.vgregion.verticalprio.repository.JpaAatgaerdsRiskKodRepository" />
-  <bean id="diagnosKodRepository" class="se.vgregion.verticalprio.repository.JpaDiagnosKodRepository" />
-  <bean id="haelsonekonomiskEvidensKodRepository" class="se.vgregion.verticalprio.repository.JpaHaelsonekonomiskEvidensKodRepository" />
-  <bean id="kostnadLevnadsaarKodRepository" class="se.vgregion.verticalprio.repository.JpaKostnadLevnadsaarKodRepository" />
-  <bean id="patientnyttaEffektAatgaerdsKodRepository" class="se.vgregion.verticalprio.repository.JpaPatientnyttaEffektAatgaerdsKodRepository" />
-  <bean id="patientnyttoEvidensKodRepository" class="se.vgregion.verticalprio.repository.JpaPatientnyttoEvidensKodRepository" />
-  <bean id="rangordningsKodRepository" class="se.vgregion.verticalprio.repository.JpaRangordningsKodRepository" />
-  <bean id="tillstaandetsSvaarighetsgradKodRepository" class="se.vgregion.verticalprio.repository.JpaTillstaandetsSvaarighetsgradKodRepository" />
-  <bean id="vaardformsKodRepository" class="se.vgregion.verticalprio.repository.JpaVaardformsKodRepository" />
-  <bean id="vaardnivaaKodRepository" class="se.vgregion.verticalprio.repository.JpaVaardnivaaKodRepository" />
-  <bean id="vaentetidsKodRepository" class="se.vgregion.verticalprio.repository.JpaVaentetidsKodRepository" />
-
+  <bean name="aatgaerdsKodRepository" class="se.vgregion.verticalprio.repository.JpaAatgaerdsKodRepository" />
+  <bean name="aatgaerdsRiskKodRepository" class="se.vgregion.verticalprio.repository.JpaAatgaerdsRiskKodRepository" />
+  <bean name="diagnosKodRepository" class="se.vgregion.verticalprio.repository.JpaDiagnosKodRepository" />
+  <bean name="haelsonekonomiskEvidensKodRepository" class="se.vgregion.verticalprio.repository.JpaHaelsonekonomiskEvidensKodRepository" />
+  <bean name="kostnadLevnadsaarKodRepository" class="se.vgregion.verticalprio.repository.JpaKostnadLevnadsaarKodRepository" />
+  <bean name="patientnyttaEffektAatgaerdsKodRepository" class="se.vgregion.verticalprio.repository.JpaPatientnyttaEffektAatgaerdsKodRepository" />
+  <bean name="patientnyttoEvidensKodRepository" class="se.vgregion.verticalprio.repository.JpaPatientnyttoEvidensKodRepository" />
+  <bean name="rangordningsKodRepository" class="se.vgregion.verticalprio.repository.JpaRangordningsKodRepository" />
+  <bean name="tillstaandetsSvaarighetsgradKodRepository" class="se.vgregion.verticalprio.repository.JpaTillstaandetsSvaarighetsgradKodRepository" />
+  <bean name="vaardformsKodRepository" class="se.vgregion.verticalprio.repository.JpaVaardformsKodRepository" />
+  <bean name="vaardnivaaKodRepository" class="se.vgregion.verticalprio.repository.JpaVaardnivaaKodRepository" />
+  <bean name="vaentetidsKodRepository" class="se.vgregion.verticalprio.repository.JpaVaentetidsKodRepository" />
+  
 </beans>
