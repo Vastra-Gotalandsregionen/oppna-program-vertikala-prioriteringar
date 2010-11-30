@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.beanutils.BeanMap;
@@ -21,15 +22,15 @@ import se.vgregion.verticalprio.MainForm;
 import se.vgregion.verticalprio.entity.Column;
 import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
 import se.vgregion.verticalprio.entity.SektorRaad;
+import se.vgregion.verticalprio.repository.GenerisktHierarkisktKodRepository;
 import se.vgregion.verticalprio.repository.PrioRepository;
-import se.vgregion.verticalprio.repository.SektorRaadRepository;
 
 @Controller
 @SessionAttributes("form")
 public class VerticalPrioController extends ControllerBase {
 
-    @Autowired
-    private SektorRaadRepository sektorRaadRepository;
+    @Resource(name = "sektorRaadRepository")
+    private GenerisktHierarkisktKodRepository<SektorRaad> sektorRaadRepository;
 
     @Autowired
     private PrioRepository prioRepository;
@@ -161,7 +162,7 @@ public class VerticalPrioController extends ControllerBase {
                 BeanMap bm = new BeanMap(prio);
                 for (Object key : bm.keySet()) {
                     if (bm.getType(key.toString()).equals(String.class)) {
-                        bm.put(key.toString(), sector.getCode() + " " + i);
+                        bm.put(key.toString(), sector.getKod() + " " + i);
                     }
                 }
                 prioRepository.store(prio);
@@ -205,7 +206,7 @@ public class VerticalPrioController extends ControllerBase {
         for (long i = 0; i < 25; i++) {
             SektorRaad sector = new SektorRaad();
             // new SektorRaad("Sector #" + dummySectorCounter, dummySectorCounter++);
-            sector.setCode("Code " + dummySectorCounter);
+            sector.setKod("Code " + dummySectorCounter);
             sector.setId(dummySectorCounter++);
             result.add(sector);
             sector.getChildren().addAll(mkSubSectors(3));
@@ -223,7 +224,7 @@ public class VerticalPrioController extends ControllerBase {
         for (int i = 0; i < 3; i++) {
             SektorRaad sector = new SektorRaad();
             // new SektorRaad("Sub-Sector #" + dummySectorCounter, dummySectorCounter++);
-            sector.setCode("subsr " + dummySectorCounter);
+            sector.setKod("subsr " + dummySectorCounter);
             sector.setId(dummySectorCounter++);
             result.add(sector);
             sector.getChildren().addAll(mkSubSectors(deep - 1));

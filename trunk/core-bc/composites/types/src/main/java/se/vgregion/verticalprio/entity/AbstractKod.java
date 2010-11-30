@@ -13,15 +13,15 @@ import se.vgregion.dao.domain.patterns.entity.AbstractEntity;
 @Entity
 @Table(name = "vgr_abstract_code")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class AbstractKod<T extends AbstractKod<T>> extends AbstractEntity<Long> {
+public abstract class AbstractKod extends AbstractEntity<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private String code;
+    private String kod;
 
-    private String description;
+    private String beskrivning;
 
     @Override
     public Long getId() {
@@ -32,20 +32,20 @@ public abstract class AbstractKod<T extends AbstractKod<T>> extends AbstractEnti
         this.id = id;
     }
 
-    public String getCode() {
-        return code;
+    public String getKod() {
+        return kod;
     }
 
-    public void setCode(String label) {
-        this.code = label;
+    public void setKod(String kod) {
+        this.kod = kod;
     }
 
-    public String getDescription() {
-        return description;
+    public String getBeskrivning() {
+        return beskrivning;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setBeskrivning(String beskrivning) {
+        this.beskrivning = beskrivning;
     }
 
     /**
@@ -53,7 +53,7 @@ public abstract class AbstractKod<T extends AbstractKod<T>> extends AbstractEnti
      */
     @Override
     public String toString() {
-        return String.valueOf(code);
+        return String.valueOf(kod);
     }
 
 }

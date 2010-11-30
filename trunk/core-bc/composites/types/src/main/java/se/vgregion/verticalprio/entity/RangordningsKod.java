@@ -5,6 +5,6 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "rangordnings_kod")
-public class RangordningsKod extends AbstractKod<RangordningsKod> {
+public class RangordningsKod extends AbstractKod {
 
 }
