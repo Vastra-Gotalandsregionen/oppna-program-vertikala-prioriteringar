@@ -13,18 +13,8 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 
-import se.vgregion.verticalprio.repository.AatgaerdsKodRepository;
-import se.vgregion.verticalprio.repository.AatgaerdsRiskKodRepository;
-import se.vgregion.verticalprio.repository.DiagnosKodRepository;
-import se.vgregion.verticalprio.repository.HaelsonekonomiskEvidensKodRepository;
-import se.vgregion.verticalprio.repository.KostnadLevnadsaarKodRepository;
-import se.vgregion.verticalprio.repository.PatientnyttaEffektAatgaerdsKodRepository;
-import se.vgregion.verticalprio.repository.PatientnyttoEvidensKodRepository;
-import se.vgregion.verticalprio.repository.RangordningsKodRepository;
-import se.vgregion.verticalprio.repository.TillstaandetsSvaarighetsgradKodRepository;
-import se.vgregion.verticalprio.repository.VaardformsKodRepository;
-import se.vgregion.verticalprio.repository.VaardnivaaKodRepository;
-import se.vgregion.verticalprio.repository.VaentetidsKodRepository;
+import se.vgregion.verticalprio.repository.GenerisktHierarkisktKodRepository;
+import se.vgregion.verticalprio.repository.GenerisktKodRepository;
 import se.vgregion.verticalprio.util.TextToBeanConverter;
 
 /**
@@ -40,7 +30,7 @@ import se.vgregion.verticalprio.util.TextToBeanConverter;
 public class LoadCodeDataTest extends AbstractTransactionalJUnit4SpringContextTests {
 
     @Resource(name = "aatgaerdsKodRepository")
-    AatgaerdsKodRepository aatgaerdsKodRepository;
+    GenerisktKodRepository<AatgaerdsKod> aatgaerdsKodRepository;
 
     @Test
     @Rollback(false)
@@ -53,7 +43,7 @@ public class LoadCodeDataTest extends AbstractTransactionalJUnit4SpringContextTe
     }
 
     @Resource(name = "aatgaerdsRiskKodRepository")
-    AatgaerdsRiskKodRepository aatgaerdsRiskKodRepository;
+    GenerisktKodRepository<AatgaerdsRiskKod> aatgaerdsRiskKodRepository;
 
     @Test
     @Rollback(false)
@@ -66,7 +56,7 @@ public class LoadCodeDataTest extends AbstractTransactionalJUnit4SpringContextTe
     }
 
     @Resource(name = "diagnosKodRepository")
-    DiagnosKodRepository diagnosKodRepository;
+    GenerisktHierarkisktKodRepository<DiagnosKod> diagnosKodRepository;
 
     @Test
     @Rollback(false)
@@ -79,7 +69,7 @@ public class LoadCodeDataTest extends AbstractTransactionalJUnit4SpringContextTe
     }
 
     @Resource(name = "haelsonekonomiskEvidensKodRepository")
-    HaelsonekonomiskEvidensKodRepository haelsonekonomiskEvidensKodRepository;
+    GenerisktKodRepository<HaelsonekonomiskEvidensKod> haelsonekonomiskEvidensKodRepository;
 
     @Test
     @Rollback(false)
@@ -93,7 +83,7 @@ public class LoadCodeDataTest extends AbstractTransactionalJUnit4SpringContextTe
     }
 
     @Resource(name = "kostnadLevnadsaarKodRepository")
-    KostnadLevnadsaarKodRepository kostnadLevnadsaarKodRepository;
+    GenerisktKodRepository<KostnadLevnadsaarKod> kostnadLevnadsaarKodRepository;
 
     @Test
     @Rollback(false)
@@ -106,7 +96,7 @@ public class LoadCodeDataTest extends AbstractTransactionalJUnit4SpringContextTe
     }
 
     @Resource(name = "patientnyttaEffektAatgaerdsKodRepository")
-    PatientnyttaEffektAatgaerdsKodRepository patientnyttaEffektAatgaerdsKodRepository;
+    GenerisktKodRepository<PatientnyttaEffektAatgaerdsKod> patientnyttaEffektAatgaerdsKodRepository;
 
     @Test
     @Rollback(false)
@@ -120,7 +110,7 @@ public class LoadCodeDataTest extends AbstractTransactionalJUnit4SpringContextTe
     }
 
     @Resource(name = "patientnyttoEvidensKodRepository")
-    PatientnyttoEvidensKodRepository patientnyttoEvidensKodRepository;
+    GenerisktKodRepository<PatientnyttoEvidensKod> patientnyttoEvidensKodRepository;
 
     @Test
     @Rollback(false)
@@ -133,7 +123,7 @@ public class LoadCodeDataTest extends AbstractTransactionalJUnit4SpringContextTe
     }
 
     @Resource(name = "rangordningsKodRepository")
-    RangordningsKodRepository rangordningsKodRepository;
+    GenerisktKodRepository<RangordningsKod> rangordningsKodRepository;
 
     @Test
     @Rollback(false)
@@ -146,7 +136,7 @@ public class LoadCodeDataTest extends AbstractTransactionalJUnit4SpringContextTe
     }
 
     @Resource(name = "tillstaandetsSvaarighetsgradKodRepository")
-    TillstaandetsSvaarighetsgradKodRepository tillstaandetsSvaarighetsgradKodRepository;
+    GenerisktKodRepository<TillstaandetsSvaarighetsgradKod> tillstaandetsSvaarighetsgradKodRepository;
 
     @Test
     @Rollback(false)
@@ -160,7 +150,7 @@ public class LoadCodeDataTest extends AbstractTransactionalJUnit4SpringContextTe
     }
 
     @Resource(name = "vaardformsKodRepository")
-    VaardformsKodRepository vaardformsKodRepository;
+    GenerisktKodRepository<VaardformsKod> vaardformsKodRepository;
 
     @Test
     @Rollback(false)
@@ -173,7 +163,7 @@ public class LoadCodeDataTest extends AbstractTransactionalJUnit4SpringContextTe
     }
 
     @Resource(name = "vaardnivaaKodRepository")
-    VaardnivaaKodRepository vaardnivaaKodRepository;
+    GenerisktKodRepository<VaardnivaaKod> vaardnivaaKodRepository;
 
     @Test
     @Rollback(false)
@@ -186,7 +176,7 @@ public class LoadCodeDataTest extends AbstractTransactionalJUnit4SpringContextTe
     }
 
     @Resource(name = "vaentetidsKodRepository")
-    VaentetidsKodRepository vaentetidsKodRepository;
+    GenerisktKodRepository<VaentetidsKod> vaentetidsKodRepository;
 
     @Test
     @Rollback(false)
@@ -215,14 +205,14 @@ public class LoadCodeDataTest extends AbstractTransactionalJUnit4SpringContextTe
 
     public static void main(String[] args) {
 
-        StringBuilder sb = new StringBuilder();
         Prioriteringsobjekt prio = new Prioriteringsobjekt();
         BeanMap bm = new BeanMap(prio);
         for (Object key : bm.keySet()) {
             System.out.println(key + "=" + key);
         }
 
-        String function = "@Resource(name = \"ENT_REPO\")" + "\n ENT_NAMERepository ENT_REPO;" + "\n    @Test"
+        final String function = "@Resource(name = \"ENT_REPO\")" + "\n"
+                + GenerisktKodRepository.class.getSimpleName() + "<ENT_NAME> ENT_REPO;" + "\n    @Test"
                 + "\n    @Rollback(false)"
                 + "\n    public void loadENT_NAMEValuesIntoDb() throws FileNotFoundException {"
                 + "\n        List<ENT_NAME> codes = toBeans(\"ENT_NAME\", ENT_NAME.class);"

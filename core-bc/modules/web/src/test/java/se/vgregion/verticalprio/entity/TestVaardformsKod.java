@@ -34,8 +34,8 @@ public class TestVaardformsKod extends AbstractTransactionalJUnit4SpringContextT
     @Rollback(false)
     public void load() {
         VaardformsKod a = new VaardformsKod();
-        a.setCode("labelcode");
-        a.setDescription("description");
+        a.setKod("labelcode");
+        a.setBeskrivning("description");
         vaardformsKodRepository.persist(a);
         vaardformsKodRepository.flush();
 
@@ -124,7 +124,8 @@ public class TestVaardformsKod extends AbstractTransactionalJUnit4SpringContextT
             }
         }
 
-        String confRow = "\n<bean id=\"VARRepository\" class=\"se.vgregion.verticalprio.repository.JpaNAMERepository\"/>";
+        String confRow = "\n<bean name=\"VARRepository\" class=\"se.vgregion.verticalprio.repository.JpaKodRepository\">"
+                + "\n  <constructor-arg value=\"se.vgregion.verticalprio.entity.NAME\"/>  \n</bean>";
 
         File icf = new File(tempDir + "hmm.xml");
         icf.createNewFile();

@@ -12,7 +12,7 @@ public class ApplicationDataGenerator {
      * @param args
      */
     public static void main(String[] args) {
-        String function = "    @Resource(name = \"REPO\")" + "\n    TYPERepository REPO;"
+        String function = "    @Resource(name = \"REPO\")" + "\n    GenerisktKodRepository<TYPE> REPO;"
                 + "\n    List<TYPE> everyTYPE;" + "\n    public List<TYPE> getEveryTYPE() {"
                 + "\n        if (everyTYPE == null) {"
                 + "\n            everyTYPE = new ArrayList<TYPE>(REPO.findAll());" + "\n        }"

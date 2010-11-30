@@ -14,22 +14,13 @@ import se.vgregion.verticalprio.entity.KostnadLevnadsaarKod;
 import se.vgregion.verticalprio.entity.PatientnyttaEffektAatgaerdsKod;
 import se.vgregion.verticalprio.entity.PatientnyttoEvidensKod;
 import se.vgregion.verticalprio.entity.RangordningsKod;
+import se.vgregion.verticalprio.entity.SektorRaad;
 import se.vgregion.verticalprio.entity.TillstaandetsSvaarighetsgradKod;
 import se.vgregion.verticalprio.entity.VaardformsKod;
 import se.vgregion.verticalprio.entity.VaardnivaaKod;
 import se.vgregion.verticalprio.entity.VaentetidsKod;
-import se.vgregion.verticalprio.repository.AatgaerdsKodRepository;
-import se.vgregion.verticalprio.repository.AatgaerdsRiskKodRepository;
-import se.vgregion.verticalprio.repository.DiagnosKodRepository;
-import se.vgregion.verticalprio.repository.HaelsonekonomiskEvidensKodRepository;
-import se.vgregion.verticalprio.repository.KostnadLevnadsaarKodRepository;
-import se.vgregion.verticalprio.repository.PatientnyttaEffektAatgaerdsKodRepository;
-import se.vgregion.verticalprio.repository.PatientnyttoEvidensKodRepository;
-import se.vgregion.verticalprio.repository.RangordningsKodRepository;
-import se.vgregion.verticalprio.repository.TillstaandetsSvaarighetsgradKodRepository;
-import se.vgregion.verticalprio.repository.VaardformsKodRepository;
-import se.vgregion.verticalprio.repository.VaardnivaaKodRepository;
-import se.vgregion.verticalprio.repository.VaentetidsKodRepository;
+import se.vgregion.verticalprio.repository.GenerisktHierarkisktKodRepository;
+import se.vgregion.verticalprio.repository.GenerisktKodRepository;
 
 /**
  * Class to hold application level data available to all sessions.
@@ -45,7 +36,7 @@ public class ApplicationData implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Resource(name = "aatgaerdsKodRepository")
-    AatgaerdsKodRepository aatgaerdsKodRepository;
+    GenerisktKodRepository<AatgaerdsKod> aatgaerdsKodRepository;
     List<AatgaerdsKod> everyAatgaerdsKod;
 
     public List<AatgaerdsKod> getEveryAatgaerdsKod() {
@@ -56,7 +47,7 @@ public class ApplicationData implements Serializable {
     }
 
     @Resource(name = "aatgaerdsRiskKodRepository")
-    AatgaerdsRiskKodRepository aatgaerdsRiskKodRepository;
+    GenerisktKodRepository<AatgaerdsRiskKod> aatgaerdsRiskKodRepository;
     List<AatgaerdsRiskKod> everyAatgaerdsRiskKod;
 
     public List<AatgaerdsRiskKod> getEveryAatgaerdsRiskKod() {
@@ -67,7 +58,7 @@ public class ApplicationData implements Serializable {
     }
 
     @Resource(name = "diagnosKodRepository")
-    DiagnosKodRepository diagnosKodRepository;
+    GenerisktHierarkisktKodRepository<DiagnosKod> diagnosKodRepository;
     List<DiagnosKod> everyDiagnosKod;
 
     public List<DiagnosKod> getEveryDiagnosKod() {
@@ -78,7 +69,7 @@ public class ApplicationData implements Serializable {
     }
 
     @Resource(name = "haelsonekonomiskEvidensKodRepository")
-    HaelsonekonomiskEvidensKodRepository haelsonekonomiskEvidensKodRepository;
+    GenerisktKodRepository<HaelsonekonomiskEvidensKod> haelsonekonomiskEvidensKodRepository;
     List<HaelsonekonomiskEvidensKod> everyHaelsonekonomiskEvidensKod;
 
     public List<HaelsonekonomiskEvidensKod> getEveryHaelsonekonomiskEvidensKod() {
@@ -90,7 +81,7 @@ public class ApplicationData implements Serializable {
     }
 
     @Resource(name = "kostnadLevnadsaarKodRepository")
-    KostnadLevnadsaarKodRepository kostnadLevnadsaarKodRepository;
+    GenerisktKodRepository<KostnadLevnadsaarKod> kostnadLevnadsaarKodRepository;
     List<KostnadLevnadsaarKod> everyKostnadLevnadsaarKod;
 
     public List<KostnadLevnadsaarKod> getEveryKostnadLevnadsaarKod() {
@@ -102,7 +93,7 @@ public class ApplicationData implements Serializable {
     }
 
     @Resource(name = "patientnyttaEffektAatgaerdsKodRepository")
-    PatientnyttaEffektAatgaerdsKodRepository patientnyttaEffektAatgaerdsKodRepository;
+    GenerisktKodRepository<PatientnyttaEffektAatgaerdsKod> patientnyttaEffektAatgaerdsKodRepository;
     List<PatientnyttaEffektAatgaerdsKod> everyPatientnyttaEffektAatgaerdsKod;
 
     public List<PatientnyttaEffektAatgaerdsKod> getEveryPatientnyttaEffektAatgaerdsKod() {
@@ -114,7 +105,7 @@ public class ApplicationData implements Serializable {
     }
 
     @Resource(name = "patientnyttoEvidensKodRepository")
-    PatientnyttoEvidensKodRepository patientnyttoEvidensKodRepository;
+    GenerisktKodRepository<PatientnyttoEvidensKod> patientnyttoEvidensKodRepository;
     List<PatientnyttoEvidensKod> everyPatientnyttoEvidensKod;
 
     public List<PatientnyttoEvidensKod> getEveryPatientnyttoEvidensKod() {
@@ -126,7 +117,7 @@ public class ApplicationData implements Serializable {
     }
 
     @Resource(name = "rangordningsKodRepository")
-    RangordningsKodRepository rangordningsKodRepository;
+    GenerisktKodRepository<RangordningsKod> rangordningsKodRepository;
     List<RangordningsKod> everyRangordningsKod;
 
     public List<RangordningsKod> getEveryRangordningsKod() {
@@ -137,7 +128,7 @@ public class ApplicationData implements Serializable {
     }
 
     @Resource(name = "tillstaandetsSvaarighetsgradKodRepository")
-    TillstaandetsSvaarighetsgradKodRepository tillstaandetsSvaarighetsgradKodRepository;
+    GenerisktKodRepository<TillstaandetsSvaarighetsgradKod> tillstaandetsSvaarighetsgradKodRepository;
     List<TillstaandetsSvaarighetsgradKod> everyTillstaandetsSvaarighetsgradKod;
 
     public List<TillstaandetsSvaarighetsgradKod> getEveryTillstaandetsSvaarighetsgradKod() {
@@ -149,7 +140,7 @@ public class ApplicationData implements Serializable {
     }
 
     @Resource(name = "vaardformsKodRepository")
-    VaardformsKodRepository vaardformsKodRepository;
+    GenerisktKodRepository<VaardformsKod> vaardformsKodRepository;
     List<VaardformsKod> everyVaardformsKod;
 
     public List<VaardformsKod> getEveryVaardformsKod() {
@@ -160,7 +151,7 @@ public class ApplicationData implements Serializable {
     }
 
     @Resource(name = "vaardnivaaKodRepository")
-    VaardnivaaKodRepository vaardnivaaKodRepository;
+    GenerisktKodRepository<VaardnivaaKod> vaardnivaaKodRepository;
     List<VaardnivaaKod> everyVaardnivaaKod;
 
     public List<VaardnivaaKod> getEveryVaardnivaaKod() {
@@ -171,7 +162,7 @@ public class ApplicationData implements Serializable {
     }
 
     @Resource(name = "vaentetidsKodRepository")
-    VaentetidsKodRepository vaentetidsKodRepository;
+    GenerisktKodRepository<VaentetidsKod> vaentetidsKodRepository;
     List<VaentetidsKod> everyVaentetidsKod;
 
     public List<VaentetidsKod> getEveryVaentetidsKod() {
@@ -179,6 +170,17 @@ public class ApplicationData implements Serializable {
             everyVaentetidsKod = new ArrayList<VaentetidsKod>(vaentetidsKodRepository.findAll());
         }
         return everyVaentetidsKod;
+    }
+
+    @Resource(name = "sektorRaadRepository")
+    GenerisktHierarkisktKodRepository<SektorRaad> sektorRaadRepository;
+    List<SektorRaad> everySektorRaad;
+
+    public List<SektorRaad> getEverySektorRaad() {
+        if (everySektorRaad == null) {
+            everySektorRaad = sektorRaadRepository.getTreeRoots();
+        }
+        return everySektorRaad;
     }
 
 }
