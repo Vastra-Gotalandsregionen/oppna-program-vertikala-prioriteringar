@@ -34,6 +34,9 @@ import se.vgregion.verticalprio.repository.VaentetidsKodRepository;
 /**
  * Class to hold application level data available to all sessions.
  * 
+ * All getter methods have the same pattern - if the member variable is null then use a repository to acquire all
+ * the data from the db. If not return the beans (as a list).
+ * 
  * @author Claes Lundahl, vgrid=clalu4
  * 
  */

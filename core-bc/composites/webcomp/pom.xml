@@ -47,17 +47,17 @@
     <dependency>
       <groupId>se.vgregion.daoframework</groupId>
       <artifactId>dao-framework</artifactId>
-      <version>3.3</version>
+      <version>3.4</version>
     </dependency>
     <dependency>
       <groupId>se.vgregion.daoframework</groupId>
       <artifactId>dao-framework-jpa</artifactId>
-      <version>3.3</version>
+      <version>3.4</version>
     </dependency>
     <dependency>
       <groupId>se.vgregion.daoframework</groupId>
       <artifactId>dao-framework-jpa-spring</artifactId>
-      <version>3.3</version>
+      <version>3.4</version>
     </dependency>
     <dependency>
       <groupId>commons-collections</groupId>

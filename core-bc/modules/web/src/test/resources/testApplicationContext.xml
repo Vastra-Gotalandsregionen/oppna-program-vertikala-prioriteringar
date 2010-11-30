@@ -30,5 +30,5 @@
   <bean name="vaardformsKodRepository" class="se.vgregion.verticalprio.repository.JpaVaardformsKodRepository" />
   <bean name="vaardnivaaKodRepository" class="se.vgregion.verticalprio.repository.JpaVaardnivaaKodRepository" />
   <bean name="vaentetidsKodRepository" class="se.vgregion.verticalprio.repository.JpaVaentetidsKodRepository" />
-
+  
 </beans>

@@ -21,7 +21,7 @@ import se.vgregion.dao.domain.patterns.entity.AbstractEntity;
 
 @Entity
 @Table(name = "prioriteringsobjekt")
-public class Prioriteringsobjekt extends AbstractEntity<Prioriteringsobjekt, Long> {
+public class Prioriteringsobjekt extends AbstractEntity<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
