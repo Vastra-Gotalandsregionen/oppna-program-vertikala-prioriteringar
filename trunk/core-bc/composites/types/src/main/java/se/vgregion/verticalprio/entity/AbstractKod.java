@@ -13,7 +13,7 @@ import se.vgregion.dao.domain.patterns.entity.AbstractEntity;
 @Entity
 @Table(name = "vgr_abstract_code")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class AbstractKod<T extends AbstractKod<T>> extends AbstractEntity<T, Long> {
+public abstract class AbstractKod<T extends AbstractKod<T>> extends AbstractEntity<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

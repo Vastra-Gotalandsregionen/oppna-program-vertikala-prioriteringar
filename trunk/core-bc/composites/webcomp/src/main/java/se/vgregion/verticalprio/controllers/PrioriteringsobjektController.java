@@ -14,8 +14,8 @@ import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
 public class PrioriteringsobjektController {
 
     @RequestMapping(value = "/save")
-    public void save(@RequestParam Prioriteringsobjekt prioriteringsobjekt) {
-
+    public void save(@RequestParam(value = "prio") Prioriteringsobjekt prioriteringsobjekt) {
+        System.out.println(prioriteringsobjekt.getVaardgivare());
     }
 
 }

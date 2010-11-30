@@ -36,7 +36,7 @@ import se.vgregion.verticalprio.util.TextToBeanConverter;
  * @author Claes Lundahl, vgrid=clalu4
  * 
  */
-@ContextConfiguration("classpath:applicationContext.xml")
+@ContextConfiguration("classpath:testApplicationContext.xml")
 public class LoadCodeDataTest extends AbstractTransactionalJUnit4SpringContextTests {
 
     @Resource(name = "aatgaerdsKodRepository")

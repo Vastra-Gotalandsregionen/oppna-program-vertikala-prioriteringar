@@ -23,7 +23,7 @@ import se.vgregion.verticalprio.util.TextToBeanConverter;
  * @author Claes Lundahl, vgrid=clalu4
  * 
  */
-@ContextConfiguration("classpath:applicationContext.xml")
+@ContextConfiguration("classpath:testApplicationContext.xml")
 public class TestVaardformsKod extends AbstractTransactionalJUnit4SpringContextTests {
     private static final Log log = LogFactory.getLog(TestVaardformsKod.class);
 
