@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 
@@ -195,6 +196,7 @@ public class LoadCodeDataTest extends AbstractTransactionalJUnit4SpringContextTe
             file = getFileByNameOnClassPath("/dbLoad/generic.data");
         }
         TextToBeanConverter converter = new TextToBeanConverter();
+        converter.setValueDelimiterExpr(Pattern.quote("|"));
         List<T> codes = converter.load(new FileInputStream(file), klass);
         return codes;
     }
