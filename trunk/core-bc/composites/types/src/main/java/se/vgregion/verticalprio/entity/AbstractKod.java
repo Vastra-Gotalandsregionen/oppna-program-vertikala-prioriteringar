@@ -1,5 +1,6 @@
 package se.vgregion.verticalprio.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -21,6 +22,7 @@ public abstract class AbstractKod extends AbstractEntity<Long> {
 
     private String kod;
 
+    @Column(name = "beskrivning", length = 1000)
     private String beskrivning;
 
     @Override
