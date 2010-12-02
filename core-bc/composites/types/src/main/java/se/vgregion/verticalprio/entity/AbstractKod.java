@@ -1,5 +1,7 @@
 package se.vgregion.verticalprio.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,7 +16,7 @@ import se.vgregion.dao.domain.patterns.entity.AbstractEntity;
 @Entity
 @Table(name = "vgr_abstract_code")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class AbstractKod extends AbstractEntity<Long> {
+public abstract class AbstractKod extends AbstractEntity<Long> implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
