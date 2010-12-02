@@ -209,6 +209,7 @@ public class VerticalPrioController extends ControllerBase {
             sector.setKod("Code " + dummySectorCounter);
             sector.setId(dummySectorCounter++);
             result.add(sector);
+            sector.setChildren(new ArrayList<SektorRaad>());
             sector.getChildren().addAll(mkSubSectors(3));
         }
         return result;
@@ -227,6 +228,7 @@ public class VerticalPrioController extends ControllerBase {
             sector.setKod("subsr " + dummySectorCounter);
             sector.setId(dummySectorCounter++);
             result.add(sector);
+            sector.setChildren(new ArrayList<SektorRaad>());
             sector.getChildren().addAll(mkSubSectors(deep - 1));
         }
         return result;

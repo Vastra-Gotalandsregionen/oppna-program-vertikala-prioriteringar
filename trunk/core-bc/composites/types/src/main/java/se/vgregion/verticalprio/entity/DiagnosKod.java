@@ -1,10 +1,44 @@
 package se.vgregion.verticalprio.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "diagnos_kod")
 public class DiagnosKod extends AbstractHirarkiskKod<DiagnosKod> {
+
+    private static final long serialVersionUID = 1L;
+
+    @Transient
+    private boolean open;
+
+    /**
+     * @return the open
+     */
+    public boolean isOpen() {
+        return open;
+    }
+
+    /**
+     * @param open
+     *            the open to set
+     */
+    public void setOpen(boolean open) {
+        this.open = open;
+    }
+
+    public List<DiagnosKod> getOpenDiagnoses() {
+        List<DiagnosKod> openDiagnoses = new ArrayList<DiagnosKod>();
+        for (DiagnosKod child : getChildren()) {
+            if (child.isOpen()) {
+                openDiagnoses.add(child);
+            }
+        }
+        return openDiagnoses;
+    }
 
 }

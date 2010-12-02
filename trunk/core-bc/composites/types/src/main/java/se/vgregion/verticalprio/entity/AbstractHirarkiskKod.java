@@ -1,12 +1,12 @@
 package se.vgregion.verticalprio.entity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -15,11 +15,15 @@ import javax.persistence.Transient;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class AbstractHirarkiskKod<T extends AbstractHirarkiskKod<?>> extends AbstractKod {
 
-    @Transient
-    private List<T> children = new ArrayList<T>();
+    @OneToMany()
+    @JoinColumn(name = "parent_id")
+    private List<T> children; // = new ArrayList<T>();
 
-    @ManyToOne
-    private T parent;
+    @Transient
+    private boolean selected;
+
+    @javax.persistence.Column(name = "parent_id")
+    private Long parentId;
 
     public List<T> getChildren() {
         return children;
@@ -29,12 +33,20 @@ public abstract class AbstractHirarkiskKod<T extends AbstractHirarkiskKod<?>> ex
         this.children = children;
     }
 
-    public T getParent() {
-        return parent;
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
     }
 
-    public void setParent(T parent) {
-        this.parent = parent;
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
+
+    public boolean isSelected() {
+        return selected;
     }
 
 }
