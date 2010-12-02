@@ -89,7 +89,7 @@ public class JpaGenerisktKodRepository<T extends AbstractKod> extends DefaultJpa
                 return false;
             }
             Field field = klass.getField(name);
-            if (!field.isAnnotationPresent(Transient.class)) {
+            if (field.isAnnotationPresent(Transient.class)) {
                 return false;
             }
             if (Modifier.isTransient(field.getModifiers())) {
