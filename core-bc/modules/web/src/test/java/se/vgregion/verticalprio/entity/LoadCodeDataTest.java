@@ -30,6 +30,19 @@ import se.vgregion.verticalprio.util.TextToBeanConverter;
 @ContextConfiguration("classpath:testApplicationContext.xml")
 public class LoadCodeDataTest extends AbstractTransactionalJUnit4SpringContextTests {
 
+    @Resource(name = "sektorRaadRepository")
+    GenerisktKodRepository<SektorRaad> sektorRaadRepository;
+
+    @Test
+    @Rollback(false)
+    public void loadSektorRaadValuesIntoDb() throws FileNotFoundException {
+        List<SektorRaad> codes = toBeans("SektorRaad", SektorRaad.class);
+        for (SektorRaad code : codes) {
+            sektorRaadRepository.persist(code);
+        }
+        sektorRaadRepository.flush();
+    }
+
     @Resource(name = "aatgaerdsKodRepository")
     GenerisktKodRepository<AatgaerdsKod> aatgaerdsKodRepository;
 
