@@ -19,7 +19,7 @@ public class JpaGenerisktHierarkisktKodRepository<T extends AbstractHirarkiskKod
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public List<T> getTreeRoots() {
-        List<T> result = query("select o from @ o where o.parentId is null order by LOWER(o.kod) DESC");
+        List<T> result = query("select o from @ o where o.parentId is null order by LOWER(o.kod)");
         // populateChildren(result);
         return result;
     }

@@ -120,5 +120,10 @@
   width: 100%;
   height: 100%;
 }
+
+.select-diagnoses table td {
+  vertical-align: top;
+  text-align: left;
+}
 </style>
 </head>

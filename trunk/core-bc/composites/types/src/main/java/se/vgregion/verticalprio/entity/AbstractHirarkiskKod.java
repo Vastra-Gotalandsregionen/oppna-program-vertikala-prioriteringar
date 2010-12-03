@@ -2,16 +2,14 @@ package se.vgregion.verticalprio.entity;
 
 import java.util.List;
 
-import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
+import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
 import javax.persistence.Transient;
 
-@Entity
-@Table(name = "vgr_abstract_hierarchical_code")
+@MappedSuperclass
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class AbstractHirarkiskKod<T extends AbstractHirarkiskKod<?>> extends AbstractKod {
 
