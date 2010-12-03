@@ -11,11 +11,11 @@
 
 <jsp:include page="jsp/main-body.jsp" />
 
-<div class="popup-overlay">
+<div class="popup-overlay select-diagnoses">
 
 <span class="window">
-<form action="select-diagnosis">
-  <tags:diagnoses items="${diagnoses}"/>
+<form action="select-diagnosis" method="post">
+  <tags:diagnoses columns="${diagnoses}"/>
 </form>
 </span>
 
