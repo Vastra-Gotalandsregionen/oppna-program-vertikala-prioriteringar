@@ -7,15 +7,14 @@ import java.io.FileWriter;
 import java.net.URL;
 import java.util.List;
 
-import javax.annotation.Resource;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.junit.Test;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 
-import se.vgregion.verticalprio.repository.VaardformsKodRepository;
+import se.vgregion.verticalprio.repository.GenerisktHierarkisktKodRepository;
 import se.vgregion.verticalprio.util.TextToBeanConverter;
 
 /**
@@ -26,8 +25,13 @@ import se.vgregion.verticalprio.util.TextToBeanConverter;
 public class TestVaardformsKod extends AbstractTransactionalJUnit4SpringContextTests {
     private static final Log log = LogFactory.getLog(TestVaardformsKod.class);
 
-    @Resource(name = "vaardformsKodRepository")
-    VaardformsKodRepository vaardformsKodRepository;
+    @Test
+    public void dummy() {
+
+    }
+
+    // @Resource(name = "vaardformsKodRepository")
+    GenerisktHierarkisktKodRepository<VaardformsKod> vaardformsKodRepository;
 
     // @Test
     @Rollback(false)
