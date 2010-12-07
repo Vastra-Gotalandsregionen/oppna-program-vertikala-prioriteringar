@@ -149,6 +149,13 @@ public class VerticalPrioController extends ControllerBase {
         return "conf-columns";
     }
 
+    @RequestMapping(value = "/modify-prio")
+    @Transactional(propagation = Propagation.REQUIRED)
+    public String selectPrio(@RequestParam Prioriteringsobjekt command) {
+        System.out.println(command.getVaentetidVeckor());
+        return "select-prio";
+    }
+
     @RequestMapping(value = "/select-prio")
     @Transactional(propagation = Propagation.REQUIRED)
     public String selectPrio(final HttpSession session, @RequestParam Integer selected) {

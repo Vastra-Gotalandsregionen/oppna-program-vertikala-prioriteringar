@@ -28,6 +28,10 @@ public class JpaGenerisktKodRepository<T extends AbstractKod> extends DefaultJpa
 
     private String jpaWildCard = "%";
 
+    public JpaGenerisktKodRepository() {
+        this((Class<T>) AbstractKod.class);
+    }
+
     /**
      * Initializing the repository with the intended type of bean to be handled.
      */

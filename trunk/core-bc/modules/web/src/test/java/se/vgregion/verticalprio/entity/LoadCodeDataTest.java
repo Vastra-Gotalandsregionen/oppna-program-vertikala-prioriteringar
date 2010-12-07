@@ -38,7 +38,7 @@ public class LoadCodeDataTest extends AbstractTransactionalJUnit4SpringContextTe
     public void loadSektorRaadValuesIntoDb() throws FileNotFoundException {
         List<SektorRaad> codes = toBeans("SektorRaad", SektorRaad.class);
         for (SektorRaad code : codes) {
-            sektorRaadRepository.merge(code);
+            sektorRaadRepository.persist(code);
         }
         sektorRaadRepository.flush();
     }

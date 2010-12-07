@@ -11,7 +11,6 @@ import javax.annotation.Resource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.junit.Test;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
@@ -30,7 +29,7 @@ public class TestVaardformsKod extends AbstractTransactionalJUnit4SpringContextT
     @Resource(name = "vaardformsKodRepository")
     VaardformsKodRepository vaardformsKodRepository;
 
-    @Test
+    // @Test
     @Rollback(false)
     public void load() {
         VaardformsKod a = new VaardformsKod();
@@ -48,7 +47,7 @@ public class TestVaardformsKod extends AbstractTransactionalJUnit4SpringContextT
         return codes;
     }
 
-    @Test
+    // @Test
     @Rollback(false)
     public void loadCodeTables() throws FileNotFoundException {
         List<VaardformsKod> codes = toBeans("VaardformsKod", VaardformsKod.class);

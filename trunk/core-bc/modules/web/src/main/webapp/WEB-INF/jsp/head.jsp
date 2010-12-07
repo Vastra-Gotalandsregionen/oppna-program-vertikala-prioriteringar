@@ -125,5 +125,13 @@
   vertical-align: top;
   text-align: left;
 }
+
+.kod {
+  display: block;
+}
+
+.prio-view {
+  display: block;
+}
 </style>
 </head>
