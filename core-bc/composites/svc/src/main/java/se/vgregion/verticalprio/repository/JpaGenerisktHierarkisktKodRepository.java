@@ -12,6 +12,10 @@ import se.vgregion.verticalprio.entity.AbstractHirarkiskKod;
 public class JpaGenerisktHierarkisktKodRepository<T extends AbstractHirarkiskKod> extends
         JpaGenerisktKodRepository<T> implements GenerisktHierarkisktKodRepository<T> {
 
+    public JpaGenerisktHierarkisktKodRepository() {
+        super((Class<T>) AbstractHirarkiskKod.class);
+    }
+
     public JpaGenerisktHierarkisktKodRepository(Class<T> klass) {
         super(klass);
     }

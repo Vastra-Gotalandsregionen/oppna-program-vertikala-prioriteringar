@@ -7,7 +7,8 @@
 
   <import resource="classpath*:applicationContext.xml" />
 
-  <!-- Imports user-defined @Controller beans that process client requests -->
+  <!-- Imports user-defined @Controller beans that process client requests    -->
+
   <context:component-scan base-package="se.vgregion.verticalprio.controllers" />
 
   <!-- Enables the Spring MVC @Controller programming model -->

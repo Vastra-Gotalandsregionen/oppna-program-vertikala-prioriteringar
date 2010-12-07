@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.springframework.stereotype.Component;
+
 import se.vgregion.verticalprio.entity.AatgaerdsKod;
 import se.vgregion.verticalprio.entity.AatgaerdsRiskKod;
 import se.vgregion.verticalprio.entity.DiagnosKod;
@@ -31,6 +33,7 @@ import se.vgregion.verticalprio.repository.GenerisktKodRepository;
  * @author Claes Lundahl, vgrid=clalu4
  * 
  */
+@Component
 public class ApplicationData implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -39,7 +42,7 @@ public class ApplicationData implements Serializable {
     GenerisktKodRepository<AatgaerdsKod> aatgaerdsKodRepository;
     List<AatgaerdsKod> everyAatgaerdsKod;
 
-    public List<AatgaerdsKod> getEveryAatgaerdsKod() {
+    public List<AatgaerdsKod> getAatgaerdsKodList() {
         if (everyAatgaerdsKod == null) {
             everyAatgaerdsKod = new ArrayList<AatgaerdsKod>(aatgaerdsKodRepository.findAll());
         }
@@ -50,7 +53,7 @@ public class ApplicationData implements Serializable {
     GenerisktKodRepository<AatgaerdsRiskKod> aatgaerdsRiskKodRepository;
     List<AatgaerdsRiskKod> everyAatgaerdsRiskKod;
 
-    public List<AatgaerdsRiskKod> getEveryAatgaerdsRiskKod() {
+    public List<AatgaerdsRiskKod> getAatgaerdsRiskKodList() {
         if (everyAatgaerdsRiskKod == null) {
             everyAatgaerdsRiskKod = new ArrayList<AatgaerdsRiskKod>(aatgaerdsRiskKodRepository.findAll());
         }
@@ -61,7 +64,7 @@ public class ApplicationData implements Serializable {
     GenerisktHierarkisktKodRepository<DiagnosKod> diagnosKodRepository;
     List<DiagnosKod> everyDiagnosKod;
 
-    public List<DiagnosKod> getEveryDiagnosKod() {
+    public List<DiagnosKod> getDiagnosKodList() {
         if (everyDiagnosKod == null) {
             everyDiagnosKod = new ArrayList<DiagnosKod>(diagnosKodRepository.findAll());
         }
@@ -72,7 +75,7 @@ public class ApplicationData implements Serializable {
     GenerisktKodRepository<HaelsonekonomiskEvidensKod> haelsonekonomiskEvidensKodRepository;
     List<HaelsonekonomiskEvidensKod> everyHaelsonekonomiskEvidensKod;
 
-    public List<HaelsonekonomiskEvidensKod> getEveryHaelsonekonomiskEvidensKod() {
+    public List<HaelsonekonomiskEvidensKod> getHaelsonekonomiskEvidensKodList() {
         if (everyHaelsonekonomiskEvidensKod == null) {
             everyHaelsonekonomiskEvidensKod = new ArrayList<HaelsonekonomiskEvidensKod>(
                     haelsonekonomiskEvidensKodRepository.findAll());
@@ -84,7 +87,7 @@ public class ApplicationData implements Serializable {
     GenerisktKodRepository<KostnadLevnadsaarKod> kostnadLevnadsaarKodRepository;
     List<KostnadLevnadsaarKod> everyKostnadLevnadsaarKod;
 
-    public List<KostnadLevnadsaarKod> getEveryKostnadLevnadsaarKod() {
+    public List<KostnadLevnadsaarKod> getKostnadLevnadsaarKodList() {
         if (everyKostnadLevnadsaarKod == null) {
             everyKostnadLevnadsaarKod = new ArrayList<KostnadLevnadsaarKod>(
                     kostnadLevnadsaarKodRepository.findAll());
@@ -96,7 +99,7 @@ public class ApplicationData implements Serializable {
     GenerisktKodRepository<PatientnyttaEffektAatgaerdsKod> patientnyttaEffektAatgaerdsKodRepository;
     List<PatientnyttaEffektAatgaerdsKod> everyPatientnyttaEffektAatgaerdsKod;
 
-    public List<PatientnyttaEffektAatgaerdsKod> getEveryPatientnyttaEffektAatgaerdsKod() {
+    public List<PatientnyttaEffektAatgaerdsKod> getPatientnyttaEffektAatgaerdsKodList() {
         if (everyPatientnyttaEffektAatgaerdsKod == null) {
             everyPatientnyttaEffektAatgaerdsKod = new ArrayList<PatientnyttaEffektAatgaerdsKod>(
                     patientnyttaEffektAatgaerdsKodRepository.findAll());
@@ -108,7 +111,7 @@ public class ApplicationData implements Serializable {
     GenerisktKodRepository<PatientnyttoEvidensKod> patientnyttoEvidensKodRepository;
     List<PatientnyttoEvidensKod> everyPatientnyttoEvidensKod;
 
-    public List<PatientnyttoEvidensKod> getEveryPatientnyttoEvidensKod() {
+    public List<PatientnyttoEvidensKod> getPatientnyttoEvidensKodList() {
         if (everyPatientnyttoEvidensKod == null) {
             everyPatientnyttoEvidensKod = new ArrayList<PatientnyttoEvidensKod>(
                     patientnyttoEvidensKodRepository.findAll());
@@ -120,7 +123,7 @@ public class ApplicationData implements Serializable {
     GenerisktKodRepository<RangordningsKod> rangordningsKodRepository;
     List<RangordningsKod> everyRangordningsKod;
 
-    public List<RangordningsKod> getEveryRangordningsKod() {
+    public List<RangordningsKod> getRangordningsKodList() {
         if (everyRangordningsKod == null) {
             everyRangordningsKod = new ArrayList<RangordningsKod>(rangordningsKodRepository.findAll());
         }
@@ -131,7 +134,7 @@ public class ApplicationData implements Serializable {
     GenerisktKodRepository<TillstaandetsSvaarighetsgradKod> tillstaandetsSvaarighetsgradKodRepository;
     List<TillstaandetsSvaarighetsgradKod> everyTillstaandetsSvaarighetsgradKod;
 
-    public List<TillstaandetsSvaarighetsgradKod> getEveryTillstaandetsSvaarighetsgradKod() {
+    public List<TillstaandetsSvaarighetsgradKod> getTillstaandetsSvaarighetsgradKodList() {
         if (everyTillstaandetsSvaarighetsgradKod == null) {
             everyTillstaandetsSvaarighetsgradKod = new ArrayList<TillstaandetsSvaarighetsgradKod>(
                     tillstaandetsSvaarighetsgradKodRepository.findAll());
@@ -143,7 +146,7 @@ public class ApplicationData implements Serializable {
     GenerisktKodRepository<VaardformsKod> vaardformsKodRepository;
     List<VaardformsKod> everyVaardformsKod;
 
-    public List<VaardformsKod> getEveryVaardformsKod() {
+    public List<VaardformsKod> getVaardformsKodList() {
         if (everyVaardformsKod == null) {
             everyVaardformsKod = new ArrayList<VaardformsKod>(vaardformsKodRepository.findAll());
         }
@@ -154,7 +157,7 @@ public class ApplicationData implements Serializable {
     GenerisktKodRepository<VaardnivaaKod> vaardnivaaKodRepository;
     List<VaardnivaaKod> everyVaardnivaaKod;
 
-    public List<VaardnivaaKod> getEveryVaardnivaaKod() {
+    public List<VaardnivaaKod> getVaardnivaaKodList() {
         if (everyVaardnivaaKod == null) {
             everyVaardnivaaKod = new ArrayList<VaardnivaaKod>(vaardnivaaKodRepository.findAll());
         }
@@ -165,7 +168,7 @@ public class ApplicationData implements Serializable {
     GenerisktKodRepository<VaentetidsKod> vaentetidsKodRepository;
     List<VaentetidsKod> everyVaentetidsKod;
 
-    public List<VaentetidsKod> getEveryVaentetidsKod() {
+    public List<VaentetidsKod> getVaentetidsKodList() {
         if (everyVaentetidsKod == null) {
             everyVaentetidsKod = new ArrayList<VaentetidsKod>(vaentetidsKodRepository.findAll());
         }
@@ -176,7 +179,7 @@ public class ApplicationData implements Serializable {
     GenerisktHierarkisktKodRepository<SektorRaad> sektorRaadRepository;
     List<SektorRaad> everySektorRaad;
 
-    public List<SektorRaad> getEverySektorRaad() {
+    public List<SektorRaad> getSektorRaadList() {
         if (everySektorRaad == null) {
             everySektorRaad = sektorRaadRepository.getTreeRoots();
         }
