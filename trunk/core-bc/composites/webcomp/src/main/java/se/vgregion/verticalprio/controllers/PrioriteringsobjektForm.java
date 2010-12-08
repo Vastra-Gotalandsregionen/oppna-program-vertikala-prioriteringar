@@ -43,6 +43,50 @@ public class PrioriteringsobjektForm extends Prioriteringsobjekt {
     private Long rangordningsKodId;
     private List<RangordningsKod> rangordningsKodList;
 
+    /**
+     * Copy all id's from their codes into their corresponding local attributes.
+     * 
+     * Example patientnyttaEffektAatgaerdsKodId getts it's value from the id in the patientnyttaEffektAatgaerdsKod
+     * property.
+     */
+    public void putAllIdsFromCodesIfAnyIntoAttributeOnThisObject() {
+        patientnyttaEffektAatgaerdsKodId = getIdFromeCodeIfAny(getPatientnyttaEffektAatgaerdsKod());
+        sektorRaadId = getIdFromeCodeIfAny(getSektorRaad());
+        patientnyttoEvidensKodId = getIdFromeCodeIfAny(getPatientnyttoEvidensKod());
+        tillstaandetsSvaarighetsgradKodId = getIdFromeCodeIfAny(getTillstaandetsSvaarighetsgradKod());
+        haelsonekonomiskEvidensKodId = getIdFromeCodeIfAny(getHaelsonekonomiskEvidensKod());
+        vaardnivaaKodId = getIdFromeCodeIfAny(getVaardnivaaKod());
+        vaentetidsKodId = getIdFromeCodeIfAny(getVaentetidsKod());
+        aatgaerdsRiskKodId = getIdFromeCodeIfAny(getAatgaerdsRiskKod());
+        rangordningsKodId = getIdFromeCodeIfAny(getRangordningsKod());
+    }
+
+    /**
+     * Uses the id's in this object to look up correspoinding code-objects in the *List attributes and assigns
+     * those to the attributes that where designed to hold them.
+     * 
+     * For instance: if the field vaardnivaaKodId = 4, then the value of the vaardnivaaKod property is set to a
+     * VadrdnivaKod object with id = 4. That is if there are a List with that object present in the
+     * vaardnivaaKodList property.
+     * 
+     * @throws NullPointerException
+     *             if there are no List holding possible values to pick from.
+     */
+    public void asignCodesFromTheListsByCorrespondingIdAttributes() {
+        setPatientnyttaEffektAatgaerdsKod(getKodByIdAndList(patientnyttaEffektAatgaerdsKodList,
+                patientnyttaEffektAatgaerdsKodId));
+        setSektorRaad(getKodByIdAndList(sektorRaadList, sektorRaadId));
+        setPatientnyttoEvidensKod(getKodByIdAndList(patientnyttoEvidensKodList, patientnyttoEvidensKodId));
+        setTillstaandetsSvaarighetsgradKod(getKodByIdAndList(tillstaandetsSvaarighetsgradKodList,
+                tillstaandetsSvaarighetsgradKodId));
+        setHaelsonekonomiskEvidensKod(getKodByIdAndList(haelsonekonomiskEvidensKodList,
+                haelsonekonomiskEvidensKodId));
+        setVaardnivaaKod(getKodByIdAndList(vaardnivaaKodList, vaardnivaaKodId));
+        setVaentetidsKod(getKodByIdAndList(vaentetidsKodList, vaentetidsKodId));
+        setAatgaerdsRiskKod(getKodByIdAndList(aatgaerdsRiskKodList, aatgaerdsRiskKodId));
+        setRangordningsKod(getKodByIdAndList(rangordningsKodList, rangordningsKodId));
+    }
+
     public Long getPatientnyttaEffektAatgaerdsKodId() {
         return patientnyttaEffektAatgaerdsKodId;
     }
@@ -204,10 +248,38 @@ public class PrioriteringsobjektForm extends Prioriteringsobjekt {
                 continue;
             }
             // sb.append("private Long " + key + "Id;\n");
+            // sb.append("propertyKeyId = getIdFromeCodeIfAny(propertyMethod());\n".replace("propertyKey", key)
+            // .replace("propertyMethod", bm.getReadMethod(key).getName()));
+
+            String text = "setter(getKodByIdAndList(${key}List, ${key}Id));\n";
+            text = text.replace("${key}", key);
+            text = text.replace("setter", bm.getWriteMethod(key).getName());
+            sb.append(text);
+
             // sb.append("private List<" + type.getSimpleName() + "> " + key + "List;\n");
-            sb.append("<tags:kod key=\"propertyKey\" label=\"propertyKey\" />\n".replace("propertyKey", key));
+            // sb.append("<tags:kod key=\"propertyKey\" label=\"propertyKey\" />\n".replace("propertyKey", key));
         }
         System.out.println(sb);
+    }
+
+    private Long getIdFromeCodeIfAny(AbstractKod abstractKod) {
+        if (abstractKod == null) {
+            return null;
+        }
+        return abstractKod.getId();
+    }
+
+    private <T extends AbstractKod> T getKodByIdAndList(List<T> possibleValues, Long id) {
+        if (id == null) {
+            return null;
+        }
+
+        for (AbstractKod ak : possibleValues) {
+            if (id.equals(ak.getId())) {
+                return (T) ak;
+            }
+        }
+        return null;
     }
 
 }

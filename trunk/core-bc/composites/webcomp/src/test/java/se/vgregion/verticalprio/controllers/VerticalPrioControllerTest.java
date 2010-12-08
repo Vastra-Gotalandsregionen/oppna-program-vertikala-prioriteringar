@@ -3,6 +3,7 @@ package se.vgregion.verticalprio.controllers;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.SortedMap;
 
 import javax.servlet.http.HttpSession;
 
@@ -33,7 +34,7 @@ public class VerticalPrioControllerTest {
     public void setUp() {
         vpc = new VerticalPrioController() {
             @Override
-            public java.util.Map<String, String> getPrioPropertyTexts() {
+            public SortedMap<String, String> getPrioPropertyTexts() {
                 columnTextsPropertiesFileName = "/column-texts-test.properties";
                 return super.getPrioPropertyTexts();
             }
