@@ -18,7 +18,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import se.vgregion.verticalprio.ConfColumnsForm;
 import se.vgregion.verticalprio.entity.Column;
-import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath*:/applicationContext.xml" })
@@ -49,12 +48,12 @@ public class VerticalPrioControllerTest {
         Assert.assertEquals("main", defaultResult);
     }
 
-    @Test
-    public void result() {
-        vpc = new VerticalPrioController();
-        List<Prioriteringsobjekt> prios = vpc.result(session);
-        Assert.assertNotSame(0, prios.size());
-    }
+    // @Test
+    // public void result() {
+    // vpc = new VerticalPrioController();
+    // List<Prioriteringsobjekt> prios = vpc.result(session);
+    // Assert.assertNotSame(0, prios.size());
+    // }
 
     @Test
     public void confColumns() {
