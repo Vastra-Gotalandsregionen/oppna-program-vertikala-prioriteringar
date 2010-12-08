@@ -21,8 +21,7 @@
 
   <!--  bean id="sektorRaadRepository" class="se.vgregion.verticalprio.repository.JpaSektorRaadRepository" -->
   
-  
-  <bean id="prioRepository" class="se.vgregion.verticalprio.repository.JpaPrioRepository" />
+  <bean name="prioRepository" class="se.vgregion.verticalprio.repository.JpaPrioRepository" />
 
 
   <!-- All these beans inherit the generic JpaKodRepository because they all represent common "code tables" -->

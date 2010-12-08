@@ -15,6 +15,7 @@
 <div class="rowsAndButtons">
 <span class="button-row">
 <label for="select-prio"><button>Visa prioriteringsobjekt</button></label>
+<form action="prio-open"> <input type="submit" value="Skapa prioriteringsobjekt"> </form>
 <form action="init-conf-columns"><input class="conf-columns" type="submit" value="Dölj/Visa kolumner" /></form>
 <button class="cost">Kostnad</button>
 <span class="export-data-buttons">
@@ -25,8 +26,7 @@
 <button class="help">Hjälp</button>
 </span>
 
-
-<form action="select-prio" method="post">
+<form action="prio-open" method="post">
 
 <input type="submit" id="select-prio"/>
 
@@ -42,7 +42,7 @@
   <tbody>
     <c:forEach items="${rows}" var="row" varStatus="vs">
       <tr class="${vs.index % 2 == 0 ? 'even' : 'odd'}">
-        <td><input type="radio" name="selected" value="${row.id}"/></td>
+        <td><input type="radio" name="id" value="${row.id}"/></td>
         <c:forEach items="${form.columns}" var="column">
           <c:if test="${column.visible}">
             <td>${row[column.name]}</td> 

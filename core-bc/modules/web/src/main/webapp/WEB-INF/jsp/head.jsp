@@ -131,7 +131,14 @@
 }
 
 .prio-view {
-  display: block;
+  max-width: 600px;
+  min-width: 300px;
+  text-align: center;
 }
+
+.prio-view form {
+  text-align: center;
+}
+
 </style>
 </head>
