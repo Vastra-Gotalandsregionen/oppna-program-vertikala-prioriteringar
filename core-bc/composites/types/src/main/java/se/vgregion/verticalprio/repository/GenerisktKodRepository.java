@@ -20,6 +20,6 @@ public interface GenerisktKodRepository<T extends AbstractKod> extends Repositor
      * @param bean
      * @return
      */
-    List<T> findByExample(T bean);
+    List<T> findByExample(T bean, Integer maxResult);
 
 }

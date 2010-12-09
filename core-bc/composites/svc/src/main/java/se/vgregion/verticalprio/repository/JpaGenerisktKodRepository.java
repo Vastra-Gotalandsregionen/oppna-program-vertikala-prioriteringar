@@ -44,9 +44,9 @@ public class JpaGenerisktKodRepository<T extends AbstractKod> extends DefaultJpa
      * @inheritDoc
      */
     @Override
-    public List<T> findByExample(T bean) {
+    public List<T> findByExample(T bean, Integer maxResult) {
         StringBuilder sb = new StringBuilder();
-        sb.append("select o from @");
+        sb.append("select o from @ o");
         StringBuilder where = new StringBuilder();
         Set<String> keys = new HashSet<String>();
         BeanMap bm = new BeanMap(bean);
@@ -62,6 +62,7 @@ public class JpaGenerisktKodRepository<T extends AbstractKod> extends DefaultJpa
         for (String key : keys) {
             Object value = bm.get(key);
             if (value != null) {
+                where.append("o.");
                 where.append(key);
                 if (value instanceof String && ((String) value).contains(wildCard)) {
                     String wildValue = (String) value;
@@ -80,11 +81,11 @@ public class JpaGenerisktKodRepository<T extends AbstractKod> extends DefaultJpa
         String jpql = sb.toString();
 
         if (where.length() > 0) {
-            where.delete(where.length() - 4, 4);
+            where.delete(where.length() - 4, where.length());
             jpql += " where " + where;
         }
 
-        return query(jpql, values);
+        return query(jpql, maxResult, values.toArray());
     }
 
     private boolean useField(String name) {
@@ -92,7 +93,11 @@ public class JpaGenerisktKodRepository<T extends AbstractKod> extends DefaultJpa
             if ("class".equals(name)) {
                 return false;
             }
-            Field field = klass.getField(name);
+
+            Field field = getField(klass, name);
+            if (field == null) {
+                return false;
+            }
             if (field.isAnnotationPresent(Transient.class)) {
                 return false;
             }
@@ -106,21 +111,42 @@ public class JpaGenerisktKodRepository<T extends AbstractKod> extends DefaultJpa
             return true;
         } catch (SecurityException e) {
             throw new RuntimeException(e);
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException(e);
         }
 
     }
 
+    private Field getField(@SuppressWarnings("rawtypes") Class klass, String name) {
+        try {
+            Field field = klass.getDeclaredField(name);
+            return field;
+        } catch (NoSuchFieldException e) {
+            if (klass.equals(Object.class)) {
+                return null;
+            } else {
+                return getField(klass.getSuperclass(), name);
+            }
+        }
+    }
+
     @SuppressWarnings("unchecked")
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    protected List<T> query(String qt, Object... values) {
+    protected List<T> query(String qt, Integer maxResult, Object... values) {
         qt = qt.replace("@", klass.getSimpleName());
         Query query = entityManager.createQuery(qt);
+        if (maxResult != null) {
+            query.setMaxResults(maxResult);
+        }
         int i = 1;
         for (Object value : values) {
             query.setParameter(i++, value);
         }
-        return query.getResultList();
+        try {
+            List<T> result = query.getResultList();
+            return result;
+        } catch (Throwable e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+
     }
 }

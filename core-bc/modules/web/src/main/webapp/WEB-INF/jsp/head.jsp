@@ -1,7 +1,13 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Vertikala prioriteringar</title>
+<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.2.0/build/cssreset/reset-context-min.css">
+
 <style type="text/css">
+
+
+
+
 .main {
   width: 100%;
 }
@@ -53,7 +59,8 @@
 .rowsAndButtons {
   background-color: #eeeeee;
   float: left;
-  
+  max-width: 1000px;
+  min-width: 200px;
 }
 
 .rowsAndButtons table thead td {

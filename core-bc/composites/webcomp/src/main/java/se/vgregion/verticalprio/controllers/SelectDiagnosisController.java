@@ -1,6 +1,7 @@
 package se.vgregion.verticalprio.controllers;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -9,9 +10,11 @@ import javax.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import se.vgregion.verticalprio.FindSelectDiagnosesForm;
 import se.vgregion.verticalprio.entity.DiagnosKod;
 import se.vgregion.verticalprio.repository.GenerisktHierarkisktKodRepository;
 
@@ -80,6 +83,29 @@ public class SelectDiagnosisController extends ControllerBase {
                 toColumnHierarchyImpl(openId, selectId, level + 1, kod.getChildren(), result);
             }
         }
+    }
+
+    @RequestMapping(value = "/find-select-diagnoses")
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public String findSelectDiagnoses(ModelMap model, FindSelectDiagnosesForm prio) {
+        if (prio == null) {
+            prio = new FindSelectDiagnosesForm();
+        }
+        model.addAttribute("prio", prio);
+
+        DiagnosKod diagnos = new DiagnosKod();
+        diagnos.setBeskrivning(prio.getFindPattern());
+        prio.getFindings().addAll(diagnosKodRepository.findByExample(diagnos, 100));
+        if (prio.getDiagnoserId() == null) {
+            prio.setDiagnoserId(new ArrayList<Long>());
+        }
+        prio.getDiagnoserId().remove(null);
+        for (Long id : new HashSet<Long>(prio.getDiagnoserId())) {
+            DiagnosKod kod = diagnosKodRepository.find(id);
+            prio.getSelectedDiagnoses().add(kod);
+        }
+
+        return "find-select-diagnoses";
     }
 
 }

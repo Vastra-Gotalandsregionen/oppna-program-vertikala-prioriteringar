@@ -5,7 +5,7 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags"%>
-<%@ taglib uri="/WEB-INF/tld/vgr-strutil.tld" prefix="su"%>
+<%@ taglib uri="/WEB-INF/tld/vgr-util.tld" prefix="su"%>
 
 <span class="${key} kod"> 
   <span class="kod-label ${key}-label"> ${label} </span> 

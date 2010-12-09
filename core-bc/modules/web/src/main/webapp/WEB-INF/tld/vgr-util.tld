@@ -2,21 +2,35 @@
 
   <tlib-version>1.0</tlib-version>
 
-  <short-name>strutil</short-name>
+  <short-name>vgr-util</short-name>
 
   <uri>http://se.vgregion.verticalprio.el/1.0</uri>
 
   <function>
 
-    <description>Test whether a string matches a regular expression.</description>
+    <description>Concatenates two strings.</description>
 
     <display-name>Concat</display-name>
 
     <name>concat</name>
 
-    <function-class>se.vgregion.verticalprio.el.StringUtil</function-class>
+    <function-class>se.vgregion.verticalprio.el.Util</function-class>
 
     <function-signature>String concat(java.lang.String, java.lang.String)</function-signature>
+
+  </function>
+  
+    <function>
+
+    <description>Is a certain value inside a collection?</description>
+
+    <display-name>Contains</display-name>
+
+    <name>contains</name>
+
+    <function-class>se.vgregion.verticalprio.el.Util</function-class>
+
+    <function-signature>boolean contains(java.util.Collection, java.lang.Object)</function-signature>
 
   </function>
 
