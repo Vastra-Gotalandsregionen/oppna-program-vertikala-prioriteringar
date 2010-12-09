@@ -5,10 +5,11 @@
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 
 <div class="main-body">
-<div style="background-color: yellow">Vertikala prioriteringar</div>
 <div class="sectorsAndButtons"> 
 <span class="sectors"><form:form commandName="form"
   action="check" method="POST">
+  <br/>
+  <br/>
   <tags:sectors items="${form.sectors}" />  
 </form:form></span>
 
@@ -42,7 +43,7 @@
   <tbody>
     <c:forEach items="${rows}" var="row" varStatus="vs">
       <tr class="${vs.index % 2 == 0 ? 'even' : 'odd'}">
-        <td><input type="radio" name="id" value="${row.id}"/></td>
+        <td><input type="radio" name="id" value="${row.id}"${vs.index == 0 ? ' checked' : ''}/></td>
         <c:forEach items="${form.columns}" var="column">
           <c:if test="${column.visible}">
             <td>${row[column.name]}</td> 
@@ -58,5 +59,4 @@
 
 </div>
 
-<div class="footer">Footer</div>
 </div>

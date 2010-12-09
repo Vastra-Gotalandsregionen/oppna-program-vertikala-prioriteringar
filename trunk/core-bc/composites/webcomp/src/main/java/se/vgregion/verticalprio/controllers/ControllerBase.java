@@ -1,6 +1,8 @@
 package se.vgregion.verticalprio.controllers;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -8,10 +10,22 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.beanutils.BeanMap;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.ModelAttribute;
+
 import se.vgregion.verticalprio.entity.Column;
 import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
+import se.vgregion.verticalprio.repository.PrioRepository;
 
 public class ControllerBase {
+
+    @Resource(name = "prioRepository")
+    protected PrioRepository prioRepository;
 
     private SortedMap<String, String> prioPropertyTexts;
 
@@ -65,6 +79,29 @@ public class ControllerBase {
             columns = result;
         }
         return columns;
+    }
+
+    @ModelAttribute("rows")
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public List<Prioriteringsobjekt> result(HttpSession session) {
+        List<Prioriteringsobjekt> prios = new ArrayList<Prioriteringsobjekt>(prioRepository.findAll());
+
+        for (Prioriteringsobjekt prio : prios) {
+            BeanMap bm = new BeanMap(prio);
+            Map<String, Object> values = new HashMap<String, Object>(bm);
+            // Completely insane... but has to be done because otherwise
+            // a lack of transaction will occur when rendering the referred child objects.
+            // TODO: don't use lazy loading on collection or objects inside the Prioriteringsobjekt class.
+            for (String key : values.keySet()) {
+                Object value = values.get(key);
+                if (value instanceof Collection) {
+                    Collection<?> collection = (Collection<?>) value;
+                    new ArrayList<Object>(collection);
+                }
+            }
+        }
+
+        return prios;
     }
 
 }

@@ -2,6 +2,7 @@ package se.vgregion.verticalprio.entity;
 
 import java.util.List;
 
+import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
@@ -13,7 +14,7 @@ import javax.persistence.Transient;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class AbstractHirarkiskKod<T extends AbstractHirarkiskKod<?>> extends AbstractKod {
 
-    @OneToMany()
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "parent_id")
     private List<T> children; // = new ArrayList<T>();
 
