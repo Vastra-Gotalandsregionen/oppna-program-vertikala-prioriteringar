@@ -12,19 +12,21 @@
 
 <jsp:include page="jsp/main-body.jsp" />
 
-
-
 <div class="popup-overlay">
+
+
+
+</div>
+
 
 <span class="window prio-view">
 
-<form:form action="prio-save" method="post" modelAttribute="prio">
+<form:form action="prio" method="post" modelAttribute="prio">
 <jsp:include page="jsp/prio-form.jsp" />
 </form:form>
 
 </span>
 
-</div>
 
 </body>
 </html>

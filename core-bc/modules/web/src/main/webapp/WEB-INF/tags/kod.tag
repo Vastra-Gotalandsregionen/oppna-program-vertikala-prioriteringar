@@ -8,7 +8,7 @@
 <%@ taglib uri="/WEB-INF/tld/vgr-util.tld" prefix="su"%>
 
 <span class="${key} kod"> 
-  <span class="kod-label ${key}-label"> ${label} </span> 
+  <span class="kod-label ${key}-label"> ${prio.columns[label].label} </span> 
   <form:select path="${key}Id">
     <form:options items="${prio[su:concat(key, 'List')]}" itemLabel="kod" itemValue="id" />
   </form:select> 

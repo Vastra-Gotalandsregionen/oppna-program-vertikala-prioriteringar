@@ -3,6 +3,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
+<%@ taglib uri="/WEB-INF/tld/vgr-util.tld" prefix="su"%>
 
 <div class="main-body">
 <div class="sectorsAndButtons"> 
@@ -46,7 +47,7 @@
         <td><input type="radio" name="id" value="${row.id}"${vs.index == 0 ? ' checked' : ''}/></td>
         <c:forEach items="${form.columns}" var="column">
           <c:if test="${column.visible}">
-            <td>${row[column.name]}</td> 
+            <td class="${column.name}"><tags:cell value="${row[column.name]}"/></td>
           </c:if>
         </c:forEach>
       </tr>

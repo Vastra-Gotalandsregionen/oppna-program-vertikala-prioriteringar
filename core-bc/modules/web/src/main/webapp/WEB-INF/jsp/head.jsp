@@ -5,9 +5,6 @@
 
 <style type="text/css">
 
-
-
-
 .main {
   width: 100%;
 }
@@ -18,6 +15,8 @@
 
 .sectors {
   padding-right: 10px;
+  border: thin solid gray;
+  margin-right: 10px;
 }
 
 .button-row {
@@ -25,7 +24,7 @@
 }
 
 .sectors {
-  background-color: orange;
+  //background-color: orange;
   min-width: 100px;
   float: left;
   height: 100%;
@@ -57,7 +56,7 @@
 }
 
 .rowsAndButtons {
-  background-color: #eeeeee;
+  XXXbackground-color: #eeeeee;
   float: left;
   max-width: 1000px;
   min-width: 200px;
@@ -74,6 +73,15 @@
   border-left-color: black;
   border-left-style: solid;
   border-left-width: thin;
+  vertical-align: top;
+  max-width: 20em;
+  overflow: hidden;
+}
+
+.diagnosTexts {
+  overflow: auto;
+  width: 20em;
+  white-space: nowrap;
 }
 
 .rowsAndButtons table .even {
@@ -110,9 +118,14 @@
   background-color: black;
 }
 
+.window {
+  position: relative;
+  z-index: 100;
+}
+
 .popup-overlay .window {
   position: relative; 
-  top:40%; 
+  top:10%; 
   background-color: lime; 
   background-repeat: repeat;
   opacity:1.0;
@@ -133,9 +146,11 @@
   text-align: left;
 }
 
-.kod {
+.kod, .kod-label {
   display: block;
 }
+
+
 
 .prio-view {
   max-width: 600px;
@@ -145,6 +160,20 @@
 
 .prio-view form {
   text-align: center;
+}
+
+.prio-view .values {
+  width: 60em;
+  XXXheight: 45em;
+  background-color: white;
+  border-bottom-color: silver;
+  border-width: thin;
+  border-style: solid;
+  border-spacing: 1em;
+  margin: auto;
+  text-align: left;
+  padding: 1em;
+  
 }
 
 </style>
