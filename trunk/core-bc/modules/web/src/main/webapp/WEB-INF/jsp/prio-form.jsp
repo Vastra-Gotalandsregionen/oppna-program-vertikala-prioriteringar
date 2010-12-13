@@ -4,10 +4,8 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 
-
-
   <div class="values">
-  
+
     <form:hidden path="id"/>
     <tags:kod key="patientnyttaEffektAatgaerdsKod" label="patientnyttaEffektAatgaerdsKod" />
     <tags:kod key="sektorRaad" label="sektorRaad" />
@@ -22,12 +20,10 @@
     <tags:textarea key="vaardgivare" label="Vårdgivare"/>
     <tags:text key="vaentetidVeckor" label="Väntetid veckor" />
     
-    
-    <input type="submit" value="Save" />
+    <input type="submit" value="Save" name="save" />
     <a href="main">Stäng</a>
     
+    <jsp:include page="find-select-diagnoses.jsp" />
+    
+
   </div>
-
-
-
-

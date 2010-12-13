@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -30,19 +31,19 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
     @Column(name = "vaentetid_veckor")
     private Integer vaentetidVeckor;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "sektor_raad_id")
     private SektorRaad sektorRaad;
 
-    @ManyToMany
+    @ManyToMany()
     @JoinTable(name = "link_prioriteringsobjekt_diagnos_kod", joinColumns = { @JoinColumn(name = "prio_id") }, inverseJoinColumns = { @JoinColumn(name = "diagnos_kod_id") })
     private List<DiagnosKod> diagnoser = new ArrayList<DiagnosKod>();
 
-    @ManyToMany
+    @ManyToMany()
     @JoinTable(name = "link_prioriteringsobjekt_aatgaerds_kod", joinColumns = { @JoinColumn(name = "prio_id") }, inverseJoinColumns = { @JoinColumn(name = "aatgaerds_kod_id") })
     private List<AatgaerdsKod> aatgaerdskoder = new ArrayList<AatgaerdsKod>();
 
-    @ManyToMany
+    @ManyToMany()
     @JoinTable(name = "link_prioriteringsobjekt_vaardforms_kod", joinColumns = { @JoinColumn(name = "prio_id") }, inverseJoinColumns = { @JoinColumn(name = "vaardforms_kod_id") })
     private List<VaardformsKod> vaardformskoder = new ArrayList<VaardformsKod>();
 
@@ -120,6 +121,22 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
 
     public void setDiagnoser(List<DiagnosKod> diagnoser) {
         this.diagnoser = diagnoser;
+    }
+
+    public List<String> getDiagnosTexts() {
+        List<String> sb = new ArrayList<String>();
+        for (DiagnosKod kod : getDiagnoser()) {
+            sb.add(kod.getBeskrivning());
+        }
+        return sb;
+    }
+
+    public List<String> getDiagnosKodTexts() {
+        List<String> sb = new ArrayList<String>();
+        for (DiagnosKod kod : getDiagnoser()) {
+            sb.add(kod.getKod());
+        }
+        return sb;
     }
 
     public List<AatgaerdsKod> getAatgaerdskoder() {

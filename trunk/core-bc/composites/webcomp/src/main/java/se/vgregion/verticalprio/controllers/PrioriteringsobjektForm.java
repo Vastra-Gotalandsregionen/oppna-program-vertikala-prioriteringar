@@ -1,13 +1,18 @@
 package se.vgregion.verticalprio.controllers;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.beanutils.BeanMap;
 
+import se.vgregion.verticalprio.entity.AatgaerdsKod;
 import se.vgregion.verticalprio.entity.AatgaerdsRiskKod;
 import se.vgregion.verticalprio.entity.AbstractKod;
+import se.vgregion.verticalprio.entity.Column;
+import se.vgregion.verticalprio.entity.DiagnosKod;
 import se.vgregion.verticalprio.entity.HaelsonekonomiskEvidensKod;
 import se.vgregion.verticalprio.entity.PatientnyttaEffektAatgaerdsKod;
 import se.vgregion.verticalprio.entity.PatientnyttoEvidensKod;
@@ -42,6 +47,42 @@ public class PrioriteringsobjektForm extends Prioriteringsobjekt {
     private List<AatgaerdsRiskKod> aatgaerdsRiskKodList;
     private Long rangordningsKodId;
     private List<RangordningsKod> rangordningsKodList;
+
+    private final Map<String, Column> columns = new HashMap<String, Column>();
+
+    // private String aatgaerdSearchWord;
+    // private List<AatgaerdsKod> foundMeasures = new ArrayList<AatgaerdsKod>();
+    // private List<Long> selectedAatgarderId = new ArrayList<Long>();
+
+    // private String diagnosSearchWord;
+    // private List<DiagnosKod> foundDiagnoses = new ArrayList<DiagnosKod>();
+    // private List<Long> selectedDiagnosesId = new ArrayList<Long>();
+
+    @SuppressWarnings("serial")
+    ManyCodesRef<AatgaerdsKod> aatgaerdRef = new ManyCodesRef<AatgaerdsKod>() {
+        @Override
+        public java.util.List<AatgaerdsKod> getCodes() {
+            return getAatgaerdskoder();
+        }
+
+        @Override
+        public void setCodes(java.util.List<AatgaerdsKod> codes) {
+            setAatgaerdskoder(codes);
+        }
+    };
+
+    @SuppressWarnings("serial")
+    private ManyCodesRef<DiagnosKod> diagnosRef = new ManyCodesRef<DiagnosKod>() {
+        @Override
+        public List<DiagnosKod> getCodes() {
+            return getDiagnoser();
+        }
+
+        @Override
+        public void setCodes(List<DiagnosKod> codes) {
+            setDiagnoser(codes);
+        }
+    };
 
     /**
      * Copy all id's from their codes into their corresponding local attributes.
@@ -280,6 +321,14 @@ public class PrioriteringsobjektForm extends Prioriteringsobjekt {
             }
         }
         return null;
+    }
+
+    public ManyCodesRef<DiagnosKod> getDiagnosRef() {
+        return diagnosRef;
+    }
+
+    public Map<String, Column> getColumns() {
+        return columns;
     }
 
 }

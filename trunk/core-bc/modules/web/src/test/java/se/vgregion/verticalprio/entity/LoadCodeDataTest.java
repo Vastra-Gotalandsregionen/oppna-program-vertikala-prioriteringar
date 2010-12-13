@@ -3,16 +3,27 @@ package se.vgregion.verticalprio.entity;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.beanutils.BeanMap;
 import org.junit.Test;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import se.vgregion.verticalprio.repository.GenerisktHierarkisktKodRepository;
 import se.vgregion.verticalprio.repository.GenerisktKodRepository;
@@ -27,18 +38,138 @@ import se.vgregion.verticalprio.util.TextToBeanConverter;
  * @author Claes Lundahl, vgrid=clalu4
  * 
  */
-@ContextConfiguration("classpath:testApplicationContext.xml")
-public class LoadCodeDataTest extends AbstractTransactionalJUnit4SpringContextTests {
+// @ContextConfiguration("classpath:testApplicationContext.xml")
+// @TransactionConfiguration(defaultRollback = false)
+public class LoadCodeDataTest /* extends AbstractTransactionalJUnit4SpringContextTests */{
 
-    @Resource(name = "sektorRaadRepository")
-    GenerisktKodRepository<SektorRaad> sektorRaadRepository;
+    public static void main(String[] args) throws FileNotFoundException {
+        LoadCodeDataTest me = new LoadCodeDataTest();
+        me.setupDb();
 
-    @Test
-    @Rollback(false)
-    public void loadSektorRaadValuesIntoDb() throws FileNotFoundException {
+        // GenerisktKodRepository<SektorRaad> sektorRaadRepository;
+        // ClassPathXmlApplicationContext appContext = new ClassPathXmlApplicationContext(
+        // "testApplicationContext.xml");
+        // sektorRaadRepository = appContext.getBean("sektorRaadRepository",
+        // GenerisktHierarkisktKodRepository.class);
+        // List<SektorRaad> codes = toBeans("SektorRaad", SektorRaad.class);
+        // for (SektorRaad code : codes) {
+        // sektorRaadRepository.store(code);
+        // }
+        // sektorRaadRepository.flush();
+
+    }
+
+    private void setupDb() {
+        // drop all link tables and the main table
+        dropAllDbrelations();
+
+        // drop all code tables
+        dropAllCodeTables();
+
+        // create all code tables and all relations
+
+    }
+
+    private Properties getProperties() {
+        Properties properties = new Properties();
+        try {
+            properties.load(getClass().getResourceAsStream("/security.properties"));
+            properties.load(getClass().getResourceAsStream("/datasource.properties"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return properties;
+    }
+
+    private void dropAllDbrelations() {
+        Properties properties = getProperties();
+        try {
+            getClass().forName(properties.getProperty("database.driver"));
+            String url = properties.getProperty("database.url");
+            String user = properties.getProperty("database.user");
+            String password = properties.getProperty("database.password");
+
+            Connection con = DriverManager.getConnection(url, user, password);
+
+            DatabaseMetaData meta = con.getMetaData();
+
+            String catalog = null;
+            String schemaPattern = null; // "vertikala_prioriteringar";
+            String tableNamePattern = null;
+            String[] types = new String[] { "TABLE" };
+
+            ResultSet rs = meta.getTables(catalog, schemaPattern, tableNamePattern, types);
+
+            List<Map<String, Object>> tables = toMap(rs);
+
+            for (Map<String, Object> map : tables) {
+                System.out.println(map);
+            }
+            dropTables(con, tables);
+            rs.close();
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    private void dropTables(Connection con, List<Map<String, Object>> tables) {
+        tables = new ArrayList<Map<String, Object>>(tables);
+        int max = 100;
+        while (!tables.isEmpty()) {
+            if (max-- < 0) {
+                throw new RuntimeException();
+            }
+            for (Map<String, Object> table : new ArrayList<Map<String, Object>>(tables)) {
+                if (dropTable(con, table.get("table_name").toString())) {
+                    tables.remove(table);
+                }
+            }
+        }
+    }
+
+    private boolean dropTable(Connection con, String tableName) {
+        try {
+            PreparedStatement ps = con.prepareStatement("delete from link_prioriteringsobjekt_aatgaerds_kod");
+
+            ps.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private List<Map<String, Object>> toMap(ResultSet rs) throws SQLException {
+        List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
+        ResultSetMetaData meta = rs.getMetaData();
+
+        while (rs.next()) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            for (int i = 1, j = meta.getColumnCount(); i <= j; i++) {
+                String column = meta.getColumnName(i);
+                Object value = rs.getObject(column);
+                map.put(column, value);
+            }
+            result.add(map);
+        }
+
+        return result;
+    }
+
+    private void dropAllCodeTables() {
+
+    }
+
+    // @Resource(name = "sektorRaadRepository")
+    // GenerisktKodRepository<SektorRaad> sektorRaadRepository;
+
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+    public void loadSektorRaadValuesIntoDb(GenerisktKodRepository<SektorRaad> sektorRaadRepository)
+            throws FileNotFoundException {
         List<SektorRaad> codes = toBeans("SektorRaad", SektorRaad.class);
         for (SektorRaad code : codes) {
-            sektorRaadRepository.persist(code);
+            sektorRaadRepository.store(code);
         }
         sektorRaadRepository.flush();
     }
@@ -202,7 +333,7 @@ public class LoadCodeDataTest extends AbstractTransactionalJUnit4SpringContextTe
         vaentetidsKodRepository.flush();
     }
 
-    private <T> List<T> toBeans(String entityName, Class<T> klass) throws FileNotFoundException {
+    private static <T> List<T> toBeans(String entityName, Class<T> klass) throws FileNotFoundException {
         File file = getFileByNameOnClassPath("/dbLoad/" + entityName + ".data");
         if (file == null || !file.exists()) {
             // Assert.fail();
@@ -214,35 +345,35 @@ public class LoadCodeDataTest extends AbstractTransactionalJUnit4SpringContextTe
         return codes;
     }
 
-    private File getFileByNameOnClassPath(String name) {
+    private static File getFileByNameOnClassPath(String name) {
         return EntityGeneratorTool.getFileByNameOnClassPath(name);
     }
 
-    public static void main(String[] args) {
-
-        Prioriteringsobjekt prio = new Prioriteringsobjekt();
-        BeanMap bm = new BeanMap(prio);
-        for (Object key : bm.keySet()) {
-            System.out.println(key + "=" + key);
-        }
-
-        final String function = "@Resource(name = \"ENT_REPO\")" + "\n"
-                + GenerisktKodRepository.class.getSimpleName() + "<ENT_NAME> ENT_REPO;" + "\n    @Test"
-                + "\n    @Rollback(false)"
-                + "\n    public void loadENT_NAMEValuesIntoDb() throws FileNotFoundException {"
-                + "\n        List<ENT_NAME> codes = toBeans(\"ENT_NAME\", ENT_NAME.class);"
-                + "\n        for (ENT_NAME code : codes) {" + "\n            ENT_REPO.persist(code);"
-                + "\n        }" + "\n        ENT_REPO.flush();" + "\n    }";
-
-        for (String ent : getEntityNames()) {
-            String entRepo = toRepoName(ent);
-            String result = function.replace("ENT_NAME", ent);
-            result = result.replace("ENT_REPO", entRepo);
-
-            System.out.println("\n" + result);
-        }
-
-    }
+    // public static void main(String[] args) {
+    //
+    // Prioriteringsobjekt prio = new Prioriteringsobjekt();
+    // BeanMap bm = new BeanMap(prio);
+    // for (Object key : bm.keySet()) {
+    // System.out.println(key + "=" + key);
+    // }
+    //
+    // final String function = "@Resource(name = \"ENT_REPO\")" + "\n"
+    // + GenerisktKodRepository.class.getSimpleName() + "<ENT_NAME> ENT_REPO;" + "\n    @Test"
+    // + "\n    @Rollback(false)"
+    // + "\n    public void loadENT_NAMEValuesIntoDb() throws FileNotFoundException {"
+    // + "\n        List<ENT_NAME> codes = toBeans(\"ENT_NAME\", ENT_NAME.class);"
+    // + "\n        for (ENT_NAME code : codes) {" + "\n            ENT_REPO.persist(code);"
+    // + "\n        }" + "\n        ENT_REPO.flush();" + "\n    }";
+    //
+    // for (String ent : getEntityNames()) {
+    // String entRepo = toRepoName(ent);
+    // String result = function.replace("ENT_NAME", ent);
+    // result = result.replace("ENT_REPO", entRepo);
+    //
+    // System.out.println("\n" + result);
+    // }
+    //
+    // }
 
     private static List<String> getEntityNames() {
         return EntityGeneratorTool.getEntityNames();

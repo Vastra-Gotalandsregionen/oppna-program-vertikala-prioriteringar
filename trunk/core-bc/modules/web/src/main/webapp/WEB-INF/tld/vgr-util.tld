@@ -33,5 +33,49 @@
     <function-signature>boolean contains(java.util.Collection, java.lang.Object)</function-signature>
 
   </function>
+  
+   <function>
+
+    <description>Is a certain value a collection?</description>
+
+    <display-name>isCollection</display-name>
+
+    <name>isCollection</name>
+
+    <function-class>se.vgregion.verticalprio.el.Util</function-class>
+
+    <function-signature>boolean isCollection(java.lang.Object)</function-signature>
+
+  </function>
+  
+  
+  <function>
+
+    <description>Format a cell value </description>
+
+    <display-name>cellToString</display-name>
+
+    <name>cellToString</name>
+
+    <function-class>se.vgregion.verticalprio.el.Util</function-class>
+
+    <function-signature>String cellToString(java.lang.Object)</function-signature>
+
+  </function>
+
+
+  <function>
+
+    <description>Casts a object to a collection.</description>
+
+    <display-name>toCollection</display-name>
+
+    <name>toCollection</name>
+
+    <function-class>se.vgregion.verticalprio.el.Util</function-class>
+
+    <function-signature>java.util.Collection toCollection(java.lang.Object)</function-signature>
+
+  </function>
 
 </taglib>

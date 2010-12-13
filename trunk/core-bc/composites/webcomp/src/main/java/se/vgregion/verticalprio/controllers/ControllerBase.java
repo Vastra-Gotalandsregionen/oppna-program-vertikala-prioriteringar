@@ -71,7 +71,7 @@ public class ControllerBase {
             List<Column> result = new ArrayList<Column>(ppt.size());
             for (String key : new TreeSet<String>(ppt.keySet())) {
                 Column column = new Column();
-                column.setName(key.substring(3));
+                column.setName(key.substring(4));
                 column.setLabel(ppt.get(key));
                 column.setId(count++);
                 result.add(column);
