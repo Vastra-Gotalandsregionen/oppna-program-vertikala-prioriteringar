@@ -10,8 +10,10 @@
 
 <body style="height: 100%;">
 
+<%--
 <jsp:include page="jsp/main-body.jsp" />
-
+ --%>
+ 
 <div class="popup-overlay">
 
 

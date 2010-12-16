@@ -47,6 +47,10 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
     @JoinTable(name = "link_prioriteringsobjekt_vaardforms_kod", joinColumns = { @JoinColumn(name = "prio_id") }, inverseJoinColumns = { @JoinColumn(name = "vaardforms_kod_id") })
     private List<VaardformsKod> vaardformskoder = new ArrayList<VaardformsKod>();
 
+    @ManyToMany()
+    @JoinTable(name = "link_prioriteringsobjekt_atc_kod", joinColumns = { @JoinColumn(name = "prio_id") }, inverseJoinColumns = { @JoinColumn(name = "atc_kod_id") })
+    private List<AtcKod> atcKoder = new ArrayList<AtcKod>();
+
     @ManyToOne
     @JoinColumn(name = "tillstaandets_svaarighetsgrad_kod_id")
     private TillstaandetsSvaarighetsgradKod tillstaandetsSvaarighetsgradKod;
@@ -81,6 +85,9 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
 
     @Column(name = "vaardgivare")
     private String vaardgivare;
+
+    @Column(name = "kommentar", length = 2000)
+    private String kommentar;
 
     public String getVaardgivare() {
         return vaardgivare;
@@ -217,6 +224,22 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
 
     public Integer getVaentetidVeckor() {
         return vaentetidVeckor;
+    }
+
+    public void setKommentar(String kommentar) {
+        this.kommentar = kommentar;
+    }
+
+    public String getKommentar() {
+        return kommentar;
+    }
+
+    public void setAtcKoder(List<AtcKod> atcKoder) {
+        this.atcKoder = atcKoder;
+    }
+
+    public List<AtcKod> getAtcKoder() {
+        return atcKoder;
     }
 
 }

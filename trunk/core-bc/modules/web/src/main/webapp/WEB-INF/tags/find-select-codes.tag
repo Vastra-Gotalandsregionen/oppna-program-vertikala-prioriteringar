@@ -8,15 +8,28 @@
 
 <%@ attribute name="codeRef" required="true" rtexprvalue="true" type="se.vgregion.verticalprio.controllers.ManyCodesRef"%>
 
+<%@ attribute name="styleClass" required="false" rtexprvalue="true" type="java.lang.String"%>
+
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags"%>
 <%@ taglib uri="/WEB-INF/tld/vgr-util.tld" prefix="util"%>
 
-<div class="find-select-code">
+<div class="find-select-code ${styleClass}">
+
+  <div class="selected">
+  <c:forEach items="${codeRef.codes}" var="item">
+    <label for="">
+      <input type="checkbox" name="${codeRefName}.selectedCodesId" value="${item.id}" checked="checked"/>
+      ${item.kod} ${item.beskrivning} 
+    </label>
+    <br/>
+  </c:forEach>
+  </div>
 
   <div class="label">
-    ${label} <form:input path="${codeRefName}.searchWord"/>
+    ${label} <form:input path="${codeRefName}.searchWord"/> 
+    <input type="submit" value="Sök/Välj" name="${submitName}" />
   </div>
   
   <div class="findings">
@@ -29,17 +42,7 @@
   </c:forEach>
   </div>
   
-  <div>
-  <input type="submit" value="Välj!" name="${submitName}" />
-  </div>
+
   
-  <div class="selected">
-  <c:forEach items="${codeRef.codes}" var="item">
-    <label for="">
-      <input type="checkbox" name="${codeRefName}.selectedCodesId" value="${item.id}" checked="checked"/>
-      ${item.kod} ${item.beskrivning} 
-    </label>
-    <br/>
-  </c:forEach>
-  </div>
+
 </div>

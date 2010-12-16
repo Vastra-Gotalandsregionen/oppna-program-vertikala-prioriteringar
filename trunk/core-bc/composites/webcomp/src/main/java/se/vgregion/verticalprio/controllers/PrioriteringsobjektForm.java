@@ -331,4 +331,16 @@ public class PrioriteringsobjektForm extends Prioriteringsobjekt {
         return columns;
     }
 
+    public ManyCodesRef<AatgaerdsKod> getAatgaerdRef() {
+        return aatgaerdRef;
+    }
+
+    public void setAatgaerdRef(ManyCodesRef<AatgaerdsKod> aatgaerdRef) {
+        this.aatgaerdRef = aatgaerdRef;
+    }
+
+    public void setDiagnosRef(ManyCodesRef<DiagnosKod> diagnosRef) {
+        this.diagnosRef = diagnosRef;
+    }
+
 }
