@@ -150,8 +150,6 @@
   display: block;
 }
 
-
-
 .prio-view {
   max-width: 600px;
   min-width: 300px;
@@ -173,6 +171,33 @@
   margin: auto;
   text-align: left;
   padding: 1em;
+  
+}
+
+
+.find-select-code {
+  display: block;
+  clear:both;
+}
+
+.find-select-code .findings {
+  overflow: auto;
+  max-height: 3em;
+}
+
+.find-select-code .selected, .find-select-code .findings {
+  float: left;
+  width: 50%;
+  min-height: 1em;
+}
+
+.find-select-code .label, .find-select-code .findings {
+  float: right;
+  clear: right;
+}
+
+.find-select-code .label {
+  width: 50%;
   
 }
 
