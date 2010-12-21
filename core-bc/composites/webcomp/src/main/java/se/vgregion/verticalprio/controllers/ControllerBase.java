@@ -18,7 +18,7 @@ public class ControllerBase {
 
     private SortedMap<String, String> prioPropertyTexts;
 
-    private List<Column> columns;
+    private List<Column> columns = Prioriteringsobjekt.getDefaultColumns();
 
     protected String columnTextsPropertiesFileName = "/column-texts.properties";
 
@@ -55,7 +55,7 @@ public class ControllerBase {
      */
     public List<Column> getColumns() {
 
-        return Prioriteringsobjekt.getColumns();
+        return columns;
 
         // if (columns == null) {
         // Map<String, String> ppt = getPrioPropertyTexts();

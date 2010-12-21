@@ -24,7 +24,7 @@ public class PrioriteringsobjektTest {
         Set<String> propertyKeys = new HashSet<String>(bm.keySet());
         Set<String> columnKeys = new HashSet<String>();
 
-        for (Column column : Prioriteringsobjekt.getColumns()) {
+        for (Column column : Prioriteringsobjekt.getDefaultColumns()) {
             if (!propertyKeys.contains(column.getName())) {
                 Assert.fail("The key " + column.getName()
                         + " was present in the columns list but not in the Prioriteringsobjekt class itself.");
