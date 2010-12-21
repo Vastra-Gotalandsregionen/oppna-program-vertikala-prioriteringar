@@ -368,7 +368,7 @@ public class PrioriteringsobjektForm extends Prioriteringsobjekt {
         return atcKoderRef;
     }
 
-    public Map<String, Column> columns() {
+    public Map<String, Column> getColumns() {
         return columns;
     }
 

@@ -119,10 +119,12 @@ public class VerticalPrioController extends ControllerBase {
         MainForm mainForm = getMainForm(session);
 
         for (Column column : mainForm.getColumns()) {
-            if (column.isVisible()) {
-                columnForm.getVisibleColumns().add(column);
-            } else {
-                columnForm.getHiddenColumns().add(column);
+            if (column.isHideAble()) {
+                if (column.isVisible()) {
+                    columnForm.getVisibleColumns().add(column);
+                } else {
+                    columnForm.getHiddenColumns().add(column);
+                }
             }
         }
 
