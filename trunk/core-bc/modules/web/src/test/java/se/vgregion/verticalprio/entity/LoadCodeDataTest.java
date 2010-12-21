@@ -20,6 +20,7 @@ import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 
+import org.junit.Test;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -373,6 +374,11 @@ public class LoadCodeDataTest /* extends AbstractTransactionalJUnit4SpringContex
     // }
     //
     // }
+
+    @Test
+    public void dummy() {
+
+    }
 
     private static List<String> getEntityNames() {
         return EntityGeneratorTool.getEntityNames();
