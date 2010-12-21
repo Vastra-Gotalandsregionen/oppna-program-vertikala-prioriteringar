@@ -92,4 +92,12 @@ public class Column {
         return displayOrder;
     }
 
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public String toString() {
+        return String.valueOf(name);
+    }
+
 }

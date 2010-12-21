@@ -1,10 +1,9 @@
 package se.vgregion.verticalprio.controllers;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.SortedMap;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
 import junit.framework.Assert;
@@ -17,12 +16,15 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import se.vgregion.verticalprio.ConfColumnsForm;
+import se.vgregion.verticalprio.MainForm;
 import se.vgregion.verticalprio.entity.Column;
+import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath*:/applicationContext.xml" })
+@ContextConfiguration("classpath:testApplicationContext.xml")
 public class VerticalPrioControllerTest {
 
+    @Resource(name = "testVerticalPrioController")
     private VerticalPrioController vpc;
 
     private MockHttpServletRequest request;
@@ -31,15 +33,16 @@ public class VerticalPrioControllerTest {
 
     @Before
     public void setUp() {
-        vpc = new VerticalPrioController() {
-            @Override
-            public SortedMap<String, String> getPrioPropertyTexts() {
-                columnTextsPropertiesFileName = "/column-texts-test.properties";
-                return super.getPrioPropertyTexts();
-            }
-        };
+        /*
+         * vpc = new VerticalPrioController() {
+         * 
+         * @Override public SortedMap<String, String> getPrioPropertyTexts() { columnTextsPropertiesFileName =
+         * "/column-texts-test.properties"; return super.getPrioPropertyTexts(); } };
+         */
         request = new MockHttpServletRequest();
         session = request.getSession();
+        MainForm form = new MainForm();
+        session.setAttribute("form", form);
     }
 
     @Test
@@ -55,11 +58,21 @@ public class VerticalPrioControllerTest {
     // Assert.assertNotSame(0, prios.size());
     // }
 
+    private List<Column> getVisibleColumns() {
+        List<Column> result = new ArrayList<Column>(Prioriteringsobjekt.getDefaultColumns());
+
+        for (Column column : Prioriteringsobjekt.getDefaultColumns()) {
+            if (!column.isVisible()) {
+                result.remove(column);
+            }
+        }
+
+        return result;
+    }
+
     @Test
     public void confColumns() {
-        List<String> visibleColumns = new ArrayList<String>();
-        visibleColumns.addAll(Arrays.asList(new String[] { "col1", "col2", "col3" }));
-        visibleColumns.addAll(Arrays.asList(new String[] { "col4", "col5", "col6" }));
+        List<Column> visible = getVisibleColumns();
 
         List<String> hiddenColumns = new ArrayList<String>();
 
@@ -67,31 +80,8 @@ public class VerticalPrioControllerTest {
 
         ConfColumnsForm columnForm = (ConfColumnsForm) session.getAttribute("confCols");
         Assert.assertEquals(0, columnForm.getHiddenColumns().size());
-        Assert.assertEquals(6, columnForm.getVisibleColumns().size());
+        Assert.assertEquals(visible.size(), columnForm.getVisibleColumns().size());
 
-        String result = vpc.confColumns(session, "hide", visibleColumns, hiddenColumns);
-        columnForm = (ConfColumnsForm) session.getAttribute("confCols");
-        Assert.assertEquals("conf-columns", result);
-
-        Assert.assertEquals(6, columnForm.getHiddenColumns().size());
-        Assert.assertEquals(0, columnForm.getVisibleColumns().size());
-
-        result = vpc.confColumns(session, "show", hiddenColumns, visibleColumns);
-        Assert.assertEquals("conf-columns", result);
-        Assert.assertEquals(0, columnForm.getHiddenColumns().size());
-        Assert.assertEquals(6, columnForm.getVisibleColumns().size());
-
-        result = vpc.confColumns(session, "save", visibleColumns, hiddenColumns);
-        Assert.assertEquals("main", result);
-        for (Column column : columnForm.getVisibleColumns()) {
-            Assert.assertEquals(true, column.isVisible());
-        }
-        for (Column column : columnForm.getHiddenColumns()) {
-            Assert.assertEquals(false, column.isVisible());
-        }
-
-        result = vpc.confColumns(session, "cancel", visibleColumns, hiddenColumns);
-        Assert.assertEquals("main", result);
     }
 
     @Test
@@ -102,7 +92,8 @@ public class VerticalPrioControllerTest {
 
     @Test
     public void check() {
-        String result = vpc.check(session, 10);
+
+        String result = vpc.check(session, 1);
         Assert.assertEquals("main", result);
     }
 }

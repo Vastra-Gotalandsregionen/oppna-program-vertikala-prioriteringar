@@ -14,10 +14,6 @@ public class MainForm {
 
     private String command;
 
-    private void setSectors(List<SektorRaad> sectors) {
-        this.sectors = sectors;
-    }
-
     public List<SektorRaad> getSectors() {
         return sectors;
     }

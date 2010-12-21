@@ -275,7 +275,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
     // sb.append("column." + setterCall("name", quote(prop)) + "\n");
     // sb.append("column." + setterCall("label", quote("")) + "\n");
     // sb.append("column." + setterCall("displayOrder", "i++") + "\n");
-    // sb.append("result.add(column); column.setHideAble(true);\n\n");
+    // sb.append("result.add(column); column.setId(i); column.setHideAble(true);\n\n");
     // }
     //
     // System.out.println(sb);
@@ -311,6 +311,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         column.setLabel("Väntetid veckor");
         column.setDisplayOrder(i++);
         result.add(column);
+        column.setId(i);
         column.setHideAble(true);
 
         column = new se.vgregion.verticalprio.entity.Column();
@@ -318,6 +319,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         column.setLabel("Atc-kod");
         column.setDisplayOrder(i++);
         result.add(column);
+        column.setId(i);
         column.setHideAble(true);
 
         column = new se.vgregion.verticalprio.entity.Column();
@@ -325,6 +327,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         column.setLabel("Vårdgivare");
         column.setDisplayOrder(i++);
         result.add(column);
+        column.setId(i);
         column.setHideAble(true);
 
         column = new se.vgregion.verticalprio.entity.Column();
@@ -332,6 +335,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         column.setLabel("Diagnos");
         column.setDisplayOrder(i++);
         result.add(column);
+        column.setId(i);
         column.setHideAble(true);
 
         column = new se.vgregion.verticalprio.entity.Column();
@@ -339,6 +343,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         column.setLabel("Patientnytta effekt/åtgärd");
         column.setDisplayOrder(i++);
         result.add(column);
+        column.setId(i);
         column.setHideAble(true);
 
         column = new se.vgregion.verticalprio.entity.Column();
@@ -346,6 +351,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         column.setLabel("Sektorsråd");
         column.setDisplayOrder(i++);
         result.add(column);
+        column.setId(i);
         column.setHideAble(false);
 
         column = new se.vgregion.verticalprio.entity.Column();
@@ -353,6 +359,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         column.setLabel("Patientnytta evidens");
         column.setDisplayOrder(i++);
         result.add(column);
+        column.setId(i);
         column.setHideAble(true);
 
         column = new se.vgregion.verticalprio.entity.Column();
@@ -360,6 +367,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         column.setLabel("Tillståndets svårighetsgrad");
         column.setDisplayOrder(i++);
         result.add(column);
+        column.setId(i);
         column.setHideAble(false);
 
         column = new se.vgregion.verticalprio.entity.Column();
@@ -367,6 +375,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         column.setLabel("Hälsoekonomisk evidens");
         column.setDisplayOrder(i++);
         result.add(column);
+        column.setId(i);
         column.setHideAble(true);
 
         column = new se.vgregion.verticalprio.entity.Column();
@@ -374,6 +383,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         column.setLabel("Indikation / Gaf");
         column.setDisplayOrder(i++);
         result.add(column);
+        column.setId(i);
         column.setHideAble(true);
 
         column = new se.vgregion.verticalprio.entity.Column();
@@ -381,6 +391,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         column.setLabel("Vårdform");
         column.setDisplayOrder(i++);
         result.add(column);
+        column.setId(i);
         column.setHideAble(true);
 
         column = new se.vgregion.verticalprio.entity.Column();
@@ -388,6 +399,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         column.setLabel("Diagnostext");
         column.setDisplayOrder(i++);
         result.add(column);
+        column.setId(i);
         column.setHideAble(false);
 
         column = new se.vgregion.verticalprio.entity.Column();
@@ -395,6 +407,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         column.setLabel("Id");
         column.setDisplayOrder(i++);
         result.add(column);
+        column.setId(i);
         column.setHideAble(true);
 
         column = new se.vgregion.verticalprio.entity.Column();
@@ -402,6 +415,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         column.setLabel("Vårdnivå");
         column.setDisplayOrder(i++);
         result.add(column);
+        column.setId(i);
         column.setHideAble(true);
 
         column = new se.vgregion.verticalprio.entity.Column();
@@ -409,6 +423,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         column.setLabel("Åtgärdskod");
         column.setDisplayOrder(i++);
         result.add(column);
+        column.setId(i);
         column.setHideAble(false);
 
         column = new se.vgregion.verticalprio.entity.Column();
@@ -416,6 +431,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         column.setLabel("Diagnoskodtext");
         column.setDisplayOrder(i++);
         result.add(column);
+        column.setId(i);
         column.setHideAble(false);
 
         column = new se.vgregion.verticalprio.entity.Column();
@@ -423,6 +439,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         column.setLabel("Väntettidskod");
         column.setDisplayOrder(i++);
         result.add(column);
+        column.setId(i);
         column.setHideAble(true);
 
         column = new se.vgregion.verticalprio.entity.Column();
@@ -430,6 +447,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         column.setLabel("Besöksväntetid veckor");
         column.setDisplayOrder(i++);
         result.add(column);
+        column.setId(i);
         column.setHideAble(true);
 
         column = new se.vgregion.verticalprio.entity.Column();
@@ -437,6 +455,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         column.setLabel("Åtgärdsrisk");
         column.setDisplayOrder(i++);
         result.add(column);
+        column.setId(i);
         column.setHideAble(true);
 
         column = new se.vgregion.verticalprio.entity.Column();
@@ -444,6 +463,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         column.setLabel("Kommentar");
         column.setDisplayOrder(i++);
         result.add(column);
+        column.setId(i);
         column.setHideAble(true);
 
         column = new se.vgregion.verticalprio.entity.Column();
@@ -451,6 +471,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         column.setLabel("Rangordning");
         column.setDisplayOrder(i++);
         result.add(column);
+        column.setId(i);
         column.setHideAble(false);
 
         columns = result;
