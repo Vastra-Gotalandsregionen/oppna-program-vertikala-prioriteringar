@@ -70,11 +70,20 @@ public class VerticalPrioControllerTest {
         return result;
     }
 
+    private List<String> toNameList(List<Column> columns) {
+        List<String> result = new ArrayList<String>();
+        for (Column column : columns) {
+            result.add(column.getName());
+        }
+        return result;
+    }
+
     @Test
     public void confColumns() {
         List<Column> visible = getVisibleColumns();
 
-        List<String> hiddenColumns = new ArrayList<String>();
+        List<String> hiddenColumns = toNameList(vpc.getColumns());
+        List<String> visibleColumns = toNameList(vpc.getColumns());
 
         vpc.initConfColumns(session);
 
@@ -82,6 +91,14 @@ public class VerticalPrioControllerTest {
         Assert.assertEquals(0, columnForm.getHiddenColumns().size());
         Assert.assertEquals(visible.size(), columnForm.getVisibleColumns().size());
 
+        String result = vpc.confColumns(session, "hide", visibleColumns, hiddenColumns);
+        Assert.assertEquals("conf-columns", result);
+
+        result = vpc.confColumns(session, "show", visibleColumns, hiddenColumns);
+        Assert.assertEquals("conf-columns", result);
+
+        result = vpc.confColumns(session, "save", visibleColumns, hiddenColumns);
+        Assert.assertEquals("main", result);
     }
 
     @Test
