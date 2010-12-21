@@ -24,7 +24,6 @@ import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
 import se.vgregion.verticalprio.entity.VaardformsKod;
 import se.vgregion.verticalprio.repository.GenerisktHierarkisktKodRepository;
 import se.vgregion.verticalprio.repository.GenerisktKodRepository;
-import se.vgregion.verticalprio.repository.PrioRepository;
 
 /**
  * @author Claes Lundahl, vgrid=clalu4
@@ -36,8 +35,8 @@ public class EditPrioriteringController extends ControllerBase {
     @Resource(name = "applicationData")
     ApplicationData applicationData;
 
-    @Resource(name = "prioRepository")
-    PrioRepository prioRepository;
+    // @Resource(name = "prioRepository")
+    // PrioRepository prioRepository;
 
     @Resource(name = "diagnosKodRepository")
     GenerisktHierarkisktKodRepository<DiagnosKod> diagnosKodRepository;

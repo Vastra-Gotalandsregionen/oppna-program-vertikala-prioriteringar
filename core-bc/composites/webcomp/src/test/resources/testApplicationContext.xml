@@ -2,6 +2,55 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:p="http://www.springframework.org/schema/p"
   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+ 
+  <bean name="testVerticalPrioController" class="se.vgregion.verticalprio.controllers.VerticalPrioController" />
+ 
+  <bean name="prioRepository" class="se.vgregion.verticalprio.controllers.MockPrioRepository" />
 
-  <import resource="classpath*:applicationContext.xml" />
+  <bean name="aatgaerdsKodRepository" class="se.vgregion.verticalprio.controllers.MockGenerisktKodRepository">
+    <constructor-arg value="se.vgregion.verticalprio.entity.AatgaerdsKod" />
+  </bean>
+  <bean name="sektorRaadRepository" class="se.vgregion.verticalprio.controllers.MockGenerisktHierarkisktKodRepository">
+    <constructor-arg value="se.vgregion.verticalprio.entity.SektorRaad" />
+  </bean>
+  <bean name="aatgaerdsRiskKodRepository" class="se.vgregion.verticalprio.controllers.MockGenerisktKodRepository">
+    <constructor-arg value="se.vgregion.verticalprio.entity.AatgaerdsRiskKod" />
+  </bean>
+  <bean name="diagnosKodRepository" class="se.vgregion.verticalprio.controllers.MockGenerisktHierarkisktKodRepository">
+    <constructor-arg value="se.vgregion.verticalprio.entity.DiagnosKod" />
+  </bean>
+  <bean name="haelsonekonomiskEvidensKodRepository" class="se.vgregion.verticalprio.controllers.MockGenerisktKodRepository">
+    <constructor-arg value="se.vgregion.verticalprio.entity.HaelsonekonomiskEvidensKod" />
+  </bean>
+  <bean name="kostnadLevnadsaarKodRepository" class="se.vgregion.verticalprio.controllers.MockGenerisktKodRepository">
+    <constructor-arg value="se.vgregion.verticalprio.entity.KostnadLevnadsaarKod" />
+  </bean>
+  <bean name="patientnyttaEffektAatgaerdsKodRepository" class="se.vgregion.verticalprio.controllers.MockGenerisktKodRepository">
+    <constructor-arg value="se.vgregion.verticalprio.entity.PatientnyttaEffektAatgaerdsKod" />
+  </bean>
+  <bean name="patientnyttoEvidensKodRepository" class="se.vgregion.verticalprio.controllers.MockGenerisktKodRepository">
+    <constructor-arg value="se.vgregion.verticalprio.entity.PatientnyttoEvidensKod" />
+  </bean>
+  <bean name="rangordningsKodRepository" class="se.vgregion.verticalprio.controllers.MockGenerisktKodRepository">
+    <constructor-arg value="se.vgregion.verticalprio.entity.RangordningsKod" />
+  </bean>
+  <bean name="tillstaandetsSvaarighetsgradKodRepository" class="se.vgregion.verticalprio.controllers.MockGenerisktKodRepository">
+    <constructor-arg value="se.vgregion.verticalprio.entity.TillstaandetsSvaarighetsgradKod" />
+  </bean>
+  <bean name="vaardformsKodRepository" class="se.vgregion.verticalprio.controllers.MockGenerisktKodRepository">
+    <constructor-arg value="se.vgregion.verticalprio.entity.VaardformsKod" />
+  </bean>
+  <bean name="vaardnivaaKodRepository" class="se.vgregion.verticalprio.controllers.MockGenerisktKodRepository">
+    <constructor-arg value="se.vgregion.verticalprio.entity.VaardnivaaKod" />
+  </bean>
+  <bean name="vaentetidsKodRepository" class="se.vgregion.verticalprio.controllers.MockGenerisktKodRepository">
+    <constructor-arg value="se.vgregion.verticalprio.entity.VaentetidsKod" />
+  </bean>
+  <bean name="atcKodRepository" class="se.vgregion.verticalprio.controllers.MockGenerisktKodRepository">
+    <constructor-arg value="se.vgregion.verticalprio.entity.AtcKod" />
+  </bean>
+
+  <bean name="applicationData" class="se.vgregion.verticalprio.ApplicationData"/>
+
+  
 </beans>

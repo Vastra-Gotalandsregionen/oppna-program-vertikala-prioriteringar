@@ -26,11 +26,11 @@ import se.vgregion.verticalprio.entity.SektorRaad;
 import se.vgregion.verticalprio.repository.GenerisktHierarkisktKodRepository;
 
 @Controller
-@SessionAttributes("form")
+@SessionAttributes(value = { "confCols", "form" })
 public class VerticalPrioController extends ControllerBase {
 
     @Resource(name = "sektorRaadRepository")
-    private GenerisktHierarkisktKodRepository<SektorRaad> sektorRaadRepository;
+    GenerisktHierarkisktKodRepository<SektorRaad> sektorRaadRepository;
 
     private void initMainForm(MainForm form) {
         if (form.getSectors().isEmpty()) {
