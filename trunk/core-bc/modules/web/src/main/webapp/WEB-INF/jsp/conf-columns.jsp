@@ -7,10 +7,13 @@
 
 <body style="height: 100%;">
 
-<jsp:include page="jsp/main-body.jsp" />
+<%-- jsp:include page="jsp/main-body.jsp" / --%>
+
+
 <jsp:useBean id="confCols" scope="session" class="se.vgregion.verticalprio.ConfColumnsForm"></jsp:useBean>
 
 <div class="popup-overlay">
+</div>
 
 <span class="window">
 <form action="conf-columns"><select name="hiddenColumns" multiple="multiple">
@@ -29,7 +32,7 @@
   <c:forEach items="${confCols.visibleColumns}" var="column">
     <option value="${column.name}" id="${column.id}">${column.label}</option>
   </c:forEach>
-</select>
+  </select>
 
 
   <input type="submit" name="command"  style="display: none;"
@@ -44,7 +47,7 @@
 
 </span>
 
-</div>
+
 
 </body>
 </html>

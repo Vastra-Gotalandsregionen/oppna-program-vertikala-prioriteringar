@@ -64,6 +64,9 @@
   <bean name="vaentetidsKodRepository" class="se.vgregion.verticalprio.repository.JpaGenerisktKodRepository">
     <constructor-arg value="se.vgregion.verticalprio.entity.VaentetidsKod" />
   </bean>
+  <bean name="atcKodRepository" class="se.vgregion.verticalprio.repository.JpaGenerisktKodRepository">
+    <constructor-arg value="se.vgregion.verticalprio.entity.AtcKod" />
+  </bean>
 
   <bean name="applicationData" class="se.vgregion.verticalprio.ApplicationData"/>
 

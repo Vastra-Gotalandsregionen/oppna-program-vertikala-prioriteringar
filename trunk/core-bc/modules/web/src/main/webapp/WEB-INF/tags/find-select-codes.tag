@@ -13,6 +13,7 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags"%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib uri="/WEB-INF/tld/vgr-util.tld" prefix="util"%>
 
 <div class="find-select-code ${styleClass}">
@@ -28,12 +29,14 @@
   </div>
 
   <div class="label">
-    ${label} <form:input path="${codeRefName}.searchWord"/> 
+    ${label}
+     <form:input cssStyle="width:5em" path="${codeRefName}.searchKodText"/>
+     <form:input path="${codeRefName}.searchBeskrivningText"/> 
     <input type="submit" value="Sök/Välj" name="${submitName}" />
   </div>
   
   <div class="findings">
-  <c:forEach items="${codeRef.findings}" var="item">
+  <c:forEach items="${codeRef.findings}" var="item" varStatus="vs">
     <label for="">
       <form:checkbox path="${codeRefName}.selectedCodesId" value="${item.id}" disabled="${util:contains(codeRef.selectedCodesId, item.id)}" />
       ${item.kod} ${item.beskrivning} 

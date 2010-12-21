@@ -8,68 +8,88 @@ package se.vgregion.verticalprio.entity;
  * 
  */
 public class Column {
-	// private static final Log log = LogFactory.getLog(Column.class);
-	private int id;
+    // private static final Log log = LogFactory.getLog(Column.class);
+    private int id;
 
-	private String label;
+    private int displayOrder;
 
-	private String name;
+    private boolean hideAble;
 
-	private boolean visible = true;
+    private String label;
 
-	public Column() {
-		// TODO Auto-generated constructor stub
-	}
+    private String name;
 
-	public Column(int id, String label) {
-		setId(id);
-		setLabel(label);
-	}
+    private boolean visible = true;
 
-	public int getId() {
-		return id;
-	}
+    public Column() {
+        // TODO Auto-generated constructor stub
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public Column(int id, String label) {
+        setId(id);
+        setLabel(label);
+    }
 
-	public String getLabel() {
-		return label;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public void setLabel(String label) {
-		this.label = label;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public void setVisible(boolean visible) {
-		this.visible = visible;
-	}
+    public String getLabel() {
+        return label;
+    }
 
-	public boolean isVisible() {
-		return visible;
-	}
+    public void setLabel(String label) {
+        this.label = label;
+    }
 
-	@Override
-	public int hashCode() {
-		return id;
-	}
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (!(obj instanceof Column)) {
-			return false;
-		}
-		Column other = (Column) obj;
-		return other.id == id;
-	}
+    public boolean isVisible() {
+        return visible;
+    }
 
-	public String getName() {
-		return name;
-	}
+    @Override
+    public int hashCode() {
+        return id;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Column)) {
+            return false;
+        }
+        Column other = (Column) obj;
+        return other.id == id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setHideAble(boolean hideAble) {
+        this.hideAble = hideAble;
+    }
+
+    public boolean isHideAble() {
+        return hideAble;
+    }
+
+    public void setDisplayOrder(int displayOrder) {
+        this.displayOrder = displayOrder;
+    }
+
+    public int getDisplayOrder() {
+        return displayOrder;
+    }
 
 }
