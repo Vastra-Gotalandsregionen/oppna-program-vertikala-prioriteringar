@@ -231,7 +231,7 @@ public class EditPrioriteringController extends ControllerBase {
         BeanMap adMap = new BeanMap(applicationData);
         pfMap.putAllWriteable(adMap);
         for (Column column : getColumns()) {
-            pf.columns().put(column.getName(), column);
+            pf.getColumns().put(column.getName(), column);
         }
     }
 

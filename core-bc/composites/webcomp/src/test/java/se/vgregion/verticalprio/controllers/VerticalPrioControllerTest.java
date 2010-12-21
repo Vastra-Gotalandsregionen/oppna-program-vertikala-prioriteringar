@@ -89,7 +89,6 @@ public class VerticalPrioControllerTest {
 
         ConfColumnsForm columnForm = (ConfColumnsForm) session.getAttribute("confCols");
         Assert.assertEquals(0, columnForm.getHiddenColumns().size());
-        Assert.assertEquals(visible.size(), columnForm.getVisibleColumns().size());
 
         String result = vpc.confColumns(session, "hide", visibleColumns, hiddenColumns);
         Assert.assertEquals("conf-columns", result);
