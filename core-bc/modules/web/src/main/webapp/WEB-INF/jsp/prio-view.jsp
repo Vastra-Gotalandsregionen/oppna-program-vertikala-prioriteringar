@@ -16,10 +16,7 @@
  
 <div class="popup-overlay">
 
-
-
 </div>
-
 
 <span class="window prio-view">
 

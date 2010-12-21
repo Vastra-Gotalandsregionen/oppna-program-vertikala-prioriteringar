@@ -1,22 +1,11 @@
 package se.vgregion.verticalprio.controllers;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import java.util.TreeSet;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
-
-import org.apache.commons.beanutils.BeanMap;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.ModelAttribute;
 
 import se.vgregion.verticalprio.entity.Column;
 import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
@@ -65,43 +54,23 @@ public class ControllerBase {
      * @return List of columns described in the property file /column-texts.properties.
      */
     public List<Column> getColumns() {
-        if (columns == null) {
-            Map<String, String> ppt = getPrioPropertyTexts();
-            int count = 0;
-            List<Column> result = new ArrayList<Column>(ppt.size());
-            for (String key : new TreeSet<String>(ppt.keySet())) {
-                Column column = new Column();
-                column.setName(key.substring(4));
-                column.setLabel(ppt.get(key));
-                column.setId(count++);
-                result.add(column);
-            }
-            columns = result;
-        }
-        return columns;
-    }
 
-    @ModelAttribute("rows")
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public List<Prioriteringsobjekt> result(HttpSession session) {
-        List<Prioriteringsobjekt> prios = new ArrayList<Prioriteringsobjekt>(prioRepository.findAll());
+        return Prioriteringsobjekt.getColumns();
 
-        for (Prioriteringsobjekt prio : prios) {
-            BeanMap bm = new BeanMap(prio);
-            Map<String, Object> values = new HashMap<String, Object>(bm);
-            // Completely insane... but has to be done because otherwise
-            // a lack of transaction will occur when rendering the referred child objects.
-            // TODO: don't use lazy loading on collection or objects inside the Prioriteringsobjekt class.
-            for (String key : values.keySet()) {
-                Object value = values.get(key);
-                if (value instanceof Collection) {
-                    Collection<?> collection = (Collection<?>) value;
-                    new ArrayList<Object>(collection);
-                }
-            }
-        }
-
-        return prios;
+        // if (columns == null) {
+        // Map<String, String> ppt = getPrioPropertyTexts();
+        // int count = 0;
+        // List<Column> result = new ArrayList<Column>(ppt.size());
+        // for (String key : new TreeSet<String>(ppt.keySet())) {
+        // Column column = new Column();
+        // column.setName(key.substring(4));
+        // column.setLabel(ppt.get(key));
+        // column.setId(count++);
+        // result.add(column);
+        // }
+        // columns = result;
+        // }
+        // return columns;
     }
 
 }

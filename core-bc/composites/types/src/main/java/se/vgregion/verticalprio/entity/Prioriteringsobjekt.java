@@ -31,6 +31,9 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
     @Column(name = "vaentetid_veckor")
     private Integer vaentetidVeckor;
 
+    @Column(name = "vaentetid_besook_veckor")
+    private Integer vaentetidBesookVeckor;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "sektor_raad_id")
     private SektorRaad sektorRaad;
@@ -88,6 +91,9 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
 
     @Column(name = "kommentar", length = 2000)
     private String kommentar;
+
+    @Column(name = "indikation_gaf", length = 2000)
+    private String indikationGaf;
 
     public String getVaardgivare() {
         return vaardgivare;
@@ -240,6 +246,216 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
 
     public List<AtcKod> getAtcKoder() {
         return atcKoder;
+    }
+
+    public void setIndikationGaf(String indikationGaf) {
+        this.indikationGaf = indikationGaf;
+    }
+
+    public String getIndikationGaf() {
+        return indikationGaf;
+    }
+
+    public void setVaentetidBesookVeckor(Integer vaentetidBesookVeckor) {
+        this.vaentetidBesookVeckor = vaentetidBesookVeckor;
+    }
+
+    public Integer getVaentetidBesookVeckor() {
+        return vaentetidBesookVeckor;
+    }
+
+    // public static void main(String[] args) {
+    // Prioriteringsobjekt prio = new Prioriteringsobjekt();
+    // BeanMap bm = BeanMap.create(prio);
+    // StringBuilder sb = new StringBuilder();
+    //
+    // for (Object key : bm.keySet()) {
+    // String prop = (String) key;
+    // sb.append("column = new se.vgregion.verticalprio.entity.Column();\n");
+    // sb.append("column." + setterCall("name", quote(prop)) + "\n");
+    // sb.append("column." + setterCall("label", quote("")) + "\n");
+    // sb.append("column." + setterCall("displayOrder", "i++") + "\n");
+    // sb.append("result.add(column); column.setHideAble(true);\n\n");
+    // }
+    //
+    // System.out.println(sb);
+    // }
+    //
+    // private static String quote(String s) {
+    // return '"' + s + '"';
+    // }
+    //
+    // private static String setterCall(String prop, String arg) {
+    // String result = "set" + prop.substring(0, 1).toUpperCase() + prop.substring(1) + "(";
+    // result += arg + ");";
+    // return result;
+    // }
+    //
+    // private static String getterCall(String prop) {
+    // String result = "set" + prop.substring(0, 1).toUpperCase() + prop.substring(1) + "();";
+    // return result;
+    // }
+
+    private static List<se.vgregion.verticalprio.entity.Column> columns;
+
+    public static List<se.vgregion.verticalprio.entity.Column> getColumns() {
+        if (columns != null) {
+            return columns;
+        }
+        se.vgregion.verticalprio.entity.Column column = null;
+        List<se.vgregion.verticalprio.entity.Column> result = new ArrayList<se.vgregion.verticalprio.entity.Column>();
+        int i = 0;
+
+        column = new se.vgregion.verticalprio.entity.Column();
+        column.setName("vaentetidVeckor");
+        column.setLabel("Väntetid veckor");
+        column.setDisplayOrder(i++);
+        result.add(column);
+        column.setHideAble(true);
+
+        column = new se.vgregion.verticalprio.entity.Column();
+        column.setName("atcKoder");
+        column.setLabel("Atc-kod");
+        column.setDisplayOrder(i++);
+        result.add(column);
+        column.setHideAble(true);
+
+        column = new se.vgregion.verticalprio.entity.Column();
+        column.setName("vaardgivare");
+        column.setLabel("Vårdgivare");
+        column.setDisplayOrder(i++);
+        result.add(column);
+        column.setHideAble(true);
+
+        column = new se.vgregion.verticalprio.entity.Column();
+        column.setName("diagnoser");
+        column.setLabel("Diagnos");
+        column.setDisplayOrder(i++);
+        result.add(column);
+        column.setHideAble(true);
+
+        column = new se.vgregion.verticalprio.entity.Column();
+        column.setName("patientnyttaEffektAatgaerdsKod");
+        column.setLabel("Patientnytta effekt/åtgärd");
+        column.setDisplayOrder(i++);
+        result.add(column);
+        column.setHideAble(true);
+
+        column = new se.vgregion.verticalprio.entity.Column();
+        column.setName("sektorRaad");
+        column.setLabel("Sektorsråd");
+        column.setDisplayOrder(i++);
+        result.add(column);
+        column.setHideAble(false);
+
+        column = new se.vgregion.verticalprio.entity.Column();
+        column.setName("patientnyttoEvidensKod");
+        column.setLabel("Patientnytta evidens");
+        column.setDisplayOrder(i++);
+        result.add(column);
+        column.setHideAble(true);
+
+        column = new se.vgregion.verticalprio.entity.Column();
+        column.setName("tillstaandetsSvaarighetsgradKod");
+        column.setLabel("Tillståndets svårighetsgrad");
+        column.setDisplayOrder(i++);
+        result.add(column);
+        column.setHideAble(false);
+
+        column = new se.vgregion.verticalprio.entity.Column();
+        column.setName("haelsonekonomiskEvidensKod");
+        column.setLabel("Hälsoekonomisk evidens");
+        column.setDisplayOrder(i++);
+        result.add(column);
+        column.setHideAble(true);
+
+        column = new se.vgregion.verticalprio.entity.Column();
+        column.setName("indikationGaf");
+        column.setLabel("Indikation / Gaf");
+        column.setDisplayOrder(i++);
+        result.add(column);
+        column.setHideAble(true);
+
+        column = new se.vgregion.verticalprio.entity.Column();
+        column.setName("vaardformskoder");
+        column.setLabel("Vårdform");
+        column.setDisplayOrder(i++);
+        result.add(column);
+        column.setHideAble(true);
+
+        column = new se.vgregion.verticalprio.entity.Column();
+        column.setName("diagnosTexts");
+        column.setLabel("Diagnostext");
+        column.setDisplayOrder(i++);
+        result.add(column);
+        column.setHideAble(false);
+
+        column = new se.vgregion.verticalprio.entity.Column();
+        column.setName("id");
+        column.setLabel("Id");
+        column.setDisplayOrder(i++);
+        result.add(column);
+        column.setHideAble(true);
+
+        column = new se.vgregion.verticalprio.entity.Column();
+        column.setName("vaardnivaaKod");
+        column.setLabel("Vårdnivå");
+        column.setDisplayOrder(i++);
+        result.add(column);
+        column.setHideAble(true);
+
+        column = new se.vgregion.verticalprio.entity.Column();
+        column.setName("aatgaerdskoder");
+        column.setLabel("Åtgärdskod");
+        column.setDisplayOrder(i++);
+        result.add(column);
+        column.setHideAble(false);
+
+        column = new se.vgregion.verticalprio.entity.Column();
+        column.setName("diagnosKodTexts");
+        column.setLabel("Diagnoskodtext");
+        column.setDisplayOrder(i++);
+        result.add(column);
+        column.setHideAble(false);
+
+        column = new se.vgregion.verticalprio.entity.Column();
+        column.setName("vaentetidsKod");
+        column.setLabel("Väntettidskod");
+        column.setDisplayOrder(i++);
+        result.add(column);
+        column.setHideAble(true);
+
+        column = new se.vgregion.verticalprio.entity.Column();
+        column.setName("vaentetidBesookVeckor");
+        column.setLabel("Besöksväntetid veckor");
+        column.setDisplayOrder(i++);
+        result.add(column);
+        column.setHideAble(true);
+
+        column = new se.vgregion.verticalprio.entity.Column();
+        column.setName("aatgaerdsRiskKod");
+        column.setLabel("Åtgärdsrisk");
+        column.setDisplayOrder(i++);
+        result.add(column);
+        column.setHideAble(true);
+
+        column = new se.vgregion.verticalprio.entity.Column();
+        column.setName("kommentar");
+        column.setLabel("Kommentar");
+        column.setDisplayOrder(i++);
+        result.add(column);
+        column.setHideAble(true);
+
+        column = new se.vgregion.verticalprio.entity.Column();
+        column.setName("rangordningsKod");
+        column.setLabel("Rangordning");
+        column.setDisplayOrder(i++);
+        result.add(column);
+        column.setHideAble(false);
+
+        columns = result;
+
+        return result;
     }
 
 }

@@ -49,6 +49,8 @@ public class JpaGenerisktKodRepository<T extends AbstractKod> extends DefaultJpa
         sb.append("select o from @ o");
         StringBuilder where = new StringBuilder();
         Set<String> keys = new HashSet<String>();
+        StringBuilder orderBy = new StringBuilder();
+
         BeanMap bm = new BeanMap(bean);
         for (Object key : bm.keySet()) {
             Class<?> type = bm.getType(key.toString());
@@ -61,9 +63,17 @@ public class JpaGenerisktKodRepository<T extends AbstractKod> extends DefaultJpa
         int i = 1;
         for (String key : keys) {
             Object value = bm.get(key);
-            if (value != null) {
-                where.append("o.");
-                where.append(key);
+            if (value != null && !"".equals(value)) {
+                if (value instanceof String) {
+                    where.append("lower(o.");
+                    where.append(key);
+                    where.append(")");
+                    value = value.toString().toLowerCase();
+                } else {
+                    where.append("o.");
+                    where.append(key);
+                }
+
                 if (value instanceof String && ((String) value).contains(wildCard)) {
                     String wildValue = (String) value;
                     wildValue = wildValue.replace(wildCard, jpaWildCard);
@@ -75,6 +85,9 @@ public class JpaGenerisktKodRepository<T extends AbstractKod> extends DefaultJpa
                 where.append("?" + i++);
                 values.add(value);
                 where.append(" and ");
+                orderBy.append("o.");
+                orderBy.append(key);
+                orderBy.append(", ");
             }
         }
 
@@ -83,6 +96,11 @@ public class JpaGenerisktKodRepository<T extends AbstractKod> extends DefaultJpa
         if (where.length() > 0) {
             where.delete(where.length() - 4, where.length());
             jpql += " where " + where;
+        }
+
+        if (orderBy.length() > 0) {
+            orderBy.delete(orderBy.length() - 2, orderBy.length());
+            jpql += " order by " + orderBy;
         }
 
         return query(jpql, maxResult, values.toArray());

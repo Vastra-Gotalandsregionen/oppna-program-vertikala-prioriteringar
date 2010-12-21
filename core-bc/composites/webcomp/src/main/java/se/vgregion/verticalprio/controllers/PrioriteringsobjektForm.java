@@ -11,6 +11,7 @@ import org.apache.commons.beanutils.BeanMap;
 import se.vgregion.verticalprio.entity.AatgaerdsKod;
 import se.vgregion.verticalprio.entity.AatgaerdsRiskKod;
 import se.vgregion.verticalprio.entity.AbstractKod;
+import se.vgregion.verticalprio.entity.AtcKod;
 import se.vgregion.verticalprio.entity.Column;
 import se.vgregion.verticalprio.entity.DiagnosKod;
 import se.vgregion.verticalprio.entity.HaelsonekonomiskEvidensKod;
@@ -20,6 +21,7 @@ import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
 import se.vgregion.verticalprio.entity.RangordningsKod;
 import se.vgregion.verticalprio.entity.SektorRaad;
 import se.vgregion.verticalprio.entity.TillstaandetsSvaarighetsgradKod;
+import se.vgregion.verticalprio.entity.VaardformsKod;
 import se.vgregion.verticalprio.entity.VaardnivaaKod;
 import se.vgregion.verticalprio.entity.VaentetidsKod;
 
@@ -84,6 +86,32 @@ public class PrioriteringsobjektForm extends Prioriteringsobjekt {
         }
     };
 
+    @SuppressWarnings("serial")
+    private ManyCodesRef<VaardformsKod> vaardformskoderRef = new ManyCodesRef<VaardformsKod>() {
+        @Override
+        public List<VaardformsKod> getCodes() {
+            return getVaardformskoder();
+        }
+
+        @Override
+        public void setCodes(List<VaardformsKod> codes) {
+            setVaardformskoder(codes);
+        }
+    };
+
+    @SuppressWarnings("serial")
+    private ManyCodesRef<AtcKod> atcKoderRef = new ManyCodesRef<AtcKod>() {
+        @Override
+        public List<AtcKod> getCodes() {
+            return getAtcKoder();
+        }
+
+        @Override
+        public void setCodes(List<AtcKod> codes) {
+            setAtcKoder(codes);
+        }
+    };
+
     /**
      * Copy all id's from their codes into their corresponding local attributes.
      * 
@@ -100,6 +128,7 @@ public class PrioriteringsobjektForm extends Prioriteringsobjekt {
         vaentetidsKodId = getIdFromeCodeIfAny(getVaentetidsKod());
         aatgaerdsRiskKodId = getIdFromeCodeIfAny(getAatgaerdsRiskKod());
         rangordningsKodId = getIdFromeCodeIfAny(getRangordningsKod());
+
     }
 
     /**
@@ -335,12 +364,12 @@ public class PrioriteringsobjektForm extends Prioriteringsobjekt {
         return aatgaerdRef;
     }
 
-    public void setAatgaerdRef(ManyCodesRef<AatgaerdsKod> aatgaerdRef) {
-        this.aatgaerdRef = aatgaerdRef;
+    public ManyCodesRef<VaardformsKod> getVaardformskoderRef() {
+        return vaardformskoderRef;
     }
 
-    public void setDiagnosRef(ManyCodesRef<DiagnosKod> diagnosRef) {
-        this.diagnosRef = diagnosRef;
+    public ManyCodesRef<AtcKod> getAtcKoderRef() {
+        return atcKoderRef;
     }
 
 }

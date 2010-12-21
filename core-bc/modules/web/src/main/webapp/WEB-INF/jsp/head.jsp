@@ -171,7 +171,6 @@
   margin: auto;
   text-align: left;
   padding: 1em;
-  
 }
 
 
@@ -199,6 +198,19 @@
 .find-select-code .label {
   width: 50%;
   
+}
+
+.prio-form-grid .cell {
+  float: left;
+  width: 20%;
+}
+
+.prio-form-grid .end {
+  clear: right;
+}
+
+.prio-form-grid {
+  clear:both;
 }
 
 </style>

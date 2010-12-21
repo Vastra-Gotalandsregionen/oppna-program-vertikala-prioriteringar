@@ -1,22 +1,27 @@
 package se.vgregion.verticalprio.controllers;
 
-import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.beanutils.BeanMap;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import se.vgregion.verticalprio.ApplicationData;
+import se.vgregion.verticalprio.entity.AatgaerdsKod;
 import se.vgregion.verticalprio.entity.AbstractKod;
+import se.vgregion.verticalprio.entity.AtcKod;
 import se.vgregion.verticalprio.entity.Column;
 import se.vgregion.verticalprio.entity.DiagnosKod;
 import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
+import se.vgregion.verticalprio.entity.VaardformsKod;
 import se.vgregion.verticalprio.repository.GenerisktHierarkisktKodRepository;
 import se.vgregion.verticalprio.repository.GenerisktKodRepository;
 import se.vgregion.verticalprio.repository.PrioRepository;
@@ -37,6 +42,15 @@ public class EditPrioriteringController extends ControllerBase {
     @Resource(name = "diagnosKodRepository")
     GenerisktHierarkisktKodRepository<DiagnosKod> diagnosKodRepository;
 
+    @Resource(name = "aatgaerdsKodRepository")
+    GenerisktKodRepository<AatgaerdsKod> aatgaerdsKodRepository;
+
+    @Resource(name = "vaardformsKodRepository")
+    GenerisktKodRepository<VaardformsKod> vaardformsKodRepository;
+
+    @Resource(name = "atcKodRepository")
+    GenerisktKodRepository<AtcKod> atcKodRepository;
+
     @RequestMapping(value = "prio-open")
     @Transactional
     public String initView(ModelMap model, @RequestParam(required = false) Long id) {
@@ -56,6 +70,7 @@ public class EditPrioriteringController extends ControllerBase {
             form.getDiagnoser().toArray(); // Are not eager so we have to make sure they are
             form.getAatgaerdskoder().toArray(); // loaded before sending them to the jsp-layer.
             form.getVaardformskoder().toArray();
+            form.getAtcKoder().toArray();
         }
 
         return "prio-view";
@@ -63,47 +78,125 @@ public class EditPrioriteringController extends ControllerBase {
 
     @RequestMapping(value = "prio", params = { "save" })
     @Transactional
-    public String save(/* ModelMap model */PrioriteringsobjektForm pf) {
-        Prioriteringsobjekt prio = toPrioriteringsobjekt(pf);
+    public String save(HttpServletRequest request, PrioriteringsobjektForm pf) {
+        Prioriteringsobjekt prio = toPrioriteringsobjekt(request, pf);
         prioRepository.store(prio);
+
         return "main";
+    }
+
+    @RequestMapping(value = "prio", params = { "findAatgerder" })
+    @Transactional
+    public String findAatgerder(HttpServletRequest request, ModelMap model, PrioriteringsobjektForm pf,
+            @RequestParam(required = false, value = "aatgaerdRef.selectedCodesId") List<String> selectedIds)
+            throws InstantiationException, IllegalAccessException {
+        return findCodesAction(model, pf, AatgaerdsKod.class, pf.getAatgaerdRef(), aatgaerdsKodRepository,
+                pf.getAatgaerdskoder(), request);
+    }
+
+    /**
+     * Sets selectedCodesId in the nested ManyCodesRef-objects inside the PrioriteringsobjektForm with values from
+     * the request.
+     * 
+     * This method should be redundant. Spring mvc should do the setting of 'selectedCodesId' property. It did this
+     * once, then after some changes it stopped.
+     * 
+     * TODO: Remove this method and make Spring Mvc do this instead.
+     * 
+     * @param pf
+     * @param request
+     */
+    private void initNestedValues(HttpServletRequest request, PrioriteringsobjektForm pf) {
+        copyLongValues(request, "aatgaerdRef", pf.getAatgaerdRef());
+        copyLongValues(request, "atcKoderRef", pf.getAtcKoderRef());
+        copyLongValues(request, "diagnosRef", pf.getDiagnosRef());
+        copyLongValues(request, "vaardformskoderRef", pf.getVaardformskoderRef());
+    }
+
+    /**
+     * See initNestedValues for context.
+     * 
+     * @param request
+     * @param requestProperty
+     * @param target
+     */
+    private void copyLongValues(HttpServletRequest request, String requestProperty, ManyCodesRef<?> target) {
+        String[] props = request.getParameterValues(requestProperty + ".selectedCodesId");
+        if (props == null) {
+            return;
+        }
+        for (String value : props) {
+            target.getSelectedCodesId().add(Long.parseLong(value));
+        }
     }
 
     @RequestMapping(value = "prio", params = { "findDiagnoses" })
     @Transactional
-    public String findDiagnoses(ModelMap model, PrioriteringsobjektForm pf) {
+    public String findDiagnoses(HttpServletRequest request, ModelMap model,
+            @ModelAttribute(value = "prio") PrioriteringsobjektForm pf,
+            @RequestParam(required = false, value = "diagnosRef.selectedCodesId") List<String> selectedCodesId)
+            throws InstantiationException, IllegalAccessException {
+
+        initNestedValues(request, pf);
+        return findCodesAction(model, pf, DiagnosKod.class, pf.getDiagnosRef(), diagnosKodRepository,
+                pf.getDiagnoser(), request);
+    }
+
+    @RequestMapping(value = "prio", params = { "findVaardformer" })
+    @Transactional
+    public String findVaardformskoder(HttpServletRequest request, ModelMap model, PrioriteringsobjektForm pf,
+            @RequestParam(required = false, value = "vaardformskoderRef.selectedCodesId") List<String> selectedIds)
+            throws InstantiationException, IllegalAccessException {
+        return findCodesAction(model, pf, VaardformsKod.class, pf.getVaardformskoderRef(),
+                vaardformsKodRepository, pf.getVaardformskoder(), request);
+    }
+
+    @RequestMapping(value = "prio", params = { "findAtcKoder" })
+    @Transactional
+    public String findAtckoder(HttpServletRequest request, ModelMap model, PrioriteringsobjektForm pf,
+            @RequestParam(required = false, value = "atcKoderRef.selectedCodesId") List<String> selectedIds)
+            throws InstantiationException, IllegalAccessException {
+        return findCodesAction(model, pf, AtcKod.class, pf.getAtcKoderRef(), atcKodRepository, pf.getAtcKoder(),
+                request);
+    }
+
+    @Transactional
+    private <T extends AbstractKod> String findCodesAction(ModelMap model, PrioriteringsobjektForm pf,
+            Class<T> clazz, ManyCodesRef<T> mcr, GenerisktKodRepository<T> repo, List<T> target,
+            HttpServletRequest request) throws InstantiationException, IllegalAccessException {
         if (pf == null) {
             pf = new PrioriteringsobjektForm();
         }
-
+        initNestedValues(request, pf);
         model.addAttribute("prio", pf);
+        T diagnos = clazz.newInstance();
 
-        DiagnosKod diagnos = new DiagnosKod();
-        ManyCodesRef<DiagnosKod> dr = pf.getDiagnosRef();
-
-        diagnos.setBeskrivning(dr.getSearchWord());
-        dr.getFindings().clear();
-        dr.getFindings().addAll(diagnosKodRepository.findByExample(diagnos, 20));
-
-        if (dr.getSelectedCodesId() == null) {
-            dr.setSelectedCodesId(new ArrayList<Long>());
-        }
-        dr.getCodes().clear();
-        dr.getSelectedCodesId().remove(null);
-        for (Long id : new HashSet<Long>(dr.getSelectedCodesId())) {
-            DiagnosKod kod = diagnosKodRepository.find(id);
-            pf.getDiagnoser().add(kod);
-        }
+        diagnos.setBeskrivning(mcr.getSearchBeskrivningText());
+        diagnos.setKod(mcr.getSearchKodText());
+        mcr.getFindings().clear();
+        mcr.getFindings().addAll(repo.findByExample(diagnos, 20));
 
         initKodLists(pf);
+        initAllManyToOneCodes(pf);
         return "prio-view";
     }
 
-    private <T extends AbstractKod> void findCodesAction(ManyCodesRef<T> codeRef, GenerisktKodRepository<T> repo) {
-
+    private void initAllManyToOneCodes(PrioriteringsobjektForm pf) {
+        initManyToOneCode(pf.getDiagnosRef(), pf.getDiagnoser(), diagnosKodRepository);
+        initManyToOneCode(pf.getAatgaerdRef(), pf.getAatgaerdskoder(), aatgaerdsKodRepository);
+        initManyToOneCode(pf.getVaardformskoderRef(), pf.getVaardformskoder(), vaardformsKodRepository);
+        initManyToOneCode(pf.getAtcKoderRef(), pf.getAtcKoder(), atcKodRepository);
     }
 
-    private Prioriteringsobjekt toPrioriteringsobjekt(PrioriteringsobjektForm pf) {
+    private <T extends AbstractKod> void initManyToOneCode(ManyCodesRef<T> dr, List<T> target,
+            GenerisktKodRepository<T> repo) {
+        for (Long id : new HashSet<Long>(dr.getSelectedCodesId())) {
+            T code = repo.find(id);
+            target.add(code);
+        }
+    }
+
+    private Prioriteringsobjekt toPrioriteringsobjekt(HttpServletRequest request, PrioriteringsobjektForm pf) {
         initKodLists(pf);
         pf.asignCodesFromTheListsByCorrespondingIdAttributes();
         Prioriteringsobjekt prio;
@@ -126,6 +219,10 @@ public class EditPrioriteringController extends ControllerBase {
         } else {
             prio.getDiagnoser().clear();
         }
+
+        initNestedValues(request, pf);
+        initKodLists(pf);
+        initAllManyToOneCodes(pf);
 
         return prio;
     }
