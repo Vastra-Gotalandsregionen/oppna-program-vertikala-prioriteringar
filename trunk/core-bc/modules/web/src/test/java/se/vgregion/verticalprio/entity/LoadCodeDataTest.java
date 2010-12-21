@@ -20,7 +20,6 @@ import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 
-import org.junit.Test;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -177,7 +176,7 @@ public class LoadCodeDataTest /* extends AbstractTransactionalJUnit4SpringContex
     @Resource(name = "aatgaerdsKodRepository")
     GenerisktKodRepository<AatgaerdsKod> aatgaerdsKodRepository;
 
-    @Test
+    // @Test
     @Rollback(false)
     public void loadAatgaerdsKodValuesIntoDb() throws FileNotFoundException {
         List<AatgaerdsKod> codes = toBeans("AatgaerdsKod", AatgaerdsKod.class);
@@ -190,7 +189,7 @@ public class LoadCodeDataTest /* extends AbstractTransactionalJUnit4SpringContex
     @Resource(name = "aatgaerdsRiskKodRepository")
     GenerisktKodRepository<AatgaerdsRiskKod> aatgaerdsRiskKodRepository;
 
-    @Test
+    // @Test
     @Rollback(false)
     public void loadAatgaerdsRiskKodValuesIntoDb() throws FileNotFoundException {
         List<AatgaerdsRiskKod> codes = toBeans("AatgaerdsRiskKod", AatgaerdsRiskKod.class);
@@ -203,7 +202,7 @@ public class LoadCodeDataTest /* extends AbstractTransactionalJUnit4SpringContex
     @Resource(name = "diagnosKodRepository")
     GenerisktHierarkisktKodRepository<DiagnosKod> diagnosKodRepository;
 
-    @Test
+    // @Test
     @Rollback(false)
     public void loadDiagnosKodValuesIntoDb() throws FileNotFoundException {
         List<DiagnosKod> codes = toBeans("DiagnosKod", DiagnosKod.class);
@@ -216,7 +215,7 @@ public class LoadCodeDataTest /* extends AbstractTransactionalJUnit4SpringContex
     @Resource(name = "haelsonekonomiskEvidensKodRepository")
     GenerisktKodRepository<HaelsonekonomiskEvidensKod> haelsonekonomiskEvidensKodRepository;
 
-    @Test
+    // @Test
     @Rollback(false)
     public void loadHaelsonekonomiskEvidensKodValuesIntoDb() throws FileNotFoundException {
         List<HaelsonekonomiskEvidensKod> codes = toBeans("HaelsonekonomiskEvidensKod",
@@ -230,7 +229,7 @@ public class LoadCodeDataTest /* extends AbstractTransactionalJUnit4SpringContex
     @Resource(name = "kostnadLevnadsaarKodRepository")
     GenerisktKodRepository<KostnadLevnadsaarKod> kostnadLevnadsaarKodRepository;
 
-    @Test
+    // @Test
     @Rollback(false)
     public void loadKostnadLevnadsaarKodValuesIntoDb() throws FileNotFoundException {
         List<KostnadLevnadsaarKod> codes = toBeans("KostnadLevnadsaarKod", KostnadLevnadsaarKod.class);
@@ -243,7 +242,7 @@ public class LoadCodeDataTest /* extends AbstractTransactionalJUnit4SpringContex
     @Resource(name = "patientnyttaEffektAatgaerdsKodRepository")
     GenerisktKodRepository<PatientnyttaEffektAatgaerdsKod> patientnyttaEffektAatgaerdsKodRepository;
 
-    @Test
+    // @Test
     @Rollback(false)
     public void loadPatientnyttaEffektAatgaerdsKodValuesIntoDb() throws FileNotFoundException {
         List<PatientnyttaEffektAatgaerdsKod> codes = toBeans("PatientnyttaEffektAatgaerdsKod",
@@ -257,7 +256,7 @@ public class LoadCodeDataTest /* extends AbstractTransactionalJUnit4SpringContex
     @Resource(name = "patientnyttoEvidensKodRepository")
     GenerisktKodRepository<PatientnyttoEvidensKod> patientnyttoEvidensKodRepository;
 
-    @Test
+    // @Test
     @Rollback(false)
     public void loadPatientnyttoEvidensKodValuesIntoDb() throws FileNotFoundException {
         List<PatientnyttoEvidensKod> codes = toBeans("PatientnyttoEvidensKod", PatientnyttoEvidensKod.class);
@@ -270,7 +269,7 @@ public class LoadCodeDataTest /* extends AbstractTransactionalJUnit4SpringContex
     @Resource(name = "rangordningsKodRepository")
     GenerisktKodRepository<RangordningsKod> rangordningsKodRepository;
 
-    @Test
+    // @Test
     @Rollback(false)
     public void loadRangordningsKodValuesIntoDb() throws FileNotFoundException {
         List<RangordningsKod> codes = toBeans("RangordningsKod", RangordningsKod.class);
@@ -283,7 +282,7 @@ public class LoadCodeDataTest /* extends AbstractTransactionalJUnit4SpringContex
     @Resource(name = "tillstaandetsSvaarighetsgradKodRepository")
     GenerisktKodRepository<TillstaandetsSvaarighetsgradKod> tillstaandetsSvaarighetsgradKodRepository;
 
-    @Test
+    // @Test
     @Rollback(false)
     public void loadTillstaandetsSvaarighetsgradKodValuesIntoDb() throws FileNotFoundException {
         List<TillstaandetsSvaarighetsgradKod> codes = toBeans("TillstaandetsSvaarighetsgradKod",
@@ -297,7 +296,7 @@ public class LoadCodeDataTest /* extends AbstractTransactionalJUnit4SpringContex
     @Resource(name = "vaardformsKodRepository")
     GenerisktKodRepository<VaardformsKod> vaardformsKodRepository;
 
-    @Test
+    // @Test
     @Rollback(false)
     public void loadVaardformsKodValuesIntoDb() throws FileNotFoundException {
         List<VaardformsKod> codes = toBeans("VaardformsKod", VaardformsKod.class);
@@ -310,7 +309,7 @@ public class LoadCodeDataTest /* extends AbstractTransactionalJUnit4SpringContex
     @Resource(name = "vaardnivaaKodRepository")
     GenerisktKodRepository<VaardnivaaKod> vaardnivaaKodRepository;
 
-    @Test
+    // @Test
     @Rollback(false)
     public void loadVaardnivaaKodValuesIntoDb() throws FileNotFoundException {
         List<VaardnivaaKod> codes = toBeans("VaardnivaaKod", VaardnivaaKod.class);
@@ -323,7 +322,7 @@ public class LoadCodeDataTest /* extends AbstractTransactionalJUnit4SpringContex
     @Resource(name = "vaentetidsKodRepository")
     GenerisktKodRepository<VaentetidsKod> vaentetidsKodRepository;
 
-    @Test
+    // @Test
     @Rollback(false)
     public void loadVaentetidsKodValuesIntoDb() throws FileNotFoundException {
         List<VaentetidsKod> codes = toBeans("VaentetidsKod", VaentetidsKod.class);
@@ -358,7 +357,7 @@ public class LoadCodeDataTest /* extends AbstractTransactionalJUnit4SpringContex
     // }
     //
     // final String function = "@Resource(name = \"ENT_REPO\")" + "\n"
-    // + GenerisktKodRepository.class.getSimpleName() + "<ENT_NAME> ENT_REPO;" + "\n    @Test"
+    // + GenerisktKodRepository.class.getSimpleName() + "<ENT_NAME> ENT_REPO;" + "\n    //@Test"
     // + "\n    @Rollback(false)"
     // + "\n    public void loadENT_NAMEValuesIntoDb() throws FileNotFoundException {"
     // + "\n        List<ENT_NAME> codes = toBeans(\"ENT_NAME\", ENT_NAME.class);"
