@@ -298,7 +298,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
 
     private static List<se.vgregion.verticalprio.entity.Column> columns;
 
-    public static List<se.vgregion.verticalprio.entity.Column> getColumns() {
+    public static List<se.vgregion.verticalprio.entity.Column> getDefaultColumns() {
         if (columns != null) {
             return columns;
         }

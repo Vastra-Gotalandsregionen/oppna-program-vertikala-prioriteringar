@@ -356,10 +356,6 @@ public class PrioriteringsobjektForm extends Prioriteringsobjekt {
         return diagnosRef;
     }
 
-    public Map<String, Column> getColumns() {
-        return columns;
-    }
-
     public ManyCodesRef<AatgaerdsKod> getAatgaerdRef() {
         return aatgaerdRef;
     }
@@ -370,6 +366,10 @@ public class PrioriteringsobjektForm extends Prioriteringsobjekt {
 
     public ManyCodesRef<AtcKod> getAtcKoderRef() {
         return atcKoderRef;
+    }
+
+    public Map<String, Column> columns() {
+        return columns;
     }
 
 }
