@@ -51,7 +51,6 @@ public class VerticalPrioController extends ControllerBase {
     @RequestMapping(value = "/main")
     public String main(HttpSession session) {
         MainForm form = getMainForm(session);
-        System.out.println("in main method");
         return "main";
     }
 
@@ -183,37 +182,19 @@ public class VerticalPrioController extends ControllerBase {
         return null;
     }
 
-    private long dummySectorCounter = 0;
-
     @Transactional
     private List<SektorRaad> getSectors() {
         Collection<SektorRaad> result = sektorRaadRepository.getTreeRoots();
         return new ArrayList<SektorRaad>(result);
     }
 
-    private List<SektorRaad> mkSubSectors(int deep) {
-
-        List<SektorRaad> result = new ArrayList<SektorRaad>();
-        if (deep < 1) {
-            return result;
-        }
-
-        for (int i = 0; i < 3; i++) {
-            SektorRaad sector = new SektorRaad();
-            // new SektorRaad("Sub-Sector #" + dummySectorCounter, dummySectorCounter++);
-            sector.setKod("subsr " + dummySectorCounter);
-            sector.setId(dummySectorCounter++);
-            result.add(sector);
-            sector.setChildren(new ArrayList<SektorRaad>());
-            sector.getChildren().addAll(mkSubSectors(deep - 1));
-        }
-        return result;
-    }
-
     @ModelAttribute("rows")
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public List<Prioriteringsobjekt> result(HttpSession session) {
-        List<Prioriteringsobjekt> prios = new ArrayList<Prioriteringsobjekt>(prioRepository.findAll());
+        Prioriteringsobjekt condition = getOrCreateSessionObj(session, "prio-condition", Prioriteringsobjekt.class);
+
+        List<Prioriteringsobjekt> prios = new ArrayList<Prioriteringsobjekt>(prioRepository.findByExample(
+                condition, null));
 
         for (Prioriteringsobjekt prio : prios) {
             BeanMap bm = new BeanMap(prio);

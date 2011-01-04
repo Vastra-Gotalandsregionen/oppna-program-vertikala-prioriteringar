@@ -4,9 +4,17 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+@SuppressWarnings("serial")
 @Entity
 @Table(name = "sektor_raad")
 public class SektorRaad extends AbstractHirarkiskKod<SektorRaad> {
+
+    public SektorRaad() {
+    }
+
+    public SektorRaad(Long id) {
+        setId(id);
+    }
 
     @Id
     Long id;

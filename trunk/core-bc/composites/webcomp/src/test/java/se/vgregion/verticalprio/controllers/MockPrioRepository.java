@@ -91,4 +91,12 @@ public class MockPrioRepository implements PrioRepository {
         throw new UnsupportedOperationException("TODO: Implement this method");
     }
 
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public void hej() {
+        throw new UnsupportedOperationException("TODO: Implement this method");
+    }
+
 }

@@ -33,7 +33,11 @@ public class DiagnosKod extends AbstractHirarkiskKod<DiagnosKod> {
 
     public List<DiagnosKod> getOpenDiagnoses() {
         List<DiagnosKod> openDiagnoses = new ArrayList<DiagnosKod>();
-        for (DiagnosKod child : getChildren()) {
+        List<DiagnosKod> children = getChildren();
+        if (children == null) {
+            return openDiagnoses;
+        }
+        for (DiagnosKod child : children) {
             if (child.isOpen()) {
                 openDiagnoses.add(child);
             }
