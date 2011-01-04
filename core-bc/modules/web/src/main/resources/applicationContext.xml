@@ -23,7 +23,6 @@
   
   <bean name="prioRepository" class="se.vgregion.verticalprio.repository.JpaPrioRepository" />
 
-
   <!-- All these beans inherit the generic JpaKodRepository because they all represent common "code tables" -->
   <bean name="aatgaerdsKodRepository" class="se.vgregion.verticalprio.repository.JpaGenerisktKodRepository">
     <constructor-arg value="se.vgregion.verticalprio.entity.AatgaerdsKod" />
