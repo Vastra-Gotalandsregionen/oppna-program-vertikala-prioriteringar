@@ -1,5 +1,6 @@
 package se.vgregion.verticalprio.controllers;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -97,7 +98,7 @@ public class MockPrioRepository implements PrioRepository {
      */
     @Override
     public List<Prioriteringsobjekt> findByExample(Prioriteringsobjekt bean, Integer maxResult) {
-        throw new UnsupportedOperationException("TODO: Implement this method");
+        return new ArrayList<Prioriteringsobjekt>();
     }
 
     /**

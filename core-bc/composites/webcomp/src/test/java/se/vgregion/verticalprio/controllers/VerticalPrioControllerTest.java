@@ -19,6 +19,7 @@ import se.vgregion.verticalprio.ConfColumnsForm;
 import se.vgregion.verticalprio.MainForm;
 import se.vgregion.verticalprio.entity.Column;
 import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
+import se.vgregion.verticalprio.entity.SektorRaad;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:testApplicationContext.xml")
@@ -112,4 +113,20 @@ public class VerticalPrioControllerTest {
         String result = vpc.check(session, 1);
         Assert.assertEquals("main", result);
     }
+
+    @Test
+    public void getMarkedLeafs() {
+        SektorRaad root = new SektorRaad(0l);
+        List<SektorRaad> roots = new ArrayList<SektorRaad>();
+        roots.add(new SektorRaad(1l));
+        roots.add(root);
+        roots.add(new SektorRaad(2l));
+
+        root.setSelected(true);
+        root.setChildren(new ArrayList<SektorRaad>());
+        root.getChildren().add(new SektorRaad(1l));
+        List<SektorRaad> result = vpc.getMarkedLeafs(roots);
+        System.out.println(result);
+    }
+
 }

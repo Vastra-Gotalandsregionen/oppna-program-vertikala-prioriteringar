@@ -13,8 +13,8 @@ import org.apache.commons.beanutils.BeanMap;
 import se.vgregion.dao.domain.patterns.entity.AbstractEntity;
 
 /**
- * Help logic to produce jpql that selects data from the db. It does "search by example". Uses values in a object
- * graph to produce conditions for retrieving data. The objects being returned is of the same type that is used in
+ * Help-logic to produce jpql that selects data from the db. It does "search by example". Uses values in a object
+ * graph to produce conditions for retrieving data. The objects being returned is of the same type as is used in
  * the query.
  * 
  * Atomic values - strings and objects inheriting from the Number class are used for the conditions that limits the
@@ -24,7 +24,16 @@ import se.vgregion.dao.domain.patterns.entity.AbstractEntity;
  * 
  * Entities (objects children of <code>AbstractEntity</code>) in member variables are joined with the query. Atomic
  * values inside these are included in the query. If not marked as transient. Several objects inside a collection
- * is joined with a separately.
+ * is joined with separately - making conditions that stipulates that a certain parent must have some specific
+ * children: If (object) A have (obj) B and C in list 'children' and B.id = 1 and C.id = 2 - then the search
+ * stipulates that results (of same class as A) must have at least one child B (with B.id=1) and at least one child
+ * C (with C.id=2).
+ * 
+ * Entities that also implements <code>HaveNestedEnteties</code> is not used themselves. Rather their children or
+ * return value of <code>List<> content()</code> is used. Those 'sub-entities' are joined into the query but their
+ * conditions are joined by 'or':s rather than, the usual, 'and'. This makes us able to have mutually inclusive
+ * search conditions. Referring to example in clause above this would mean that A must have any (or both) children
+ * with matching id property.
  * 
  * Strings found in the object graph are looked into. If the wild card sign is present in the text the
  * <code>like</code> operator is used in the condition. Normally, both for strings and numbers, the equals '
@@ -43,7 +52,8 @@ public class JpqlMatchBuilder {
     private final List<String> sortOrder = new ArrayList<String>();
 
     /**
-     * Produces jpql code for selecting data that matches the provided example in values and class.
+     * Produces jpql code for selecting data that matches the provided example in values and class. See description
+     * of this class for more logic behind query creation.
      * 
      * @param bean
      *            object containing values that should be used to match against fields in the db.
@@ -61,10 +71,10 @@ public class JpqlMatchBuilder {
         mkFindByExampleJpql(bean, fromJoin, where, values, 0);
         StringBuilder sb = new StringBuilder();
         sb.append("select o0 from ");
-        sb.append(join(fromJoin, " join "));
+        sb.append(toString(fromJoin, " join "));
         if (!where.isEmpty()) {
             sb.append(" \nwhere ");
-            sb.append(join(where, " and "));
+            sb.append(toString(where, " and "));
         }
         sb.append(mkOrderBy(bean));
 
@@ -109,7 +119,7 @@ public class JpqlMatchBuilder {
                 continue;
             }
 
-            if (value instanceof HaveNestedEnteties<?>) {
+            if (value instanceof HaveNestedEntities<?>) {
                 handleNestedEnteties(value, prefix, propertyName, bean, fromJoin, where, values, aliasIndex);
             }
 
@@ -164,23 +174,23 @@ public class JpqlMatchBuilder {
 
     private void handleNestedEnteties(Object uncastedHaveNestedEnteties, String prefix, String parentPropertyName,
             Object bean, List<String> fromJoin, List<String> where, List<Object> values, int aliasIndex) {
-        HaveNestedEnteties<AbstractEntity<Long>> hne = (HaveNestedEnteties<AbstractEntity<Long>>) uncastedHaveNestedEnteties;
+        HaveNestedEntities<AbstractEntity<Long>> hne = (HaveNestedEntities<AbstractEntity<Long>>) uncastedHaveNestedEnteties;
 
         List<String> allItemsWhere = new ArrayList<String>();
         for (AbstractEntity<Long> ent : hne.content()) {
             List<String> iterationWhere = new ArrayList<String>();
             boolean result = handleSubBean(prefix, parentPropertyName, ent, fromJoin, iterationWhere, values,
-                    aliasIndex);
+                    aliasIndex + 1);
             if (result) {
                 aliasIndex++;
-                String oneIterationWhere = join(iterationWhere, " and ");
+                String oneIterationWhere = toString(iterationWhere, " and ");
                 oneIterationWhere = "(" + oneIterationWhere + ")";
                 allItemsWhere.add(oneIterationWhere);
             }
         }
 
         if (allItemsWhere.size() > 1) {
-            String resultWhere = join(allItemsWhere, " or ");
+            String resultWhere = toString(allItemsWhere, " or ");
             resultWhere = "(" + resultWhere + ")";
             where.add(resultWhere);
             return;
@@ -191,7 +201,7 @@ public class JpqlMatchBuilder {
         }
     }
 
-    private String join(List<String> list, String junctor) {
+    private String toString(List<String> list, String junctor) {
         StringBuilder sb = new StringBuilder();
         for (String item : list) {
             sb.append(item);
@@ -287,7 +297,7 @@ public class JpqlMatchBuilder {
         for (String item : sortOrder) {
             prefixedSortOrderColumns.add("o0." + item);
         }
-        return "\n order by " + join(prefixedSortOrderColumns, ", ");
+        return "\n order by " + toString(prefixedSortOrderColumns, ", ");
     }
 
     protected void validateSortOrderReallyAmongObjectProperties(Object exampleBean) {
