@@ -13,7 +13,6 @@ import org.apache.commons.beanutils.BeanMap;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
@@ -24,6 +23,7 @@ import se.vgregion.verticalprio.entity.Column;
 import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
 import se.vgregion.verticalprio.entity.SektorRaad;
 import se.vgregion.verticalprio.repository.GenerisktHierarkisktKodRepository;
+import se.vgregion.verticalprio.repository.NestedSektorRaad;
 
 @Controller
 @SessionAttributes(value = { "confCols", "form" })
@@ -45,12 +45,15 @@ public class VerticalPrioController extends ControllerBase {
     private MainForm getMainForm(HttpSession session) {
         MainForm form = getOrCreateSessionObj(session, "form", MainForm.class);
         initMainForm(form);
+
         return form;
     }
 
     @RequestMapping(value = "/main")
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public String main(HttpSession session) {
         MainForm form = getMainForm(session);
+        result(session);
         return "main";
     }
 
@@ -161,11 +164,13 @@ public class VerticalPrioController extends ControllerBase {
     }
 
     @RequestMapping(value = "/check")
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public String check(final HttpSession session, @RequestParam Integer id) {
         MainForm form = getMainForm(session);
 
         SektorRaad sector = getSectorById(id, form.getSectors());
         sector.setSelected(!sector.isSelected());
+        result(session);
         return "main";
     }
 
@@ -182,16 +187,36 @@ public class VerticalPrioController extends ControllerBase {
         return null;
     }
 
+    List<SektorRaad> getMarkedLeafs(List<SektorRaad> raads) {
+        List<SektorRaad> result = new ArrayList<SektorRaad>();
+        if (raads == null) {
+            return result;
+        }
+        for (SektorRaad raad : raads) {
+            List<SektorRaad> markedChildren = getMarkedLeafs(raad.getChildren());
+            if (raad.isSelected() && markedChildren.size() == 0) {
+                result.add(raad);
+            } else {
+                result.addAll(markedChildren);
+            }
+        }
+        return result;
+    }
+
     @Transactional
     private List<SektorRaad> getSectors() {
         Collection<SektorRaad> result = sektorRaadRepository.getTreeRoots();
         return new ArrayList<SektorRaad>(result);
     }
 
-    @ModelAttribute("rows")
+    // @ModelAttribute("rows")
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public List<Prioriteringsobjekt> result(HttpSession session) {
         Prioriteringsobjekt condition = getOrCreateSessionObj(session, "prio-condition", Prioriteringsobjekt.class);
+        MainForm mf = getMainForm(session);
+        List<SektorRaad> raad = getMarkedLeafs(mf.getSectors());
+        NestedSektorRaad sektorNest = new NestedSektorRaad(raad);
+        condition.setSektorRaad(sektorNest);
 
         List<Prioriteringsobjekt> prios = new ArrayList<Prioriteringsobjekt>(prioRepository.findByExample(
                 condition, null));
@@ -210,6 +235,8 @@ public class VerticalPrioController extends ControllerBase {
                 }
             }
         }
+
+        session.setAttribute("rows", prios);
 
         return prios;
     }
