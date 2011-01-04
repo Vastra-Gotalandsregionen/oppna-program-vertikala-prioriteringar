@@ -5,8 +5,6 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 
 import se.vgregion.verticalprio.entity.DiagnosKod;
@@ -18,7 +16,6 @@ import se.vgregion.verticalprio.entity.SektorRaad;
  * 
  */
 public class JpqlMatchBuilderTest {
-    private static final Log log = LogFactory.getLog(JpqlMatchBuilderTest.class);
 
     /**
      * Test method for
