@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import se.vgregion.verticalprio.ConfColumnsForm;
 import se.vgregion.verticalprio.MainForm;
+import se.vgregion.verticalprio.PrioriteringsobjektFindCondition;
 import se.vgregion.verticalprio.entity.Column;
 import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
 import se.vgregion.verticalprio.entity.SektorRaad;
@@ -55,23 +56,6 @@ public class VerticalPrioController extends ControllerBase {
         MainForm form = getMainForm(session);
         result(session);
         return "main";
-    }
-
-    private <T> T getOrCreateSessionObj(HttpSession session, String name, Class<T> clazz) {
-        try {
-            T result = (T) session.getAttribute(name);
-
-            if (result == null) {
-                result = clazz.newInstance();
-                session.setAttribute(name, result);
-            }
-
-            return result;
-        } catch (InstantiationException ie) {
-            throw new RuntimeException(ie);
-        } catch (IllegalAccessException iae) {
-            throw new RuntimeException(iae);
-        }
     }
 
     @RequestMapping(value = "/conf-columns")
@@ -203,6 +187,30 @@ public class VerticalPrioController extends ControllerBase {
         return result;
     }
 
+    private List<SektorRaad> flatten(List<SektorRaad> raads) {
+        List<SektorRaad> result = new ArrayList<SektorRaad>();
+        flatten(raads, result);
+        result = toBlankWithIdOnly(result);
+        return result;
+    }
+
+    private void flatten(List<SektorRaad> raads, List<SektorRaad> result) {
+        if (raads != null) {
+            for (SektorRaad sr : raads) {
+                result.add(sr);
+                flatten(sr.getChildren(), result);
+            }
+        }
+    }
+
+    private List<SektorRaad> toBlankWithIdOnly(List<SektorRaad> raads) {
+        List<SektorRaad> result = new ArrayList<SektorRaad>();
+        for (SektorRaad sr : raads) {
+            result.add(new SektorRaad(sr.getId()));
+        }
+        return result;
+    }
+
     @Transactional
     private List<SektorRaad> getSectors() {
         Collection<SektorRaad> result = sektorRaadRepository.getTreeRoots();
@@ -212,9 +220,12 @@ public class VerticalPrioController extends ControllerBase {
     // @ModelAttribute("rows")
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public List<Prioriteringsobjekt> result(HttpSession session) {
-        Prioriteringsobjekt condition = getOrCreateSessionObj(session, "prio-condition", Prioriteringsobjekt.class);
+        PrioriteringsobjektFindCondition condition = getOrCreateSessionObj(session, "prioCondition",
+                PrioriteringsobjektFindCondition.class);
+
         MainForm mf = getMainForm(session);
         List<SektorRaad> raad = getMarkedLeafs(mf.getSectors());
+        raad = flatten(raad);
         NestedSektorRaad sektorNest = new NestedSektorRaad(raad);
         condition.setSektorRaad(sektorNest);
 

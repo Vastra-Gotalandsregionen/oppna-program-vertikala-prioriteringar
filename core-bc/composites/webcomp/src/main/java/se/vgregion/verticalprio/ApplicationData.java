@@ -6,8 +6,10 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.beanutils.BeanMap;
 import org.springframework.stereotype.Component;
 
+import se.vgregion.verticalprio.controllers.PrioriteringsobjektForm;
 import se.vgregion.verticalprio.entity.AatgaerdsKod;
 import se.vgregion.verticalprio.entity.AatgaerdsRiskKod;
 import se.vgregion.verticalprio.entity.DiagnosKod;
@@ -184,6 +186,12 @@ public class ApplicationData implements Serializable {
             everySektorRaad = sektorRaadRepository.getTreeRoots();
         }
         return everySektorRaad;
+    }
+
+    public void initKodLists(PrioriteringsobjektForm pf) {
+        BeanMap pfMap = new BeanMap(pf);
+        BeanMap adMap = new BeanMap(this);
+        pfMap.putAllWriteable(adMap);
     }
 
 }

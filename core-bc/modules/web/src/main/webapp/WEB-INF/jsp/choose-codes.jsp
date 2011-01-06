@@ -12,8 +12,19 @@
 
 <span class="window prio-view">
 
-<form:form action="prio" method="post" modelAttribute="prio">
-<jsp:include page="jsp/prio-form.jsp" />
+<form:form action="choose-codes" method="post" modelAttribute="prioCondition">
+
+  <div class="values">
+    Valda koder
+    <%-- <tags:find-select-codes label="Sök diagnoser (kod/besk.):" codeRefName="diagnosRef" codeRef="${prio.diagnosRef}" submitName="findAndSelectCodes" styleClass="diagnosRef"/> --%>
+    <tags:find-select-codes label="Sök (kod/besk.):" codeRefName="${param.codeRefName}" codeRef="${prioCondition[param.codeRefName]}" submitName="findAndSelectCodes" styleClass="diagnosRef"/>
+    
+  </div>
+
+  <input type="hidden" name="codeRefName" value="${param.codeRefName}" />
+
+  <a href="main">Ok</a>
+
 </form:form>
 
 </span>

@@ -109,7 +109,6 @@ public class VerticalPrioControllerTest {
 
     @Test
     public void check() {
-
         String result = vpc.check(session, 1);
         Assert.assertEquals("main", result);
     }
