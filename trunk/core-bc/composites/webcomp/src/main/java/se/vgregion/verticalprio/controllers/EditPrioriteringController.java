@@ -35,9 +35,6 @@ public class EditPrioriteringController extends ControllerBase {
     @Resource(name = "applicationData")
     ApplicationData applicationData;
 
-    // @Resource(name = "prioRepository")
-    // PrioRepository prioRepository;
-
     @Resource(name = "diagnosKodRepository")
     GenerisktHierarkisktKodRepository<DiagnosKod> diagnosKodRepository;
 
@@ -168,12 +165,12 @@ public class EditPrioriteringController extends ControllerBase {
         }
         initNestedValues(request, pf);
         model.addAttribute("prio", pf);
-        T diagnos = clazz.newInstance();
+        T kod = clazz.newInstance();
 
-        diagnos.setBeskrivning(mcr.getSearchBeskrivningText());
-        diagnos.setKod(mcr.getSearchKodText());
+        kod.setBeskrivning(mcr.getSearchBeskrivningText());
+        kod.setKod(mcr.getSearchKodText());
         mcr.getFindings().clear();
-        mcr.getFindings().addAll(repo.findByExample(diagnos, 20));
+        mcr.getFindings().addAll(repo.findByExample(kod, 20));
 
         initKodLists(pf);
         initAllManyToOneCodes(pf);
@@ -227,9 +224,7 @@ public class EditPrioriteringController extends ControllerBase {
     }
 
     private void initKodLists(PrioriteringsobjektForm pf) {
-        BeanMap pfMap = new BeanMap(pf);
-        BeanMap adMap = new BeanMap(applicationData);
-        pfMap.putAllWriteable(adMap);
+        applicationData.initKodLists(pf);
         for (Column column : getColumns()) {
             pf.getColumns().put(column.getName(), column);
         }

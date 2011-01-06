@@ -6,6 +6,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 
 import se.vgregion.verticalprio.entity.Column;
 import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
@@ -71,6 +72,23 @@ public class ControllerBase {
         // columns = result;
         // }
         // return columns;
+    }
+
+    protected <T> T getOrCreateSessionObj(HttpSession session, String name, Class<T> clazz) {
+        try {
+            T result = (T) session.getAttribute(name);
+
+            if (result == null) {
+                result = clazz.newInstance();
+                session.setAttribute(name, result);
+            }
+
+            return result;
+        } catch (InstantiationException ie) {
+            throw new RuntimeException(ie);
+        } catch (IllegalAccessException iae) {
+            throw new RuntimeException(iae);
+        }
     }
 
 }

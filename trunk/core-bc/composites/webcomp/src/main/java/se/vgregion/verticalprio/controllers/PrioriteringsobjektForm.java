@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.persistence.Transient;
+
 import org.apache.commons.beanutils.BeanMap;
 
 import se.vgregion.verticalprio.entity.AatgaerdsKod;
@@ -31,35 +33,46 @@ import se.vgregion.verticalprio.entity.VaentetidsKod;
  */
 public class PrioriteringsobjektForm extends Prioriteringsobjekt {
 
+    @Transient
     private Long patientnyttaEffektAatgaerdsKodId;
+    @Transient
     private List<PatientnyttaEffektAatgaerdsKod> patientnyttaEffektAatgaerdsKodList;
+    @Transient
     private Long sektorRaadId;
+    @Transient
     private List<SektorRaad> sektorRaadList;
+    @Transient
     private Long patientnyttoEvidensKodId;
+    @Transient
     private List<PatientnyttoEvidensKod> patientnyttoEvidensKodList;
+    @Transient
     private Long tillstaandetsSvaarighetsgradKodId;
+    @Transient
     private List<TillstaandetsSvaarighetsgradKod> tillstaandetsSvaarighetsgradKodList;
+    @Transient
     private Long haelsonekonomiskEvidensKodId;
+    @Transient
     private List<HaelsonekonomiskEvidensKod> haelsonekonomiskEvidensKodList;
+    @Transient
     private Long vaardnivaaKodId;
+    @Transient
     private List<VaardnivaaKod> vaardnivaaKodList;
+    @Transient
     private Long vaentetidsKodId;
+    @Transient
     private List<VaentetidsKod> vaentetidsKodList;
+    @Transient
     private Long aatgaerdsRiskKodId;
+    @Transient
     private List<AatgaerdsRiskKod> aatgaerdsRiskKodList;
+    @Transient
     private Long rangordningsKodId;
+    @Transient
     private List<RangordningsKod> rangordningsKodList;
-
+    @Transient
     private final Map<String, Column> columns = new HashMap<String, Column>();
 
-    // private String aatgaerdSearchWord;
-    // private List<AatgaerdsKod> foundMeasures = new ArrayList<AatgaerdsKod>();
-    // private List<Long> selectedAatgarderId = new ArrayList<Long>();
-
-    // private String diagnosSearchWord;
-    // private List<DiagnosKod> foundDiagnoses = new ArrayList<DiagnosKod>();
-    // private List<Long> selectedDiagnosesId = new ArrayList<Long>();
-
+    @Transient
     @SuppressWarnings("serial")
     ManyCodesRef<AatgaerdsKod> aatgaerdRef = new ManyCodesRef<AatgaerdsKod>() {
         @Override
@@ -73,6 +86,7 @@ public class PrioriteringsobjektForm extends Prioriteringsobjekt {
         }
     };
 
+    @Transient
     @SuppressWarnings("serial")
     private ManyCodesRef<DiagnosKod> diagnosRef = new ManyCodesRef<DiagnosKod>() {
         @Override
@@ -86,6 +100,7 @@ public class PrioriteringsobjektForm extends Prioriteringsobjekt {
         }
     };
 
+    @Transient
     @SuppressWarnings("serial")
     private ManyCodesRef<VaardformsKod> vaardformskoderRef = new ManyCodesRef<VaardformsKod>() {
         @Override
@@ -99,6 +114,7 @@ public class PrioriteringsobjektForm extends Prioriteringsobjekt {
         }
     };
 
+    @Transient
     @SuppressWarnings("serial")
     private ManyCodesRef<AtcKod> atcKoderRef = new ManyCodesRef<AtcKod>() {
         @Override

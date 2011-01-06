@@ -66,12 +66,18 @@ public class JpqlMatchBuilder {
     public String mkFindByExampleJpql(Object bean, List<Object> values) {
         List<String> where = new ArrayList<String>();
         List<String> fromJoin = new ArrayList<String>();
-        fromJoin.add(bean.getClass().getSimpleName() + " o0");
+
+        if (bean instanceof HaveExplicitTypeToFind) {
+            HaveExplicitTypeToFind hettf = (HaveExplicitTypeToFind) bean;
+            fromJoin.add(hettf.type().getSimpleName() + " o0");
+        } else {
+            fromJoin.add(bean.getClass().getSimpleName() + " o0");
+        }
 
         mkFindByExampleJpql(bean, fromJoin, where, values, 0);
         StringBuilder sb = new StringBuilder();
         sb.append("select o0 from ");
-        sb.append(toString(fromJoin, " join "));
+        sb.append(toString(fromJoin, " left join "));
         if (!where.isEmpty()) {
             sb.append(" \nwhere ");
             sb.append(toString(where, " and "));
@@ -90,6 +96,11 @@ public class JpqlMatchBuilder {
             String propertyName = (String) key;
             Object value = bm.get(propertyName);
             if (skipFieldForBuildingCondition(bean, propertyName)) {
+                continue;
+            }
+
+            if (value instanceof HaveNestedEntities<?>) {
+                handleNestedEnteties(value, prefix, propertyName, bean, fromJoin, where, values, aliasIndex);
                 continue;
             }
 
@@ -117,10 +128,6 @@ public class JpqlMatchBuilder {
                     }
                 }
                 continue;
-            }
-
-            if (value instanceof HaveNestedEntities<?>) {
-                handleNestedEnteties(value, prefix, propertyName, bean, fromJoin, where, values, aliasIndex);
             }
 
             if (isEntity(value)) {
