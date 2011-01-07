@@ -6,25 +6,14 @@
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 
   <div class="values">
-    Diagnostexter
+    Diagnos
     <tags:find-select-codes label="Sök diagnoser (kod/besk.):" codeRefName="diagnosRef" codeRef="${prio.diagnosRef}" submitName="findDiagnoses" styleClass="diagnosRef"/>
     
     <hr style="clear:both"/>
-    Åtgärdskoder
+    Åtgärd
     <tags:find-select-codes label="Sök åtgärder (kod/besk.):" codeRefName="aatgaerdRef" codeRef="${prio.aatgaerdRef}" submitName="findAatgerder" styleClass="aatgaerdRef"/>
 
     <hr style="clear:both"/>
-
-    Vårdformer
-    <tags:find-select-codes label="Sök vårdformer (kod/besk.):" codeRefName="vaardformskoderRef" codeRef="${prio.vaardformskoderRef}" submitName="findVaardformer" styleClass="vaardformskoderRef"/>
-
-    <hr style="clear:both"/>
-    
-    Atc-koder
-    <tags:find-select-codes label="Sök Atc-koder (kod/besk.):" codeRefName="atcKoderRef" codeRef="${prio.atcKoderRef}" submitName="findAtcKoder" styleClass="atcKoderRef"/>
-
-    <hr style="clear:both"/>
-
 
     <form:hidden path="id"/>
     
@@ -47,17 +36,26 @@
         </div>
     </div>
     
-    <div style="width:100%" class="prio-form-grid">
-        <div class="cell">Atc-text</div> 
-        <div class="cell">Atc-kod</div>
-        <div class="cell"><tags:kod key="vaardnivaaKod" label="vaardnivaaKod" /></div>
-        <div class="cell">Vårdformskoder</div>
-        <div class="cell last"><tags:textarea key="kommentar" label="Kommentar"/></div>
+    <div style="width:100%" class="prio-form-grid last">
+        <div class="cell" style="width:33%"><tags:kod key="vaardnivaaKod" label="vaardnivaaKod" /></div>
+        <div class="cell" style="width:33%"> 
+          <tags:textarea cssInputBoxStyle="width:90%" key="vaardgivare" label="Vårdgivare"/> 
+        </div>
+        <div class="cell last" style="width:33%">
+          <tags:textarea cssInputBoxStyle="width:90%" key="kommentar" label="Kommentar"/>
+        </div>
     </div>
     
-    <tags:textarea key="vaardgivare" label="Vårdgivare"/>    
-    <input type="submit" value="Save" name="save" />
-    <a href="main">Stäng</a>
-    
+    <br/>Atc-kod
+    <tags:find-select-codes label="Sök Atc-koder (kod/besk.):" codeRefName="atcKoderRef" codeRef="${prio.atcKoderRef}" submitName="findAtcKoder" styleClass="atcKoderRef"/>
 
+    <hr style="clear:both"/>
+    
+    Vårdformer
+    <tags:find-select-codes label="Sök vårdformer (kod/besk.):" codeRefName="vaardformskoderRef" codeRef="${prio.vaardformskoderRef}" submitName="findVaardformer" styleClass="vaardformskoderRef"/>
+
+    <hr style="clear:both"/>
+
+    <input type="submit" value="Spara" name="save" />
+    <a href="main">Stäng</a>
   </div>

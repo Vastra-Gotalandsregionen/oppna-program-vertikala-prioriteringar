@@ -2,6 +2,7 @@ package se.vgregion.verticalprio.controllers;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,6 +77,7 @@ public class VerticalPrioController extends ControllerBase {
             for (Column column : columnForm.getVisibleColumns()) {
                 column.setVisible(true);
             }
+            Collections.sort(getMainForm(session).getColumns(), new Column.OrderComparer());
             return "main";
         } else if ("cancel".equals(command)) {
             return "main";
@@ -206,7 +208,8 @@ public class VerticalPrioController extends ControllerBase {
     private List<SektorRaad> toBlankWithIdOnly(List<SektorRaad> raads) {
         List<SektorRaad> result = new ArrayList<SektorRaad>();
         for (SektorRaad sr : raads) {
-            result.add(new SektorRaad(sr.getId()));
+            SektorRaad newRaad = new SektorRaad(sr.getId());
+            result.add(newRaad);
         }
         return result;
     }

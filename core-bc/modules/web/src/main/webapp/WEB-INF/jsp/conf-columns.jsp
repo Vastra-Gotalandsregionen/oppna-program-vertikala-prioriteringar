@@ -12,9 +12,6 @@
 
 <jsp:useBean id="confCols" scope="session" class="se.vgregion.verticalprio.ConfColumnsForm"></jsp:useBean>
 
-<div class="popup-overlay">
-</div>
-
 <span class="window">
 <form action="conf-columns"><select name="hiddenColumns" multiple="multiple">
   <c:forEach items="${confCols.hiddenColumns}" var="column">

@@ -100,7 +100,8 @@ public class JpqlMatchBuilder {
             }
 
             if (value instanceof HaveNestedEntities<?>) {
-                handleNestedEnteties(value, prefix, propertyName, bean, fromJoin, where, values, aliasIndex);
+                aliasIndex = handleNestedEnteties(value, prefix, propertyName, bean, fromJoin, where, values,
+                        aliasIndex);
                 continue;
             }
 
@@ -179,7 +180,7 @@ public class JpqlMatchBuilder {
         return result;
     }
 
-    private void handleNestedEnteties(Object uncastedHaveNestedEnteties, String prefix, String parentPropertyName,
+    private int handleNestedEnteties(Object uncastedHaveNestedEnteties, String prefix, String parentPropertyName,
             Object bean, List<String> fromJoin, List<String> where, List<Object> values, int aliasIndex) {
         HaveNestedEntities<AbstractEntity<Long>> hne = (HaveNestedEntities<AbstractEntity<Long>>) uncastedHaveNestedEnteties;
 
@@ -200,12 +201,13 @@ public class JpqlMatchBuilder {
             String resultWhere = toString(allItemsWhere, " or ");
             resultWhere = "(" + resultWhere + ")";
             where.add(resultWhere);
-            return;
+            return aliasIndex;
         }
 
         if (!allItemsWhere.isEmpty()) {
             where.addAll(allItemsWhere);
         }
+        return aliasIndex;
     }
 
     private String toString(List<String> list, String junctor) {

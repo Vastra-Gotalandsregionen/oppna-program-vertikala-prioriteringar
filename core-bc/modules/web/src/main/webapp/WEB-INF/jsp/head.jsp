@@ -56,8 +56,6 @@
 }
 
 .rowsAndButtons {
-  XXXbackground-color: #eeeeee;
-  float: left;
   max-width: 1000px;
   min-width: 200px;
 }

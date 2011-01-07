@@ -7,8 +7,6 @@
 <html>
 <jsp:include page="jsp/head.jsp"/>
 <body style="height: 100%;">
-<div class="popup-overlay">
-</div>
 
 <span class="window prio-view">
 
