@@ -32,12 +32,15 @@
 
 <input type="submit" id="select-prio"/>
 
-<table>
+<table cellpadding="5">
   <thead>
-    <td>#</td>
+    <td><h3>#</h3></td>
     <c:forEach items="${form.columns}" var="column">
       <c:if test="${column.visible}">
-        <td>${column.label}</td>
+        <td>
+          <h3>${column.label}</h3>
+          <tags:cell value="${prioCondition[column.name]}"/>
+        </td>
       </c:if>
     </c:forEach>
   </thead>

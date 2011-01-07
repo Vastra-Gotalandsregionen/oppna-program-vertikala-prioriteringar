@@ -1,5 +1,7 @@
 package se.vgregion.verticalprio.entity;
 
+import java.util.Comparator;
+
 /**
  * This class is used for letting the user save his/hers selected columns. So that each logged in user can have
  * his/hers gui look
@@ -98,6 +100,17 @@ public class Column {
     @Override
     public String toString() {
         return String.valueOf(name);
+    }
+
+    public static class OrderComparer implements Comparator<Column> {
+        /**
+         * @inheritDoc
+         */
+        @Override
+        public int compare(se.vgregion.verticalprio.entity.Column o1, se.vgregion.verticalprio.entity.Column o2) {
+            return o1.getDisplayOrder() - o2.getDisplayOrder();
+        }
+
     }
 
 }

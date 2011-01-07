@@ -1,10 +1,12 @@
 package se.vgregion.verticalprio.controllers;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.beanutils.BeanMap;
 import org.springframework.stereotype.Controller;
@@ -74,10 +76,11 @@ public class EditPrioriteringController extends ControllerBase {
 
     @RequestMapping(value = "prio", params = { "save" })
     @Transactional
-    public String save(HttpServletRequest request, PrioriteringsobjektForm pf) {
+    public String save(HttpServletRequest request, HttpServletResponse response, PrioriteringsobjektForm pf)
+            throws IOException {
         Prioriteringsobjekt prio = toPrioriteringsobjekt(request, pf);
         prioRepository.store(prio);
-
+        response.sendRedirect("/vertikala-prioriteringar-core-bc-module-web/main");
         return "main";
     }
 

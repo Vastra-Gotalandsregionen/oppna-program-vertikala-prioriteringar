@@ -1,7 +1,9 @@
 package se.vgregion.verticalprio.controllers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +24,8 @@ import se.vgregion.verticalprio.entity.AbstractHirarkiskKod;
 import se.vgregion.verticalprio.entity.AbstractKod;
 import se.vgregion.verticalprio.entity.AtcKod;
 import se.vgregion.verticalprio.entity.DiagnosKod;
+import se.vgregion.verticalprio.entity.RangordningsKod;
+import se.vgregion.verticalprio.entity.TillstaandetsSvaarighetsgradKod;
 import se.vgregion.verticalprio.entity.VaardformsKod;
 import se.vgregion.verticalprio.repository.GenerisktHierarkisktKodRepository;
 import se.vgregion.verticalprio.repository.GenerisktKodRepository;
@@ -49,8 +53,22 @@ public class ChooseCodesController extends ControllerBase {
     @Resource(name = "atcKodRepository")
     GenerisktKodRepository<AtcKod> atcKodRepository;
 
+    @Resource(name = "rangordningsKodRepository")
+    GenerisktKodRepository<RangordningsKod> rangordningsKodRepository;
+
+    @Resource(name = "tillstaandetsSvaarighetsgradKodRepository")
+    GenerisktKodRepository<TillstaandetsSvaarighetsgradKod> tillstaandetsSvaarighetsgradKodRepository;
+
     private Map<String, GenerisktKodRepository<?>> nameToRepository;
     private Map<String, Class<?>> nameToKodClass;
+
+    @RequestMapping(value = "/choose-codes-init")
+    public String start(HttpSession session, ModelMap model) {
+        PrioriteringsobjektFindCondition condition = getOrCreateSessionObj(session, "prioCondition",
+                PrioriteringsobjektFindCondition.class);
+        model.addAttribute("prioCondition", condition);
+        return "choose-codes";
+    }
 
     @RequestMapping(value = "/choose-codes")
     public String findAndOrSelect(HttpServletRequest request, HttpSession session, ModelMap model,
@@ -61,6 +79,9 @@ public class ChooseCodesController extends ControllerBase {
 
         BeanMap bm = new BeanMap(condition);
         ManyCodesRef<AbstractKod> ref = (ManyCodesRef<AbstractKod>) bm.get(codeRefName);
+
+        String[] selected = request.getParameterValues(codeRefName + ".selectedCodesId");
+
         ref.setSearchKodText(request.getParameter(codeRefName + ".searchKodText"));
         ref.setSearchBeskrivningText(request.getParameter(codeRefName + ".searchBeskrivningText"));
 
@@ -73,11 +94,12 @@ public class ChooseCodesController extends ControllerBase {
         ref.setFindings(findings);
         applicationData.initKodLists(condition);
 
-        String[] selected = request.getParameterValues(codeRefName + ".selectedCodesId");
-        if (selected != null) {
+        ref.getSelectedCodesId().clear();
+
+        if (selected != null && selected.length > 0) {
             ref.setCodes(new NestedArrayList<AbstractKod>());
 
-            for (String id : selected) {
+            for (String id : new HashSet<String>(Arrays.asList(selected))) {
                 Long lid = Long.parseLong(id);
                 ref.getCodes().add(repo.find(lid));
                 ref.getSelectedCodesId().add(lid);
@@ -91,6 +113,8 @@ public class ChooseCodesController extends ControllerBase {
                     ahk.setChildren(null);
                 }
             }
+        } else {
+            ref.getCodes().clear();
         }
 
         return "choose-codes";
@@ -103,6 +127,8 @@ public class ChooseCodesController extends ControllerBase {
             nameToRepository.put("atcKoderRef", atcKodRepository);
             nameToRepository.put("diagnosRef", diagnosKodRepository);
             nameToRepository.put("vaardformskoderRef", vaardformsKodRepository);
+            nameToRepository.put("rangordningsRef", rangordningsKodRepository);
+            nameToRepository.put("tillstaandetsSvaarighetsgradRef", tillstaandetsSvaarighetsgradKodRepository);
         }
         return nameToRepository.get(propertyName);
     }
@@ -114,6 +140,8 @@ public class ChooseCodesController extends ControllerBase {
             nameToKodClass.put("atcKoderRef", AtcKod.class);
             nameToKodClass.put("diagnosRef", DiagnosKod.class);
             nameToKodClass.put("vaardformskoderRef", VaardformsKod.class);
+            nameToKodClass.put("rangordningsRef", RangordningsKod.class);
+            nameToKodClass.put("tillstaandetsSvaarighetsgradRef", TillstaandetsSvaarighetsgradKod.class);
         }
         return nameToKodClass.get(propertyName);
     }

@@ -1,6 +1,8 @@
 package se.vgregion.verticalprio.controllers;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -19,9 +21,36 @@ public class ControllerBase {
 
     private SortedMap<String, String> prioPropertyTexts;
 
-    private List<Column> columns = Prioriteringsobjekt.getDefaultColumns();
+    private List<Column> columns = getDefaultColumns();
 
     protected String columnTextsPropertiesFileName = "/column-texts.properties";
+
+    private List<Column> getDefaultColumns() {
+        List<Column> columns = Prioriteringsobjekt.getDefaultColumns();
+
+        Map<String, Column> map = new HashMap<String, Column>();
+        for (Column column : columns) {
+            map.put(column.getName(), column);
+        }
+
+        addHtmlLinkToColumnLabel(map, "diagnosTexts", "choose-codes-init?codeRefName=diagnosRef");
+        addHtmlLinkToColumnLabel(map, "aatgaerdskoder", "choose-codes-init?codeRefName=aatgaerdRef");
+        addHtmlLinkToColumnLabel(map, "atcKoder", "choose-codes-init?codeRefName=atcKoderRef");
+        addHtmlLinkToColumnLabel(map, "vaardformskoder", "choose-codes-init?codeRefName=vaardformskoderRef");
+        addHtmlLinkToColumnLabel(map, "rangordningsKod", "choose-codes-init?codeRefName=rangordningsRef");
+        addHtmlLinkToColumnLabel(map, "tillstaandetsSvaarighetsgradKod",
+                "choose-codes-init?codeRefName=tillstaandetsSvaarighetsgradRef");
+
+        return columns;
+    }
+
+    private void addHtmlLinkToColumnLabel(Map<String, Column> map, String key, String linkText) {
+        Column column = map.get(key);
+        String template = "<a href='${link}'>${text}</a>";
+        template = template.replace("${link}", linkText);
+        template = template.replace("${text}", column.getLabel());
+        column.setLabel(template);
+    }
 
     /**
      * Getter for the prioPropertyTexts property. It initializes the map with the value in the property file
