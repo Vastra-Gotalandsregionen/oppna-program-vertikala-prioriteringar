@@ -58,7 +58,9 @@ public class MockPrioRepository implements PrioRepository {
      */
     @Override
     public Prioriteringsobjekt find(Long id) {
-        throw new UnsupportedOperationException("TODO: Implement this method");
+        Prioriteringsobjekt result = new Prioriteringsobjekt();
+        result.setId(id);
+        return result;
     }
 
     /**
@@ -90,7 +92,7 @@ public class MockPrioRepository implements PrioRepository {
      */
     @Override
     public Prioriteringsobjekt store(Prioriteringsobjekt entity) {
-        throw new UnsupportedOperationException("TODO: Implement this method");
+        return entity;
     }
 
     /**
