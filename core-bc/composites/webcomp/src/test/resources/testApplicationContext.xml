@@ -51,6 +51,9 @@
   </bean>
 
   <bean name="applicationData" class="se.vgregion.verticalprio.ApplicationData"/>
-
+  
+  <bean name="testEditPrioriteringController" class="se.vgregion.verticalprio.controllers.EditPrioriteringController"/>
+  
+  <bean name="testChooseCodesController" class="se.vgregion.verticalprio.controllers.ChooseCodesController"/>
   
 </beans>
