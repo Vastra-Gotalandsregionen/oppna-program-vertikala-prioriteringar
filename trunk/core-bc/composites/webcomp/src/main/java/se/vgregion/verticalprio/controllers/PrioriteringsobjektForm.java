@@ -141,7 +141,7 @@ public class PrioriteringsobjektForm extends Prioriteringsobjekt {
         tillstaandetsSvaarighetsgradKodId = getIdFromeCodeIfAny(getTillstaandetsSvaarighetsgradKod());
         haelsonekonomiskEvidensKodId = getIdFromeCodeIfAny(getHaelsonekonomiskEvidensKod());
         vaardnivaaKodId = getIdFromeCodeIfAny(getVaardnivaaKod());
-        vaentetidsKodId = getIdFromeCodeIfAny(getVaentetidsKod());
+        vaentetidsKodId = getIdFromeCodeIfAny(getVaentetidBehandlingVeckor());
         aatgaerdsRiskKodId = getIdFromeCodeIfAny(getAatgaerdsRiskKod());
         rangordningsKodId = getIdFromeCodeIfAny(getRangordningsKod());
 
@@ -168,7 +168,7 @@ public class PrioriteringsobjektForm extends Prioriteringsobjekt {
         setHaelsonekonomiskEvidensKod(getKodByIdAndList(haelsonekonomiskEvidensKodList,
                 haelsonekonomiskEvidensKodId));
         setVaardnivaaKod(getKodByIdAndList(vaardnivaaKodList, vaardnivaaKodId));
-        setVaentetidsKod(getKodByIdAndList(vaentetidsKodList, vaentetidsKodId));
+        setVaentetidBehandlingVeckor(getKodByIdAndList(vaentetidsKodList, vaentetidsKodId));
         setAatgaerdsRiskKod(getKodByIdAndList(aatgaerdsRiskKodList, aatgaerdsRiskKodId));
         setRangordningsKod(getKodByIdAndList(rangordningsKodList, rangordningsKodId));
     }

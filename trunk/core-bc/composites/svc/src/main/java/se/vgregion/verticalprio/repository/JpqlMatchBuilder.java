@@ -91,6 +91,8 @@ public class JpqlMatchBuilder {
             int aliasIndex) {
         String prefix = "o" + aliasIndex + ".";
 
+        // here is the main loop where we iterate over all properties inside a bean and build up the corresponding
+        // JPQL query
         BeanMap bm = new BeanMap(bean);
         for (Object key : bm.keySet()) {
             String propertyName = (String) key;
@@ -100,7 +102,8 @@ public class JpqlMatchBuilder {
             }
 
             if (value instanceof HaveNestedEntities<?>) {
-                aliasIndex = handleNestedEnteties(value, prefix, propertyName, bean, fromJoin, where, values,
+                HaveNestedEntities<AbstractEntity<Long>> hne = (HaveNestedEntities<AbstractEntity<Long>>) value;
+                aliasIndex = handleNestedEnteties(hne, prefix, propertyName, bean, fromJoin, where, values,
                         aliasIndex);
                 continue;
             }
@@ -180,17 +183,34 @@ public class JpqlMatchBuilder {
         return result;
     }
 
-    private int handleNestedEnteties(Object uncastedHaveNestedEnteties, String prefix, String parentPropertyName,
-            Object bean, List<String> fromJoin, List<String> where, List<Object> values, int aliasIndex) {
-        @SuppressWarnings("unchecked")
-        HaveNestedEntities<AbstractEntity<Long>> hne = (HaveNestedEntities<AbstractEntity<Long>>) uncastedHaveNestedEnteties;
+    /**
+     * This method is used to build up a part of the query. It is used to iterate through a collection of entities
+     * (that implements the <code>HaveNestedEntities</code>) and create an inclusive condition for every item in
+     * the list.
+     * 
+     * @param hne
+     * @param prefix
+     * @param parentPropertyName
+     * @param bean
+     * @param fromJoin
+     * @param where
+     * @param values
+     * @param aliasIndex
+     *            used in join conditions as alias name e.g. 1 or 2 denoting a table named o1 or o2
+     * @return
+     */
+    private int handleNestedEnteties(HaveNestedEntities<AbstractEntity<Long>> hne, String prefix,
+            String parentPropertyName, Object bean, List<String> fromJoin, List<String> where,
+            List<Object> values, int aliasIndex) {
 
         List<String> allItemsWhere = new ArrayList<String>();
         for (AbstractEntity<Long> ent : hne.content()) {
             List<String> iterationWhere = new ArrayList<String>();
-            boolean result = handleSubBean(prefix, parentPropertyName, ent, fromJoin, iterationWhere, values,
-                    aliasIndex + 1);
-            if (result) {
+            // check if there are values to match inside the bean when building the query
+            boolean hasValuesToMatch = handleSubBean(prefix, parentPropertyName, ent, fromJoin, iterationWhere,
+                    values, aliasIndex + 1);
+
+            if (hasValuesToMatch) {
                 aliasIndex++;
                 String oneIterationWhere = toString(iterationWhere, " and ");
                 oneIterationWhere = "(" + oneIterationWhere + ")";

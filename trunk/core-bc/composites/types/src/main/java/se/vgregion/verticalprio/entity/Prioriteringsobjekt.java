@@ -38,6 +38,16 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
     @JoinColumn(name = "sektor_raad_id")
     private SektorRaad sektorRaad;
 
+    @Column(name = "qualy")
+    private Integer qualy;
+
+    @Column(name = "rangordning_enligt_formel")
+    private Integer rangordningEnligtFormel;
+
+    private Integer kostnad;
+
+    private Integer volym;
+
     @ManyToMany()
     @JoinTable(name = "link_prioriteringsobjekt_diagnos_kod", joinColumns = { @JoinColumn(name = "prio_id") }, inverseJoinColumns = { @JoinColumn(name = "diagnos_kod_id") })
     private List<DiagnosKod> diagnoser = new ArrayList<DiagnosKod>();
@@ -59,8 +69,8 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
     private TillstaandetsSvaarighetsgradKod tillstaandetsSvaarighetsgradKod;
 
     @ManyToOne
-    @JoinColumn(name = "vaentetids_kod_id")
-    private VaentetidsKod vaentetidsKod;
+    @JoinColumn(name = "vaentetid_behandling_veckor_kod_id")
+    private VaentetidsKod vaentetidBehandlingVeckor;
 
     @ManyToOne
     @JoinColumn(name = "rangordnings_kod_id")
@@ -168,12 +178,12 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         this.vaardformskoder = vaardformskoder;
     }
 
-    public void setVaentetidsKod(VaentetidsKod vaentetidsKod) {
-        this.vaentetidsKod = vaentetidsKod;
+    public void setVaentetidBehandlingVeckor(VaentetidsKod vaentetidBehandlingVeckor) {
+        this.vaentetidBehandlingVeckor = vaentetidBehandlingVeckor;
     }
 
-    public VaentetidsKod getVaentetidsKod() {
-        return vaentetidsKod;
+    public VaentetidsKod getVaentetidBehandlingVeckor() {
+        return vaentetidBehandlingVeckor;
     }
 
     public void setRangordningsKod(RangordningsKod rangordningsKod) {
@@ -316,7 +326,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
 
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("diagnosTexts");
-        column.setLabel("Diagnostext");
+        column.setLabel("Symptom / Diagnostext");
         column.setColumnLabel("<a href='choose-codes-init?codeRefName=diagnosRef'>Diagnostext</a>");
         column.setDisplayOrder(i++);
         result.add(column);
@@ -325,13 +335,13 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
 
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("diagnosKodTexts");
-        column.setLabel("Diagnoskodtext");
+        column.setLabel("Symptom / Diagnoskod");
         column.setDisplayOrder(i++);
         result.add(column);
         column.setId(i);
         column.setHideAble(false);
 
-        // Åtgärdsrisk saknas!
+        // Åtgärdstext saknas!
 
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("aatgaerdskoder");
@@ -340,7 +350,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         column.setDisplayOrder(i++);
         result.add(column);
         column.setId(i);
-        column.setHideAble(false);
+        column.setHideAble(true);
 
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("tillstaandetsSvaarighetsgradKod");
@@ -364,7 +374,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
 
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("indikationGaf");
-        column.setLabel("Indikation / Gaf");
+        column.setLabel("Indikation - GAF");
         column.setDisplayOrder(i++);
         result.add(column);
         column.setId(i);
@@ -374,7 +384,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
 
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("atcKoder");
-        column.setLabel("Atc-kod");
+        column.setLabel("ATC-kod");
         column.setColumnLabel("<a href='choose-codes-init?codeRefName=atcKoderRef'>Atc-kod</a>");
         column.setDisplayOrder(i++);
         result.add(column);
@@ -383,7 +393,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
 
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("aatgaerdsRiskKod");
-        column.setLabel("Åtgärdsrisk");
+        column.setLabel("Risk med åtgärd");
         column.setDisplayOrder(i++);
         result.add(column);
         column.setId(i);
@@ -391,7 +401,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
 
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("patientnyttaEffektAatgaerdsKod");
-        column.setLabel("Patientnytta effekt/åtgärd");
+        column.setLabel("Patientnytta / effekt åtgärd");
         column.setDisplayOrder(i++);
         result.add(column);
         column.setId(i);
@@ -399,17 +409,23 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
 
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("patientnyttoEvidensKod");
-        column.setLabel("Patientnytta evidens");
+        column.setLabel("Evidens patientnytta / effekt åtgärd");
         column.setDisplayOrder(i++);
         result.add(column);
         column.setId(i);
         column.setHideAble(true);
 
-        // Kostnad vunnet levnadsår Qaly saknas
+        column = new se.vgregion.verticalprio.entity.Column();
+        column.setName("qualy");
+        column.setLabel("Kostnad vunnet levnadsår Qaly");
+        column.setDisplayOrder(i++);
+        result.add(column);
+        column.setId(i);
+        column.setHideAble(true);
 
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("haelsonekonomiskEvidensKod");
-        column.setLabel("Hälsoekonomisk evidens");
+        column.setLabel("Hälso ekonomisk evidens");
         column.setDisplayOrder(i++);
         result.add(column);
         column.setId(i);
@@ -417,23 +433,23 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
 
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("vaentetidBesookVeckor");
-        column.setLabel("Besöksväntetid veckor");
+        column.setLabel("Väntetid veckor besök");
         column.setDisplayOrder(i++);
         result.add(column);
         column.setId(i);
         column.setHideAble(true);
 
         column = new se.vgregion.verticalprio.entity.Column();
-        column.setName("vaentetidsKod");
-        column.setLabel("Väntettidskod");
+        column.setName("vaentetidBesookVeckor");
+        column.setLabel("Väntetid veckor besök");
         column.setDisplayOrder(i++);
         result.add(column);
         column.setId(i);
         column.setHideAble(true);
 
         column = new se.vgregion.verticalprio.entity.Column();
-        column.setName("vaentetidVeckor");
-        column.setLabel("Väntetid veckor");
+        column.setName("vaentetidBehandlingVeckor");
+        column.setLabel("Väntetid veckor behandling");
         column.setDisplayOrder(i++);
         result.add(column);
         column.setId(i);
@@ -456,8 +472,13 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         column.setId(i);
         column.setHideAble(true);
 
-        // Rangornding enligt formel
-        // Rangordning
+        column = new se.vgregion.verticalprio.entity.Column();
+        column.setName("rangordningEnligtFormel");
+        column.setLabel("Rangornding enligt formel");
+        column.setDisplayOrder(i++);
+        result.add(column);
+        column.setId(i);
+        column.setHideAble(true);
 
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("kommentar");
@@ -467,9 +488,57 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         column.setId(i);
         column.setHideAble(true);
 
+        column = new se.vgregion.verticalprio.entity.Column();
+        column.setName("kostnad");
+        column.setLabel("Kostnad");
+        column.setDisplayOrder(i++);
+        result.add(column);
+        column.setId(i);
+        column.setHideAble(true);
+
+        column = new se.vgregion.verticalprio.entity.Column();
+        column.setName("volym");
+        column.setLabel("Volym");
+        column.setDisplayOrder(i++);
+        result.add(column);
+        column.setId(i);
+        column.setHideAble(true);
+
         columns = result;
 
         return result;
+    }
+
+    public void setQualy(Integer qualy) {
+        this.qualy = qualy;
+    }
+
+    public Integer getQualy() {
+        return qualy;
+    }
+
+    public void setRangordningEnligtFormel(Integer rangordningEnligtFormel) {
+        this.rangordningEnligtFormel = rangordningEnligtFormel;
+    }
+
+    public Integer getRangordningEnligtFormel() {
+        return rangordningEnligtFormel;
+    }
+
+    public void setKostnad(Integer kostnad) {
+        this.kostnad = kostnad;
+    }
+
+    public Integer getKostnad() {
+        return kostnad;
+    }
+
+    public void setVolym(Integer volym) {
+        this.volym = volym;
+    }
+
+    public Integer getVolym() {
+        return volym;
     }
 
 }
