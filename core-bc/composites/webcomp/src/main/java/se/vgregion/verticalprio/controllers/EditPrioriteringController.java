@@ -69,6 +69,11 @@ public class EditPrioriteringController extends ControllerBase {
             form.getAatgaerdskoder().toArray(); // loaded before sending them to the jsp-layer.
             form.getVaardformskoder().toArray();
             form.getAtcKoder().toArray();
+            if (form.getId() == null) {
+                form.setId(id); // Strange... yes?
+                // putAllWriteable seems not to work for this class on Long:s at least (and in the antonio-env).
+                // TODO: own implementation of BeanMap
+            }
         }
 
         return "prio-view";

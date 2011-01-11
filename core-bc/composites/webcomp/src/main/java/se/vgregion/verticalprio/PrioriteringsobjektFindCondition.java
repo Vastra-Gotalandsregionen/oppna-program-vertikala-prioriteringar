@@ -1,5 +1,6 @@
 package se.vgregion.verticalprio;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Transient;
@@ -21,7 +22,9 @@ import se.vgregion.verticalprio.repository.NestedTillstaandetsSvaarighetsgradKod
  */
 public class PrioriteringsobjektFindCondition extends PrioriteringsobjektForm implements HaveExplicitTypeToFind {
 
-    final private NestedRangordningsKod rangordningsHolder = new NestedRangordningsKod();
+    private final NestedRangordningsKod rangordningsHolder = new NestedRangordningsKod();
+
+    private final List<String> sortOrder = new ArrayList<String>();
 
     public PrioriteringsobjektFindCondition() {
         super();
@@ -83,5 +86,9 @@ public class PrioriteringsobjektFindCondition extends PrioriteringsobjektForm im
      */
     public ManyCodesRef<TillstaandetsSvaarighetsgradKod> getTillstaandetsSvaarighetsgradRef() {
         return tillstaandetsSvaarighetsgradRef;
+    }
+
+    public List<String> getSortOrder() {
+        return sortOrder;
     }
 }

@@ -59,6 +59,35 @@ public class VerticalPrioController extends ControllerBase {
         return "main";
     }
 
+    @RequestMapping(value = "/main", params = { "sortField" })
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public String alterSortOrder(HttpSession session, @RequestParam String sortField) {
+        MainForm form = getMainForm(session);
+        PrioriteringsobjektFindCondition condition = getOrCreateSessionObj(session, "prioCondition",
+                PrioriteringsobjektFindCondition.class);
+
+        for (Column column : form.getColumns()) {
+            if (sortField.equals(column.getName())) {
+                column.setSorting(!column.isSorting());
+                if (!column.isSorting()) {
+                    condition.getSortOrder().remove(sortField);
+                    continue;
+                }
+                continue;
+            }
+        }
+
+        condition.getSortOrder().clear();
+        for (Column column : form.getColumns()) {
+            if (column.isSorting()) {
+                condition.getSortOrder().add(column.getName());
+            }
+        }
+
+        result(session);
+        return "main";
+    }
+
     @RequestMapping(value = "/conf-columns")
     public String confColumns(final HttpSession session, @RequestParam String command,
             @RequestParam(required = false) List<String> visibleColumns,
@@ -254,4 +283,5 @@ public class VerticalPrioController extends ControllerBase {
 
         return prios;
     }
+
 }

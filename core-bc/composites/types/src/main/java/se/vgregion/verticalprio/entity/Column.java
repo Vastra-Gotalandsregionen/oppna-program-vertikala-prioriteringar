@@ -19,9 +19,15 @@ public class Column {
 
     private String label;
 
+    private String columnLabel;
+
     private String name;
 
     private boolean visible = true;
+
+    private boolean sorting;
+
+    private boolean sortable = true;
 
     public Column() {
         // TODO Auto-generated constructor stub
@@ -100,6 +106,33 @@ public class Column {
     @Override
     public String toString() {
         return String.valueOf(name);
+    }
+
+    public void setColumnLabel(String columnLabel) {
+        this.columnLabel = columnLabel;
+    }
+
+    public String getColumnLabel() {
+        if (columnLabel == null) {
+            return label;
+        }
+        return columnLabel;
+    }
+
+    public void setSorting(boolean sorting) {
+        this.sorting = sorting;
+    }
+
+    public boolean isSorting() {
+        return sorting;
+    }
+
+    public void setSortable(boolean sortable) {
+        this.sortable = sortable;
+    }
+
+    public boolean isSortable() {
+        return sortable;
     }
 
     public static class OrderComparer implements Comparator<Column> {

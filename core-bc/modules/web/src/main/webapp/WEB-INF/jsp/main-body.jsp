@@ -38,7 +38,7 @@
     <c:forEach items="${form.columns}" var="column">
       <c:if test="${column.visible}">
         <td>
-          <h3>${column.label}</h3>
+          <h3>${column.columnLabel}</h3>
           <tags:cell value="${prioCondition[column.name]}"/>
         </td>
       </c:if>

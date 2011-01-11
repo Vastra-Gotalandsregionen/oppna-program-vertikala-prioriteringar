@@ -14,7 +14,6 @@
     <tags:find-select-codes label="Sök åtgärder (kod/besk.):" codeRefName="aatgaerdRef" codeRef="${prio.aatgaerdRef}" submitName="findAatgerder" styleClass="aatgaerdRef"/>
 
     <hr style="clear:both"/>
-
     <form:hidden path="id"/>
     
     <div style="width:100%" class="prio-form-grid">

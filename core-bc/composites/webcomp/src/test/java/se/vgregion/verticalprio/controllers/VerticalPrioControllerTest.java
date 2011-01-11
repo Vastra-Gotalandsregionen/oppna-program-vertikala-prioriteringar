@@ -34,12 +34,6 @@ public class VerticalPrioControllerTest {
 
     @Before
     public void setUp() {
-        /*
-         * vpc = new VerticalPrioController() {
-         * 
-         * @Override public SortedMap<String, String> getPrioPropertyTexts() { columnTextsPropertiesFileName =
-         * "/column-texts-test.properties"; return super.getPrioPropertyTexts(); } };
-         */
         request = new MockHttpServletRequest();
         session = request.getSession();
         MainForm form = new MainForm();
@@ -51,13 +45,6 @@ public class VerticalPrioControllerTest {
         String defaultResult = vpc.main(session);
         Assert.assertEquals("main", defaultResult);
     }
-
-    // @Test
-    // public void result() {
-    // vpc = new VerticalPrioController();
-    // List<Prioriteringsobjekt> prios = vpc.result(session);
-    // Assert.assertNotSame(0, prios.size());
-    // }
 
     private List<Column> getVisibleColumns() {
         List<Column> result = new ArrayList<Column>(Prioriteringsobjekt.getDefaultColumns());

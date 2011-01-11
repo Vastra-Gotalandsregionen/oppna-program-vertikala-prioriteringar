@@ -42,7 +42,7 @@ public class ChooseCodesControllerTest {
      * .
      */
     @Test
-    public final void testStart() {
+    public final void start() {
         ccc.start(session, modelMap);
     }
 
@@ -55,7 +55,7 @@ public class ChooseCodesControllerTest {
      * @throws InstantiationException
      */
     @Test
-    public final void testFindAndOrSelect() throws InstantiationException, IllegalAccessException {
+    public final void findAndOrSelect() throws InstantiationException, IllegalAccessException {
         ccc.findAndOrSelect(request, session, modelMap, "aatgaerdRef");
         ccc.findAndOrSelect(request, session, modelMap, "atcKoderRef");
         ccc.findAndOrSelect(request, session, modelMap, "diagnosRef");

@@ -76,7 +76,7 @@ public class JpqlMatchBuilder {
 
         mkFindByExampleJpql(bean, fromJoin, where, values, 0);
         StringBuilder sb = new StringBuilder();
-        sb.append("select o0 from ");
+        sb.append("select distinct o0 from ");
         sb.append(toString(fromJoin, " left join "));
         if (!where.isEmpty()) {
             sb.append(" \nwhere ");
@@ -182,6 +182,7 @@ public class JpqlMatchBuilder {
 
     private int handleNestedEnteties(Object uncastedHaveNestedEnteties, String prefix, String parentPropertyName,
             Object bean, List<String> fromJoin, List<String> where, List<Object> values, int aliasIndex) {
+        @SuppressWarnings("unchecked")
         HaveNestedEntities<AbstractEntity<Long>> hne = (HaveNestedEntities<AbstractEntity<Long>>) uncastedHaveNestedEnteties;
 
         List<String> allItemsWhere = new ArrayList<String>();
