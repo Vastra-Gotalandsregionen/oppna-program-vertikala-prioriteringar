@@ -24,7 +24,6 @@
 }
 
 .sectors {
-  //background-color: orange;
   min-width: 100px;
   float: left;
   height: 100%;
@@ -56,6 +55,7 @@
 }
 
 .rowsAndButtons {
+  float: left;
   max-width: 1000px;
   min-width: 200px;
 }
@@ -160,7 +160,6 @@
 
 .prio-view .values {
   width: 60em;
-  XXXheight: 45em;
   background-color: white;
   border-bottom-color: silver;
   border-width: thin;

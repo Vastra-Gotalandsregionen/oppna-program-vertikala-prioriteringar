@@ -317,6 +317,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("diagnosTexts");
         column.setLabel("Diagnostext");
+        column.setColumnLabel("<a href='choose-codes-init?codeRefName=diagnosRef'>Diagnostext</a>");
         column.setDisplayOrder(i++);
         result.add(column);
         column.setId(i);
@@ -335,6 +336,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("aatgaerdskoder");
         column.setLabel("Åtgärdskod");
+        column.setColumnLabel("<a href='choose-codes-init?codeRefName=aatgaerdRef'>Åtgärdskod</a>");
         column.setDisplayOrder(i++);
         result.add(column);
         column.setId(i);
@@ -343,6 +345,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("tillstaandetsSvaarighetsgradKod");
         column.setLabel("Tillståndets svårighetsgrad");
+        column.setColumnLabel("<a href='choose-codes-init?codeRefName=tillstaandetsSvaarighetsgradRef'>Tillståndets svårighetsgrad</a>");
         column.setDisplayOrder(i++);
         result.add(column);
         column.setId(i);
@@ -351,6 +354,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("rangordningsKod");
         column.setLabel("Rangordning");
+        column.setColumnLabel("<a href='choose-codes-init?codeRefName=rangordningsRef'>Rangordning</a>");
         column.setDisplayOrder(i++);
         result.add(column);
         column.setId(i);
@@ -371,6 +375,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("atcKoder");
         column.setLabel("Atc-kod");
+        column.setColumnLabel("<a href='choose-codes-init?codeRefName=atcKoderRef'>Atc-kod</a>");
         column.setDisplayOrder(i++);
         result.add(column);
         column.setId(i);
@@ -445,6 +450,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("vaardformskoder");
         column.setLabel("Vårdform");
+        column.setColumnLabel("<a href='choose-codes-init?codeRefName=vaardformskoderRef'>Vårdform</a>");
         column.setDisplayOrder(i++);
         result.add(column);
         column.setId(i);
