@@ -50,6 +50,10 @@ public class PrioriteringsobjektForm extends Prioriteringsobjekt {
     @Transient
     private List<TillstaandetsSvaarighetsgradKod> tillstaandetsSvaarighetsgradKodList;
     @Transient
+    private Long vaentetidBesookVeckorId;
+    @Transient
+    private List<VaentetidsKod> vaentetidBesookVeckorList;
+    @Transient
     private Long haelsonekonomiskEvidensKodId;
     @Transient
     private List<HaelsonekonomiskEvidensKod> haelsonekonomiskEvidensKodList;
@@ -386,6 +390,22 @@ public class PrioriteringsobjektForm extends Prioriteringsobjekt {
 
     public Map<String, Column> getColumns() {
         return columns;
+    }
+
+    public void setVaentetidBesookVeckorId(Long vaentetidBesookVeckorId) {
+        this.vaentetidBesookVeckorId = vaentetidBesookVeckorId;
+    }
+
+    public Long getVaentetidBesookVeckorId() {
+        return vaentetidBesookVeckorId;
+    }
+
+    public void setVaentetidBesookVeckorList(List<VaentetidsKod> vaentetidBesookVeckorList) {
+        this.vaentetidBesookVeckorList = vaentetidBesookVeckorList;
+    }
+
+    public List<VaentetidsKod> getVaentetidBesookVeckorList() {
+        return vaentetidBesookVeckorList;
     }
 
 }

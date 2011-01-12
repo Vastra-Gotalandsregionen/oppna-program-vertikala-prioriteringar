@@ -170,7 +170,7 @@ public class ApplicationData implements Serializable {
     GenerisktKodRepository<VaentetidsKod> vaentetidsKodRepository;
     List<VaentetidsKod> everyVaentetidsKod;
 
-    public List<VaentetidsKod> getVaentetidsKodList() {
+    public List<VaentetidsKod> getVaentetidBesookVeckorList() {
         if (everyVaentetidsKod == null) {
             everyVaentetidsKod = new ArrayList<VaentetidsKod>(vaentetidsKodRepository.findAll());
         }
