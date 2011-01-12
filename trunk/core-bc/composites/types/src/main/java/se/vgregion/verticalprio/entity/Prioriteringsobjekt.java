@@ -28,9 +28,6 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "vaentetid_veckor")
-    private Integer vaentetidVeckor;
-
     @Column(name = "vaentetid_besook_veckor")
     private Integer vaentetidBesookVeckor;
 
@@ -147,17 +144,24 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
     }
 
     public List<String> getDiagnosTexts() {
-        List<String> sb = new ArrayList<String>();
-        for (DiagnosKod kod : getDiagnoser()) {
-            sb.add(kod.getBeskrivning());
-        }
-        return sb;
+        return mkBeskrivningsText(getDiagnoser());
     }
 
     public List<String> getDiagnosKodTexts() {
         List<String> sb = new ArrayList<String>();
         for (DiagnosKod kod : getDiagnoser()) {
             sb.add(kod.getKod());
+        }
+        return sb;
+    }
+
+    private List<String> mkBeskrivningsText(List<? extends AbstractKod> koder) {
+        List<String> sb = new ArrayList<String>();
+        if (koder == null || koder.isEmpty()) {
+            return sb;
+        }
+        for (AbstractKod kod : koder) {
+            sb.add(kod.getBeskrivning());
         }
         return sb;
     }
@@ -234,14 +238,6 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         return patientnyttaEffektAatgaerdsKod;
     }
 
-    public void setVaentetidVeckor(Integer vaentetidVeckor) {
-        this.vaentetidVeckor = vaentetidVeckor;
-    }
-
-    public Integer getVaentetidVeckor() {
-        return vaentetidVeckor;
-    }
-
     public void setKommentar(String kommentar) {
         this.kommentar = kommentar;
     }
@@ -256,6 +252,10 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
 
     public List<AtcKod> getAtcKoder() {
         return atcKoder;
+    }
+
+    public List<String> getAtcText() {
+        return mkBeskrivningsText(getAtcKoder());
     }
 
     public void setIndikationGaf(String indikationGaf) {
@@ -380,7 +380,14 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         column.setId(i);
         column.setHideAble(true);
 
-        // Atc-text saknas!
+        column = new se.vgregion.verticalprio.entity.Column();
+        column.setName("atcText");
+        column.setLabel("ATC-text");
+        column.setColumnLabel("<a href='choose-codes-init?codeRefName=atcKoderRef'>Atc-kod</a>");
+        column.setDisplayOrder(i++);
+        result.add(column);
+        column.setId(i);
+        column.setHideAble(true);
 
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("atcKoder");

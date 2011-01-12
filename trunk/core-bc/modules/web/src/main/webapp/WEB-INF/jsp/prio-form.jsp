@@ -27,8 +27,8 @@
     <div style="width:100%" class="prio-form-grid">
         <div class="cell"><tags:kod key="haelsonekonomiskEvidensKod" label="haelsonekonomiskEvidensKod" /></div> 
         <div class="cell"></div>
-        <div class="cell"><tags:kod key="vaentetidsKod" label="vaentetidsKod" /></div>
-        <div class="cell"><tags:text key="vaentetidVeckor" label="Väntetid veckor" /></div>
+        <div class="cell"><tags:kod key="vaentetidBesookVeckor" label="vaentetidBesookVeckor" /></div>
+        <div class="cell"><tags:text key="vaentetidBehandlingVeckor" label="Väntetid behandling veckor" /></div>
         <div class="cell last">
           <span class="kod-label">Sektorsråd</span> 
           <tags:kod key="sektorRaad" label="Sektorsråd" />
@@ -41,7 +41,7 @@
           <tags:textarea cssInputBoxStyle="width:90%" key="vaardgivare" label="Vårdgivare"/> 
         </div>
         <div class="cell last" style="width:33%">
-          <tags:textarea cssInputBoxStyle="width:90%" key="kommentar" label="Kommentar"/>
+          <tags:textarea cssInputBoxStyle="width:90%" key="kommentar" label="kommentar"/>
         </div>
     </div>
     
