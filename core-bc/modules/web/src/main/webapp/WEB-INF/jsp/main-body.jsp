@@ -7,8 +7,15 @@
 
 <div class="main-body">
 <div class="sectorsAndButtons"> 
+
 <span class="sectors"><form:form commandName="form"
   action="check" method="POST">
+  
+<c:choose>
+  <c:when test="${user != null and user.editor}"><a href="login">Logga ut</a></c:when>
+  <c:otherwise><a href="login">Logga in</a></c:otherwise>
+</c:choose>
+  
   <br/>
   <br/>
   <tags:sectors items="${form.sectors}" />  
@@ -17,8 +24,9 @@
 <div class="rowsAndButtons">
 <span class="button-row">
 <label for="select-prio"><button>Visa prioriteringsobjekt</button></label>
-<form action="prio-open"> <input type="submit" value="Skapa prioriteringsobjekt"> </form>
-<form action="init-conf-columns"><input class="conf-columns" type="submit" value="Dölj/Visa kolumner" /></form>
+<label for="delete-prio"><button>Radera prioriteringsobjekt</button></label>
+<form action="prio-open"> <input type="submit" value="Skapa prioriteringsobjekt" class="button"> </form>
+<form action="init-conf-columns"><input class="conf-columns button" type="submit" value="Dölj/Visa kolumner" /></form>
 <button class="cost">Kostnad</button>
 <span class="export-data-buttons">
 <button class="excel">Excel</button>
@@ -30,7 +38,8 @@
 
 <form action="prio-open" method="post">
 
-<input type="submit" id="select-prio"/>
+<input type="submit" id="select-prio" name="select-prio"/>
+<input type="submit" id="delete-prio" name="delete-prio"/>
 
 <table cellpadding="5">
   <thead>

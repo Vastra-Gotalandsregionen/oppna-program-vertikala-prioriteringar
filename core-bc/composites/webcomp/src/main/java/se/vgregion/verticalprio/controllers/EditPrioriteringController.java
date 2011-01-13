@@ -7,6 +7,7 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.beanutils.BeanMap;
 import org.springframework.stereotype.Controller;
@@ -49,14 +50,26 @@ public class EditPrioriteringController extends ControllerBase {
     @Resource(name = "atcKodRepository")
     GenerisktKodRepository<AtcKod> atcKodRepository;
 
-    @RequestMapping(value = "prio-open")
+    @RequestMapping(value = "prio-open", params = { "delete-prio" })
     @Transactional
-    public String initView(ModelMap model, @RequestParam(required = false) Long id) {
+    public String initDeleteView(ModelMap model, HttpSession session, @RequestParam(required = false) Long id) {
+        String result = initView(model, session, id);
+        model.addAttribute("editDir", new EditDirective(false, null));
+        // model.addAttribute("overrideEdit", null);
+        // session.setAttribute("overrideEdit", null);
+        return result;
+    }
+
+    @RequestMapping(value = "prio-open", params = { "select-prio" })
+    @Transactional
+    public String initView(ModelMap model, HttpSession session, @RequestParam(required = false) Long id) {
         PrioriteringsobjektForm form = (PrioriteringsobjektForm) model.get("prio");
+        String[] hmm = session.getValueNames();
         if (form == null) {
             form = new PrioriteringsobjektForm();
         }
         model.addAttribute("prio", form);
+        model.addAttribute("editDir", new EditDirective(true, null));
         initKodLists(form);
 
         if (id != null) {
@@ -168,6 +181,7 @@ public class EditPrioriteringController extends ControllerBase {
     private <T extends AbstractKod> String findCodesAction(ModelMap model, PrioriteringsobjektForm pf,
             Class<T> clazz, ManyCodesRef<T> mcr, GenerisktKodRepository<T> repo, List<T> target,
             HttpServletRequest request) throws InstantiationException, IllegalAccessException {
+        model.addAttribute("editDir", new EditDirective(true, null));
         if (pf == null) {
             pf = new PrioriteringsobjektForm();
         }

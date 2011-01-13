@@ -28,8 +28,9 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "vaentetid_besook_veckor")
-    private Integer vaentetidBesookVeckor;
+    @ManyToOne
+    @JoinColumn(name = "vaentetid_besook_veckor_kod_id")
+    private VaentetidsKod vaentetidBesookVeckor;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "sektor_raad_id")
@@ -266,11 +267,11 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         return indikationGaf;
     }
 
-    public void setVaentetidBesookVeckor(Integer vaentetidBesookVeckor) {
+    public void setVaentetidBesookVeckor(VaentetidsKod vaentetidBesookVeckor) {
         this.vaentetidBesookVeckor = vaentetidBesookVeckor;
     }
 
-    public Integer getVaentetidBesookVeckor() {
+    public VaentetidsKod getVaentetidBesookVeckor() {
         return vaentetidBesookVeckor;
     }
 
@@ -383,7 +384,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("atcText");
         column.setLabel("ATC-text");
-        column.setColumnLabel("<a href='choose-codes-init?codeRefName=atcKoderRef'>Atc-kod</a>");
+        column.setColumnLabel("<a href='choose-codes-init?codeRefName=atcKoderRef'>Atc-text</a>");
         column.setDisplayOrder(i++);
         result.add(column);
         column.setId(i);
@@ -447,14 +448,6 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         column.setHideAble(true);
 
         column = new se.vgregion.verticalprio.entity.Column();
-        column.setName("vaentetidBesookVeckor");
-        column.setLabel("Väntetid veckor besök");
-        column.setDisplayOrder(i++);
-        result.add(column);
-        column.setId(i);
-        column.setHideAble(true);
-
-        column = new se.vgregion.verticalprio.entity.Column();
         column.setName("vaentetidBehandlingVeckor");
         column.setLabel("Väntetid veckor behandling");
         column.setDisplayOrder(i++);
@@ -481,7 +474,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
 
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("rangordningEnligtFormel");
-        column.setLabel("Rangornding enligt formel");
+        column.setLabel("Rangordning enligt formel");
         column.setDisplayOrder(i++);
         result.add(column);
         column.setId(i);

@@ -2,6 +2,10 @@ package se.vgregion.verticalprio.el;
 
 import java.util.Collection;
 
+import se.vgregion.verticalprio.controllers.EditDirective;
+import se.vgregion.verticalprio.entity.AbstractKod;
+import se.vgregion.verticalprio.entity.User;
+
 /**
  * A utility class with string functions that could come in handy inside el-expressions.
  * 
@@ -46,6 +50,32 @@ public class Util {
 
     public static Collection toCollection(Object obj) {
         return (Collection) obj;
+    }
+
+    public static String labelFor(Integer id, Collection<? extends AbstractKod> collection) {
+        if (id == null || collection == null) {
+            return "";
+        }
+        for (AbstractKod kod : collection) {
+            if (kod.getId().longValue() == id.longValue()) {
+                return kod.getLabel();
+            }
+        }
+        return "";
+    }
+
+    public static Boolean canEdit(User user, EditDirective editDirective) {
+        if (editDirective.getOverride() != null) {
+            return editDirective.getOverride();
+        }
+        if (user == null) {
+            return false;
+        }
+        Boolean editMode = editDirective.getEditable();
+        if (editMode == null || !editMode) {
+            return false;
+        }
+        return user.isEditor();
     }
 
 }

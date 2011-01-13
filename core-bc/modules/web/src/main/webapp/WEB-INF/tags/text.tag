@@ -9,5 +9,5 @@
 
 <span class="${key} kod"> 
   <span class="kod-label ${key}-label"> ${label} </span> 
-  <form:input path="${key}" /> 
+  <form:input path="${key}" disabled="${su:canEdit(user, editDir) ? '' : 'true'}"/> 
 </span>

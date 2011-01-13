@@ -54,6 +54,10 @@ public class PrioriteringsobjektForm extends Prioriteringsobjekt {
     @Transient
     private List<VaentetidsKod> vaentetidBesookVeckorList;
     @Transient
+    private Long vaentetidBehandlingVeckorId;
+    @Transient
+    private List<VaentetidsKod> vaentetidBehandlingVeckorList;
+    @Transient
     private Long haelsonekonomiskEvidensKodId;
     @Transient
     private List<HaelsonekonomiskEvidensKod> haelsonekonomiskEvidensKodList;
@@ -63,8 +67,8 @@ public class PrioriteringsobjektForm extends Prioriteringsobjekt {
     private List<VaardnivaaKod> vaardnivaaKodList;
     @Transient
     private Long vaentetidsKodId;
-    @Transient
-    private List<VaentetidsKod> vaentetidsKodList;
+    // @Transient
+    // private List<VaentetidsKod> vaentetidsKodList;
     @Transient
     private Long aatgaerdsRiskKodId;
     @Transient
@@ -148,7 +152,8 @@ public class PrioriteringsobjektForm extends Prioriteringsobjekt {
         vaentetidsKodId = getIdFromeCodeIfAny(getVaentetidBehandlingVeckor());
         aatgaerdsRiskKodId = getIdFromeCodeIfAny(getAatgaerdsRiskKod());
         rangordningsKodId = getIdFromeCodeIfAny(getRangordningsKod());
-
+        vaentetidBehandlingVeckorId = getIdFromeCodeIfAny(getVaentetidBehandlingVeckor());
+        vaentetidBesookVeckorId = getIdFromeCodeIfAny(getVaentetidBesookVeckor());
     }
 
     /**
@@ -172,9 +177,10 @@ public class PrioriteringsobjektForm extends Prioriteringsobjekt {
         setHaelsonekonomiskEvidensKod(getKodByIdAndList(haelsonekonomiskEvidensKodList,
                 haelsonekonomiskEvidensKodId));
         setVaardnivaaKod(getKodByIdAndList(vaardnivaaKodList, vaardnivaaKodId));
-        setVaentetidBehandlingVeckor(getKodByIdAndList(vaentetidsKodList, vaentetidsKodId));
         setAatgaerdsRiskKod(getKodByIdAndList(aatgaerdsRiskKodList, aatgaerdsRiskKodId));
         setRangordningsKod(getKodByIdAndList(rangordningsKodList, rangordningsKodId));
+        setVaentetidBehandlingVeckor(getKodByIdAndList(vaentetidBehandlingVeckorList, vaentetidBehandlingVeckorId));
+        setVaentetidBesookVeckor(getKodByIdAndList(vaentetidBesookVeckorList, vaentetidBesookVeckorId));
     }
 
     public Long getPatientnyttaEffektAatgaerdsKodId() {
@@ -283,13 +289,13 @@ public class PrioriteringsobjektForm extends Prioriteringsobjekt {
         this.vaentetidsKodId = vaentetidsKodId;
     }
 
-    public List<VaentetidsKod> getVaentetidsKodList() {
-        return vaentetidsKodList;
-    }
-
-    public void setVaentetidsKodList(List<VaentetidsKod> vaentetidsKodList) {
-        this.vaentetidsKodList = vaentetidsKodList;
-    }
+    // public List<VaentetidsKod> getVaentetidsKodList() {
+    // return vaentetidsKodList;
+    // }
+    //
+    // public void setVaentetidsKodList(List<VaentetidsKod> vaentetidsKodList) {
+    // this.vaentetidsKodList = vaentetidsKodList;
+    // }
 
     public Long getAatgaerdsRiskKodId() {
         return aatgaerdsRiskKodId;
@@ -406,6 +412,22 @@ public class PrioriteringsobjektForm extends Prioriteringsobjekt {
 
     public List<VaentetidsKod> getVaentetidBesookVeckorList() {
         return vaentetidBesookVeckorList;
+    }
+
+    public void setVaentetidBehandlingVeckorId(Long vaentetidBehandlingVeckorId) {
+        this.vaentetidBehandlingVeckorId = vaentetidBehandlingVeckorId;
+    }
+
+    public Long getVaentetidBehandlingVeckorId() {
+        return vaentetidBehandlingVeckorId;
+    }
+
+    public void setVaentetidBehandlingVeckorList(List<VaentetidsKod> vaentetidBehandlingVeckorList) {
+        this.vaentetidBehandlingVeckorList = vaentetidBehandlingVeckorList;
+    }
+
+    public List<VaentetidsKod> getVaentetidBehandlingVeckorList() {
+        return vaentetidBehandlingVeckorList;
     }
 
 }

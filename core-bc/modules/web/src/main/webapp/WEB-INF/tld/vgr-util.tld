@@ -77,5 +77,22 @@
     <function-signature>java.util.Collection toCollection(java.lang.Object)</function-signature>
 
   </function>
-
+  
+  
+  <function>
+    <description>Prints the label of the AbstractKod that matches the id provided in the call.</description>
+    <display-name>labelFor</display-name>
+    <name>labelFor</name>
+    <function-class>se.vgregion.verticalprio.el.Util</function-class>
+    <function-signature>java.lang.String labelFor(java.lang.Integer, java.util.Collection)</function-signature>
+  </function>
+  
+  <function>
+    <description>Combines a User object and a simple boolean to see if a page should display edit capabilities.</description>
+    <display-name>canEdit</display-name>
+    <name>canEdit</name>
+    <function-class>se.vgregion.verticalprio.el.Util</function-class>
+    <function-signature>java.lang.Boolean canEdit(se.vgregion.verticalprio.entity.User, se.vgregion.verticalprio.controllers.EditDirective)</function-signature>
+  </function>
+  
 </taglib>
