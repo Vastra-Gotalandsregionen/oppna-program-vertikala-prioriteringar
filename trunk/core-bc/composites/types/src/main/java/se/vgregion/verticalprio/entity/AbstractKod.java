@@ -52,7 +52,18 @@ public abstract class AbstractKod extends AbstractEntity<Long> implements Serial
      */
     @Override
     public String toString() {
-        return String.valueOf(kod);
+        return getLabel();
+    }
+
+    public String getLabel() {
+        return (nullAsBlank(kod) + " " + nullAsBlank(beskrivning)).trim();
+    }
+
+    private String nullAsBlank(String s) {
+        if (s == null) {
+            return "";
+        }
+        return s;
     }
 
 }

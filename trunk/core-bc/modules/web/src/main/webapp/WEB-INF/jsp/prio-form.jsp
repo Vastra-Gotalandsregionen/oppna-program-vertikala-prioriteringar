@@ -28,7 +28,7 @@
         <div class="cell"><tags:kod key="haelsonekonomiskEvidensKod" label="haelsonekonomiskEvidensKod" /></div> 
         <div class="cell"></div>
         <div class="cell"><tags:kod key="vaentetidBesookVeckor" label="vaentetidBesookVeckor" /></div>
-        <div class="cell"><tags:text key="vaentetidBehandlingVeckor" label="Väntetid behandling veckor" /></div>
+        <div class="cell"><tags:kod key="vaentetidBehandlingVeckor" label="vaentetidBehandlingVeckor" /></div>
         <div class="cell last">
           <span class="kod-label">Sektorsråd</span> 
           <tags:kod key="sektorRaad" label="Sektorsråd" />
@@ -55,6 +55,6 @@
 
     <hr style="clear:both"/>
 
-    <input type="submit" value="Spara" name="save" />
+    <tags:submit value="Spara" name="save" />
     <a href="main">Stäng</a>
   </div>

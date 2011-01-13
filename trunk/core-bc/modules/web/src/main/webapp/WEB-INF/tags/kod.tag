@@ -9,7 +9,15 @@
 
 <span class="${key} kod"> 
   <span class="kod-label ${key}-label"> ${prio.columns[label].label} </span> 
-  <form:select path="${key}Id">
-    <form:options items="${prio[su:concat(key, 'List')]}" itemLabel="kod" itemValue="id" />
-  </form:select> 
+  <c:choose>
+    <c:when test="${su:canEdit(user, editDir)}">
+      <form:select path="${key}Id">
+        <option value="">-- Ingen --</option>
+        <form:options items="${prio[su:concat(key, 'List')]}" itemLabel="label" itemValue="id" />
+      </form:select>
+    </c:when>
+    <c:otherwise>
+      ${su:labelFor(prio[su:concat(key, 'Id')], prio[su:concat(key, 'List')])} <br/>
+    </c:otherwise>
+  </c:choose> 
 </span>

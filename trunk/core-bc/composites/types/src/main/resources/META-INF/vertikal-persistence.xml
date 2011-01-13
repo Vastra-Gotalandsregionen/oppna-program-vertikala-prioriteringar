@@ -4,6 +4,7 @@
     <provider>org.hibernate.ejb.HibernatePersistence</provider>
     <class>se.vgregion.verticalprio.entity.Prioriteringsobjekt</class>
     <class>se.vgregion.verticalprio.entity.DiagnosKod</class>
+    <class>se.vgregion.verticalprio.entity.AtcKod</class>
     <class>se.vgregion.verticalprio.entity.SektorRaad</class>
     <class>se.vgregion.verticalprio.entity.TillstaandetsSvaarighetsgradKod</class>
     <class>se.vgregion.verticalprio.entity.VaardformsKod</class>

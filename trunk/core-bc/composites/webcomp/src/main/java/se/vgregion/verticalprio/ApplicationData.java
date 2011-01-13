@@ -177,6 +177,10 @@ public class ApplicationData implements Serializable {
         return everyVaentetidsKod;
     }
 
+    public List<VaentetidsKod> getVaentetidBehandlingVeckorList() {
+        return getVaentetidBesookVeckorList();
+    }
+
     @Resource(name = "sektorRaadRepository")
     GenerisktHierarkisktKodRepository<SektorRaad> sektorRaadRepository;
     List<SektorRaad> everySektorRaad;

@@ -17,7 +17,9 @@
 <%@ taglib uri="/WEB-INF/tld/vgr-util.tld" prefix="util"%>
 
 <div class="find-select-code ${styleClass}">
-
+  <c:choose>
+    <c:when test="${util:canEdit(user, editDir)}">
+    
   <div class="selected">
   <c:forEach items="${codeRef.codes}" var="item">
     <label for="">
@@ -44,5 +46,17 @@
     <br/>
   </c:forEach>
   </div>
-  
+    </c:when>
+    <c:otherwise>
+    <ul>
+  <c:forEach items="${codeRef.codes}" var="item">
+  <li>
+    <label for="">
+      ${item.label} 
+    </label>
+  </li>
+  </c:forEach>
+    </ul>
+    </c:otherwise>
+  </c:choose> 
 </div>

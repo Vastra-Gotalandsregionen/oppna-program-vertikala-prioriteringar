@@ -59,6 +59,8 @@ public class ChooseCodesController extends ControllerBase {
     @Resource(name = "tillstaandetsSvaarighetsgradKodRepository")
     GenerisktKodRepository<TillstaandetsSvaarighetsgradKod> tillstaandetsSvaarighetsgradKodRepository;
 
+    private static final Integer MAX_ROWS_TO_FIND = 20;
+
     private Map<String, GenerisktKodRepository<?>> nameToRepository;
     private Map<String, Class<?>> nameToKodClass;
 
@@ -67,6 +69,7 @@ public class ChooseCodesController extends ControllerBase {
         PrioriteringsobjektFindCondition condition = getOrCreateSessionObj(session, "prioCondition",
                 PrioriteringsobjektFindCondition.class);
         model.addAttribute("prioCondition", condition);
+        model.addAttribute("editDir", new EditDirective(true, true));
         return "choose-codes";
     }
 
@@ -76,6 +79,7 @@ public class ChooseCodesController extends ControllerBase {
         PrioriteringsobjektFindCondition condition = getOrCreateSessionObj(session, "prioCondition",
                 PrioriteringsobjektFindCondition.class);
         model.addAttribute("prioCondition", condition);
+        model.addAttribute("editDir", new EditDirective(true, true));
 
         BeanMap bm = new BeanMap(condition);
         ManyCodesRef<AbstractKod> ref = (ManyCodesRef<AbstractKod>) bm.get(codeRefName);
@@ -89,7 +93,7 @@ public class ChooseCodesController extends ControllerBase {
         example.setBeskrivning(ref.getSearchBeskrivningText());
         example.setKod(ref.getSearchKodText());
         GenerisktKodRepository<AbstractKod> repo = (GenerisktKodRepository<AbstractKod>) getRepo(codeRefName);
-        List<AbstractKod> findings = repo.findByExample(example, new Integer(20));
+        List<AbstractKod> findings = repo.findByExample(example, MAX_ROWS_TO_FIND);
         new ArrayList<AbstractKod>(findings); // To ensure that jpa have everything loaded.
         ref.setFindings(findings);
         applicationData.initKodLists(condition);
@@ -116,7 +120,7 @@ public class ChooseCodesController extends ControllerBase {
         } else {
             ref.getCodes().clear();
         }
-
+        model.addAttribute("overrideEdit", true);
         return "choose-codes";
     }
 
@@ -145,11 +149,5 @@ public class ChooseCodesController extends ControllerBase {
         }
         return nameToKodClass.get(propertyName);
     }
-
-    /**
-     * copyLongValues(request, "aatgaerdRef", pf.getAatgaerdRef()); copyLongValues(request, "atcKoderRef",
-     * pf.getAtcKoderRef()); copyLongValues(request, "diagnosRef", pf.getDiagnosRef()); copyLongValues(request,
-     * "vaardformskoderRef", pf.getVaardformskoderRef());
-     */
 
 }

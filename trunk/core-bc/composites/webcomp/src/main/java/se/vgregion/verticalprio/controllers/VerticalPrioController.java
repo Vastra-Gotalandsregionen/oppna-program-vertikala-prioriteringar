@@ -3,6 +3,7 @@ package se.vgregion.verticalprio.controllers;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,9 +22,11 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import se.vgregion.verticalprio.ConfColumnsForm;
 import se.vgregion.verticalprio.MainForm;
 import se.vgregion.verticalprio.PrioriteringsobjektFindCondition;
+import se.vgregion.verticalprio.entity.AbstractKod;
 import se.vgregion.verticalprio.entity.Column;
 import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
 import se.vgregion.verticalprio.entity.SektorRaad;
+import se.vgregion.verticalprio.entity.User;
 import se.vgregion.verticalprio.repository.GenerisktHierarkisktKodRepository;
 import se.vgregion.verticalprio.repository.NestedSektorRaad;
 
@@ -47,7 +50,6 @@ public class VerticalPrioController extends ControllerBase {
     private MainForm getMainForm(HttpSession session) {
         MainForm form = getOrCreateSessionObj(session, "form", MainForm.class);
         initMainForm(form);
-
         return form;
     }
 
@@ -57,6 +59,16 @@ public class VerticalPrioController extends ControllerBase {
         MainForm form = getMainForm(session);
         result(session);
         return "main";
+    }
+
+    @RequestMapping(value = "/login")
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public String login(HttpSession session) {
+        User user = getOrCreateSessionObj(session, "user", User.class);
+        user.setFirstName("John");
+        user.setLastName("Doe");
+        user.setEditor(!user.isEditor());
+        return main(session);
     }
 
     @RequestMapping(value = "/main", params = { "sortField" })
@@ -274,7 +286,22 @@ public class VerticalPrioController extends ControllerBase {
                 Object value = values.get(key);
                 if (value instanceof Collection) {
                     Collection<?> collection = (Collection<?>) value;
-                    new ArrayList<Object>(collection);
+                    if (!collection.isEmpty()) {
+                        Object item = collection.iterator().next();
+                        if (item instanceof AbstractKod) {
+                            Comparator<AbstractKod> comp = new Comparator<AbstractKod>() {
+                                @Override
+                                public int compare(AbstractKod o1, AbstractKod o2) {
+                                    return o1.getKod().compareTo(o2.getKod());
+                                }
+                            };
+                            List<AbstractKod> kods = (List<AbstractKod>) collection;
+                            Collections.sort(kods, comp);
+                        } else {
+                            new ArrayList<Object>(collection);
+                        }
+                    }
+
                 }
             }
         }

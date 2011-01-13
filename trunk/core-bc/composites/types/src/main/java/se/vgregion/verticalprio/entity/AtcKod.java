@@ -4,7 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "aatgaerds_kod")
+@Table(name = "atc_kod")
 public class AtcKod extends AbstractKod {
 
 }
