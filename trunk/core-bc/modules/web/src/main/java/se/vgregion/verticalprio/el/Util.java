@@ -1,8 +1,10 @@
 package se.vgregion.verticalprio.el;
 
 import java.util.Collection;
+import java.util.List;
 
 import se.vgregion.verticalprio.controllers.EditDirective;
+import se.vgregion.verticalprio.entity.AbstractHirarkiskKod;
 import se.vgregion.verticalprio.entity.AbstractKod;
 import se.vgregion.verticalprio.entity.User;
 
@@ -78,4 +80,34 @@ public class Util {
         return user.isEditor();
     }
 
+    public static String toOptions(Long id, List<AbstractKod> items) {
+        StringBuilder sb = new StringBuilder();
+        boolean haveChildren = (items.size() > 0 && items.get(0) instanceof AbstractHirarkiskKod);
+        toOptions(id, 0, items, sb, haveChildren);
+        return sb.toString();
+    }
+
+    private static void toOptions(Long id, int level, List<? extends AbstractKod> items, StringBuilder sb,
+            boolean haveChildren) {
+        for (AbstractKod item : items) {
+            sb.append("<option value='");
+            sb.append(item.getId().toString());
+            sb.append("'");
+            if (id.longValue() == item.getId().longValue()) {
+                sb.append(" selected='selected'");
+            }
+            sb.append(">");
+            if (haveChildren) {
+                for (int i = 0; i < level; i++) {
+                    sb.append("&nbsp;&nbsp;");
+                }
+            }
+            sb.append(item.getLabel());
+            sb.append("</option>");
+            if (haveChildren) {
+                AbstractHirarkiskKod<? extends AbstractKod> ahk = (AbstractHirarkiskKod) item;
+                toOptions(id, level + 1, ahk.getChildren(), sb, true);
+            }
+        }
+    }
 }

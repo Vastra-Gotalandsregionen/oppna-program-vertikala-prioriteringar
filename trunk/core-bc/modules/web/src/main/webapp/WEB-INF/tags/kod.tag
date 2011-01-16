@@ -13,7 +13,7 @@
     <c:when test="${su:canEdit(user, editDir)}">
       <form:select path="${key}Id">
         <option value="">-- Ingen --</option>
-        <form:options items="${prio[su:concat(key, 'List')]}" itemLabel="label" itemValue="id" />
+        ${su:toOptions(prio[su:concat(key, 'Id')], prio[su:concat(key, 'List')])}
       </form:select>
     </c:when>
     <c:otherwise>

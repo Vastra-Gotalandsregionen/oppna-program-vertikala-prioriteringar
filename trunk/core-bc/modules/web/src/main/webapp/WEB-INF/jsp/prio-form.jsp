@@ -5,7 +5,7 @@
 <%@taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 
-  <div class="values">
+  <div>
     Diagnos
     <tags:find-select-codes label="Sök diagnoser (kod/besk.):" codeRefName="diagnosRef" codeRef="${prio.diagnosRef}" submitName="findDiagnoses" styleClass="diagnosRef"/>
     
@@ -55,6 +55,4 @@
 
     <hr style="clear:both"/>
 
-    <tags:submit value="Spara" name="save" />
-    <a href="main">Stäng</a>
   </div>
