@@ -10,18 +10,14 @@
 
 <span class="window prio-view">
 
-<form:form action="prio" method="post" modelAttribute="prio" cssClass="values">
+<form:form action="delete-prio" method="post" modelAttribute="prio" cssClass="values">
 <jsp:include page="jsp/prio-form.jsp" />
-
 <div style="vertical-align: middle;">
-  <tags:editSubmit value="Spara" name="save" />
+  <tags:editSubmit value="Radera det här prioriteringsobjektet"/>
   <a href="main" style="float:right">Stäng</a>
 </div>
-
 </form:form>
-
 </span>
-
 
 </body>
 </html>

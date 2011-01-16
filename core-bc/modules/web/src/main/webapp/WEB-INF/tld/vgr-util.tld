@@ -95,4 +95,12 @@
     <function-signature>java.lang.Boolean canEdit(se.vgregion.verticalprio.entity.User, se.vgregion.verticalprio.controllers.EditDirective)</function-signature>
   </function>
   
+  <function>
+    <description>Produces options html from a list of objects extending AbstractKod</description>
+    <display-name>toOptions</display-name>
+    <name>toOptions</name>
+    <function-class>se.vgregion.verticalprio.el.Util</function-class>
+    <function-signature>java.lang.String toOptions(java.lang.Long, java.util.List)</function-signature>
+  </function>
+  
 </taglib>

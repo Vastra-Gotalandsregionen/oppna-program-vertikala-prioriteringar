@@ -12,6 +12,7 @@ import org.apache.commons.beanutils.BeanMap;
 
 import se.vgregion.verticalprio.entity.AatgaerdsKod;
 import se.vgregion.verticalprio.entity.AatgaerdsRiskKod;
+import se.vgregion.verticalprio.entity.AbstractHirarkiskKod;
 import se.vgregion.verticalprio.entity.AbstractKod;
 import se.vgregion.verticalprio.entity.AtcKod;
 import se.vgregion.verticalprio.entity.Column;
@@ -170,7 +171,7 @@ public class PrioriteringsobjektForm extends Prioriteringsobjekt {
     public void asignCodesFromTheListsByCorrespondingIdAttributes() {
         setPatientnyttaEffektAatgaerdsKod(getKodByIdAndList(patientnyttaEffektAatgaerdsKodList,
                 patientnyttaEffektAatgaerdsKodId));
-        setSektorRaad(getKodByIdAndList(sektorRaadList, sektorRaadId));
+        setSektorRaad(getNestedKodByIdAndList(sektorRaadList, sektorRaadId));
         setPatientnyttoEvidensKod(getKodByIdAndList(patientnyttoEvidensKodList, patientnyttoEvidensKodId));
         setTillstaandetsSvaarighetsgradKod(getKodByIdAndList(tillstaandetsSvaarighetsgradKodList,
                 tillstaandetsSvaarighetsgradKodId));
@@ -375,6 +376,24 @@ public class PrioriteringsobjektForm extends Prioriteringsobjekt {
                 return (T) ak;
             }
         }
+        return null;
+    }
+
+    private <T extends AbstractKod> T getNestedKodByIdAndList(List<T> possibleValues, Long id) {
+
+        T kod = getKodByIdAndList(possibleValues, id);
+        if (kod != null) {
+            return kod;
+        }
+        List<AbstractHirarkiskKod> nestedOnes = (List<AbstractHirarkiskKod>) possibleValues;
+
+        for (AbstractHirarkiskKod ak : nestedOnes) {
+            T possibleResult = (T) getNestedKodByIdAndList(ak.getChildren(), id);
+            if (possibleResult != null) {
+                return possibleResult;
+            }
+        }
+
         return null;
     }
 

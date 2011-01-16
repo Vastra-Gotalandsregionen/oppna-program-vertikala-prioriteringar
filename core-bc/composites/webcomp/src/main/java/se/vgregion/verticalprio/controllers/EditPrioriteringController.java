@@ -54,10 +54,9 @@ public class EditPrioriteringController extends ControllerBase {
     @Transactional
     public String initDeleteView(ModelMap model, HttpSession session, @RequestParam(required = false) Long id) {
         String result = initView(model, session, id);
-        model.addAttribute("editDir", new EditDirective(false, null));
-        // model.addAttribute("overrideEdit", null);
-        // session.setAttribute("overrideEdit", null);
-        return result;
+        model.addAttribute("editDir", new EditDirective(false, false));
+
+        return "delete-prio-view";
     }
 
     @RequestMapping(value = "prio-open", params = { "select-prio" })
@@ -92,13 +91,25 @@ public class EditPrioriteringController extends ControllerBase {
         return "prio-view";
     }
 
+    @RequestMapping(value = "delete-prio")
+    @Transactional
+    public String deletePrio(HttpServletRequest request, HttpServletResponse response, PrioriteringsobjektForm pf)
+            throws IOException {
+        Prioriteringsobjekt prio = toPrioriteringsobjekt(request, pf);
+        prioRepository.remove(prio);
+        String path = request.getRequestURI().replace("/delete-prio", "/main");
+        response.sendRedirect(path);
+        return "main";
+    }
+
     @RequestMapping(value = "prio", params = { "save" })
     @Transactional
     public String save(HttpServletRequest request, HttpServletResponse response, PrioriteringsobjektForm pf)
             throws IOException {
         Prioriteringsobjekt prio = toPrioriteringsobjekt(request, pf);
         prioRepository.store(prio);
-        response.sendRedirect("/vertikala-prioriteringar-core-bc-module-web/main");
+        String path = request.getRequestURI().replace("/prio", "/main");
+        response.sendRedirect(path);
         return "main";
     }
 

@@ -24,7 +24,9 @@
 <div class="rowsAndButtons">
 <span class="button-row">
 <label for="select-prio"><button>Visa prioriteringsobjekt</button></label>
-<label for="delete-prio"><button>Radera prioriteringsobjekt</button></label>
+<c:if test="${user != null and user.editor}">
+  <label for="delete-prio"><button>Radera prioriteringsobjekt</button></label>
+</c:if>
 <form action="prio-open"> <input type="submit" value="Skapa prioriteringsobjekt" class="button"> </form>
 <form action="init-conf-columns"><input class="conf-columns button" type="submit" value="Dölj/Visa kolumner" /></form>
 <button class="cost">Kostnad</button>
