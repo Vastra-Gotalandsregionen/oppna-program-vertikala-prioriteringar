@@ -1,5 +1,10 @@
 @CHARSET "UTF-8";
 
+div, span, button, input, textArea, select, td {
+  font-family: arial; 
+  font: arial;
+}
+
 body {
   margin: 5px;
 }
@@ -10,12 +15,10 @@ body {
 
 .button {
   height: 24px; 
-  
 }
 
 button {
-  height: 24px; 
-  
+  height: 24px;   
 }
 
 .sector-node div {
@@ -243,4 +246,8 @@ button {
 
 label {
   font-family: arial;
+}
+
+.left {
+  float: left;
 }

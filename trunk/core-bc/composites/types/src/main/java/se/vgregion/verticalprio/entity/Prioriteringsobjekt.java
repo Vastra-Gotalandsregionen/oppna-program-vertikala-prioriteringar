@@ -94,22 +94,11 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
     @JoinColumn(name = "patientnytta_effekt_aatgaerds_kod_id")
     private PatientnyttaEffektAatgaerdsKod patientnyttaEffektAatgaerdsKod;
 
-    @Column(name = "vaardgivare")
-    private String vaardgivare;
-
     @Column(name = "kommentar", length = 2000)
     private String kommentar;
 
     @Column(name = "indikation_gaf", length = 2000)
     private String indikationGaf;
-
-    public String getVaardgivare() {
-        return vaardgivare;
-    }
-
-    public void setVaardgivare(String vaardgivare) {
-        this.vaardgivare = vaardgivare;
-    }
 
     @Override
     public Long getId() {
@@ -328,7 +317,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("diagnosTexts");
         column.setLabel("Symptom / Diagnostext");
-        column.setColumnLabel("<a href='choose-codes-init?codeRefName=diagnosRef'>Diagnostext</a>");
+        column.setColumnLabel("<a href='choose-codes-init?codeRefName=diagnosRef'>Symptom / Diagnostext</a>");
         column.setDisplayOrder(i++);
         result.add(column);
         column.setId(i);
@@ -361,6 +350,15 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         result.add(column);
         column.setId(i);
         column.setHideAble(false);
+        column.setDescription("* 1 Omedelbart livshot. \n"
+                + "* 2 Risk för mycket allvarlig skada, för tidig död, betydande invaliditet, outhärdlig situation. \n"
+                + "* 3 Risk för allvarlig skada, bestående men eller mycket låg livskvalitet. \n"
+                + "* 4 Risk för förväntad försämring, ej vidmakthållen funktion-ADL-nivå. \n"
+                + "* 5 Risk för betydande olägenhet, ökad sjuklighet, förlängd sjukdomsperiod, sänkt livskvalitet. \n"
+                + "* 6 Risk för olägenhet, skada, bestående men eller låg livskvalitet. \n"
+                + "* 7 Sannolik ökad risk för försämrad hälsoupplevelse eller icke optimal livskvalitet. \n"
+                + "* 8 Möjligen ökad risk sjuklighet, försämring av funktionsnivå eller livskvalitet. \n"
+                + "* 9 Risk för sänkt livskvalitet enligt patientens uppfattning och vetenskap och beprövad kunskap inte motsäger detta. \n");
 
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("rangordningsKod");
@@ -370,6 +368,10 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         result.add(column);
         column.setId(i);
         column.setHideAble(false);
+        column.setDescription("1 Rangordning 1. \n" + "2 Rangordning 2. \n" + "3 Rangordning 3. \n"
+                + "4 Rangordning 4. \n" + "5 Rangordning 5. \n" + "6 Rangordning 6. \n" + "7 Rangordning 7. \n"
+                + "8 Rangordning 8. \n" + "9 Rangordning 9. \n" + "10 Rangordning 10. \n" + "11 FoU. \n"
+                + "12 Icke göra. \n");
 
         // Lösa fält
 
@@ -384,7 +386,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("atcText");
         column.setLabel("ATC-text");
-        column.setColumnLabel("<a href='choose-codes-init?codeRefName=atcKoderRef'>Atc-text</a>");
+        column.setColumnLabel("<a href='choose-codes-init?codeRefName=atcKoderRef'>ATC-text</a>");
         column.setDisplayOrder(i++);
         result.add(column);
         column.setId(i);
@@ -393,7 +395,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("atcKoder");
         column.setLabel("ATC-kod");
-        column.setColumnLabel("<a href='choose-codes-init?codeRefName=atcKoderRef'>Atc-kod</a>");
+        column.setColumnLabel("<a href='choose-codes-init?codeRefName=atcKoderRef'>ATC-kod</a>");
         column.setDisplayOrder(i++);
         result.add(column);
         column.setId(i);
@@ -406,6 +408,10 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         result.add(column);
         column.setId(i);
         column.setHideAble(true);
+        column.setDescription("1 Liten risk för allvarliga biverkningar/komplikationer. \n"
+                + "2 Måttlig risk för allvarliga biverkningar / komplikationer. \n"
+                + "3 Biverkningar / komplikationer som kan kräva sjukvårdsinsatser. \n"
+                + "4 Mycket hög risk för allvarliga biverkningar / komplikationer som påverkar livskvalitet och funktion. Biverkningar / komplikationer som ofta kväver sjukvårdsinsatser. \n");
 
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("patientnyttaEffektAatgaerdsKod");
@@ -414,6 +420,10 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         result.add(column);
         column.setId(i);
         column.setHideAble(true);
+        column.setDescription("* Evidensstyrka 1. Starkt vetenskapligt underlag. En slutsats stöds av minst två studier med högt bevisvärde. Om det finns studier som talat emot slutsatsen kan dock evidensstyrkan bli lägre. \n"
+                + "* Evidensstyrka 2. Måttligt starkt vetenskapligt underlag. Minst en studie med högt bevisvärde och två med medelhögt bevisvärde. Vid ny indikation inom närliggande terapiområde krävs minst en stor studie med högt bevisvärde, och viss stöddokumentation. \n"
+                + "* Evidensstyrka 3. Begränsat vetenskapligt underlag. Minst två studier med medelhögt bevisvärde. \n"
+                + "* Evidensstyrka 4. Otillräckligt vetenskapligt stöd. Studier som uppfyller krav på bevisvärde saknas alternativt motsägande underlag.");
 
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("patientnyttoEvidensKod");
@@ -422,6 +432,10 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         result.add(column);
         column.setId(i);
         column.setHideAble(true);
+        column.setDescription("1 Sjuklighet, död kan förhindras. Tillståndet kan botas. \n"
+                + "2 Sjukligheten påverkas mycket, överlevnaden förlängs. \n"
+                + "3 Sjukligheten påverkas i måttlig utsträckning. \n"
+                + "4 Sjukligheten påverkas i liten utsträckning. \n");
 
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("qualy");
@@ -430,14 +444,19 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         result.add(column);
         column.setId(i);
         column.setHideAble(true);
+        column.setDescription("1 <100.000 kr/Qaly alt vunnet levnadsår. \n"
+                + "2 <500.000 kr/Qaly alt vunnet levnadsår. \n"
+                + "3 < eller= 1.000.000 kr/Qaly alt vunnet levnadsår. \n" + "4 Ej bedömbar. \n");
 
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("haelsonekonomiskEvidensKod");
-        column.setLabel("Hälso ekonomisk evidens");
+        column.setLabel("Hälso- ekonomisk evidens");
         column.setDisplayOrder(i++);
         result.add(column);
         column.setId(i);
         column.setHideAble(true);
+        column.setDescription("1 Studie av god kvalitet med robusta resultat. \n"
+                + "2 Studie av godtagbar kvalitet. \n" + "3 Egna kalkyler. \n" + "4 Egna bedömningar. \n");
 
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("vaentetidBesookVeckor");

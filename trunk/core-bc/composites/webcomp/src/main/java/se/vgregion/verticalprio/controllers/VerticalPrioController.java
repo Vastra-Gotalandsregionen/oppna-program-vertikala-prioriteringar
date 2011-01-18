@@ -56,6 +56,7 @@ public class VerticalPrioController extends ControllerBase {
     @RequestMapping(value = "/main")
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public String main(HttpSession session) {
+        session.setAttribute("editDir", new EditDirective(true, null));
         MainForm form = getMainForm(session);
         result(session);
         return "main";

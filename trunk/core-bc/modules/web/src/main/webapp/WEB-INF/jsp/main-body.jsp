@@ -5,8 +5,8 @@
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 <%@ taglib uri="/WEB-INF/tld/vgr-util.tld" prefix="su"%>
 
-<div class="main-body yui3-g">
-<div class="sectorsAndButtons"> 
+<div class="main-body">
+<div class="sectorsAndButtons yui3-g"> 
 
 <span class="yui3-u sectors"><form:form commandName="form"
   action="check" method="POST">
@@ -23,22 +23,22 @@
 
 <div class="yui3-u rowsAndButtons">
 <span class="button-row">
-<label for="select-prio"><button>Visa prioriteringsobjekt</button></label>
+<label for="select-prio"><button class="button left">Visa prioriteringsobjekt</button></label>
 <c:if test="${user != null and user.editor}">
-  <label for="delete-prio"><button>Radera prioriteringsobjekt</button></label>
+  <label for="delete-prio"><tags:editButton value="Radera prioriteringsobjekt" cssClass="left button"></tags:editButton></label>
 </c:if>
-<form action="prio-open"> <input type="submit" value="Skapa prioriteringsobjekt" class="button"> </form>
-<form action="init-conf-columns"><input class="conf-columns button" type="submit" value="Dölj/Visa kolumner" /></form>
+<form action="prio-create"> <tags:editSubmit value="Skapa prioriteringsobjekt" cssClass="button left" /> </form>
+<form action="init-conf-columns"><input class="conf-columns button left" type="submit" value="Dölj/Visa kolumner" /></form>
 <button class="cost">Kostnad</button>
-<span class="export-data-buttons">
-<button class="excel">Excel</button>
-<button class="pdf">Pdf</button>
-<button class="print">Skriv ut</button>
+<span class="export-data-buttons left button">
+<button class="excel left button">Excel</button>
+<button class="pdf left button">Pdf</button>
+<button class="print left button">Skriv ut</button>
 </span>
 <button class="help">Hjälp</button>
 </span>
 
-<form action="prio-open" method="post">
+<form action="prio-open" method="post" style="clear:left">
 
 <input type="submit" id="select-prio" name="select-prio"/>
 <input type="submit" id="delete-prio" name="delete-prio"/>
@@ -49,7 +49,7 @@
     <c:forEach items="${form.columns}" var="column">
       <c:if test="${column.visible}">
         <td>
-          <h3>${column.columnLabel}</h3>
+          <h3 title="${column.description}">${column.columnLabel}</h3>
           <tags:cell value="${prioCondition[column.name]}"/>
         </td>
       </c:if>
