@@ -387,10 +387,12 @@ public class PrioriteringsobjektForm extends Prioriteringsobjekt {
         }
         List<AbstractHirarkiskKod> nestedOnes = (List<AbstractHirarkiskKod>) possibleValues;
 
-        for (AbstractHirarkiskKod ak : nestedOnes) {
-            T possibleResult = (T) getNestedKodByIdAndList(ak.getChildren(), id);
-            if (possibleResult != null) {
-                return possibleResult;
+        if (nestedOnes != null) {
+            for (AbstractHirarkiskKod ak : nestedOnes) {
+                T possibleResult = (T) getNestedKodByIdAndList(ak.getChildren(), id);
+                if (possibleResult != null) {
+                    return possibleResult;
+                }
             }
         }
 
