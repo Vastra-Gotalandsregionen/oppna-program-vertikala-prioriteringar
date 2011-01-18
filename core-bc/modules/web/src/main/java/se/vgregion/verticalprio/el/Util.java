@@ -67,6 +67,9 @@ public class Util {
     }
 
     public static Boolean canEdit(User user, EditDirective editDirective) {
+        if (editDirective == null) {
+            return false;
+        }
         if (editDirective.getOverride() != null) {
             return editDirective.getOverride();
         }

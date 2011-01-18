@@ -50,7 +50,7 @@ public class EditPrioriteringController extends ControllerBase {
     @Resource(name = "atcKodRepository")
     GenerisktKodRepository<AtcKod> atcKodRepository;
 
-    @RequestMapping(value = "prio-open", params = { "delete-prio" })
+    @RequestMapping(value = "/prio-open", params = { "delete-prio" })
     @Transactional
     public String initDeleteView(ModelMap model, HttpSession session, @RequestParam(required = false) Long id) {
         String result = initView(model, session, id);
@@ -59,11 +59,18 @@ public class EditPrioriteringController extends ControllerBase {
         return "delete-prio-view";
     }
 
-    @RequestMapping(value = "prio-open", params = { "select-prio" })
+    @RequestMapping(value = "/prio-create")
+    @Transactional
+    public String create(ModelMap model, HttpSession session) {
+        String result = initView(model, session, null);
+        model.addAttribute("editDir", new EditDirective(true, null));
+        return result;
+    }
+
+    @RequestMapping(value = "/prio-open")
     @Transactional
     public String initView(ModelMap model, HttpSession session, @RequestParam(required = false) Long id) {
         PrioriteringsobjektForm form = (PrioriteringsobjektForm) model.get("prio");
-        String[] hmm = session.getValueNames();
         if (form == null) {
             form = new PrioriteringsobjektForm();
         }
@@ -91,7 +98,7 @@ public class EditPrioriteringController extends ControllerBase {
         return "prio-view";
     }
 
-    @RequestMapping(value = "delete-prio")
+    @RequestMapping(value = "/delete-prio")
     @Transactional
     public String deletePrio(HttpServletRequest request, HttpServletResponse response, PrioriteringsobjektForm pf)
             throws IOException {

@@ -9,8 +9,9 @@ import javax.persistence.Table;
  * @author Claes Lundahl, vgrid=clalu4
  * 
  */
+@SuppressWarnings("serial")
 @Entity
 @Table(name = "aatgaerds_risk_kod")
-public class AatgaerdsRiskKod extends AbstractKod {
+public class AatgaerdsRiskKod extends AbstractShortLabelKod {
 
 }

@@ -31,7 +31,6 @@ public class JpqlMatchBuilderTest {
         List<Object> values = new ArrayList<Object>();
 
         Prioriteringsobjekt prio = new Prioriteringsobjekt();
-        prio.setVaardgivare("vardgivare*");
         prio.setKommentar("kommentar");
         DiagnosKod diagnos1 = new DiagnosKod();
         diagnos1.setBeskrivning("Kolera*");
@@ -53,7 +52,6 @@ public class JpqlMatchBuilderTest {
 
         Assert.assertTrue(jpql.contains("Prioriteringsobjekt"));
 
-        Assert.assertTrue(values.contains("vardgivare%"));
         Assert.assertTrue(values.contains("Kolera%"));
         Assert.assertTrue(values.contains("Ticks%"));
         Assert.assertTrue(values.contains("Sektorråd med id 43."));

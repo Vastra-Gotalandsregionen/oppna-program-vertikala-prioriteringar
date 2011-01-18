@@ -29,6 +29,8 @@ public class Column {
 
     private boolean sortable = true;
 
+    private String description;
+
     public Column() {
         // TODO Auto-generated constructor stub
     }
@@ -133,6 +135,14 @@ public class Column {
 
     public boolean isSortable() {
         return sortable;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public static class OrderComparer implements Comparator<Column> {

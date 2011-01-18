@@ -37,9 +37,7 @@
     
     <div style="width:100%" class="prio-form-grid last">
         <div class="cell" style="width:33%"><tags:kod key="vaardnivaaKod" label="vaardnivaaKod" /></div>
-        <div class="cell" style="width:33%"> 
-          <tags:textarea cssInputBoxStyle="width:90%" key="vaardgivare" label="Vårdgivare"/> 
-        </div>
+
         <div class="cell last" style="width:33%">
           <tags:textarea cssInputBoxStyle="width:90%" key="kommentar" label="kommentar"/>
         </div>
