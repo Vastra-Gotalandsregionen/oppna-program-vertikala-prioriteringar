@@ -5,10 +5,10 @@
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 <%@ taglib uri="/WEB-INF/tld/vgr-util.tld" prefix="su"%>
 
-<div class="main-body">
+<div class="main-body yui3-g">
 <div class="sectorsAndButtons"> 
 
-<span class="sectors"><form:form commandName="form"
+<span class="yui3-u sectors"><form:form commandName="form"
   action="check" method="POST">
   
 <c:choose>
@@ -21,7 +21,7 @@
   <tags:sectors items="${form.sectors}" />  
 </form:form></span>
 
-<div class="rowsAndButtons">
+<div class="yui3-u rowsAndButtons">
 <span class="button-row">
 <label for="select-prio"><button>Visa prioriteringsobjekt</button></label>
 <c:if test="${user != null and user.editor}">
