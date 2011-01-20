@@ -2,10 +2,10 @@ package se.vgregion.verticalprio.repository;
 
 import java.util.List;
 
+import se.vgregion.dao.domain.patterns.entity.AbstractEntity;
 import se.vgregion.dao.domain.patterns.repository.Repository;
-import se.vgregion.verticalprio.entity.AbstractKod;
 
-public interface GenerisktKodRepository<T extends AbstractKod> extends Repository<T, Long> {
+public interface GenerisktKodRepository<T extends AbstractEntity<Long>> extends Repository<T, Long> {
 
     /**
      * Uses the values of a bean to find matching values.

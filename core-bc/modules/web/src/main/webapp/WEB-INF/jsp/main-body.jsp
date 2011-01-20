@@ -8,14 +8,21 @@
 <div class="main-body">
 <div class="sectorsAndButtons yui3-g"> 
 
-<span class="yui3-u sectors"><form:form commandName="form"
-  action="check" method="POST">
-  
+<span class="yui3-u sectors">
+
 <c:choose>
-  <c:when test="${user != null and user.editor}"><a href="login">Logga ut</a></c:when>
-  <c:otherwise><a href="login">Logga in</a></c:otherwise>
+  <c:when test="${user != null and user != 'login-failed'}"><a href="login">Logga ut</a></c:when>
+  <c:otherwise>
+  <form method="post" action="login">
+    Användare <input type="text" name="userName"/> <br/>
+    Lösen <input type="password" name="password"/> <br/>
+    <input type="submit" name="login" value="Logga in"/>
+  </form>  
+  </c:otherwise>
 </c:choose>
-  
+
+<form:form commandName="form"
+  action="check" method="POST">
   <br/>
   <br/>
   <tags:sectors items="${form.sectors}" />  

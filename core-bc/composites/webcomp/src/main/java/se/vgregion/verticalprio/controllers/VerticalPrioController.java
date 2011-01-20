@@ -28,6 +28,7 @@ import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
 import se.vgregion.verticalprio.entity.SektorRaad;
 import se.vgregion.verticalprio.entity.User;
 import se.vgregion.verticalprio.repository.GenerisktHierarkisktKodRepository;
+import se.vgregion.verticalprio.repository.GenerisktKodRepository;
 import se.vgregion.verticalprio.repository.NestedSektorRaad;
 
 @Controller
@@ -36,6 +37,9 @@ public class VerticalPrioController extends ControllerBase {
 
     @Resource(name = "sektorRaadRepository")
     GenerisktHierarkisktKodRepository<SektorRaad> sektorRaadRepository;
+
+    @Resource(name = "userRepository")
+    GenerisktKodRepository<User> userRepository;
 
     private void initMainForm(MainForm form) {
         if (form.getSectors().isEmpty()) {
@@ -64,11 +68,24 @@ public class VerticalPrioController extends ControllerBase {
 
     @RequestMapping(value = "/login")
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public String login(HttpSession session) {
-        User user = getOrCreateSessionObj(session, "user", User.class);
-        user.setFirstName("John");
-        user.setLastName("Doe");
-        user.setEditor(!user.isEditor());
+    public String login(HttpSession session, @RequestParam(required = false) String userName,
+            @RequestParam(required = false) String password) {
+
+        User bean = new User();
+        bean.setVgrId(userName);
+        bean.setPassword(userName);
+
+        List<User> users = userRepository.findByExample(bean, 1);
+        if (users.isEmpty()) {
+            session.setAttribute("user", "login-failed");
+        } else {
+            session.setAttribute("user", users.get(0));
+
+            // User user = getOrCreateSessionObj(session, "user", User.class);
+            // user.setFirstName("John");
+            // user.setLastName("Doe");
+            // user.setEditor(!user.isEditor());
+        }
         return main(session);
     }
 
