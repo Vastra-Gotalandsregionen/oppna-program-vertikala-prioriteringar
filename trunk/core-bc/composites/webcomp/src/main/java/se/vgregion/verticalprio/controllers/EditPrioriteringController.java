@@ -53,7 +53,7 @@ public class EditPrioriteringController extends ControllerBase {
     @RequestMapping(value = "/prio-open", params = { "delete-prio" })
     @Transactional
     public String initDeleteView(ModelMap model, HttpSession session, @RequestParam(required = false) Long id) {
-        String result = initView(model, session, id);
+        initView(model, session, id);
         model.addAttribute("editDir", new EditDirective(false, false));
 
         return "delete-prio-view";

@@ -253,6 +253,7 @@ public class JpqlMatchBuilder {
         if (field == null) {
             return true;
         }
+
         if (field.isAnnotationPresent(Transient.class)) {
             return true;
         }

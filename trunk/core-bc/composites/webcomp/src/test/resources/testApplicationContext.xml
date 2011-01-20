@@ -52,6 +52,10 @@
   <bean name="atcKodRepository" class="se.vgregion.verticalprio.controllers.MockGenerisktKodRepository">
     <constructor-arg value="se.vgregion.verticalprio.entity.AtcKod" />
   </bean>
+  <bean name="userRepository" class="se.vgregion.verticalprio.controllers.MockGenerisktKodRepository">
+    <constructor-arg value="se.vgregion.verticalprio.entity.User" />
+  </bean>
+
 
   <bean name="applicationData" class="se.vgregion.verticalprio.ApplicationData"/>
   
