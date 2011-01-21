@@ -24,6 +24,7 @@ import se.vgregion.verticalprio.entity.AtcKod;
 import se.vgregion.verticalprio.entity.Column;
 import se.vgregion.verticalprio.entity.DiagnosKod;
 import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
+import se.vgregion.verticalprio.entity.User;
 import se.vgregion.verticalprio.entity.VaardformsKod;
 import se.vgregion.verticalprio.repository.GenerisktHierarkisktKodRepository;
 import se.vgregion.verticalprio.repository.GenerisktKodRepository;
@@ -57,6 +58,28 @@ public class EditPrioriteringController extends ControllerBase {
         model.addAttribute("editDir", new EditDirective(false, false));
 
         return "delete-prio-view";
+    }
+
+    @RequestMapping(value = "/prio-open", params = { "approve-prio" })
+    @Transactional
+    public String approve(HttpServletRequest request, HttpServletResponse response, ModelMap model,
+            HttpSession session, @RequestParam(required = true) Long id) throws IOException {
+        User user = (User) session.getAttribute("user");
+        if (user != null && user.isApprover()) {
+            Prioriteringsobjekt prio = prioRepository.find(id);
+            if (user.getSektorRaad().contains(prio.getSektorRaad())) {
+                Boolean approved = prio.getGodkaend();
+                approved = approved == null || !approved;
+                prio.setGodkaend(approved);
+                prioRepository.merge(prio);
+            } else {
+                session.setAttribute("message",
+                        "Du saknar behörighet till prioriteringsobjektet och kan därför inte ändra dess status.");
+            }
+        }
+        String path = request.getRequestURI().replace("/prio-open", "/main");
+        response.sendRedirect(path);
+        return null; // Will not get here anyway...
     }
 
     @RequestMapping(value = "/prio-create")

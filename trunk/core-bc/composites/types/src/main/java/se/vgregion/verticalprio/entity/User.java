@@ -1,10 +1,16 @@
 package se.vgregion.verticalprio.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import se.vgregion.dao.domain.patterns.entity.AbstractEntity;
@@ -24,19 +30,24 @@ public class User extends AbstractEntity<Long> {
     @Column(name = "editor")
     private boolean editor;
 
-    private String name;
+    @Column(name = "approver")
+    private boolean approver;
 
-    // @Column(name = "first_name")
+    @Column(name = "first_name")
     private String firstName;
 
-    // @Column(name = "last_name")
+    @Column(name = "last_name")
     private String lastName;
 
-    @Column(name = "vgr_id")
+    @Column(name = "vgr_id", unique = true)
     private String vgrId;
 
     @Column(name = "password")
     private String password;
+
+    @ManyToMany()
+    @JoinTable(name = "link_vgr_user_sektor_raad", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = { @JoinColumn(name = "sektor_raad_id") })
+    private List<SektorRaad> sektorRaad = new ArrayList<SektorRaad>();
 
     public boolean isEditor() {
         return editor;
@@ -44,14 +55,6 @@ public class User extends AbstractEntity<Long> {
 
     public void setEditor(boolean editor) {
         this.editor = editor;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getFirstName() {
@@ -100,6 +103,22 @@ public class User extends AbstractEntity<Long> {
 
     public String getPassword() {
         return password;
+    }
+
+    public void setSektorRaad(List<SektorRaad> sektorRaad) {
+        this.sektorRaad = sektorRaad;
+    }
+
+    public List<SektorRaad> getSektorRaad() {
+        return sektorRaad;
+    }
+
+    public void setApprover(boolean approver) {
+        this.approver = approver;
+    }
+
+    public boolean isApprover() {
+        return approver;
     }
 
 }

@@ -1,11 +1,13 @@
 package se.vgregion.verticalprio.el;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import se.vgregion.verticalprio.controllers.EditDirective;
 import se.vgregion.verticalprio.entity.AbstractHirarkiskKod;
 import se.vgregion.verticalprio.entity.AbstractKod;
+import se.vgregion.verticalprio.entity.SektorRaad;
 import se.vgregion.verticalprio.entity.User;
 
 /**
@@ -86,12 +88,26 @@ public class Util {
     public static String toOptions(Long id, List<AbstractKod> items) {
         StringBuilder sb = new StringBuilder();
         boolean haveChildren = (items.size() > 0 && items.get(0) instanceof AbstractHirarkiskKod);
-        toOptions(id, 0, items, sb, haveChildren);
+        toOptions(id, 0, items, sb, haveChildren, null);
         return sb.toString();
     }
 
+    public static String toRaadOptions(Long id, List<AbstractKod> items, List<SektorRaad> raad) {
+        StringBuilder sb = new StringBuilder();
+        toOptions(id, 0, items, sb, true, toList(raad));
+        return sb.toString();
+    }
+
+    private static List<Long> toList(Collection<SektorRaad> raad) {
+        List<Long> result = new ArrayList<Long>();
+        for (SektorRaad sr : raad) {
+            result.add(sr.getId());
+        }
+        return result;
+    }
+
     private static void toOptions(Long id, int level, List<? extends AbstractKod> items, StringBuilder sb,
-            boolean haveChildren) {
+            boolean haveChildren, List<Long> enableOnlyThese) {
         for (AbstractKod item : items) {
             sb.append("<option value='");
             sb.append(item.getId().toString());
@@ -99,6 +115,13 @@ public class Util {
             if (id.longValue() == item.getId().longValue()) {
                 sb.append(" selected='selected'");
             }
+
+            if (enableOnlyThese != null) {
+                if (!enableOnlyThese.contains(item.getId())) {
+                    sb.append(" disabled='disabled'");
+                }
+            }
+
             sb.append(">");
             if (haveChildren) {
                 for (int i = 0; i < level; i++) {
@@ -109,8 +132,26 @@ public class Util {
             sb.append("</option>");
             if (haveChildren) {
                 AbstractHirarkiskKod<? extends AbstractKod> ahk = (AbstractHirarkiskKod) item;
-                toOptions(id, level + 1, ahk.getChildren(), sb, true);
+                toOptions(id, level + 1, ahk.getChildren(), sb, true, enableOnlyThese);
             }
         }
+    }
+
+    public static String toString(Object o) {
+        if (o instanceof Collection) {
+            StringBuilder sb = new StringBuilder();
+            @SuppressWarnings("rawtypes")
+            Collection c = (Collection) o;
+            for (Object i : c) {
+                sb.append("* ");
+                sb.append(i);
+                sb.append(" \n");
+            }
+            return sb.toString();
+        }
+        if (o == null) {
+            return "";
+        }
+        return o + "";
     }
 }

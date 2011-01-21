@@ -1,7 +1,8 @@
 @CHARSET "UTF-8";
 
-div, span, button, input, textArea, select, td {
+div, span, button, input, textArea, select, td, a {
   font-family: arial; 
+  font-size: 14px;
   font: arial;
 }
 
@@ -75,6 +76,21 @@ button {
   float: left;
   max-width: 1000px;
   min-width: 200px;
+}
+
+.headerRow {
+  background-color: CadetBlue;
+}
+
+.conditionRow {
+  background-color: GoldenRod;
+  border-bottom-color: black;
+  border-bottom-style: solid;
+  border-bottom-width: thin;
+  
+  border-top-color: black;
+  border-top-style: solid;
+  border-top-width: thin;
 }
 
 .rowsAndButtons table thead td h3 {
@@ -250,4 +266,8 @@ label {
 
 .left {
   float: left;
+}
+
+.center {
+  text-align: center;  
 }

@@ -103,4 +103,20 @@
     <function-signature>java.lang.String toOptions(java.lang.Long, java.util.List)</function-signature>
   </function>
   
+  <function>
+    <description>Produces options html from a list of SektorRaads</description>
+    <display-name>toRaadOptions</display-name>
+    <name>toRaadOptions</name>
+    <function-class>se.vgregion.verticalprio.el.Util</function-class>
+    <function-signature>java.lang.String toRaadOptions(java.lang.Long, java.util.List, java.util.List)</function-signature>
+  </function>
+  
+  <function>
+    <description>Makes a string with the toString of that object or a composition of the objects sent into it is a Collection.</description>
+    <display-name>toString</display-name>
+    <name>toString</name>
+    <function-class>se.vgregion.verticalprio.el.Util</function-class>
+    <function-signature>java.lang.String toString(java.lang.Object)</function-signature>
+  </function>
+  
 </taglib>

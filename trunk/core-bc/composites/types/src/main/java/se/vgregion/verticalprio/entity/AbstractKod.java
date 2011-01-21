@@ -10,6 +10,7 @@ import javax.persistence.MappedSuperclass;
 
 import se.vgregion.dao.domain.patterns.entity.AbstractEntity;
 
+@SuppressWarnings("serial")
 @MappedSuperclass
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class AbstractKod extends AbstractEntity<Long> implements Serializable {
@@ -21,6 +22,9 @@ public abstract class AbstractKod extends AbstractEntity<Long> implements Serial
 
     @Column(name = "beskrivning", length = 1000)
     private String beskrivning;
+
+    @Column(name = "kort_beskrivning", length = 1000)
+    private String kortBeskrivning;
 
     @Override
     public Long getId() {
@@ -64,6 +68,14 @@ public abstract class AbstractKod extends AbstractEntity<Long> implements Serial
             return "";
         }
         return s;
+    }
+
+    public void setKortBeskrivning(String kortBeskrivning) {
+        this.kortBeskrivning = kortBeskrivning;
+    }
+
+    public String getKortBeskrivning() {
+        return kortBeskrivning;
     }
 
 }

@@ -17,6 +17,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import se.vgregion.dao.domain.patterns.entity.AbstractEntity;
 
@@ -42,9 +43,14 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
     @Column(name = "rangordning_enligt_formel")
     private Integer rangordningEnligtFormel;
 
+    @Transient
     private Integer kostnad;
 
+    @Transient
     private Integer volym;
+
+    @Column(name = "godkaend")
+    private Boolean godkaend;
 
     @ManyToMany()
     @JoinTable(name = "link_prioriteringsobjekt_diagnos_kod", joinColumns = { @JoinColumn(name = "prio_id") }, inverseJoinColumns = { @JoinColumn(name = "diagnos_kod_id") })
@@ -558,6 +564,14 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
 
     public Integer getVolym() {
         return volym;
+    }
+
+    public void setGodkaend(Boolean godkaend) {
+        this.godkaend = godkaend;
+    }
+
+    public Boolean getGodkaend() {
+        return godkaend;
     }
 
 }
