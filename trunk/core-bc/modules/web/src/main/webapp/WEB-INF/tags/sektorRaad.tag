@@ -11,7 +11,7 @@
   <span class="kod-label ${key}-label"> ${prio.columns[label].label} </span> 
   <c:choose>
     <c:when test="${su:canEdit(user, editDir)}">
-      <form:select path="${key}Id">
+      <form:select path="${key}Id" cssClass="standardInput">
         <option value="">-- Ingen --</option>
         ${su:toRaadOptions(prio[su:concat(key, 'Id')], prio[su:concat(key, 'List')], user.sektorRaad)}
       </form:select>

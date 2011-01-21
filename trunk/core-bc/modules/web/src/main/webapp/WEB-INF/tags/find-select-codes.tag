@@ -19,7 +19,7 @@
   <div class="selected">
   <c:forEach items="${codeRef.codes}" var="item">
     <label for="">
-      <input type="checkbox" name="${codeRefName}.selectedCodesId" value="${item.id}" checked="checked"/>
+      <input type="checkbox" name="${codeRefName}.selectedCodesId" value="${item.id}" checked="checked" class="standardInputCheckBox"/>
       ${item.kod} ${item.beskrivning} 
     </label>
     <br/>
@@ -28,15 +28,15 @@
 
   <div class="label">
     ${label}
-     <form:input cssStyle="width:5em" path="${codeRefName}.searchKodText"/>
-     <form:input path="${codeRefName}.searchBeskrivningText"/> 
+     <form:input cssStyle="width:5em" path="${codeRefName}.searchKodText" cssClass="standardInput"/>
+     <form:input path="${codeRefName}.searchBeskrivningText" cssClass="standardInput"/> 
     <input type="submit" value="Sök/Välj" name="${submitName}" />
   </div>
   
   <div class="findings">
   <c:forEach items="${codeRef.findings}" var="item" varStatus="vs">
     <label for="">
-      <form:checkbox path="${codeRefName}.selectedCodesId" value="${item.id}" disabled="${util:contains(codeRef.selectedCodesId, item.id)}" />
+      <form:checkbox cssClass="standardInputCheckBox" path="${codeRefName}.selectedCodesId" value="${item.id}" disabled="${util:contains(codeRef.selectedCodesId, item.id)}" />
       ${item.kod} ${item.beskrivning} 
     </label>
     <br/>
