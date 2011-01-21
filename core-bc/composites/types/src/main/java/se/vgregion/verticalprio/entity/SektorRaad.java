@@ -3,6 +3,7 @@ package se.vgregion.verticalprio.entity;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @SuppressWarnings("serial")
 @Entity
@@ -19,6 +20,9 @@ public class SektorRaad extends AbstractHirarkiskKod<SektorRaad> {
     @Id
     Long id;
 
+    @Transient
+    private boolean able = true;
+
     /**
      * @inheritDoc
      */
@@ -33,6 +37,14 @@ public class SektorRaad extends AbstractHirarkiskKod<SektorRaad> {
     @Override
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public void setAble(boolean able) {
+        this.able = able;
+    }
+
+    public boolean isAble() {
+        return able;
     }
 
 }

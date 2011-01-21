@@ -1,13 +1,9 @@
 <%@ tag language="java" pageEncoding="ISO-8859-1"%>
 
 <%@ attribute name="codeRefName" required="true" rtexprvalue="true" type="java.lang.String"%>
-
 <%@ attribute name="label" required="true" rtexprvalue="true" type="java.lang.String"%>
-
 <%@ attribute name="submitName" required="true" rtexprvalue="true" type="java.lang.String"%>
-
 <%@ attribute name="codeRef" required="true" rtexprvalue="true" type="se.vgregion.verticalprio.controllers.ManyCodesRef"%>
-
 <%@ attribute name="styleClass" required="false" rtexprvalue="true" type="java.lang.String"%>
 
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>

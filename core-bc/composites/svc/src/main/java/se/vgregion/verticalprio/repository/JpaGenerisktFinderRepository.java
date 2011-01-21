@@ -44,6 +44,7 @@ public class JpaGenerisktFinderRepository<T extends AbstractEntity<Long>> extend
         JpqlMatchBuilder builder = new JpqlMatchBuilder();
         builder.getSortOrder().addAll(getSortOrder());
         String jpql = builder.mkFindByExampleJpql(bean, values);
+        System.out.println(jpql);
         return query(jpql, maxResult, values.toArray());
     }
 
@@ -59,14 +60,8 @@ public class JpaGenerisktFinderRepository<T extends AbstractEntity<Long>> extend
         for (Object value : values) {
             query.setParameter(i++, value);
         }
-        try {
-            List<T> result = query.getResultList();
-            return result;
-        } catch (Throwable e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
-
+        List<T> result = query.getResultList();
+        return result;
     }
 
     @Override

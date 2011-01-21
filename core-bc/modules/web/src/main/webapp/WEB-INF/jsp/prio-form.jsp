@@ -4,6 +4,7 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
+<%@ taglib uri="/WEB-INF/tld/vgr-util.tld" prefix="util"%>
 
   <div>
     Diagnos
@@ -31,7 +32,7 @@
         <div class="cell"><tags:kod key="vaentetidBehandlingVeckor" label="vaentetidBehandlingVeckor" /></div>
         <div class="cell last">
           <span class="kod-label">Sektorsråd</span> 
-          <tags:kod key="sektorRaad" label="Sektorsråd" />
+          <tags:sektorRaad key="sektorRaad" label="Sektorsråd" />
         </div>
     </div>
     
@@ -52,5 +53,4 @@
     <tags:find-select-codes label="Sök vårdformer (kod/besk.):" codeRefName="vaardformskoderRef" codeRef="${prio.vaardformskoderRef}" submitName="findVaardformer" styleClass="vaardformskoderRef"/>
 
     <hr style="clear:both"/>
-
   </div>

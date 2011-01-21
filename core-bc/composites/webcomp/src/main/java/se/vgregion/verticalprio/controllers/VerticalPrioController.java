@@ -61,30 +61,47 @@ public class VerticalPrioController extends ControllerBase {
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public String main(HttpSession session) {
         session.setAttribute("editDir", new EditDirective(true, null));
-        MainForm form = getMainForm(session);
         result(session);
         return "main";
     }
 
+    @RequestMapping(value = "/logout")
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public String logout(HttpSession session) {
+        session.setAttribute("user", null);
+        session.setAttribute("loginResult", null);
+        return main(session);
+    }
+
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @RequestMapping(value = "/login")
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public String login(HttpSession session, @RequestParam(required = false) String userName,
             @RequestParam(required = false) String password) {
 
-        User bean = new User();
-        bean.setVgrId(userName);
-        bean.setPassword(userName);
+        User example = new User();
+        example.setVgrId(userName);
+        example.setPassword(userName);
 
-        List<User> users = userRepository.findByExample(bean, 1);
-        if (users.isEmpty()) {
-            session.setAttribute("user", "login-failed");
+        List<User> users = userRepository.findByExample(example, 1);
+        if (users.isEmpty() || "".equals(password)) {
+            session.setAttribute("user", null);
+            session.setAttribute("loginResult", false);
         } else {
-            session.setAttribute("user", users.get(0));
+            User user = users.get(0);
 
-            // User user = getOrCreateSessionObj(session, "user", User.class);
-            // user.setFirstName("John");
-            // user.setLastName("Doe");
-            // user.setEditor(!user.isEditor());
+            Map userValues = new HashMap(new BeanMap(user)); // Insane... makes all lazy properties initialized.
+            for (Object o : userValues.values()) {
+                if (o instanceof Collection) {
+                    Collection c = (Collection) o;
+                    for (Object i : c) {
+                        new HashMap(new BeanMap(i));
+                    }
+                }
+            }
+
+            session.setAttribute("user", user);
+            session.setAttribute("loginResult", true);
         }
         return main(session);
     }
@@ -178,12 +195,12 @@ public class VerticalPrioController extends ControllerBase {
         return "conf-columns";
     }
 
-    // @RequestMapping(value = "/modify-prio")
-    // @Transactional(propagation = Propagation.REQUIRED)
-    // public String selectPrio(@RequestParam Prioriteringsobjekt command) {
-    // System.out.println(command.getVaentetidVeckor());
-    // return "select-prio";
-    // }
+    @RequestMapping(value = "/approve")
+    @Transactional(propagation = Propagation.REQUIRED)
+    public String approve(final HttpSession session, @RequestParam Long id) {
+
+        return main(session);
+    }
 
     @RequestMapping(value = "/select-prio")
     @Transactional(propagation = Propagation.REQUIRED)
@@ -213,8 +230,14 @@ public class VerticalPrioController extends ControllerBase {
     public String check(final HttpSession session, @RequestParam Integer id) {
         MainForm form = getMainForm(session);
 
-        SektorRaad sector = getSectorById(id, form.getSectors());
-        sector.setSelected(!sector.isSelected());
+        if (id.longValue() == -1l) {
+            boolean b = form.getAllSektorsRaad().isSelected();
+            form.getAllSektorsRaad().setSelected(!b);
+        } else {
+            SektorRaad sector = getSectorById(id, form.getSectors());
+            sector.setSelected(!sector.isSelected());
+        }
+
         result(session);
         return "main";
     }
@@ -279,23 +302,34 @@ public class VerticalPrioController extends ControllerBase {
         return new ArrayList<SektorRaad>(result);
     }
 
-    // @ModelAttribute("rows")
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public List<Prioriteringsobjekt> result(HttpSession session) {
         PrioriteringsobjektFindCondition condition = getOrCreateSessionObj(session, "prioCondition",
                 PrioriteringsobjektFindCondition.class);
-
         MainForm mf = getMainForm(session);
-        List<SektorRaad> raad = getMarkedLeafs(mf.getSectors());
-        raad = flatten(raad);
-        NestedSektorRaad sektorNest = new NestedSektorRaad(raad);
-        condition.setSektorRaad(sektorNest);
+
+        if (mf.getAllSektorsRaad().isSelected()) {
+            condition.setSektorRaad(null);
+            mf.getSectors().clear();
+            mf.getSectors().addAll(sektorRaadRepository.getTreeRoots());
+        } else {
+            List<SektorRaad> raad = getMarkedLeafs(mf.getSectors());
+            raad = flatten(raad);
+            NestedSektorRaad sektorNest = new NestedSektorRaad(raad);
+            condition.setSektorRaad(sektorNest);
+            if (sektorNest.content().isEmpty()) {
+                List<Prioriteringsobjekt> zeroResult = new ArrayList<Prioriteringsobjekt>();
+                session.setAttribute("rows", zeroResult);
+                return zeroResult;
+            }
+        }
 
         List<Prioriteringsobjekt> prios = new ArrayList<Prioriteringsobjekt>(prioRepository.findByExample(
                 condition, null));
 
         for (Prioriteringsobjekt prio : prios) {
             BeanMap bm = new BeanMap(prio);
+            @SuppressWarnings("unchecked")
             Map<String, Object> values = new HashMap<String, Object>(bm);
             // Completely insane... but has to be done because otherwise
             // a lack of transaction will occur when rendering the referred child objects.
@@ -328,5 +362,4 @@ public class VerticalPrioController extends ControllerBase {
 
         return prios;
     }
-
 }

@@ -90,13 +90,15 @@ public class JpqlMatchBuilder {
     private void mkFindByExampleJpql(Object bean, List<String> fromJoin, List<String> where, List<Object> values,
             int aliasIndex) {
         String prefix = "o" + aliasIndex + ".";
-
         // here is the main loop where we iterate over all properties inside a bean and build up the corresponding
         // JPQL query
         BeanMap bm = new BeanMap(bean);
         for (Object key : bm.keySet()) {
             String propertyName = (String) key;
             Object value = bm.get(propertyName);
+            if (value == null || "".equals(value)) {
+                continue;
+            }
             if (skipFieldForBuildingCondition(bean, propertyName)) {
                 continue;
             }

@@ -11,30 +11,39 @@
 <span class="yui3-u sectors">
 
 <c:choose>
-  <c:when test="${user != null and user != 'login-failed'}"><a href="login">Logga ut</a></c:when>
+  <c:when test="${user != null and loginResult}">
+    <a href="logout">Logga ut ${user.firstName} ${user.lastName}</a></c:when>
   <c:otherwise>
   <form method="post" action="login">
-    Användare <input type="text" name="userName"/> <br/>
-    Lösen <input type="password" name="password"/> <br/>
+    Användare<br/> <input type="text" name="userName"/> <br/>
+    Lösen<br/> <input type="password" name="password"/> <br/>
     <input type="submit" name="login" value="Logga in"/>
   </form>  
   </c:otherwise>
 </c:choose>
 
-<form:form commandName="form"
-  action="check" method="POST">
+<form:form commandName="form" action="check" method="POST">
   <br/>
+  <tags:sector sector="${form.allSektorsRaad}" />
   <br/>
   <tags:sectors items="${form.sectors}" />  
-</form:form></span>
+</form:form>
+
+
+</span>
 
 <div class="yui3-u rowsAndButtons">
 <span class="button-row">
 <label for="select-prio"><button class="button left">Visa prioriteringsobjekt</button></label>
-<c:if test="${user != null and user.editor}">
+<c:if test="${loginResult && user != null and user.editor}">
   <label for="delete-prio"><tags:editButton value="Radera prioriteringsobjekt" cssClass="left button"></tags:editButton></label>
 </c:if>
-<form action="prio-create"> <tags:editSubmit value="Skapa prioriteringsobjekt" cssClass="button left" /> </form>
+<form action="prio-create"> <tags:editSubmit value="Lägg till nytt" cssClass="button left" /> </form>
+
+<c:if test="${su:canEdit(user, editDir) and user.approver}">
+  <label for="approve-prio"><tags:editButton value="Godkänn" cssClass="left button"></tags:editButton></label>
+</c:if>
+
 <form action="init-conf-columns"><input class="conf-columns button left" type="submit" value="Dölj/Visa kolumner" /></form>
 <button class="cost">Kostnad</button>
 <span class="export-data-buttons left button">
@@ -45,30 +54,54 @@
 <button class="help">Hjälp</button>
 </span>
 
+<c:if test="${not empty message}">
+  <div style="color:red">${message}</div>
+</c:if>
+
 <form action="prio-open" method="post" style="clear:left">
 
 <input type="submit" id="select-prio" name="select-prio"/>
 <input type="submit" id="delete-prio" name="delete-prio"/>
+<input type="submit" id="approve-prio" name="approve-prio"/>
 
 <table cellpadding="5">
-  <thead>
+  <thead class="headerRow">
+    <tr>
     <td><h3>#</h3></td>
     <c:forEach items="${form.columns}" var="column">
       <c:if test="${column.visible}">
         <td>
           <h3 title="${column.description}">${column.columnLabel}</h3>
-          <tags:cell value="${prioCondition[column.name]}"/>
         </td>
       </c:if>
     </c:forEach>
+    </tr>
   </thead>
   <tbody>
+    <tr class="conditionRow">
+      <td colspan="2"><h3>Filter:</h3></td>
+      <c:forEach items="${form.columns}" var="column" varStatus="vs">
+        <c:if test="${column.visible and vs.index > 0}">
+          <td style="center">
+            <c:if test="${not empty su:toString(prioCondition[column.name])}">
+              <h4 title='<tags:cell value="${su:toString(prioCondition[column.name])}"/>'>*</h4>
+            </c:if>
+          </td>
+        </c:if>
+      </c:forEach>
+    </tr>
     <c:forEach items="${rows}" var="row" varStatus="vs">
       <tr class="${vs.index % 2 == 0 ? 'even' : 'odd'}">
-        <td><input type="radio" name="id" value="${row.id}"${vs.index == 0 ? ' checked' : ''}/></td>
+        <td>
+          <input type="radio" name="id" value="${row.id}"${vs.index == 0 ? ' checked' : ''}/>
+          <c:if test="${not row.godkaend}">
+            <div style="color: red; text-align: center;" title="Ännu ej godkänd">*</div>
+          </c:if>
+        </td>
         <c:forEach items="${form.columns}" var="column">
           <c:if test="${column.visible}">
-            <td class="${column.name}"><tags:cell value="${row[column.name]}"/></td>
+            <td class="${column.name}"><tags:cell value="${row[column.name]}"/>
+            </td>
           </c:if>
         </c:forEach>
       </tr>
