@@ -29,27 +29,30 @@
   <tags:sectors items="${form.sectors}" />  
 </form:form>
 
-
 </span>
 
 <div class="yui3-u rowsAndButtons">
 <span class="button-row">
-<label for="select-prio"><button class="button left">Visa prioriteringsobjekt</button></label>
+
 <c:if test="${loginResult && user != null and user.editor}">
-  <label for="delete-prio"><tags:editButton value="Radera prioriteringsobjekt" cssClass="left button"></tags:editButton></label>
+  <span class="rPadding2em">
+    <label for="select-prio"><button id="showPrioButton" class="button">Visa prioriteringsobjekt</button></label>
+    <label for="edit-prio"><button class="button">Ändra</button></label>
+    <form action="prio-create"> <tags:editSubmit value="Lägg till nytt" cssClass="button" /> </form>
+    <label for="delete-prio"><tags:editButton value="Ta bort" cssClass="button"></tags:editButton></label>
+  </span>
 </c:if>
-<form action="prio-create"> <tags:editSubmit value="Lägg till nytt" cssClass="button left" /> </form>
 
 <c:if test="${su:canEdit(user, editDir) and user.approver}">
-  <label for="approve-prio"><tags:editButton value="Godkänn" cssClass="left button"></tags:editButton></label>
+  <label for="approve-prio"><tags:editButton value="Godkänn" cssClass="button"></tags:editButton></label>
 </c:if>
 
-<form action="init-conf-columns"><input class="conf-columns button left" type="submit" value="Dölj/Visa kolumner" /></form>
+<form action="init-conf-columns"><input class="conf-columns button" type="submit" value="Dölj/Visa kolumner" /></form>
 <button class="cost">Kostnad</button>
-<span class="export-data-buttons left button">
-<button class="excel left button">Excel</button>
-<button class="pdf left button">Pdf</button>
-<button class="print left button">Skriv ut</button>
+<span class="export-data-buttons">
+<button class="excel button">Excel</button>
+<button class="pdf button">Pdf</button>
+<button class="print  button">Skriv ut</button>
 </span>
 <button class="help">Hjälp</button>
 </span>
@@ -62,6 +65,7 @@
 
 <input type="submit" id="select-prio" name="select-prio"/>
 <input type="submit" id="delete-prio" name="delete-prio"/>
+<input type="submit" id="edit-prio" name="edit-prio"/>
 <input type="submit" id="approve-prio" name="approve-prio"/>
 
 <table cellpadding="5">

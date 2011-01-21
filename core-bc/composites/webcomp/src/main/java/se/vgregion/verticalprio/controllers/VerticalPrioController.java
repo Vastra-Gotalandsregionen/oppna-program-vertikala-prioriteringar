@@ -234,6 +234,7 @@ public class VerticalPrioController extends ControllerBase {
             boolean b = form.getAllSektorsRaad().isSelected();
             form.getAllSektorsRaad().setSelected(!b);
         } else {
+            form.getAllSektorsRaad().setSelected(false);
             SektorRaad sector = getSectorById(id, form.getSectors());
             sector.setSelected(!sector.isSelected());
         }

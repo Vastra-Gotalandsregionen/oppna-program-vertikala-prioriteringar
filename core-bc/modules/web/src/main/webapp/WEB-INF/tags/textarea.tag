@@ -10,5 +10,5 @@
 
 <span class="${key} kod"> 
   <span class="kod-label ${key}-label"> ${label} </span> 
-  <form:textarea cssStyle="${cssInputBoxStyle}" path="${key}" disabled="${su:canEdit(user, editDir) ? '' : 'true'}" /> 
+  <form:textarea cssStyle="${cssInputBoxStyle}" cssClass="standardInput" path="${key}" disabled="${su:canEdit(user, editDir) ? '' : 'true'}" /> 
 </span>

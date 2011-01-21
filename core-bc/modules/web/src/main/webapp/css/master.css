@@ -6,6 +6,15 @@ div, span, button, input, textArea, select, td, a {
   font: arial;
 }
 
+.standardInput {
+  background-color: #FBF9DD;
+  font-family: arial;
+  font-size: 12px;
+}
+
+.standardInputCheckBox {
+}
+
 body {
   margin: 5px;
 }
@@ -15,7 +24,9 @@ body {
 }
 
 .button {
-  height: 24px; 
+    background-color: #EEE8AA;
+    border-style: groove;
+    height: 24px;
 }
 
 button {
@@ -35,10 +46,8 @@ button {
 
 .button-row {
   width: 100%;
-}
-
-.button-row a, .button-row button {
-  float: left;
+  white-space: nowrap;
+  padding-bottom: 4px;
 }
 
 .sectors {
@@ -51,15 +60,7 @@ button {
   display: inline;
 }
 
-.button-row .help {
-  float: right;
-}
-
 .conf-columns {
-  left: 2em;
-}
-
-.cost {
   left: 2em;
 }
 
@@ -137,7 +138,7 @@ button {
   clear: both
 }
 
-#select-prio, #delete-prio {
+#select-prio, #delete-prio, #edit-prio, #approve-prio {
   display: none;
 }
 
@@ -270,4 +271,8 @@ label {
 
 .center {
   text-align: center;  
+}
+
+.rPadding2em {
+  padding-right: 2em; 
 }

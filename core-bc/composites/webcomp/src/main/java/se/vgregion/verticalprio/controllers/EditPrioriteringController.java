@@ -90,7 +90,15 @@ public class EditPrioriteringController extends ControllerBase {
         return result;
     }
 
-    @RequestMapping(value = "/prio-open")
+    @RequestMapping(value = "/prio-open", params = { "edit-prio" })
+    @Transactional
+    public String edit(ModelMap model, HttpSession session, @RequestParam(required = false) Long id) {
+        String result = initView(model, session, id);
+        model.addAttribute("editDir", new EditDirective(true, null));
+        return result;
+    }
+
+    @RequestMapping(value = "/prio-open", params = { "select-prio" })
     @Transactional
     public String initView(ModelMap model, HttpSession session, @RequestParam(required = false) Long id) {
         PrioriteringsobjektForm form = (PrioriteringsobjektForm) model.get("prio");
@@ -98,7 +106,7 @@ public class EditPrioriteringController extends ControllerBase {
             form = new PrioriteringsobjektForm();
         }
         model.addAttribute("prio", form);
-        model.addAttribute("editDir", new EditDirective(true, null));
+        model.addAttribute("editDir", new EditDirective(false, false));
         initKodLists(form);
 
         if (id != null) {
