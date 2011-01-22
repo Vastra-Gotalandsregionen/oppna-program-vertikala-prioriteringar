@@ -60,6 +60,9 @@ public abstract class AbstractKod extends AbstractEntity<Long> implements Serial
     }
 
     public String getLabel() {
+        if (kortBeskrivning != null) {
+            return kortBeskrivning;
+        }
         return (nullAsBlank(kod) + " " + nullAsBlank(beskrivning)).trim();
     }
 

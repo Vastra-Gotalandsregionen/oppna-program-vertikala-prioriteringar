@@ -65,7 +65,7 @@ public class Util {
                 return kod.getLabel();
             }
         }
-        return "";
+        return "-";
     }
 
     public static Boolean canEdit(User user, EditDirective editDirective) {

@@ -7,12 +7,13 @@
 <%@ taglib uri="/WEB-INF/tld/vgr-util.tld" prefix="util"%>
 
   <div>
-    Diagnos
-    <tags:find-select-codes label="Sök diagnoser (kod/besk.):" codeRefName="diagnosRef" codeRef="${prio.diagnosRef}" submitName="findDiagnoses" styleClass="diagnosRef"/>
+    <h4>Diagnos</h4>
+    <tags:find-select-codes label="Sök diagnoser<br/> (kod/besk.):" codeRefName="diagnosRef" codeRef="${prio.diagnosRef}" submitName="findDiagnoses" styleClass="diagnosRef"/>
     
     <hr style="clear:both"/>
-    Åtgärd
-    <tags:find-select-codes label="Sök åtgärder (kod/besk.):" codeRefName="aatgaerdRef" codeRef="${prio.aatgaerdRef}" submitName="findAatgerder" styleClass="aatgaerdRef"/>
+    
+    <h4>Åtgärd</h4>
+    <tags:find-select-codes label="Sök åtgärder<br/> (kod/besk.):" codeRefName="aatgaerdRef" codeRef="${prio.aatgaerdRef}" submitName="findAatgerder" styleClass="aatgaerdRef"/>
 
     <hr style="clear:both"/>
     <form:hidden path="id"/>
@@ -36,7 +37,7 @@
     
     <div style="width:100%" class="prio-form-grid">
         <div class="cell"><tags:label key="haelsonekonomiskEvidensKod" /></div> 
-        <div class="cell"></div>
+        <div class="cell"><tags:label key="vaardform" /></div> 
         <div class="cell"><tags:label key="vaentetidBesookVeckor" /></div>
         <div class="cell"><tags:label key="vaentetidBehandlingVeckor" /></div>
         <div class="cell last"><tags:label key="sektorRaad" /></div>
@@ -44,10 +45,11 @@
     
     <div style="width:100%" class="prio-form-grid">
         <div class="cell"><tags:kod key="haelsonekonomiskEvidensKod" /></div> 
-        <div class="cell"></div>
+        <div class="cell"><tags:kod key="vaardform" /></div>
         <div class="cell"><tags:kod key="vaentetidBesookVeckor" /></div>
         <div class="cell"><tags:kod key="vaentetidBehandlingVeckor" /></div>
         <div class="cell last"><tags:sektorRaad key="sektorRaad" label="Sektorsråd" /></div>
+        
     </div>
     <br/><br/>
     
@@ -75,14 +77,9 @@
         </div>
     </div>
     <br/><br/>
-    
-    <br/>Atc-kod
-    <tags:find-select-codes label="Sök Atc-koder (kod/besk.):" codeRefName="atcKoderRef" codeRef="${prio.atcKoderRef}" submitName="findAtcKoder" styleClass="atcKoderRef"/>
-
-    <hr style="clear:both"/>
-    
-    Vårdformer
-    <tags:find-select-codes label="Sök vårdformer (kod/besk.):" codeRefName="vaardformskoderRef" codeRef="${prio.vaardformskoderRef}" submitName="findVaardformer" styleClass="vaardformskoderRef"/>
-
+    <div>
+      <h4>Atc-kod</h4>
+      <tags:find-select-codes label="Sök Atc-koder<br/> (kod/besk.):" codeRefName="atcKoderRef" codeRef="${prio.atcKoderRef}" submitName="findAtcKoder" styleClass="atcKoderRef"/>
+    </div>
     <hr style="clear:both"/>
   </div>

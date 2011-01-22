@@ -14,7 +14,7 @@
 <jsp:include page="jsp/prio-form.jsp" />
 <div style="vertical-align: middle;">
   <tags:editSubmit value="Radera det här prioriteringsobjektet" overrideEdit="true"/>
-  <a href="main" style="float:right">Stäng</a>
+  <a href="main" class="button">Stäng</a>
 </div>
 </form:form>
 </span>

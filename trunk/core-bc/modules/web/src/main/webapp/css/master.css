@@ -6,6 +6,10 @@ div, span, button, input, textArea, select, td, a {
   font: arial;
 }
 
+h4 {
+  font-weight: bold;  
+}
+
 .standardInput {
   background-color: #FBF9DD;
   font-family: arial;
@@ -27,6 +31,9 @@ body {
     background-color: #EEE8AA;
     border-style: groove;
     height: 24px;
+    padding-left: 5px;
+    padding-right: 5px;
+    color: black;
 }
 
 button {
@@ -75,7 +82,7 @@ button {
 
 .rowsAndButtons {
   float: left;
-  max-width: 1000px;
+  max-width: 200px;
   min-width: 200px;
 }
 
@@ -111,13 +118,6 @@ button {
   max-width: 20em;
   overflow: hidden;
   padding: 2px;
-}
-
-
-.diagnosTexts, .atcText {
-  overflow: auto;
-  width: 20em;
-  white-space: nowrap;
 }
 
 .rowsAndButtons table .even {
@@ -219,11 +219,20 @@ button {
   max-height: 3em;
 }
 
+
+.findings label {
+    letter-spacing: 0;
+    word-spacing: 0;
+}
+
+
 .find-select-code .selected, .find-select-code .findings {
   float: left;
   width: 50%;
   min-height: 1em;
 }
+
+
 
 .find-select-code .label, .find-select-code .findings {
   float: right;

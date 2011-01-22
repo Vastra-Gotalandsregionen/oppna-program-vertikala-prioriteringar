@@ -12,11 +12,11 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib uri="/WEB-INF/tld/vgr-util.tld" prefix="util"%>
 
-<div class="find-select-code ${styleClass}">
+<div class="find-select-code ${styleClass} yui3-g">
   <c:choose>
     <c:when test="${util:canEdit(user, editDir)}">
     
-  <div class="selected">
+  <div class="selected yui3-u-1-2">
   <c:forEach items="${codeRef.codes}" var="item">
     <label for="">
       <input type="checkbox" name="${codeRefName}.selectedCodesId" value="${item.id}" checked="checked" class="standardInputCheckBox"/>
@@ -26,33 +26,36 @@
   </c:forEach>
   </div>
 
-  <div class="label">
-    ${label}
-     <form:input cssStyle="width:5em" path="${codeRefName}.searchKodText" cssClass="standardInput"/>
-     <form:input path="${codeRefName}.searchBeskrivningText" cssClass="standardInput"/> 
-    <input type="submit" value="Sök/Välj" name="${submitName}" />
+  <div class="selected yui3-u-1-2">
+     <span style="white-space: normal; width: 45%"> ${label} </span>
+     <span style="white-space: nowrap; width: 45%">
+       <form:input cssStyle="width:5em" path="${codeRefName}.searchKodText" cssClass="standardInput"/>
+       <form:input path="${codeRefName}.searchBeskrivningText" cssClass="standardInput"/> 
+       <input type="submit" value="Sök/Välj" name="${submitName}" class="button" />
+     </span>
   </div>
   
-  <div class="findings">
+  <div class="findings yui3-u-1">
   <c:forEach items="${codeRef.findings}" var="item" varStatus="vs">
     <label for="">
       <form:checkbox cssClass="standardInputCheckBox" path="${codeRefName}.selectedCodesId" value="${item.id}" disabled="${util:contains(codeRef.selectedCodesId, item.id)}" />
-      ${item.kod} ${item.beskrivning} 
+      ${item.kod} ${item.beskrivning}
     </label>
     <br/>
   </c:forEach>
   </div>
     </c:when>
     <c:otherwise>
-    <ul>
+    <ul class="yui3-u-1">
   <c:forEach items="${codeRef.codes}" var="item">
   <li>
     <label for="">
-      ${item.label} 
+      <div>${item.label}</div> 
     </label>
   </li>
   </c:forEach>
     </ul>
     </c:otherwise>
-  </c:choose> 
+  </c:choose>
+   ${(empty codeRef.codes) ? '-':' '}
 </div>

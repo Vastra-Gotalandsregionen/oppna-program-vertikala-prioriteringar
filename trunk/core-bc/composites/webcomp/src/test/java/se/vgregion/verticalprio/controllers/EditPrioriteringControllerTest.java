@@ -102,20 +102,6 @@ public class EditPrioriteringControllerTest {
 
     /**
      * Test method for
-     * {@link se.vgregion.verticalprio.controllers.EditPrioriteringControllerTest#findVaardformskoder(javax.servlet.http.HttpServletRequest, org.springframework.ui.ModelMap, se.vgregion.verticalprio.controllers.PrioriteringsobjektForm, java.util.List)}
-     * .
-     * 
-     * @throws IllegalAccessException
-     * @throws InstantiationException
-     */
-    @Test
-    public final void testFindVaardformskoder() throws InstantiationException, IllegalAccessException {
-        String result = epc.findVaardformskoder(request, modelMap, pf, selectedIds);
-        Assert.assertEquals("prio-view", result);
-    }
-
-    /**
-     * Test method for
      * {@link se.vgregion.verticalprio.controllers.EditPrioriteringControllerTest#findAtckoder(javax.servlet.http.HttpServletRequest, org.springframework.ui.ModelMap, se.vgregion.verticalprio.controllers.PrioriteringsobjektForm, java.util.List)}
      * .
      * 

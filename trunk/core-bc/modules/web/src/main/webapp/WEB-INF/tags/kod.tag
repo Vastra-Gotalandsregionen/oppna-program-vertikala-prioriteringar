@@ -17,7 +17,8 @@
       </form:select>
     </c:when>
     <c:otherwise>
-      ${su:labelFor(prio[su:concat(key, 'Id')], prio[su:concat(key, 'List')])} <br/>
+      
+      ${su:labelFor(prio[su:concat(key, 'Id')], prio[su:concat(key, 'List')])} <br/>  
     </c:otherwise>
   </c:choose> 
 </span>

@@ -15,7 +15,7 @@
 
 <div style="vertical-align: middle;">
   <tags:editSubmit value="Spara" name="save" />
-  <a href="main" style="float:right">Stäng</a>
+  <a href="main" class="button">Stäng</a>
 </div>
 
 </form:form>

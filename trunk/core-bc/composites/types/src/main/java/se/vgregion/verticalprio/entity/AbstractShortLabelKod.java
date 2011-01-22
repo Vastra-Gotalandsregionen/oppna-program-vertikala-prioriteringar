@@ -12,6 +12,9 @@ public class AbstractShortLabelKod extends AbstractKod {
      */
     @Override
     public String getLabel() {
+        if (getKortBeskrivning() != null) {
+            return getKortBeskrivning();
+        }
         return getKod();
     }
 

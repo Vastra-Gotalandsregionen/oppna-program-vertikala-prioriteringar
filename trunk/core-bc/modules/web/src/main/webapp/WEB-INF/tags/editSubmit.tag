@@ -10,5 +10,5 @@
 <%@ taglib uri="/WEB-INF/tld/vgr-util.tld" prefix="su"%>
 
 <c:if test="${su:canEdit(user, editDir) or overrideEdit == 'true'}">
-  <input type="submit" value="${value}" name="${name}" class="${cssClass}" />
+  <input type="submit" value="${value}" name="${name}" class="${cssClass} button" />
 </c:if>

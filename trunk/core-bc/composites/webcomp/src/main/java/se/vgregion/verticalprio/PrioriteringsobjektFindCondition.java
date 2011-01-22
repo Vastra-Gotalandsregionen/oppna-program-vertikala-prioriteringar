@@ -10,9 +10,11 @@ import se.vgregion.verticalprio.controllers.PrioriteringsobjektForm;
 import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
 import se.vgregion.verticalprio.entity.RangordningsKod;
 import se.vgregion.verticalprio.entity.TillstaandetsSvaarighetsgradKod;
+import se.vgregion.verticalprio.entity.VaardformsKod;
 import se.vgregion.verticalprio.repository.HaveExplicitTypeToFind;
 import se.vgregion.verticalprio.repository.NestedRangordningsKod;
 import se.vgregion.verticalprio.repository.NestedTillstaandetsSvaarighetsgradKod;
+import se.vgregion.verticalprio.repository.NestedVaardformsKod;
 
 /**
  * To be used as search argument with the <code>PrioRepository</code> implementation and its
@@ -24,12 +26,15 @@ public class PrioriteringsobjektFindCondition extends PrioriteringsobjektForm im
 
     private final NestedRangordningsKod rangordningsHolder = new NestedRangordningsKod();
 
+    private final NestedVaardformsKod vaardformHolder = new NestedVaardformsKod();
+
     private final List<String> sortOrder = new ArrayList<String>();
 
     public PrioriteringsobjektFindCondition() {
         super();
         setRangordningsKod(rangordningsHolder);
         setTillstaandetsSvaarighetsgradKod(svaarighetsgradHolder);
+        setVaardform(vaardformHolder);
     }
 
     /**
@@ -74,6 +79,22 @@ public class PrioriteringsobjektFindCondition extends PrioriteringsobjektForm im
 
     };
 
+    @Transient
+    @SuppressWarnings("serial")
+    private ManyCodesRef<VaardformsKod> vaardformRef = new ManyCodesRef<VaardformsKod>() {
+
+        @Override
+        public List<VaardformsKod> getCodes() {
+            return vaardformHolder.content();
+        }
+
+        @Override
+        public void setCodes(List<VaardformsKod> codes) {
+            vaardformHolder.setNestedContent(codes);
+        }
+
+    };
+
     /**
      * @return the rangordningsRef
      */
@@ -90,5 +111,13 @@ public class PrioriteringsobjektFindCondition extends PrioriteringsobjektForm im
 
     public List<String> getSortOrder() {
         return sortOrder;
+    }
+
+    public void setVaardformRef(ManyCodesRef<VaardformsKod> vaardformRef) {
+        this.vaardformRef = vaardformRef;
+    }
+
+    public ManyCodesRef<VaardformsKod> getVaardformRef() {
+        return vaardformRef;
     }
 }

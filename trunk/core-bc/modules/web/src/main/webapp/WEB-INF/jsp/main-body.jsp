@@ -34,9 +34,10 @@
 <div class="yui3-u rowsAndButtons">
 <span class="button-row">
 
+<label for="select-prio"><button id="showPrioButton" class="button">Visa prioriteringsobjekt</button></label>
 <c:if test="${loginResult && user != null and user.editor}">
   <span class="rPadding2em">
-    <label for="select-prio"><button id="showPrioButton" class="button">Visa prioriteringsobjekt</button></label>
+    
     <label for="edit-prio"><button class="button">Ändra</button></label>
     <form action="prio-create"> <tags:editSubmit value="Lägg till nytt" cssClass="button" /> </form>
     <label for="delete-prio"><tags:editButton value="Ta bort" cssClass="button"></tags:editButton></label>
@@ -48,25 +49,27 @@
 </c:if>
 
 <form action="init-conf-columns"><input class="conf-columns button" type="submit" value="Dölj/Visa kolumner" /></form>
-<button class="cost">Kostnad</button>
+<button class="cost button">Kostnad</button>
 <span class="export-data-buttons">
 <button class="excel button">Excel</button>
 <button class="pdf button">Pdf</button>
 <button class="print  button">Skriv ut</button>
 </span>
-<button class="help">Hjälp</button>
+<button class="help button">Hjälp</button>
 </span>
 
 <c:if test="${not empty message}">
   <div style="color:red">${message}</div>
 </c:if>
 
-<form action="prio-open" method="post" style="clear:left">
+<form action="prio-open" method="post">
 
 <input type="submit" id="select-prio" name="select-prio"/>
 <input type="submit" id="delete-prio" name="delete-prio"/>
 <input type="submit" id="edit-prio" name="edit-prio"/>
 <input type="submit" id="approve-prio" name="approve-prio"/>
+
+<div style="height:8px;"></div>
 
 <table cellpadding="5">
   <thead class="headerRow">
@@ -75,7 +78,7 @@
     <c:forEach items="${form.columns}" var="column">
       <c:if test="${column.visible}">
         <td>
-          <h3 title="${column.description}">${column.columnLabel}</h3>
+          <h3 title="${column.description}">${column.label}</h3>
         </td>
       </c:if>
     </c:forEach>
@@ -87,8 +90,9 @@
       <c:forEach items="${form.columns}" var="column" varStatus="vs">
         <c:if test="${column.visible and vs.index > 0}">
           <td style="center">
+              ${column.columnLabel}
             <c:if test="${not empty su:toString(prioCondition[column.name])}">
-              <h4 title='<tags:cell value="${su:toString(prioCondition[column.name])}"/>'>*</h4>
+              <span title='<tags:cell value="${su:toString(prioCondition[column.name])}"/>'>(*)</span>
             </c:if>
           </td>
         </c:if>
