@@ -117,7 +117,6 @@ public class EditPrioriteringController extends ControllerBase {
             form.putAllIdsFromCodesIfAnyIntoAttributeOnThisObject();
             form.getDiagnoser().toArray(); // Are not eager so we have to make sure they are
             form.getAatgaerdskoder().toArray(); // loaded before sending them to the jsp-layer.
-            form.getVaardformskoder().toArray();
             form.getAtcKoder().toArray();
             if (form.getId() == null) {
                 form.setId(id); // Strange... yes?
@@ -176,7 +175,6 @@ public class EditPrioriteringController extends ControllerBase {
         copyLongValues(request, "aatgaerdRef", pf.getAatgaerdRef());
         copyLongValues(request, "atcKoderRef", pf.getAtcKoderRef());
         copyLongValues(request, "diagnosRef", pf.getDiagnosRef());
-        copyLongValues(request, "vaardformskoderRef", pf.getVaardformskoderRef());
     }
 
     /**
@@ -206,15 +204,6 @@ public class EditPrioriteringController extends ControllerBase {
         initNestedValues(request, pf);
         return findCodesAction(model, pf, DiagnosKod.class, pf.getDiagnosRef(), diagnosKodRepository,
                 pf.getDiagnoser(), request);
-    }
-
-    @RequestMapping(value = "prio", params = { "findVaardformer" })
-    @Transactional
-    public String findVaardformskoder(HttpServletRequest request, ModelMap model, PrioriteringsobjektForm pf,
-            @RequestParam(required = false, value = "vaardformskoderRef.selectedCodesId") List<String> selectedIds)
-            throws InstantiationException, IllegalAccessException {
-        return findCodesAction(model, pf, VaardformsKod.class, pf.getVaardformskoderRef(),
-                vaardformsKodRepository, pf.getVaardformskoder(), request);
     }
 
     @RequestMapping(value = "prio", params = { "findAtcKoder" })
@@ -251,7 +240,6 @@ public class EditPrioriteringController extends ControllerBase {
     private void initAllManyToOneCodes(PrioriteringsobjektForm pf) {
         initManyToOneCode(pf.getDiagnosRef(), pf.getDiagnoser(), diagnosKodRepository);
         initManyToOneCode(pf.getAatgaerdRef(), pf.getAatgaerdskoder(), aatgaerdsKodRepository);
-        initManyToOneCode(pf.getVaardformskoderRef(), pf.getVaardformskoder(), vaardformsKodRepository);
         initManyToOneCode(pf.getAtcKoderRef(), pf.getAtcKoder(), atcKodRepository);
     }
 

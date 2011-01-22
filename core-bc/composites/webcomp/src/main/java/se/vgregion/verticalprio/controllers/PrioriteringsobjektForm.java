@@ -1,5 +1,6 @@
 package se.vgregion.verticalprio.controllers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -70,6 +71,9 @@ public class PrioriteringsobjektForm extends Prioriteringsobjekt {
     private Long vaentetidsKodId;
     // @Transient
     // private List<VaentetidsKod> vaentetidsKodList;
+    private Long vaardformId;
+    @Transient
+    private List<VaardformsKod> vaardformList = new ArrayList<VaardformsKod>();
     @Transient
     private Long aatgaerdsRiskKodId;
     @Transient
@@ -109,19 +113,19 @@ public class PrioriteringsobjektForm extends Prioriteringsobjekt {
         }
     };
 
-    @Transient
-    @SuppressWarnings("serial")
-    private ManyCodesRef<VaardformsKod> vaardformskoderRef = new ManyCodesRef<VaardformsKod>() {
-        @Override
-        public List<VaardformsKod> getCodes() {
-            return getVaardformskoder();
-        }
-
-        @Override
-        public void setCodes(List<VaardformsKod> codes) {
-            setVaardformskoder(codes);
-        }
-    };
+    // @Transient
+    // @SuppressWarnings("serial")
+    // private ManyCodesRef<VaardformsKod> vaardformskoderRef = new ManyCodesRef<VaardformsKod>() {
+    // @Override
+    // public List<VaardformsKod> getCodes() {
+    // return getVaardformskoder();
+    // }
+    //
+    // @Override
+    // public void setCodes(List<VaardformsKod> codes) {
+    // setVaardformskoder(codes);
+    // }
+    // };
 
     @Transient
     @SuppressWarnings("serial")
@@ -155,6 +159,8 @@ public class PrioriteringsobjektForm extends Prioriteringsobjekt {
         rangordningsKodId = getIdFromeCodeIfAny(getRangordningsKod());
         vaentetidBehandlingVeckorId = getIdFromeCodeIfAny(getVaentetidBehandlingVeckor());
         vaentetidBesookVeckorId = getIdFromeCodeIfAny(getVaentetidBesookVeckor());
+        vaardformId = getIdFromeCodeIfAny(getVaardform());
+
     }
 
     /**
@@ -182,6 +188,7 @@ public class PrioriteringsobjektForm extends Prioriteringsobjekt {
         setRangordningsKod(getKodByIdAndList(rangordningsKodList, rangordningsKodId));
         setVaentetidBehandlingVeckor(getKodByIdAndList(vaentetidBehandlingVeckorList, vaentetidBehandlingVeckorId));
         setVaentetidBesookVeckor(getKodByIdAndList(vaentetidBesookVeckorList, vaentetidBesookVeckorId));
+        setVaardform(getKodByIdAndList(vaardformList, vaardformId));
     }
 
     public Long getPatientnyttaEffektAatgaerdsKodId() {
@@ -407,9 +414,9 @@ public class PrioriteringsobjektForm extends Prioriteringsobjekt {
         return aatgaerdRef;
     }
 
-    public ManyCodesRef<VaardformsKod> getVaardformskoderRef() {
-        return vaardformskoderRef;
-    }
+    // public ManyCodesRef<VaardformsKod> getVaardformskoderRef() {
+    // return vaardformskoderRef;
+    // }
 
     public ManyCodesRef<AtcKod> getAtcKoderRef() {
         return atcKoderRef;
@@ -449,6 +456,22 @@ public class PrioriteringsobjektForm extends Prioriteringsobjekt {
 
     public List<VaentetidsKod> getVaentetidBehandlingVeckorList() {
         return vaentetidBehandlingVeckorList;
+    }
+
+    public void setVaardformList(List<VaardformsKod> vaardformsKodList) {
+        this.vaardformList = vaardformsKodList;
+    }
+
+    public List<VaardformsKod> getVaardformList() {
+        return vaardformList;
+    }
+
+    public void setVaardformId(Long vaardformsKodId) {
+        this.vaardformId = vaardformsKodId;
+    }
+
+    public Long getVaardformId() {
+        return vaardformId;
     }
 
 }

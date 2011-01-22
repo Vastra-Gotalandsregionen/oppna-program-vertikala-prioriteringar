@@ -115,9 +115,6 @@ public class Column {
     }
 
     public String getColumnLabel() {
-        if (columnLabel == null) {
-            return label;
-        }
         return columnLabel;
     }
 

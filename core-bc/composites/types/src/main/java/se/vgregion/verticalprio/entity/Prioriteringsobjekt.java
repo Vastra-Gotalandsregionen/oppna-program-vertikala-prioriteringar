@@ -60,9 +60,14 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
     @JoinTable(name = "link_prioriteringsobjekt_aatgaerds_kod", joinColumns = { @JoinColumn(name = "prio_id") }, inverseJoinColumns = { @JoinColumn(name = "aatgaerds_kod_id") })
     private List<AatgaerdsKod> aatgaerdskoder = new ArrayList<AatgaerdsKod>();
 
-    @ManyToMany()
-    @JoinTable(name = "link_prioriteringsobjekt_vaardforms_kod", joinColumns = { @JoinColumn(name = "prio_id") }, inverseJoinColumns = { @JoinColumn(name = "vaardforms_kod_id") })
-    private List<VaardformsKod> vaardformskoder = new ArrayList<VaardformsKod>();
+    @ManyToOne
+    @JoinColumn(name = "vaardforms_kod_id")
+    private VaardformsKod vaardform;
+
+    // @ManyToMany()
+    // @JoinTable(name = "link_prioriteringsobjekt_vaardforms_kod", joinColumns = { @JoinColumn(name = "prio_id")
+    // }, inverseJoinColumns = { @JoinColumn(name = "vaardforms_kod_id") })
+    // private List<VaardformsKod> vaardformskoder = new ArrayList<VaardformsKod>();
 
     @ManyToMany()
     @JoinTable(name = "link_prioriteringsobjekt_atc_kod", joinColumns = { @JoinColumn(name = "prio_id") }, inverseJoinColumns = { @JoinColumn(name = "atc_kod_id") })
@@ -170,13 +175,13 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         this.aatgaerdskoder = aatgaerdskoder;
     }
 
-    public List<VaardformsKod> getVaardformskoder() {
-        return vaardformskoder;
-    }
-
-    public void setVaardformskoder(List<VaardformsKod> vaardformskoder) {
-        this.vaardformskoder = vaardformskoder;
-    }
+    // public List<VaardformsKod> getVaardformskoder() {
+    // return vaardformskoder;
+    // }
+    //
+    // public void setVaardformskoder(List<VaardformsKod> vaardformskoder) {
+    // this.vaardformskoder = vaardformskoder;
+    // }
 
     public void setVaentetidBehandlingVeckor(VaentetidsKod vaentetidBehandlingVeckor) {
         this.vaentetidBehandlingVeckor = vaentetidBehandlingVeckor;
@@ -323,7 +328,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("diagnosTexts");
         column.setLabel("Symptom / Diagnostext");
-        column.setColumnLabel("<a href='choose-codes-init?codeRefName=diagnosRef'>Symptom / Diagnostext</a>");
+        column.setColumnLabel("<a href='choose-codes-init?codeRefName=diagnosRef'>X=?</a>");
         column.setDisplayOrder(i++);
         result.add(column);
         column.setId(i);
@@ -342,7 +347,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("aatgaerdskoder");
         column.setLabel("Åtgärdskod");
-        column.setColumnLabel("<a href='choose-codes-init?codeRefName=aatgaerdRef'>Åtgärdskod</a>");
+        column.setColumnLabel("<a href='choose-codes-init?codeRefName=aatgaerdRef'>X=?</a>");
         column.setDisplayOrder(i++);
         result.add(column);
         column.setId(i);
@@ -351,7 +356,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("tillstaandetsSvaarighetsgradKod");
         column.setLabel("Tillståndets svårighetsgrad");
-        column.setColumnLabel("<a href='choose-codes-init?codeRefName=tillstaandetsSvaarighetsgradRef'>Tillståndets svårighetsgrad</a>");
+        column.setColumnLabel("<a href='choose-codes-init?codeRefName=tillstaandetsSvaarighetsgradRef'>X=?</a>");
         column.setDisplayOrder(i++);
         result.add(column);
         column.setId(i);
@@ -369,7 +374,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("rangordningsKod");
         column.setLabel("Rangordning");
-        column.setColumnLabel("<a href='choose-codes-init?codeRefName=rangordningsRef'>Rangordning</a>");
+        column.setColumnLabel("<a href='choose-codes-init?codeRefName=rangordningsRef'>X=?</a>");
         column.setDisplayOrder(i++);
         result.add(column);
         column.setId(i);
@@ -392,7 +397,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("atcText");
         column.setLabel("ATC-text");
-        column.setColumnLabel("<a href='choose-codes-init?codeRefName=atcKoderRef'>ATC-text</a>");
+        column.setColumnLabel("<a href='choose-codes-init?codeRefName=atcKoderRef'>X=?</a>");
         column.setDisplayOrder(i++);
         result.add(column);
         column.setId(i);
@@ -401,7 +406,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("atcKoder");
         column.setLabel("ATC-kod");
-        column.setColumnLabel("<a href='choose-codes-init?codeRefName=atcKoderRef'>ATC-kod</a>");
+        column.setColumnLabel("<a href='choose-codes-init?codeRefName=atcKoderRef'>X=?</a>");
         column.setDisplayOrder(i++);
         result.add(column);
         column.setId(i);
@@ -489,9 +494,9 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         column.setHideAble(true);
 
         column = new se.vgregion.verticalprio.entity.Column();
-        column.setName("vaardformskoder");
+        column.setName("vaardform");
         column.setLabel("Vårdform");
-        column.setColumnLabel("<a href='choose-codes-init?codeRefName=vaardformskoderRef'>Vårdform</a>");
+        column.setColumnLabel("<a href='choose-codes-init?codeRefName=vaardformRef'>X=?</a>");
         column.setDisplayOrder(i++);
         result.add(column);
         column.setId(i);
@@ -572,6 +577,21 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
 
     public Boolean getGodkaend() {
         return godkaend;
+    }
+
+    /**
+     * @param vaardform
+     *            the vaardform to set
+     */
+    public void setVaardform(VaardformsKod vaardform) {
+        this.vaardform = vaardform;
+    }
+
+    /**
+     * @return the vaardform
+     */
+    public VaardformsKod getVaardform() {
+        return vaardform;
     }
 
 }

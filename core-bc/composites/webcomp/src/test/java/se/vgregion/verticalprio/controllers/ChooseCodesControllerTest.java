@@ -59,7 +59,7 @@ public class ChooseCodesControllerTest {
         ccc.findAndOrSelect(request, session, modelMap, "aatgaerdRef");
         ccc.findAndOrSelect(request, session, modelMap, "atcKoderRef");
         ccc.findAndOrSelect(request, session, modelMap, "diagnosRef");
-        ccc.findAndOrSelect(request, session, modelMap, "vaardformskoderRef");
+        ccc.findAndOrSelect(request, session, modelMap, "vaardformRef");
         ccc.findAndOrSelect(request, session, modelMap, "rangordningsRef");
         ccc.findAndOrSelect(request, session, modelMap, "tillstaandetsSvaarighetsgradRef");
 

@@ -130,7 +130,7 @@ public class ChooseCodesController extends ControllerBase {
             nameToRepository.put("aatgaerdRef", aatgaerdsKodRepository);
             nameToRepository.put("atcKoderRef", atcKodRepository);
             nameToRepository.put("diagnosRef", diagnosKodRepository);
-            nameToRepository.put("vaardformskoderRef", vaardformsKodRepository);
+            nameToRepository.put("vaardformRef", vaardformsKodRepository);
             nameToRepository.put("rangordningsRef", rangordningsKodRepository);
             nameToRepository.put("tillstaandetsSvaarighetsgradRef", tillstaandetsSvaarighetsgradKodRepository);
         }
@@ -143,7 +143,7 @@ public class ChooseCodesController extends ControllerBase {
             nameToKodClass.put("aatgaerdRef", AatgaerdsKod.class);
             nameToKodClass.put("atcKoderRef", AtcKod.class);
             nameToKodClass.put("diagnosRef", DiagnosKod.class);
-            nameToKodClass.put("vaardformskoderRef", VaardformsKod.class);
+            nameToKodClass.put("vaardformRef", VaardformsKod.class);
             nameToKodClass.put("rangordningsRef", RangordningsKod.class);
             nameToKodClass.put("tillstaandetsSvaarighetsgradRef", TillstaandetsSvaarighetsgradKod.class);
         }
