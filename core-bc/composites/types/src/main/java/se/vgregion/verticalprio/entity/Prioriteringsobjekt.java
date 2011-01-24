@@ -328,11 +328,13 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("diagnosTexts");
         column.setLabel("Symptom / Diagnostext");
-        column.setColumnLabel("<a href='choose-codes-init?codeRefName=diagnosRef'>X=?</a>");
+        column.setColumnLabel("<a href='choose-codes-init?codeRefName=diagnosRef'><img src='img/filter.gif'/></a>");
         column.setDisplayOrder(i++);
         result.add(column);
         column.setId(i);
         column.setHideAble(false);
+        column.setSortField("diagnoser.kod");
+        column.setSortable(true);
 
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("diagnosKodTexts");
@@ -341,13 +343,14 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         result.add(column);
         column.setId(i);
         column.setHideAble(false);
-
+        column.setSortField("");
+        column.setSortable(true);
         // Åtgärdstext saknas!
 
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("aatgaerdskoder");
         column.setLabel("Åtgärdskod");
-        column.setColumnLabel("<a href='choose-codes-init?codeRefName=aatgaerdRef'>X=?</a>");
+        column.setColumnLabel("<a href='choose-codes-init?codeRefName=aatgaerdRef'><img src='img/filter.gif'/></a>");
         column.setDisplayOrder(i++);
         result.add(column);
         column.setId(i);
@@ -356,7 +359,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("tillstaandetsSvaarighetsgradKod");
         column.setLabel("Tillståndets svårighetsgrad");
-        column.setColumnLabel("<a href='choose-codes-init?codeRefName=tillstaandetsSvaarighetsgradRef'>X=?</a>");
+        column.setColumnLabel("<a href='choose-codes-init?codeRefName=tillstaandetsSvaarighetsgradRef'><img src='img/filter.gif'/></a>");
         column.setDisplayOrder(i++);
         result.add(column);
         column.setId(i);
@@ -374,7 +377,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("rangordningsKod");
         column.setLabel("Rangordning");
-        column.setColumnLabel("<a href='choose-codes-init?codeRefName=rangordningsRef'>X=?</a>");
+        column.setColumnLabel("<a href='choose-codes-init?codeRefName=rangordningsRef'><img src='img/filter.gif'/></a>");
         column.setDisplayOrder(i++);
         result.add(column);
         column.setId(i);
@@ -397,7 +400,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("atcText");
         column.setLabel("ATC-text");
-        column.setColumnLabel("<a href='choose-codes-init?codeRefName=atcKoderRef'>X=?</a>");
+        column.setColumnLabel("<a href='choose-codes-init?codeRefName=atcKoderRef'><img src='img/filter.gif'/></a>");
         column.setDisplayOrder(i++);
         result.add(column);
         column.setId(i);
@@ -406,7 +409,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("atcKoder");
         column.setLabel("ATC-kod");
-        column.setColumnLabel("<a href='choose-codes-init?codeRefName=atcKoderRef'>X=?</a>");
+        column.setColumnLabel("<a href='choose-codes-init?codeRefName=atcKoderRef'><img src='img/filter.gif'/></a>");
         column.setDisplayOrder(i++);
         result.add(column);
         column.setId(i);
@@ -496,7 +499,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("vaardform");
         column.setLabel("Vårdform");
-        column.setColumnLabel("<a href='choose-codes-init?codeRefName=vaardformRef'>X=?</a>");
+        column.setColumnLabel("<a href='choose-codes-init?codeRefName=vaardformRef'><img src='img/filter.gif'/></a>");
         column.setDisplayOrder(i++);
         result.add(column);
         column.setId(i);
