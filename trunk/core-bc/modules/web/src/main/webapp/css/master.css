@@ -184,6 +184,7 @@ button {
 
 .kod, .kod-label {
   display: block;
+  font-style: italic;
 }
 
 .prio-view {
@@ -284,4 +285,8 @@ label {
 
 .rPadding2em {
   padding-right: 2em; 
+}
+
+.aatgaerdskoder div {
+  white-space: nowrap; 
 }
