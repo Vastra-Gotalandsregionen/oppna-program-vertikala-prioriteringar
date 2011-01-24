@@ -23,6 +23,8 @@ public class Column {
 
     private String name;
 
+    private String sortField;
+
     private boolean visible = true;
 
     private boolean sorting;
@@ -140,6 +142,14 @@ public class Column {
 
     public String getDescription() {
         return description;
+    }
+
+    public void setSortField(String sortField) {
+        this.sortField = sortField;
+    }
+
+    public String getSortField() {
+        return sortField;
     }
 
     public static class OrderComparer implements Comparator<Column> {
