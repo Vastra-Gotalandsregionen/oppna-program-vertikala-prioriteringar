@@ -74,19 +74,19 @@
 <table cellpadding="5">
   <thead class="headerRow">
     <tr>
-    <td><h3>#</h3></td>
+    <th>#</th>
     <c:forEach items="${form.columns}" var="column">
       <c:if test="${column.visible}">
-        <td>
-          <h3 title="${column.description}">${column.label}</h3>
-        </td>
+        <th>
+          <span title="${column.description}">${column.label}</span>
+        </th>
       </c:if>
     </c:forEach>
     </tr>
   </thead>
   <tbody>
     <tr class="conditionRow">
-      <td colspan="2"><h3>Filter:</h3></td>
+      <td colspan="2">Filter:</td>
       <c:forEach items="${form.columns}" var="column" varStatus="vs">
         <c:if test="${column.visible and vs.index > 0}">
           <td style="center">
