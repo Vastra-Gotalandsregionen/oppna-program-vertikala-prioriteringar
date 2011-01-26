@@ -108,6 +108,7 @@ button {
   padding: 0px;
 }
 
+.rowsAndButtons table th,
 .rowsAndButtons table td {
   padding-right: 1em;
   border-left-color: black;
@@ -118,6 +119,15 @@ button {
   max-width: 20em;
   overflow: hidden;
   padding: 2px;
+}
+
+.rowsAndButtons table th {
+    font-weight: bold;
+}
+
+.rowsAndButtons table .diagnosTexts {
+    min-width: 20em;
+    max-width: 25em;
 }
 
 .rowsAndButtons table .even {

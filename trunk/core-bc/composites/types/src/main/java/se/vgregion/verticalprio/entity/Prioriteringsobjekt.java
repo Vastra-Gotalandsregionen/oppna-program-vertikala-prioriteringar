@@ -3,6 +3,7 @@ package se.vgregion.verticalprio.entity;
 /**
  * This is the actual Priority object
  */
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +24,7 @@ import se.vgregion.dao.domain.patterns.entity.AbstractEntity;
 
 @Entity
 @Table(name = "prioriteringsobjekt")
-public class Prioriteringsobjekt extends AbstractEntity<Long> {
+public class Prioriteringsobjekt extends AbstractEntity<Long> implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -434,10 +435,10 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> {
         result.add(column);
         column.setId(i);
         column.setHideAble(true);
-        column.setDescription("* Evidensstyrka 1. Starkt vetenskapligt underlag. En slutsats stöds av minst två studier med högt bevisvärde. Om det finns studier som talat emot slutsatsen kan dock evidensstyrkan bli lägre. \n"
-                + "* Evidensstyrka 2. Måttligt starkt vetenskapligt underlag. Minst en studie med högt bevisvärde och två med medelhögt bevisvärde. Vid ny indikation inom närliggande terapiområde krävs minst en stor studie med högt bevisvärde, och viss stöddokumentation. \n"
-                + "* Evidensstyrka 3. Begränsat vetenskapligt underlag. Minst två studier med medelhögt bevisvärde. \n"
-                + "* Evidensstyrka 4. Otillräckligt vetenskapligt stöd. Studier som uppfyller krav på bevisvärde saknas alternativt motsägande underlag.");
+        column.setDescription("* Evidensstyrka 1. \n Starkt vetenskapligt underlag. En slutsats stöds av minst två studier med högt bevisvärde. Om det finns studier som talat emot slutsatsen kan dock evidensstyrkan bli lägre. \n\n"
+                + "* Evidensstyrka 2. \n Måttligt starkt vetenskapligt underlag. Minst en studie med högt bevisvärde och två med medelhögt bevisvärde. Vid ny indikation inom närliggande terapiområde krävs minst en stor studie med högt bevisvärde, och viss stöddokumentation.\n\n"
+                + "* Evidensstyrka 3. \n Begränsat vetenskapligt underlag. Minst två studier med medelhögt bevisvärde.\n\n"
+                + "* Evidensstyrka 4. \n Otillräckligt vetenskapligt stöd. Studier som uppfyller krav på bevisvärde saknas alternativt motsägande underlag.\n\n");
 
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("patientnyttoEvidensKod");
