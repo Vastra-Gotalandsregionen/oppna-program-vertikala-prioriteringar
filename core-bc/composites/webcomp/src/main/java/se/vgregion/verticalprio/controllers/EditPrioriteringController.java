@@ -28,6 +28,7 @@ import se.vgregion.verticalprio.entity.User;
 import se.vgregion.verticalprio.entity.VaardformsKod;
 import se.vgregion.verticalprio.repository.GenerisktHierarkisktKodRepository;
 import se.vgregion.verticalprio.repository.GenerisktKodRepository;
+import se.vgregion.verticalprio.repository.PrioRepository;
 
 /**
  * @author Claes Lundahl, vgrid=clalu4
@@ -50,6 +51,9 @@ public class EditPrioriteringController extends ControllerBase {
 
     @Resource(name = "atcKodRepository")
     GenerisktKodRepository<AtcKod> atcKodRepository;
+
+    @Resource(name = "prioRepository")
+    protected PrioRepository prioRepository;
 
     @RequestMapping(value = "/prio-open", params = { "delete-prio" })
     @Transactional

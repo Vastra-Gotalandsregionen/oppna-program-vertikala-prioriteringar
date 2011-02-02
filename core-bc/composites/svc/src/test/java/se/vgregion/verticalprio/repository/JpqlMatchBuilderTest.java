@@ -10,6 +10,7 @@ import org.junit.Test;
 import se.vgregion.verticalprio.entity.DiagnosKod;
 import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
 import se.vgregion.verticalprio.entity.SektorRaad;
+import se.vgregion.verticalprio.repository.HaveQuerySortOrder.SortOrderField;
 
 /**
  * @author Claes Lundahl, vgrid=clalu4
@@ -25,12 +26,21 @@ public class JpqlMatchBuilderTest {
     @Test
     public final void mkFindByExampleJpql() {
         JpqlMatchBuilder builder = new JpqlMatchBuilder();
-        builder.getSortOrder().add("id");
-        builder.getSortOrder().add("kommentar");
 
         List<Object> values = new ArrayList<Object>();
 
-        Prioriteringsobjekt prio = new Prioriteringsobjekt();
+        PriorCriteria prio = new PriorCriteria();
+
+        SortOrderField sof = new SortOrderField();
+        sof.setName("kommentar");
+        prio.listSortOrders().add(sof);
+        sof.setOrder(1);
+
+        sof = new SortOrderField();
+        sof.setName("id");
+        sof.setAscending(false);
+        prio.listSortOrders().add(sof);
+
         prio.setKommentar("kommentar");
         DiagnosKod diagnos1 = new DiagnosKod();
         diagnos1.setBeskrivning("Kolera*");
@@ -61,4 +71,27 @@ public class JpqlMatchBuilderTest {
         Assert.assertTrue(jpql.contains("beskrivning like ?"));
         Assert.assertTrue(jpql.contains("kommentar = ?"));
     }
+
+    class PriorCriteria extends Prioriteringsobjekt implements HaveQuerySortOrder, HaveExplicitTypeToFind {
+
+        final List<SortOrderField> sortOrderFields = new ArrayList<HaveQuerySortOrder.SortOrderField>();
+
+        /**
+         * @inheritDoc
+         */
+        @Override
+        public List<SortOrderField> listSortOrders() {
+            return sortOrderFields;
+        }
+
+        /**
+         * @inheritDoc
+         */
+        @Override
+        public Class<?> type() {
+            return Prioriteringsobjekt.class;
+        }
+
+    }
+
 }

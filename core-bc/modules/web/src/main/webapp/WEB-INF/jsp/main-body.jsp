@@ -94,6 +94,9 @@
             <c:if test="${not empty su:toString(prioCondition[column.name])}">
               <span title='<tags:cell value="${su:toString(prioCondition[column.name])}"/>'>(*)</span>
             </c:if>
+            <c:if test="${column.sortable}">
+              <a href="main?sortField=${column.name}">S</a>
+            </c:if>
           </td>
         </c:if>
       </c:forEach>

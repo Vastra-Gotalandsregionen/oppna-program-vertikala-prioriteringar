@@ -42,7 +42,7 @@ public class JpaGenerisktFinderRepository<T extends AbstractEntity<Long>> extend
     public List<T> findByExample(T bean, Integer maxResult) {
         List<Object> values = new ArrayList<Object>();
         JpqlMatchBuilder builder = new JpqlMatchBuilder();
-        builder.getSortOrder().addAll(getSortOrder());
+        // builder.getSortOrder().addAll(getSortOrder());
         String jpql = builder.mkFindByExampleJpql(bean, values);
         // System.out.println(jpql);
         return query(jpql, maxResult, values.toArray());
