@@ -17,8 +17,8 @@ public class SektorRaad extends AbstractHirarkiskKod<SektorRaad> {
         setId(id);
     }
 
-    @Id
-    Long id;
+//    @Id
+//    Long id;
 
     @Transient
     private boolean able = true;
@@ -26,18 +26,18 @@ public class SektorRaad extends AbstractHirarkiskKod<SektorRaad> {
     /**
      * @inheritDoc
      */
-    @Override
-    public Long getId() {
-        return id;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void setId(Long id) {
-        this.id = id;
-    }
+//    @Override
+//    public Long getId() {
+//        return id;
+//    }
+//
+//    /**
+//     * @inheritDoc
+//     */
+//    @Override
+//    public void setId(Long id) {
+//        this.id = id;
+//    }
 
     public void setAble(boolean able) {
         this.able = able;

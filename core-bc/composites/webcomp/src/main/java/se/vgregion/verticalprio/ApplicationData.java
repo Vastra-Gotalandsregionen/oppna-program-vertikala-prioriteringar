@@ -35,7 +35,7 @@ import se.vgregion.verticalprio.repository.GenerisktKodRepository;
  * @author Claes Lundahl, vgrid=clalu4
  * 
  */
-@Component
+//@Component
 public class ApplicationData implements Serializable {
 
     private static final long serialVersionUID = 1L;

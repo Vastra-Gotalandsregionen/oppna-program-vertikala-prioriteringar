@@ -24,7 +24,7 @@ Generation time : 2010-11-08 10:07:26 CET
     <module>composites/types</module>
     <module>composites/svc</module>
     <module>composites/webcomp</module>
-    <module>composites/schema</module>
+    <!--<module>composites/schema</module>-->
     <module>modules/web</module>
   </modules>
 </project>

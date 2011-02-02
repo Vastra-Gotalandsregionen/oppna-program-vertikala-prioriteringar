@@ -30,11 +30,16 @@
       <artifactId>spring-context</artifactId>
     </dependency>
 
-    <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>ejb3-persistence</artifactId>
-      <version>1.0.2.GA</version>
-    </dependency>
+    <!--<dependency>-->
+      <!--<groupId>org.hibernate</groupId>-->
+      <!--<artifactId>ejb3-persistence</artifactId>-->
+      <!--<version>1.0.2.GA</version>-->
+    <!--</dependency>-->
+      <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-entitymanager</artifactId>
+        <version>3.6.0.Final</version>
+      </dependency>
     <dependency>
       <groupId>se.vgregion.daoframework</groupId>
       <artifactId>dao-framework</artifactId>
