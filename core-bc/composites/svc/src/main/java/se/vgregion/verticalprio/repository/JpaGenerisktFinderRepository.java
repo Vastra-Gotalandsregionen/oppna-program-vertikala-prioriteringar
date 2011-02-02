@@ -60,7 +60,28 @@ public class JpaGenerisktFinderRepository<T extends AbstractEntity<Long>> extend
         for (Object value : values) {
             query.setParameter(i++, value);
         }
-        List<T> result = query.getResultList();
+        List<?> rawResult = query.getResultList();
+
+        List<T> result = new ArrayList<T>();
+
+        // Sometimes the result is an array.
+        if (!rawResult.isEmpty() && rawResult.get(0).getClass().isArray()) {
+            Object[] firstRow = (Object[]) rawResult.get(0);
+            int index = 0;
+            for (int j = 0; j < firstRow.length; j++) {
+                if (firstRow[j] instanceof AbstractEntity) {
+                    index = j;
+                    break;
+                }
+            }
+            for (Object raw : rawResult) {
+                Object[] row = (Object[]) raw;
+                result.add((T) row[index]);
+            }
+        } else {
+            result = (List<T>) rawResult;
+        }
+
         return result;
     }
 

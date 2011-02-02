@@ -39,7 +39,7 @@ import se.vgregion.verticalprio.repository.PrioRepository;
  * 
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath*:applicationContext.xml")
+@ContextConfiguration("classpath:testApplicationContext.xml")
 @TransactionConfiguration(defaultRollback = false)
 public class ImportTest {
 
