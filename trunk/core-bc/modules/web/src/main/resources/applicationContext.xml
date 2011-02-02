@@ -5,7 +5,7 @@
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
         http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
 
-  <import resource="classpath*:jpa-hibernate-configuration.xml" />
+  <import resource="classpath*:local-jpa-hibernate-configuration.xml" />
   
   <context:component-scan base-package="se.vgregion.verticalprio" />
 

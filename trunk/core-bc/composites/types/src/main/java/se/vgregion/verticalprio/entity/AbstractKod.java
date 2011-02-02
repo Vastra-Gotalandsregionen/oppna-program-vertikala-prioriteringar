@@ -2,6 +2,7 @@ package se.vgregion.verticalprio.entity;
 
 import java.io.Serializable;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
@@ -13,6 +14,7 @@ import se.vgregion.dao.domain.patterns.entity.AbstractEntity;
 @SuppressWarnings("serial")
 @MappedSuperclass
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Cacheable(value = true)
 public abstract class AbstractKod extends AbstractEntity<Long> implements Serializable {
 
     @Id
