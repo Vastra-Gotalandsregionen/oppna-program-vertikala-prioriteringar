@@ -9,7 +9,7 @@
   <bean name="testVerticalPrioController" class="se.vgregion.verticalprio.controllers.VerticalPrioController" />
  
   <bean name="prioRepository" class="se.vgregion.verticalprio.controllers.MockPrioRepository" />
-
+  
   <bean name="aatgaerdsKodRepository" class="se.vgregion.verticalprio.controllers.MockGenerisktKodRepository">
     <constructor-arg value="se.vgregion.verticalprio.entity.AatgaerdsKod" />
   </bean>
@@ -55,7 +55,6 @@
   <bean name="userRepository" class="se.vgregion.verticalprio.controllers.MockGenerisktKodRepository">
     <constructor-arg value="se.vgregion.verticalprio.entity.User" />
   </bean>
-
 
   <bean name="applicationData" class="se.vgregion.verticalprio.ApplicationData"/>
   

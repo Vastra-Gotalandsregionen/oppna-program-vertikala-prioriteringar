@@ -31,6 +31,11 @@ public class JpaPrioRepository extends JpaGenerisktFinderRepository<Prioritering
             query.setParameter(i++, value);
         }
         try {
+            // List<?> preResult = query.getResultList();
+            // if (preResult instanceof List<? extends Prioriteringsobjekt>) {
+            //
+            // }
+
             List<Prioriteringsobjekt> result = query.getResultList();
             return result;
         } catch (Throwable e) {

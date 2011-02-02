@@ -148,7 +148,7 @@ public class ApplicationData implements Serializable {
     GenerisktKodRepository<VaardformsKod> vaardformsKodRepository;
     List<VaardformsKod> everyVaardformsKod;
 
-    public List<VaardformsKod> getVaardformList() {
+    public List<VaardformsKod> getVaardformsKodList() {
         if (everyVaardformsKod == null) {
             everyVaardformsKod = new ArrayList<VaardformsKod>(vaardformsKodRepository.findAll());
         }

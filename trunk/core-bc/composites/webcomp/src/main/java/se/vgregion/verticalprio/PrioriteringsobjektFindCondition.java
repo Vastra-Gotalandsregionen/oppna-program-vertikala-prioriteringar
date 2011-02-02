@@ -12,6 +12,7 @@ import se.vgregion.verticalprio.entity.RangordningsKod;
 import se.vgregion.verticalprio.entity.TillstaandetsSvaarighetsgradKod;
 import se.vgregion.verticalprio.entity.VaardformsKod;
 import se.vgregion.verticalprio.repository.HaveExplicitTypeToFind;
+import se.vgregion.verticalprio.repository.HaveQuerySortOrder;
 import se.vgregion.verticalprio.repository.NestedRangordningsKod;
 import se.vgregion.verticalprio.repository.NestedTillstaandetsSvaarighetsgradKod;
 import se.vgregion.verticalprio.repository.NestedVaardformsKod;
@@ -22,13 +23,14 @@ import se.vgregion.verticalprio.repository.NestedVaardformsKod;
  * 
  * @author Claes Lundahl, vgrid=clalu4
  */
-public class PrioriteringsobjektFindCondition extends PrioriteringsobjektForm implements HaveExplicitTypeToFind {
+public class PrioriteringsobjektFindCondition extends PrioriteringsobjektForm implements HaveExplicitTypeToFind,
+        HaveQuerySortOrder {
 
     private final NestedRangordningsKod rangordningsHolder = new NestedRangordningsKod();
 
     private final NestedVaardformsKod vaardformHolder = new NestedVaardformsKod();
 
-    private final List<String> sortOrder = new ArrayList<String>();
+    private final List<SortOrderField> sortOrder = new ArrayList<SortOrderField>();
 
     public PrioriteringsobjektFindCondition() {
         super();
@@ -109,15 +111,19 @@ public class PrioriteringsobjektFindCondition extends PrioriteringsobjektForm im
         return tillstaandetsSvaarighetsgradRef;
     }
 
-    public List<String> getSortOrder() {
-        return sortOrder;
-    }
-
     public void setVaardformRef(ManyCodesRef<VaardformsKod> vaardformRef) {
         this.vaardformRef = vaardformRef;
     }
 
     public ManyCodesRef<VaardformsKod> getVaardformRef() {
         return vaardformRef;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public List<SortOrderField> listSortOrders() {
+        return sortOrder;
     }
 }

@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.Transient;
@@ -11,6 +12,7 @@ import javax.persistence.Transient;
 import org.apache.commons.beanutils.BeanMap;
 
 import se.vgregion.dao.domain.patterns.entity.AbstractEntity;
+import se.vgregion.verticalprio.repository.HaveQuerySortOrder.SortOrderField;
 
 /**
  * Help-logic to produce jpql that selects data from the db. It does "search by example". Uses values in a object
@@ -49,7 +51,7 @@ public class JpqlMatchBuilder {
 
     private String jpaWildCard = "%";
 
-    private final List<String> sortOrder = new ArrayList<String>();
+    // private final List<String> sortOrder = new ArrayList<String>();
 
     /**
      * Produces jpql code for selecting data that matches the provided example in values and class. See description
@@ -64,35 +66,81 @@ public class JpqlMatchBuilder {
      * @return jpql representing conditions and joins between objects in the graph.
      */
     public String mkFindByExampleJpql(Object bean, List<Object> values) {
-        List<String> where = new ArrayList<String>();
-        List<String> fromJoin = new ArrayList<String>();
+
+        if (values == null) {
+            throw new RuntimeException();
+        }
+
+        QueryParts qp = new QueryParts();
+        qp.values = values;
+        qp.selects.add("o0");
+
+        // List<String> where = new ArrayList<String>();
+        // List<String> fromJoin = new ArrayList<String>();
 
         if (bean instanceof HaveExplicitTypeToFind) {
             HaveExplicitTypeToFind hettf = (HaveExplicitTypeToFind) bean;
-            fromJoin.add(hettf.type().getSimpleName() + " o0");
+            qp.fromJoin.add(hettf.type().getSimpleName() + " o0");
         } else {
-            fromJoin.add(bean.getClass().getSimpleName() + " o0");
+            qp.fromJoin.add(bean.getClass().getSimpleName() + " o0");
         }
 
-        mkFindByExampleJpql(bean, fromJoin, where, values, 0);
-        StringBuilder sb = new StringBuilder();
-        sb.append("select distinct o0 from ");
-        sb.append(toString(fromJoin, " left join "));
-        if (!where.isEmpty()) {
-            sb.append(" \nwhere ");
-            sb.append(toString(where, " and "));
+        mkFindByExampleJpql(bean, qp, 0);
+
+        List<String> orderBy = new ArrayList<String>();
+
+        if (!qp.order.isEmpty()) {
+            Collections.sort(qp.order);
+            for (SortOrderField orderField : qp.order) {
+                String fr = orderField.getAlias() + "." + orderField.getName();
+                qp.selects.add(fr);
+                if (!orderField.isAscending()) {
+                    fr += " desc";
+                }
+                orderBy.add(fr);
+            }
         }
-        sb.append(mkOrderBy(bean));
+
+        StringBuilder sb = new StringBuilder();
+        // sb.append("select distinct o0 from ");
+        sb.append("select distinct ");
+        sb.append(toString(qp.selects, ", "));
+        sb.append(" from ");
+        sb.append(toString(qp.fromJoin, " left join "));
+        if (!qp.where.isEmpty()) {
+            sb.append(" \nwhere ");
+            sb.append(toString(qp.where, " and "));
+        }
+
+        if (!orderBy.isEmpty()) {
+            sb.append(" order by ");
+            sb.append(toString(orderBy, ", "));
+        }
 
         return sb.toString();
     }
 
-    private void mkFindByExampleJpql(Object bean, List<String> fromJoin, List<String> where, List<Object> values,
-            int aliasIndex) {
-        String prefix = "o" + aliasIndex + ".";
+    private void mkFindByExampleJpql(Object bean, QueryParts qp, int aliasIndex) {
+
+        // final List<String> fromJoin = qp.fromJoin;
+        final List<String> where = qp.where;
+        final List<Object> values = qp.values;
+
+        String prefix = "o" + aliasIndex;
         // here is the main loop where we iterate over all properties inside a bean and build up the corresponding
         // JPQL query
         BeanMap bm = new BeanMap(bean);
+
+        if (bean instanceof HaveQuerySortOrder) {
+            HaveQuerySortOrder hqso = (HaveQuerySortOrder) bean;
+            for (SortOrderField item : hqso.listSortOrders()) {
+                item.setAlias(prefix);
+            }
+            qp.order.addAll(hqso.listSortOrders());
+        }
+
+        prefix += ".";
+
         for (Object key : bm.keySet()) {
             String propertyName = (String) key;
             Object value = bm.get(propertyName);
@@ -105,8 +153,7 @@ public class JpqlMatchBuilder {
 
             if (value instanceof HaveNestedEntities<?>) {
                 HaveNestedEntities<AbstractEntity<Long>> hne = (HaveNestedEntities<AbstractEntity<Long>>) value;
-                aliasIndex = handleNestedEnteties(hne, prefix, propertyName, bean, fromJoin, where, values,
-                        aliasIndex);
+                aliasIndex = handleNestedEnteties(hne, prefix, propertyName, bean, qp, aliasIndex);
                 continue;
             }
 
@@ -127,8 +174,7 @@ public class JpqlMatchBuilder {
             if (isCollectionOfEntitys(value)) {
                 Collection<AbstractEntity<?>> collection = (Collection<AbstractEntity<?>>) value;
                 for (AbstractEntity<?> entity : collection) {
-                    boolean addedCondition = handleSubBean(prefix, propertyName, entity, fromJoin, where, values,
-                            aliasIndex + 1);
+                    boolean addedCondition = handleSubBean(prefix, propertyName, entity, qp, aliasIndex + 1);
                     if (addedCondition) {
                         aliasIndex++;
                     }
@@ -137,8 +183,7 @@ public class JpqlMatchBuilder {
             }
 
             if (isEntity(value)) {
-                boolean addedCondition = handleSubBean(prefix, propertyName, value, fromJoin, where, values,
-                        aliasIndex + 1);
+                boolean addedCondition = handleSubBean(prefix, propertyName, value, qp, aliasIndex + 1);
                 if (addedCondition) {
                     aliasIndex++;
                 }
@@ -167,22 +212,25 @@ public class JpqlMatchBuilder {
      * @return if there was any values inside the bean to be used as values in conditions. If not true the work
      *         inside this method is discarded.
      */
-    private boolean handleSubBean(String prefix, String parentPropertyName, Object bean, List<String> fromJoin,
-            List<String> where, List<Object> values, int aliasIndex) {
-        int valueCount = values.size();
-        List<String> deepWhere = new ArrayList<String>();
-        List<String> deepFromJoin = new ArrayList<String>();
-        deepFromJoin.add(prefix + parentPropertyName + " o" + aliasIndex);
+    private boolean handleSubBean(String prefix, String parentPropertyName, Object bean, QueryParts qp,
+            int aliasIndex) {
+        // int valueCount = qp.values.size();
 
-        mkFindByExampleJpql(bean, deepFromJoin, deepWhere, values, aliasIndex);
+        // List<String> deepWhere = new ArrayList<String>();
+        // List<String> deepFromJoin = new ArrayList<String>();
+        QueryParts deepQp = new QueryParts();
+
+        deepQp.fromJoin.add(prefix + parentPropertyName + " o" + aliasIndex);
+
+        mkFindByExampleJpql(bean, deepQp, aliasIndex);
         // Check to see if the new jpql should be added. It is considered irrelevant if there is no 'atoms' -
         // strings and numbers in it to use for matching.
-        boolean result = valueCount < values.size();
-        if (result) {
-            fromJoin.addAll(deepFromJoin);
-            where.addAll(deepWhere);
+        // boolean result = valueCount < qp.values.size();
+        if (!deepQp.values.isEmpty()) {
+            qp.inc(deepQp);
+            return true;
         }
-        return result;
+        return false;
     }
 
     /**
@@ -202,19 +250,21 @@ public class JpqlMatchBuilder {
      * @return
      */
     private int handleNestedEnteties(HaveNestedEntities<AbstractEntity<Long>> hne, String prefix,
-            String parentPropertyName, Object bean, List<String> fromJoin, List<String> where,
-            List<Object> values, int aliasIndex) {
+            String parentPropertyName, Object bean, QueryParts qp, int aliasIndex) {
 
         List<String> allItemsWhere = new ArrayList<String>();
         for (AbstractEntity<Long> ent : hne.content()) {
-            List<String> iterationWhere = new ArrayList<String>();
+            // List<String> iterationWhere = new ArrayList<String>();
+
+            QueryParts iterationQp = new QueryParts(qp);
+            iterationQp.where = new ArrayList<String>();
+
             // check if there are values to match inside the bean when building the query
-            boolean hasValuesToMatch = handleSubBean(prefix, parentPropertyName, ent, fromJoin, iterationWhere,
-                    values, aliasIndex + 1);
+            boolean hasValuesToMatch = handleSubBean(prefix, parentPropertyName, ent, iterationQp, aliasIndex + 1);
 
             if (hasValuesToMatch) {
                 aliasIndex++;
-                String oneIterationWhere = toString(iterationWhere, " and ");
+                String oneIterationWhere = toString(iterationQp.where, " and ");
                 oneIterationWhere = "(" + oneIterationWhere + ")";
                 allItemsWhere.add(oneIterationWhere);
             }
@@ -223,12 +273,12 @@ public class JpqlMatchBuilder {
         if (allItemsWhere.size() > 1) {
             String resultWhere = toString(allItemsWhere, " or ");
             resultWhere = "(" + resultWhere + ")";
-            where.add(resultWhere);
+            qp.where.add(resultWhere);
             return aliasIndex;
         }
 
         if (!allItemsWhere.isEmpty()) {
-            where.addAll(allItemsWhere);
+            qp.where.addAll(allItemsWhere);
         }
         return aliasIndex;
     }
@@ -317,31 +367,52 @@ public class JpqlMatchBuilder {
         return false;
     }
 
-    public List<String> getSortOrder() {
-        return sortOrder;
-    }
+    // public List<String> getSortOrder() {
+    // return sortOrder;
+    // }
 
-    private String mkOrderBy(Object exampleBean) {
-        validateSortOrderReallyAmongObjectProperties(exampleBean);
-        if (sortOrder.isEmpty()) {
-            return "";
-        }
-        List<String> prefixedSortOrderColumns = new ArrayList<String>();
-        for (String item : sortOrder) {
-            prefixedSortOrderColumns.add("o0." + item);
-        }
-        return "\n order by " + toString(prefixedSortOrderColumns, ", ");
-    }
+    /*
+     * private String mkOrderBy(Object exampleBean) { validateSortOrderReallyAmongObjectProperties(exampleBean); if
+     * (sortOrder.isEmpty()) { return ""; } List<String> prefixedSortOrderColumns = new ArrayList<String>(); for
+     * (String item : sortOrder) { prefixedSortOrderColumns.add("o0." + item); } return "\n order by " +
+     * toString(prefixedSortOrderColumns, ", "); }
+     * 
+     * protected void validateSortOrderReallyAmongObjectProperties(Object exampleBean) { BeanMap bm = new
+     * BeanMap(exampleBean); for (String key : sortOrder) { if (!bm.keySet().contains(key)) { throw new
+     * RuntimeException("Property " + key + " used in order by is not present in the example object (" +
+     * exampleBean.getClass().getName()); } } }
+     */
 
-    protected void validateSortOrderReallyAmongObjectProperties(Object exampleBean) {
-        BeanMap bm = new BeanMap(exampleBean);
-        for (String key : sortOrder) {
-            if (!bm.keySet().contains(key)) {
-                throw new RuntimeException("Property " + key
-                        + " used in order by is not present in the example object ("
-                        + exampleBean.getClass().getName());
-            }
+    private class QueryParts {
+
+        QueryParts() {
         }
+
+        QueryParts(QueryParts qp) {
+            this.selects = qp.selects;
+            this.fromJoin = qp.fromJoin;
+            this.where = qp.where;
+            // this.orderBy = qp.orderBy;
+            this.values = qp.values;
+            this.order = qp.order;
+        }
+
+        public void inc(QueryParts deepQp) {
+            fromJoin.addAll(deepQp.fromJoin);
+            where.addAll(deepQp.where);
+            values.addAll(deepQp.values);
+            selects.addAll(deepQp.selects);
+            order.addAll(deepQp.order);
+            // orderBy.addAll(deepQp.orderBy);
+        }
+
+        public List<String> selects = new ArrayList<String>();
+        public List<String> fromJoin = new ArrayList<String>();
+        public List<String> where = new ArrayList<String>();
+        // public List<String> orderBy = new ArrayList<String>();
+        public List<Object> values = new ArrayList<Object>();
+
+        public List<SortOrderField> order = new ArrayList<HaveQuerySortOrder.SortOrderField>();
     }
 
 }

@@ -29,6 +29,8 @@ import se.vgregion.verticalprio.entity.SektorRaad;
 import se.vgregion.verticalprio.entity.User;
 import se.vgregion.verticalprio.repository.GenerisktHierarkisktKodRepository;
 import se.vgregion.verticalprio.repository.GenerisktKodRepository;
+import se.vgregion.verticalprio.repository.HaveQuerySortOrder;
+import se.vgregion.verticalprio.repository.HaveQuerySortOrder.SortOrderField;
 import se.vgregion.verticalprio.repository.NestedSektorRaad;
 
 @Controller
@@ -81,7 +83,7 @@ public class VerticalPrioController extends ControllerBase {
 
         User example = new User();
         example.setVgrId(userName);
-        example.setPassword(userName);
+        example.setPassword(password);
 
         List<User> users = userRepository.findByExample(example, 1);
         if (users.isEmpty() || "".equals(password)) {
@@ -113,23 +115,18 @@ public class VerticalPrioController extends ControllerBase {
         PrioriteringsobjektFindCondition condition = getOrCreateSessionObj(session, "prioCondition",
                 PrioriteringsobjektFindCondition.class);
 
-        for (Column column : form.getColumns()) {
-            if (sortField.equals(column.getName())) {
-                column.setSorting(!column.isSorting());
-                if (!column.isSorting()) {
-                    condition.getSortOrder().remove(sortField);
-                    continue;
-                }
-                continue;
+        BeanMap bm = new BeanMap(condition);
+
+        if (bm.containsKey(sortField)) {
+            Object value = bm.get(sortField);
+            if (value instanceof HaveQuerySortOrder) {
+
             }
         }
 
-        condition.getSortOrder().clear();
-        for (Column column : form.getColumns()) {
-            if (column.isSorting()) {
-                condition.getSortOrder().add(column.getName());
-            }
-        }
+        SortOrderField sof = new SortOrderField();
+        sof.setName("qualy");
+        condition.listSortOrders().add(sof);
 
         result(session);
         return "main";
