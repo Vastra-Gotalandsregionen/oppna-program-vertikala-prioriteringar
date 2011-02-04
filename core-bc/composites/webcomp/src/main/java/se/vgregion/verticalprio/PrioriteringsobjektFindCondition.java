@@ -1,9 +1,13 @@
 package se.vgregion.verticalprio;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.Transient;
+
+import org.apache.commons.beanutils.BeanMap;
 
 import se.vgregion.verticalprio.controllers.ManyCodesRef;
 import se.vgregion.verticalprio.controllers.PrioriteringsobjektForm;
@@ -11,11 +15,12 @@ import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
 import se.vgregion.verticalprio.entity.RangordningsKod;
 import se.vgregion.verticalprio.entity.TillstaandetsSvaarighetsgradKod;
 import se.vgregion.verticalprio.entity.VaardformsKod;
-import se.vgregion.verticalprio.repository.HaveExplicitTypeToFind;
-import se.vgregion.verticalprio.repository.HaveQuerySortOrder;
-import se.vgregion.verticalprio.repository.NestedRangordningsKod;
-import se.vgregion.verticalprio.repository.NestedTillstaandetsSvaarighetsgradKod;
-import se.vgregion.verticalprio.repository.NestedVaardformsKod;
+import se.vgregion.verticalprio.repository.finding.HaveExplicitTypeToFind;
+import se.vgregion.verticalprio.repository.finding.HaveNestedEntities;
+import se.vgregion.verticalprio.repository.finding.HaveQuerySortOrder;
+import se.vgregion.verticalprio.repository.finding.NestedRangordningsKod;
+import se.vgregion.verticalprio.repository.finding.NestedTillstaandetsSvaarighetsgradKod;
+import se.vgregion.verticalprio.repository.finding.NestedVaardformsKod;
 
 /**
  * To be used as search argument with the <code>PrioRepository</code> implementation and its
@@ -126,4 +131,48 @@ public class PrioriteringsobjektFindCondition extends PrioriteringsobjektForm im
     public List<SortOrderField> listSortOrders() {
         return sortOrder;
     }
+
+    /**
+     * Clears (removes) all objects that implements the {@link HaveQuerySortOrder} interface in the object graph
+     * underneath this object. It also removes all {@link SortOrderField} from itself.
+     */
+    public void clearSorting() {
+        listSortOrders().clear();
+        clearSorting(this);
+    }
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    private void clearSorting(Object o) {
+        if (o == null || o instanceof ManyCodesRef || o.getClass().isPrimitive()
+                || o.getClass().getName().startsWith("java.")) {
+            return;
+        }
+        if (o instanceof Collections) {
+            Collection collection = (Collection) o;
+            for (Object item : new ArrayList(collection)) {
+                if (item instanceof HaveQuerySortOrder) {
+                    collection.remove(item);
+                } else {
+                    clearSorting(item);
+                }
+            }
+        }
+        if (o instanceof HaveNestedEntities) {
+            HaveNestedEntities hne = (HaveNestedEntities) o;
+            clearSorting(hne.content());
+        }
+
+        BeanMap bm = new BeanMap(o);
+        for (Object key : bm.keySet()) {
+            Object value = bm.get(key);
+            if (value instanceof HaveQuerySortOrder) {
+                if (bm.getWriteMethod(key.toString()) != null) {
+                    bm.put(key, null);
+                }
+            } else {
+                clearSorting(value);
+            }
+        }
+    }
+
 }

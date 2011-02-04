@@ -29,7 +29,7 @@ import se.vgregion.verticalprio.entity.TillstaandetsSvaarighetsgradKod;
 import se.vgregion.verticalprio.entity.VaardformsKod;
 import se.vgregion.verticalprio.repository.GenerisktHierarkisktKodRepository;
 import se.vgregion.verticalprio.repository.GenerisktKodRepository;
-import se.vgregion.verticalprio.repository.NestedArrayList;
+import se.vgregion.verticalprio.repository.finding.NestedArrayList;
 
 /**
  * @author Claes Lundahl, vgrid=clalu4

@@ -1,7 +1,9 @@
 package se.vgregion.verticalprio.repository;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Query;
 
@@ -11,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import se.vgregion.dao.domain.patterns.entity.AbstractEntity;
 import se.vgregion.dao.domain.patterns.repository.db.jpa.DefaultJpaRepository;
 import se.vgregion.verticalprio.entity.AbstractKod;
+import se.vgregion.verticalprio.repository.finding.JpqlMatchBuilder;
 
 /**
  * @author Claes Lundahl, vgrid=clalu4
@@ -80,6 +83,15 @@ public class JpaGenerisktFinderRepository<T extends AbstractEntity<Long>> extend
             }
         } else {
             result = (List<T>) rawResult;
+        }
+
+        Set<Long> ids = new HashSet<Long>();
+        for (T item : new ArrayList<T>(result)) {
+            if (ids.contains(item.getId())) {
+                result.remove(item);
+            } else {
+                ids.add(item.getId());
+            }
         }
 
         return result;

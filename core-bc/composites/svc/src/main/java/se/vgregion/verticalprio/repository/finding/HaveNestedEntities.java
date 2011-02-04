@@ -1,4 +1,4 @@
-package se.vgregion.verticalprio.repository;
+package se.vgregion.verticalprio.repository.finding;
 
 import java.util.List;
 

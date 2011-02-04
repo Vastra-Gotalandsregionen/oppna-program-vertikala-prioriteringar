@@ -1,30 +1,30 @@
-package se.vgregion.verticalprio.repository;
+package se.vgregion.verticalprio.repository.finding;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import se.vgregion.verticalprio.entity.VaardformsKod;
+import se.vgregion.verticalprio.entity.RangordningsKod;
 
 /**
  * @author Claes Lundahl, vgrid=clalu4
  * 
  */
-public class NestedVaardformsKod extends VaardformsKod implements HaveNestedEntities<VaardformsKod> {
+public class NestedRangordningsKod extends RangordningsKod implements HaveNestedEntities<RangordningsKod> {
 
-    private List<VaardformsKod> nestedContent = new ArrayList<VaardformsKod>();
+    private List<RangordningsKod> nestedContent = new ArrayList<RangordningsKod>();
 
     /**
      * @inheritDoc
      */
     @Override
-    public List<VaardformsKod> content() {
+    public List<RangordningsKod> content() {
         return nestedContent;
     }
 
     /**
      * @return the nestedContent
      */
-    public List<VaardformsKod> getNestedContent() {
+    public List<RangordningsKod> getNestedContent() {
         return nestedContent;
     }
 
@@ -32,14 +32,14 @@ public class NestedVaardformsKod extends VaardformsKod implements HaveNestedEnti
      * @param nestedContent
      *            the nestedContent to set
      */
-    public void setNestedContent(List<VaardformsKod> nestedContent) {
+    public void setNestedContent(List<RangordningsKod> nestedContent) {
         this.nestedContent = nestedContent;
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        for (VaardformsKod rk : nestedContent) {
+        for (RangordningsKod rk : nestedContent) {
             sb.append(rk.getKod() + ", ");
         }
         if (sb.length() > 0) {

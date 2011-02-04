@@ -1,4 +1,4 @@
-package se.vgregion.verticalprio.repository;
+package se.vgregion.verticalprio.repository.finding;
 
 /**
  * Can be used on a example objects class when using it as argument to the <code>findByExample</code> in
