@@ -20,6 +20,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import se.vgregion.dao.domain.patterns.entity.AbstractEntity;
 
 @Entity
@@ -30,11 +33,13 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
+    @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "vaentetid_besook_veckor_kod_id")
     private VaentetidsKod vaentetidBesookVeckor;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "sektor_raad_id")
     private SektorRaad sektorRaad;
 
@@ -62,6 +67,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
     private List<AatgaerdsKod> aatgaerdskoder = new ArrayList<AatgaerdsKod>();
 
     @ManyToOne
+    @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "vaardforms_kod_id")
     private VaardformsKod vaardform;
 
@@ -74,35 +80,43 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
     @JoinTable(name = "link_prioriteringsobjekt_atc_kod", joinColumns = { @JoinColumn(name = "prio_id") }, inverseJoinColumns = { @JoinColumn(name = "atc_kod_id") })
     private List<AtcKod> atcKoder = new ArrayList<AtcKod>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
+    @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "tillstaandets_svaarighetsgrad_kod_id")
     private TillstaandetsSvaarighetsgradKod tillstaandetsSvaarighetsgradKod;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
+    @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "vaentetid_behandling_veckor_kod_id")
     private VaentetidsKod vaentetidBehandlingVeckor;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
+    @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "rangordnings_kod_id")
     private RangordningsKod rangordningsKod;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
+    @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "vaardnivaa_kod_id")
     private VaardnivaaKod vaardnivaaKod;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
+    @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "haelsonekonomisk_evidens_kod_id")
     private HaelsonekonomiskEvidensKod haelsonekonomiskEvidensKod;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
+    @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "aatgaerds_risk_kod_id")
     private AatgaerdsRiskKod aatgaerdsRiskKod;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
+    @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "patientnytto_evidens_kod_id")
     private PatientnyttoEvidensKod patientnyttoEvidensKod;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
+    @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "patientnytta_effekt_aatgaerds_kod_id")
     private PatientnyttaEffektAatgaerdsKod patientnyttaEffektAatgaerdsKod;
 

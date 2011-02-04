@@ -1,4 +1,4 @@
-package se.vgregion.verticalprio.repository;
+package se.vgregion.verticalprio.repository.finding;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -40,6 +40,6 @@ public class NestedSektorRaad extends SektorRaad implements HaveNestedEntities<S
         // sb.delete(sb.length() - 2, sb.length());
         // }
         // return sb.toString();
-        return "";
+        return sektors.toString();
     }
 }

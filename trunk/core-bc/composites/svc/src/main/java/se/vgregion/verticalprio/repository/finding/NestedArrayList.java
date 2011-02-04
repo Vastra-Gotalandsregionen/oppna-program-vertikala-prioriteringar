@@ -1,9 +1,10 @@
-package se.vgregion.verticalprio.repository;
+package se.vgregion.verticalprio.repository.finding;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import se.vgregion.dao.domain.patterns.entity.AbstractEntity;
+import se.vgregion.verticalprio.repository.GenerisktFinderRepository;
 
 /**
  * If a collection of object (with entities inside) should generate an inclusive condition when used in conjunction

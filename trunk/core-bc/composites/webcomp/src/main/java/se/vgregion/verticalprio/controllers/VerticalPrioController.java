@@ -29,9 +29,14 @@ import se.vgregion.verticalprio.entity.SektorRaad;
 import se.vgregion.verticalprio.entity.User;
 import se.vgregion.verticalprio.repository.GenerisktHierarkisktKodRepository;
 import se.vgregion.verticalprio.repository.GenerisktKodRepository;
-import se.vgregion.verticalprio.repository.HaveQuerySortOrder;
-import se.vgregion.verticalprio.repository.HaveQuerySortOrder.SortOrderField;
-import se.vgregion.verticalprio.repository.NestedSektorRaad;
+import se.vgregion.verticalprio.repository.finding.HaveNestedEntities;
+import se.vgregion.verticalprio.repository.finding.HaveQuerySortOrder;
+import se.vgregion.verticalprio.repository.finding.HaveQuerySortOrder.SortOrderField;
+import se.vgregion.verticalprio.repository.finding.NestedRangordningsKod;
+import se.vgregion.verticalprio.repository.finding.NestedSektorRaad;
+import se.vgregion.verticalprio.repository.finding.SortingDiagnosKod;
+import se.vgregion.verticalprio.repository.finding.SortingRangordningsKod;
+import se.vgregion.verticalprio.repository.finding.SortingSektorRaad;
 
 @Controller
 @SessionAttributes(value = { "confCols", "form" })
@@ -115,21 +120,42 @@ public class VerticalPrioController extends ControllerBase {
         PrioriteringsobjektFindCondition condition = getOrCreateSessionObj(session, "prioCondition",
                 PrioriteringsobjektFindCondition.class);
 
-        BeanMap bm = new BeanMap(condition);
+        condition.clearSorting();
 
-        if (bm.containsKey(sortField)) {
-            Object value = bm.get(sortField);
-            if (value instanceof HaveQuerySortOrder) {
-
+        if ("rangordningsKod".equals(sortField)) {
+            // Sektorsråd // Diagnoskod
+            NestedRangordningsKod nrk = (NestedRangordningsKod) condition.getRangordningsKod();
+            if (nrk == null) {
+                condition.setRangordningsKod(nrk = new NestedRangordningsKod());
             }
-        }
+            SortingRangordningsKod srk = new SortingRangordningsKod();
+            nrk.content().add(srk);
+            srk.listSortOrders().add(mkSortOrderField("kod"));
 
-        SortOrderField sof = new SortOrderField();
-        sof.setName("qualy");
-        condition.listSortOrders().add(sof);
+            NestedSektorRaad nsr = (NestedSektorRaad) condition.getSektorRaad();
+            if (nsr == null) {
+                condition.setSektorRaad(nsr = new NestedSektorRaad());
+            }
+            SortingSektorRaad ssr = new SortingSektorRaad();
+            ssr.listSortOrders().add(mkSortOrderField("kod"));
+            nsr.content().add(ssr);
+
+            SortingDiagnosKod sdk = new SortingDiagnosKod();
+            sdk.listSortOrders().add(mkSortOrderField("kod"));
+            condition.getDiagnoser().add(sdk);
+        }
 
         result(session);
         return "main";
+    }
+
+    int sortOrderCount = 0;
+
+    private SortOrderField mkSortOrderField(String name) {
+        SortOrderField sof = new SortOrderField();
+        sof.setName("kod");
+        sof.setOrder(sortOrderCount++);
+        return sof;
     }
 
     @RequestMapping(value = "/conf-columns")
@@ -307,7 +333,17 @@ public class VerticalPrioController extends ControllerBase {
         MainForm mf = getMainForm(session);
 
         if (mf.getAllSektorsRaad().isSelected()) {
-            condition.setSektorRaad(null);
+            if (condition.getSektorRaad() != null) {
+                // user selected to show all Prios regardless of SR.
+                // Remove all conditions that specifies specific SRs, except those that should indicate order by
+                // directive.
+                HaveNestedEntities<SektorRaad> hne = (HaveNestedEntities<SektorRaad>) condition.getSektorRaad();
+                for (SektorRaad sr : new ArrayList<SektorRaad>(hne.content())) {
+                    if (!(sr instanceof HaveQuerySortOrder)) {
+                        hne.content().remove(sr);
+                    }
+                }
+            }
             mf.getSectors().clear();
             mf.getSectors().addAll(sektorRaadRepository.getTreeRoots());
         } else {

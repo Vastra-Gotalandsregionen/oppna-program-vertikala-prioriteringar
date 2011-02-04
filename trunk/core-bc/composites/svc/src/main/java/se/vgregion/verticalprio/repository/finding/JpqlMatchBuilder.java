@@ -1,4 +1,4 @@
-package se.vgregion.verticalprio.repository;
+package se.vgregion.verticalprio.repository.finding;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -12,7 +12,7 @@ import javax.persistence.Transient;
 import org.apache.commons.beanutils.BeanMap;
 
 import se.vgregion.dao.domain.patterns.entity.AbstractEntity;
-import se.vgregion.verticalprio.repository.HaveQuerySortOrder.SortOrderField;
+import se.vgregion.verticalprio.repository.finding.HaveQuerySortOrder.SortOrderField;
 
 /**
  * Help-logic to produce jpql that selects data from the db. It does "search by example". Uses values in a object
@@ -107,9 +107,13 @@ public class JpqlMatchBuilder {
         sb.append(toString(qp.selects, ", "));
         sb.append(" from ");
         sb.append(toString(qp.fromJoin, " left join "));
+
         if (!qp.where.isEmpty()) {
-            sb.append(" \nwhere ");
-            sb.append(toString(qp.where, " and "));
+            String where = toString(qp.where, " and ");
+            if (!where.trim().equals("")) {
+                sb.append(" \nwhere ");
+                sb.append(where);
+            }
         }
 
         if (!orderBy.isEmpty()) {
@@ -226,7 +230,7 @@ public class JpqlMatchBuilder {
         // Check to see if the new jpql should be added. It is considered irrelevant if there is no 'atoms' -
         // strings and numbers in it to use for matching.
         // boolean result = valueCount < qp.values.size();
-        if (!deepQp.values.isEmpty()) {
+        if (!deepQp.values.isEmpty() || !deepQp.order.isEmpty()) {
             qp.inc(deepQp);
             return true;
         }
@@ -265,8 +269,11 @@ public class JpqlMatchBuilder {
             if (hasValuesToMatch) {
                 aliasIndex++;
                 String oneIterationWhere = toString(iterationQp.where, " and ");
-                oneIterationWhere = "(" + oneIterationWhere + ")";
+                if (oneIterationWhere != null && !"".equals(oneIterationWhere)) {
+                    oneIterationWhere = "(" + oneIterationWhere + ")";
+                }
                 allItemsWhere.add(oneIterationWhere);
+                // qp.order.addAll(iterationQp.order);
             }
         }
 
@@ -285,6 +292,8 @@ public class JpqlMatchBuilder {
 
     private String toString(List<String> list, String junctor) {
         StringBuilder sb = new StringBuilder();
+        while (list.remove("")) {
+        }
         for (String item : list) {
             sb.append(item);
             sb.append(junctor);

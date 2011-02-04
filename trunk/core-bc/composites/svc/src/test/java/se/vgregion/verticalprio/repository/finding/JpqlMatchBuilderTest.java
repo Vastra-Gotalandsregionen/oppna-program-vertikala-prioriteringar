@@ -1,4 +1,4 @@
-package se.vgregion.verticalprio.repository;
+package se.vgregion.verticalprio.repository.finding;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,7 @@ import org.junit.Test;
 import se.vgregion.verticalprio.entity.DiagnosKod;
 import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
 import se.vgregion.verticalprio.entity.SektorRaad;
-import se.vgregion.verticalprio.repository.HaveQuerySortOrder.SortOrderField;
+import se.vgregion.verticalprio.repository.finding.HaveQuerySortOrder.SortOrderField;
 
 /**
  * @author Claes Lundahl, vgrid=clalu4
@@ -56,6 +56,11 @@ public class JpqlMatchBuilderTest {
         nestedSektorRaad.content().add(raad2);
         prio.setSektorRaad(nestedSektorRaad);
 
+        SortingSektorRaad ssr = new SortingSektorRaad();
+        nestedSektorRaad.content().add(ssr);
+        ssr.listSortOrders().add(mkSortOrderField("kod"));
+        prio.setSektorRaad(ssr);
+
         String jpql = builder.mkFindByExampleJpql(prio, values);
         System.out.println(jpql);
         System.out.println(values);
@@ -92,6 +97,16 @@ public class JpqlMatchBuilderTest {
             return Prioriteringsobjekt.class;
         }
 
+    }
+
+    int sortOrderCount;
+
+    private SortOrderField mkSortOrderField(String name) {
+        SortOrderField sof = new SortOrderField();
+        sof.setName("kod");
+
+        sof.setOrder(sortOrderCount++);
+        return sof;
     }
 
 }
