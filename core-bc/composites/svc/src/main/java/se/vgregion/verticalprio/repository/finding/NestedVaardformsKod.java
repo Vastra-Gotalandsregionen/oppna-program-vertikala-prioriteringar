@@ -1,7 +1,7 @@
 package se.vgregion.verticalprio.repository.finding;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import se.vgregion.verticalprio.entity.VaardformsKod;
 
@@ -11,20 +11,20 @@ import se.vgregion.verticalprio.entity.VaardformsKod;
  */
 public class NestedVaardformsKod extends VaardformsKod implements HaveNestedEntities<VaardformsKod> {
 
-    private List<VaardformsKod> nestedContent = new ArrayList<VaardformsKod>();
+    private Set<VaardformsKod> nestedContent = new HashSet<VaardformsKod>();
 
     /**
      * @inheritDoc
      */
     @Override
-    public List<VaardformsKod> content() {
+    public Set<VaardformsKod> content() {
         return nestedContent;
     }
 
     /**
      * @return the nestedContent
      */
-    public List<VaardformsKod> getNestedContent() {
+    public Set<VaardformsKod> getNestedContent() {
         return nestedContent;
     }
 
@@ -32,7 +32,7 @@ public class NestedVaardformsKod extends VaardformsKod implements HaveNestedEnti
      * @param nestedContent
      *            the nestedContent to set
      */
-    public void setNestedContent(List<VaardformsKod> nestedContent) {
+    public void setNestedContent(Set<VaardformsKod> nestedContent) {
         this.nestedContent = nestedContent;
     }
 

@@ -1,8 +1,8 @@
 package se.vgregion.verticalprio.repository.finding;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import se.vgregion.verticalprio.entity.SektorRaad;
 
@@ -13,7 +13,7 @@ import se.vgregion.verticalprio.entity.SektorRaad;
 @SuppressWarnings("serial")
 public class NestedSektorRaad extends SektorRaad implements HaveNestedEntities<SektorRaad> {
 
-    private List<SektorRaad> sektors = new ArrayList<SektorRaad>();
+    private Set<SektorRaad> sektors = new HashSet<SektorRaad>();
 
     public NestedSektorRaad() {
     }
@@ -26,7 +26,7 @@ public class NestedSektorRaad extends SektorRaad implements HaveNestedEntities<S
      * @inheritDoc
      */
     @Override
-    public List<SektorRaad> content() {
+    public Set<SektorRaad> content() {
         return sektors;
     }
 

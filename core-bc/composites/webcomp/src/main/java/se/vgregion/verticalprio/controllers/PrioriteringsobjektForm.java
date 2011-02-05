@@ -89,12 +89,12 @@ public class PrioriteringsobjektForm extends Prioriteringsobjekt {
     @SuppressWarnings("serial")
     ManyCodesRef<AatgaerdsKod> aatgaerdRef = new ManyCodesRef<AatgaerdsKod>() {
         @Override
-        public java.util.List<AatgaerdsKod> getCodes() {
+        public Set<AatgaerdsKod> getCodes() {
             return getAatgaerdskoder();
         }
 
         @Override
-        public void setCodes(java.util.List<AatgaerdsKod> codes) {
+        public void setCodes(Set<AatgaerdsKod> codes) {
             setAatgaerdskoder(codes);
         }
     };
@@ -103,12 +103,12 @@ public class PrioriteringsobjektForm extends Prioriteringsobjekt {
     @SuppressWarnings("serial")
     private ManyCodesRef<DiagnosKod> diagnosRef = new ManyCodesRef<DiagnosKod>() {
         @Override
-        public List<DiagnosKod> getCodes() {
+        public Set<DiagnosKod> getCodes() {
             return getDiagnoser();
         }
 
         @Override
-        public void setCodes(List<DiagnosKod> codes) {
+        public void setCodes(Set<DiagnosKod> codes) {
             setDiagnoser(codes);
         }
     };
@@ -131,12 +131,12 @@ public class PrioriteringsobjektForm extends Prioriteringsobjekt {
     @SuppressWarnings("serial")
     private ManyCodesRef<AtcKod> atcKoderRef = new ManyCodesRef<AtcKod>() {
         @Override
-        public List<AtcKod> getCodes() {
+        public Set<AtcKod> getCodes() {
             return getAtcKoder();
         }
 
         @Override
-        public void setCodes(List<AtcKod> codes) {
+        public void setCodes(Set<AtcKod> codes) {
             setAtcKoder(codes);
         }
     };

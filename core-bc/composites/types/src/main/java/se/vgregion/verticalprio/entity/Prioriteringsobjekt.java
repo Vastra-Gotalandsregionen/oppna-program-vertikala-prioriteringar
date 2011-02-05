@@ -5,7 +5,9 @@ package se.vgregion.verticalprio.entity;
  */
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -60,11 +62,11 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
 
     @ManyToMany()
     @JoinTable(name = "link_prioriteringsobjekt_diagnos_kod", joinColumns = { @JoinColumn(name = "prio_id") }, inverseJoinColumns = { @JoinColumn(name = "diagnos_kod_id") })
-    private List<DiagnosKod> diagnoser = new ArrayList<DiagnosKod>();
+    private Set<DiagnosKod> diagnoser = new HashSet<DiagnosKod>();
 
     @ManyToMany()
     @JoinTable(name = "link_prioriteringsobjekt_aatgaerds_kod", joinColumns = { @JoinColumn(name = "prio_id") }, inverseJoinColumns = { @JoinColumn(name = "aatgaerds_kod_id") })
-    private List<AatgaerdsKod> aatgaerdskoder = new ArrayList<AatgaerdsKod>();
+    private Set<AatgaerdsKod> aatgaerdskoder = new HashSet<AatgaerdsKod>();
 
     @ManyToOne
     @Fetch(FetchMode.JOIN)
@@ -78,7 +80,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
 
     @ManyToMany()
     @JoinTable(name = "link_prioriteringsobjekt_atc_kod", joinColumns = { @JoinColumn(name = "prio_id") }, inverseJoinColumns = { @JoinColumn(name = "atc_kod_id") })
-    private List<AtcKod> atcKoder = new ArrayList<AtcKod>();
+    private Set<AtcKod> atcKoder = new HashSet<AtcKod>();
 
     @ManyToOne(fetch = FetchType.EAGER)
     @Fetch(FetchMode.JOIN)
@@ -151,15 +153,15 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
         return sektorRaad;
     }
 
-    public List<DiagnosKod> getDiagnoser() {
+    public Set<DiagnosKod> getDiagnoser() {
         return diagnoser;
     }
 
-    public void setDiagnoser(List<DiagnosKod> diagnoser) {
+    public void setDiagnoser(Set<DiagnosKod> diagnoser) {
         this.diagnoser = diagnoser;
     }
 
-    public List<String> getDiagnosTexts() {
+    public Set<String> getDiagnosTexts() {
         return mkBeskrivningsText(getDiagnoser());
     }
 
@@ -171,8 +173,8 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
         return sb;
     }
 
-    private List<String> mkBeskrivningsText(List<? extends AbstractKod> koder) {
-        List<String> sb = new ArrayList<String>();
+    private Set<String> mkBeskrivningsText(Set<? extends AbstractKod> koder) {
+        Set<String> sb = new HashSet<String>();
         if (koder == null || koder.isEmpty()) {
             return sb;
         }
@@ -182,11 +184,11 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
         return sb;
     }
 
-    public List<AatgaerdsKod> getAatgaerdskoder() {
+    public Set<AatgaerdsKod> getAatgaerdskoder() {
         return aatgaerdskoder;
     }
 
-    public void setAatgaerdskoder(List<AatgaerdsKod> aatgaerdskoder) {
+    public void setAatgaerdskoder(Set<AatgaerdsKod> aatgaerdskoder) {
         this.aatgaerdskoder = aatgaerdskoder;
     }
 
@@ -262,15 +264,15 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
         return kommentar;
     }
 
-    public void setAtcKoder(List<AtcKod> atcKoder) {
+    public void setAtcKoder(Set<AtcKod> atcKoder) {
         this.atcKoder = atcKoder;
     }
 
-    public List<AtcKod> getAtcKoder() {
+    public Set<AtcKod> getAtcKoder() {
         return atcKoder;
     }
 
-    public List<String> getAtcText() {
+    public Set<String> getAtcText() {
         return mkBeskrivningsText(getAtcKoder());
     }
 

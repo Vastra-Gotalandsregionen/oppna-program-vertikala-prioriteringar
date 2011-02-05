@@ -1,6 +1,6 @@
 package se.vgregion.verticalprio.repository.finding;
 
-import java.util.List;
+import java.util.Set;
 
 import se.vgregion.dao.domain.patterns.entity.AbstractEntity;
 
@@ -11,6 +11,6 @@ import se.vgregion.dao.domain.patterns.entity.AbstractEntity;
  */
 public interface HaveNestedEntities<T extends AbstractEntity<Long>> {
 
-    List<T> content();
+    Set<T> content();
 
 }

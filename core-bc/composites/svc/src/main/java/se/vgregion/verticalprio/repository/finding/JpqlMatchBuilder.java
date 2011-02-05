@@ -7,6 +7,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
 import org.apache.commons.beanutils.BeanMap;
@@ -107,6 +109,8 @@ public class JpqlMatchBuilder {
         sb.append(toString(qp.selects, ", "));
         sb.append(" from ");
         sb.append(toString(qp.fromJoin, " left join "));
+        sb.append(" ");
+        sb.append(mkFetchJoinForMasterEntity(bean));
 
         if (!qp.where.isEmpty()) {
             String where = toString(qp.where, " and ");
@@ -117,7 +121,7 @@ public class JpqlMatchBuilder {
         }
 
         if (!orderBy.isEmpty()) {
-            sb.append(" order by ");
+            sb.append(" \norder by ");
             sb.append(toString(orderBy, ", "));
         }
 
@@ -193,7 +197,24 @@ public class JpqlMatchBuilder {
                 }
             }
         }
+    }
 
+    private String mkFetchJoinForMasterEntity(Object bean) {
+        StringBuilder sb = new StringBuilder();
+        BeanMap bm = new BeanMap(bean);
+
+        for (Object key : bm.keySet()) {
+            String propertyName = (String) key;
+            Field field = getField(bean.getClass(), propertyName);
+            if (field != null) {
+                if (field.isAnnotationPresent(ManyToOne.class) || field.isAnnotationPresent(ManyToMany.class)) {
+                    sb.append(" left join fetch o0.");
+                    sb.append(propertyName);
+                }
+            }
+        }
+
+        return sb.toString().trim();
     }
 
     /**

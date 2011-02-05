@@ -1,7 +1,7 @@
 package se.vgregion.verticalprio.repository.finding;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import se.vgregion.verticalprio.entity.TillstaandetsSvaarighetsgradKod;
 
@@ -12,20 +12,20 @@ import se.vgregion.verticalprio.entity.TillstaandetsSvaarighetsgradKod;
 public class NestedTillstaandetsSvaarighetsgradKod extends TillstaandetsSvaarighetsgradKod implements
         HaveNestedEntities<TillstaandetsSvaarighetsgradKod> {
 
-    private List<TillstaandetsSvaarighetsgradKod> nestedContent = new ArrayList<TillstaandetsSvaarighetsgradKod>();
+    private Set<TillstaandetsSvaarighetsgradKod> nestedContent = new HashSet<TillstaandetsSvaarighetsgradKod>();
 
     /**
      * @inheritDoc
      */
     @Override
-    public List<TillstaandetsSvaarighetsgradKod> content() {
+    public Set<TillstaandetsSvaarighetsgradKod> content() {
         return nestedContent;
     }
 
     /**
      * @return the nestedContent
      */
-    public List<TillstaandetsSvaarighetsgradKod> getNestedContent() {
+    public Set<TillstaandetsSvaarighetsgradKod> getNestedContent() {
         return nestedContent;
     }
 
@@ -33,7 +33,7 @@ public class NestedTillstaandetsSvaarighetsgradKod extends TillstaandetsSvaarigh
      * @param nestedContent
      *            the nestedContent to set
      */
-    public void setNestedContent(List<TillstaandetsSvaarighetsgradKod> nestedContent) {
+    public void setNestedContent(Set<TillstaandetsSvaarighetsgradKod> nestedContent) {
         this.nestedContent = nestedContent;
     }
 

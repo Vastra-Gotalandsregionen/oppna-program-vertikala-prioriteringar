@@ -3,7 +3,6 @@ package se.vgregion.verticalprio.controllers;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import se.vgregion.verticalprio.ConfColumnsForm;
 import se.vgregion.verticalprio.MainForm;
 import se.vgregion.verticalprio.PrioriteringsobjektFindCondition;
-import se.vgregion.verticalprio.entity.AbstractKod;
 import se.vgregion.verticalprio.entity.Column;
 import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
 import se.vgregion.verticalprio.entity.SektorRaad;
@@ -48,9 +46,9 @@ public class VerticalPrioController extends ControllerBase {
     @Resource(name = "userRepository")
     GenerisktKodRepository<User> userRepository;
 
-    private void initMainForm(MainForm form) {
+    private void initMainForm(MainForm form, HttpSession session) {
         if (form.getSectors().isEmpty()) {
-            form.getSectors().addAll(getSectors());
+            form.getSectors().addAll(getSectors(session));
         }
 
         if (form.getColumns().isEmpty()) {
@@ -60,7 +58,7 @@ public class VerticalPrioController extends ControllerBase {
 
     private MainForm getMainForm(HttpSession session) {
         MainForm form = getOrCreateSessionObj(session, "form", MainForm.class);
-        initMainForm(form);
+        initMainForm(form, session);
         return form;
     }
 
@@ -256,6 +254,11 @@ public class VerticalPrioController extends ControllerBase {
         if (id.longValue() == -1l) {
             boolean b = form.getAllSektorsRaad().isSelected();
             form.getAllSektorsRaad().setSelected(!b);
+            if (b) {
+                for (SektorRaad sr : form.getSectors()) {
+                    sr.setSelectedDeeply(false);
+                }
+            }
         } else {
             form.getAllSektorsRaad().setSelected(false);
             SektorRaad sector = getSectorById(id, form.getSectors());
@@ -320,10 +323,20 @@ public class VerticalPrioController extends ControllerBase {
         return result;
     }
 
+    @SuppressWarnings("unchecked")
     @Transactional
-    private List<SektorRaad> getSectors() {
-        Collection<SektorRaad> result = sektorRaadRepository.getTreeRoots();
-        return new ArrayList<SektorRaad>(result);
+    private List<SektorRaad> getSectors(HttpSession session) {
+        final String sectorsKey = "sectors";
+        Collection<SektorRaad> sectorCache = (Collection<SektorRaad>) session.getAttribute(sectorsKey);
+        if (sectorCache == null) {
+            List<SektorRaad> raads = sektorRaadRepository.getTreeRoots();
+            sectorCache = new ArrayList<SektorRaad>();
+            session.setAttribute(sectorsKey, sectorCache);
+            for (SektorRaad sr : raads) {
+                sectorCache.add(sr.clone());
+            }
+        }
+        return new ArrayList<SektorRaad>(sectorCache);
     }
 
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -344,8 +357,8 @@ public class VerticalPrioController extends ControllerBase {
                     }
                 }
             }
-            mf.getSectors().clear();
-            mf.getSectors().addAll(sektorRaadRepository.getTreeRoots());
+            // mf.getSectors().clear();
+            // mf.getSectors().addAll(sektorRaadRepository.getTreeRoots());
         } else {
             List<SektorRaad> raad = getMarkedLeafs(mf.getSectors());
             raad = flatten(raad);
@@ -360,37 +373,6 @@ public class VerticalPrioController extends ControllerBase {
 
         List<Prioriteringsobjekt> prios = new ArrayList<Prioriteringsobjekt>(prioRepository.findByExample(
                 condition, null));
-
-        for (Prioriteringsobjekt prio : prios) {
-            BeanMap bm = new BeanMap(prio);
-            @SuppressWarnings("unchecked")
-            Map<String, Object> values = new HashMap<String, Object>(bm);
-            // Completely insane... but has to be done because otherwise
-            // a lack of transaction will occur when rendering the referred child objects.
-            // TODO: don't use lazy loading on collection or objects inside the Prioriteringsobjekt class.
-            for (String key : values.keySet()) {
-                Object value = values.get(key);
-                if (value instanceof Collection) {
-                    Collection<?> collection = (Collection<?>) value;
-                    if (!collection.isEmpty()) {
-                        Object item = collection.iterator().next();
-                        if (item instanceof AbstractKod) {
-                            Comparator<AbstractKod> comp = new Comparator<AbstractKod>() {
-                                @Override
-                                public int compare(AbstractKod o1, AbstractKod o2) {
-                                    return o1.getKod().compareTo(o2.getKod());
-                                }
-                            };
-                            List<AbstractKod> kods = (List<AbstractKod>) collection;
-                            Collections.sort(kods, comp);
-                        } else {
-                            new ArrayList<Object>(collection);
-                        }
-                    }
-
-                }
-            }
-        }
 
         session.setAttribute("rows", prios);
 

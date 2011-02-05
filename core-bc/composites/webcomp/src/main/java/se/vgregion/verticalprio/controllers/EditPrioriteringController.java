@@ -3,6 +3,7 @@ package se.vgregion.verticalprio.controllers;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -221,7 +222,7 @@ public class EditPrioriteringController extends ControllerBase {
 
     @Transactional
     private <T extends AbstractKod> String findCodesAction(ModelMap model, PrioriteringsobjektForm pf,
-            Class<T> clazz, ManyCodesRef<T> mcr, GenerisktKodRepository<T> repo, List<T> target,
+            Class<T> clazz, ManyCodesRef<T> mcr, GenerisktKodRepository<T> repo, Set<T> target,
             HttpServletRequest request) throws InstantiationException, IllegalAccessException {
         model.addAttribute("editDir", new EditDirective(true, null));
         if (pf == null) {
@@ -247,7 +248,7 @@ public class EditPrioriteringController extends ControllerBase {
         initManyToOneCode(pf.getAtcKoderRef(), pf.getAtcKoder(), atcKodRepository);
     }
 
-    private <T extends AbstractKod> void initManyToOneCode(ManyCodesRef<T> dr, List<T> target,
+    private <T extends AbstractKod> void initManyToOneCode(ManyCodesRef<T> dr, Set<T> target,
             GenerisktKodRepository<T> repo) {
         for (Long id : new HashSet<Long>(dr.getSelectedCodesId())) {
             T code = repo.find(id);
