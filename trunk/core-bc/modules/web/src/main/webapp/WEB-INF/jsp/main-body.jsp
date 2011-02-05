@@ -95,7 +95,10 @@
               <span title='<tags:cell value="${su:toString(prioCondition[column.name])}"/>'>(*)</span>
             </c:if>
             <c:if test="${column.sortable}">
-              <a href="main?sortField=${column.name}">S</a>
+              <c:choose>
+                <c:when test="${column.sorting}">(S)</c:when>
+                <c:otherwise><a href="main?sortField=${column.name}">S</a></c:otherwise>
+              </c:choose>
             </c:if>
           </td>
         </c:if>

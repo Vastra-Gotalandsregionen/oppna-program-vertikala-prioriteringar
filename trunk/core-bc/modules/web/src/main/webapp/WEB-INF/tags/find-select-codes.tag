@@ -18,11 +18,13 @@
     
   <div class="selected yui3-u-1-2">
   <c:forEach items="${codeRef.codes}" var="item">
-    <label for="">
-      <input type="checkbox" name="${codeRefName}.selectedCodesId" value="${item.id}" checked="checked" class="standardInputCheckBox"/>
-      ${item.kod} ${item.beskrivning} 
-    </label>
-    <br/>
+    <c:if test="${not empty item.kod and not empty item.beskrivning}">
+      <label for="">
+        <input type="checkbox" name="${codeRefName}.selectedCodesId" value="${item.id}" checked="checked" class="standardInputCheckBox"/>
+        ${item.kod} ${item.beskrivning} 
+      </label>
+      <br/>
+    </c:if>
   </c:forEach>
   </div>
 

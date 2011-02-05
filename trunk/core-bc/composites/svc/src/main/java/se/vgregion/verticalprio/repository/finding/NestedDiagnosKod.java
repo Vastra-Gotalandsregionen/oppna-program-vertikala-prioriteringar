@@ -30,4 +30,12 @@ public class NestedDiagnosKod extends DiagnosKod implements HaveNestedEntities<D
         return diagnoses;
     }
 
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public String toString() {
+        return NestedUtil.toString(this);
+    }
+
 }

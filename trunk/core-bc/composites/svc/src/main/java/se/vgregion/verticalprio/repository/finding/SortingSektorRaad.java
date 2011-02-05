@@ -3,7 +3,6 @@ package se.vgregion.verticalprio.repository.finding;
 import java.util.ArrayList;
 import java.util.List;
 
-import se.vgregion.verticalprio.entity.RangordningsKod;
 import se.vgregion.verticalprio.entity.SektorRaad;
 
 /**
@@ -20,5 +19,13 @@ public class SortingSektorRaad extends SektorRaad implements HaveQuerySortOrder 
     @Override
     public List<SortOrderField> listSortOrders() {
         return fields;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public String toString() {
+        return SortingUtil.toString(this);
     }
 }

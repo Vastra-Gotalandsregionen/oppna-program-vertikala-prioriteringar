@@ -360,8 +360,8 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
         result.add(column);
         column.setId(i);
         column.setHideAble(false);
-        column.setSortField("");
-        column.setSortable(true);
+        // column.setSortField("");
+        // column.setSortable(true);
         // Åtgärdstext saknas!
 
         column = new se.vgregion.verticalprio.entity.Column();
@@ -390,6 +390,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
                 + "* 7 Sannolik ökad risk för försämrad hälsoupplevelse eller icke optimal livskvalitet. \n"
                 + "* 8 Möjligen ökad risk sjuklighet, försämring av funktionsnivå eller livskvalitet. \n"
                 + "* 9 Risk för sänkt livskvalitet enligt patientens uppfattning och vetenskap och beprövad kunskap inte motsäger detta. \n");
+        column.setSortable(true);
 
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("rangordningsKod");
@@ -403,6 +404,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
                 + "4 Rangordning 4. \n" + "5 Rangordning 5. \n" + "6 Rangordning 6. \n" + "7 Rangordning 7. \n"
                 + "8 Rangordning 8. \n" + "9 Rangordning 9. \n" + "10 Rangordning 10. \n" + "11 FoU. \n"
                 + "12 Icke göra. \n");
+        column.setSortable(true);
 
         // Lösa fält
 
