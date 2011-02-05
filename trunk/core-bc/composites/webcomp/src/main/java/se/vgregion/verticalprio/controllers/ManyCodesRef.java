@@ -2,7 +2,9 @@ package se.vgregion.verticalprio.controllers;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import se.vgregion.verticalprio.entity.AbstractKod;
 
@@ -13,12 +15,12 @@ public abstract class ManyCodesRef<T extends AbstractKod> implements Serializabl
     private List<T> findings = new ArrayList<T>();
     private List<Long> selectedCodesId = new ArrayList<Long>();
 
-    private List<T> codes = new ArrayList<T>();
+    private Set<T> codes = new HashSet<T>();
 
     /**
      * @return the codes
      */
-    public List<T> getCodes() {
+    public Set<T> getCodes() {
         return codes;
     }
 
@@ -26,7 +28,7 @@ public abstract class ManyCodesRef<T extends AbstractKod> implements Serializabl
      * @param codes
      *            the codes to set
      */
-    public void setCodes(List<T> codes) {
+    public void setCodes(Set<T> codes) {
         this.codes = codes;
     }
 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Transient;
 
@@ -57,12 +58,12 @@ public class PrioriteringsobjektFindCondition extends PrioriteringsobjektForm im
     ManyCodesRef<RangordningsKod> rangordningsRef = new ManyCodesRef<RangordningsKod>() {
 
         @Override
-        public List<RangordningsKod> getCodes() {
+        public Set<RangordningsKod> getCodes() {
             return rangordningsHolder.content();
         }
 
         @Override
-        public void setCodes(List<RangordningsKod> codes) {
+        public void setCodes(Set<RangordningsKod> codes) {
             rangordningsHolder.setNestedContent(codes);
         }
 
@@ -75,12 +76,12 @@ public class PrioriteringsobjektFindCondition extends PrioriteringsobjektForm im
     final ManyCodesRef<TillstaandetsSvaarighetsgradKod> tillstaandetsSvaarighetsgradRef = new ManyCodesRef<TillstaandetsSvaarighetsgradKod>() {
 
         @Override
-        public List<TillstaandetsSvaarighetsgradKod> getCodes() {
+        public Set<TillstaandetsSvaarighetsgradKod> getCodes() {
             return svaarighetsgradHolder.content();
         }
 
         @Override
-        public void setCodes(List<TillstaandetsSvaarighetsgradKod> codes) {
+        public void setCodes(Set<TillstaandetsSvaarighetsgradKod> codes) {
             svaarighetsgradHolder.setNestedContent(codes);
         }
 
@@ -91,12 +92,12 @@ public class PrioriteringsobjektFindCondition extends PrioriteringsobjektForm im
     private ManyCodesRef<VaardformsKod> vaardformRef = new ManyCodesRef<VaardformsKod>() {
 
         @Override
-        public List<VaardformsKod> getCodes() {
+        public Set<VaardformsKod> getCodes() {
             return vaardformHolder.content();
         }
 
         @Override
-        public void setCodes(List<VaardformsKod> codes) {
+        public void setCodes(Set<VaardformsKod> codes) {
             vaardformHolder.setNestedContent(codes);
         }
 

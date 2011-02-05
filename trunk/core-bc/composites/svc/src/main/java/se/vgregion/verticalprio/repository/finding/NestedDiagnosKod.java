@@ -1,8 +1,8 @@
 package se.vgregion.verticalprio.repository.finding;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import se.vgregion.verticalprio.entity.DiagnosKod;
 
@@ -13,7 +13,7 @@ import se.vgregion.verticalprio.entity.DiagnosKod;
 @SuppressWarnings("serial")
 public class NestedDiagnosKod extends DiagnosKod implements HaveNestedEntities<DiagnosKod> {
 
-    private List<DiagnosKod> diagnoses = new ArrayList<DiagnosKod>();
+    private Set<DiagnosKod> diagnoses = new HashSet<DiagnosKod>();
 
     public NestedDiagnosKod() {
     }
@@ -26,7 +26,7 @@ public class NestedDiagnosKod extends DiagnosKod implements HaveNestedEntities<D
      * @inheritDoc
      */
     @Override
-    public List<DiagnosKod> content() {
+    public Set<DiagnosKod> content() {
         return diagnoses;
     }
 

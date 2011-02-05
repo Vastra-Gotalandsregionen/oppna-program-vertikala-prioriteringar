@@ -56,11 +56,6 @@ public class JpqlMatchBuilderTest {
         nestedSektorRaad.content().add(raad2);
         prio.setSektorRaad(nestedSektorRaad);
 
-        SortingSektorRaad ssr = new SortingSektorRaad();
-        nestedSektorRaad.content().add(ssr);
-        ssr.listSortOrders().add(mkSortOrderField("kod"));
-        prio.setSektorRaad(ssr);
-
         String jpql = builder.mkFindByExampleJpql(prio, values);
         System.out.println(jpql);
         System.out.println(values);
@@ -77,6 +72,7 @@ public class JpqlMatchBuilderTest {
         Assert.assertTrue(jpql.contains("kommentar = ?"));
     }
 
+    @SuppressWarnings("serial")
     class PriorCriteria extends Prioriteringsobjekt implements HaveQuerySortOrder, HaveExplicitTypeToFind {
 
         final List<SortOrderField> sortOrderFields = new ArrayList<HaveQuerySortOrder.SortOrderField>();

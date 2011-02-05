@@ -2,8 +2,9 @@ package se.vgregion.verticalprio;
 
 import java.io.File;
 import java.io.FileReader;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 
@@ -171,10 +172,10 @@ public class ImportTest {
         return null;
     }
 
-    private <T extends AbstractKod> List<T> getItemsByKoder(List<T> codes, String kod) {
+    private <T extends AbstractKod> Set<T> getItemsByKoder(List<T> codes, String kod) {
         kod = kod.replace(".", "");
         String[] frags = kod.split(Pattern.quote(","));
-        List<T> result = new ArrayList<T>();
+        Set<T> result = new HashSet<T>();
 
         for (String k : frags) {
             T item = getByKod(codes, k);

@@ -1,7 +1,7 @@
 package se.vgregion.verticalprio.repository.finding;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import se.vgregion.verticalprio.entity.RangordningsKod;
 
@@ -11,20 +11,20 @@ import se.vgregion.verticalprio.entity.RangordningsKod;
  */
 public class NestedRangordningsKod extends RangordningsKod implements HaveNestedEntities<RangordningsKod> {
 
-    private List<RangordningsKod> nestedContent = new ArrayList<RangordningsKod>();
+    private Set<RangordningsKod> nestedContent = new HashSet<RangordningsKod>();
 
     /**
      * @inheritDoc
      */
     @Override
-    public List<RangordningsKod> content() {
+    public Set<RangordningsKod> content() {
         return nestedContent;
     }
 
     /**
      * @return the nestedContent
      */
-    public List<RangordningsKod> getNestedContent() {
+    public Set<RangordningsKod> getNestedContent() {
         return nestedContent;
     }
 
@@ -32,7 +32,7 @@ public class NestedRangordningsKod extends RangordningsKod implements HaveNested
      * @param nestedContent
      *            the nestedContent to set
      */
-    public void setNestedContent(List<RangordningsKod> nestedContent) {
+    public void setNestedContent(Set<RangordningsKod> nestedContent) {
         this.nestedContent = nestedContent;
     }
 

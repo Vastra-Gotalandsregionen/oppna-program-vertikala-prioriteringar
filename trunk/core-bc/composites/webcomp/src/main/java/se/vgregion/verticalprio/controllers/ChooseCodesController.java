@@ -29,7 +29,7 @@ import se.vgregion.verticalprio.entity.TillstaandetsSvaarighetsgradKod;
 import se.vgregion.verticalprio.entity.VaardformsKod;
 import se.vgregion.verticalprio.repository.GenerisktHierarkisktKodRepository;
 import se.vgregion.verticalprio.repository.GenerisktKodRepository;
-import se.vgregion.verticalprio.repository.finding.NestedArrayList;
+import se.vgregion.verticalprio.repository.finding.NestedHashSet;
 
 /**
  * @author Claes Lundahl, vgrid=clalu4
@@ -101,7 +101,7 @@ public class ChooseCodesController extends ControllerBase {
         ref.getSelectedCodesId().clear();
 
         if (selected != null && selected.length > 0) {
-            ref.setCodes(new NestedArrayList<AbstractKod>());
+            ref.setCodes(new NestedHashSet<AbstractKod>());
 
             for (String id : new HashSet<String>(Arrays.asList(selected))) {
                 Long lid = Long.parseLong(id);
