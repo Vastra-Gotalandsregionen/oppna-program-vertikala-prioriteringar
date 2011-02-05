@@ -313,7 +313,7 @@ public class JpqlMatchBuilder {
 
     private String toString(List<String> list, String junctor) {
         StringBuilder sb = new StringBuilder();
-        while (list.remove("")) {
+        while (list.remove("") || list.remove("()")) {
         }
         for (String item : list) {
             sb.append(item);

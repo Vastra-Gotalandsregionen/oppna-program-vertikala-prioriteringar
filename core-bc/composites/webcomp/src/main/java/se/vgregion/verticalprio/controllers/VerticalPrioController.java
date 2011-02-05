@@ -29,12 +29,7 @@ import se.vgregion.verticalprio.repository.GenerisktHierarkisktKodRepository;
 import se.vgregion.verticalprio.repository.GenerisktKodRepository;
 import se.vgregion.verticalprio.repository.finding.HaveNestedEntities;
 import se.vgregion.verticalprio.repository.finding.HaveQuerySortOrder;
-import se.vgregion.verticalprio.repository.finding.HaveQuerySortOrder.SortOrderField;
-import se.vgregion.verticalprio.repository.finding.NestedRangordningsKod;
 import se.vgregion.verticalprio.repository.finding.NestedSektorRaad;
-import se.vgregion.verticalprio.repository.finding.SortingDiagnosKod;
-import se.vgregion.verticalprio.repository.finding.SortingRangordningsKod;
-import se.vgregion.verticalprio.repository.finding.SortingSektorRaad;
 
 @Controller
 @SessionAttributes(value = { "confCols", "form" })
@@ -120,40 +115,24 @@ public class VerticalPrioController extends ControllerBase {
 
         condition.clearSorting();
 
+        markColumnAsSorting(sortField, form);
+
         if ("rangordningsKod".equals(sortField)) {
-            // Sektorsråd // Diagnoskod
-            NestedRangordningsKod nrk = (NestedRangordningsKod) condition.getRangordningsKod();
-            if (nrk == null) {
-                condition.setRangordningsKod(nrk = new NestedRangordningsKod());
-            }
-            SortingRangordningsKod srk = new SortingRangordningsKod();
-            nrk.content().add(srk);
-            srk.listSortOrders().add(mkSortOrderField("kod"));
-
-            NestedSektorRaad nsr = (NestedSektorRaad) condition.getSektorRaad();
-            if (nsr == null) {
-                condition.setSektorRaad(nsr = new NestedSektorRaad());
-            }
-            SortingSektorRaad ssr = new SortingSektorRaad();
-            ssr.listSortOrders().add(mkSortOrderField("kod"));
-            nsr.content().add(ssr);
-
-            SortingDiagnosKod sdk = new SortingDiagnosKod();
-            sdk.listSortOrders().add(mkSortOrderField("kod"));
-            condition.getDiagnoser().add(sdk);
+            condition.sortByRangordningsKod();
+        } else if ("tillstaandetsSvaarighetsgradKod".equals(sortField)) {
+            condition.sortByTillstaandetsSvaarighetsgradKod();
+        } else if ("diagnosTexts".equals(sortField)) {
+            condition.sortByDiagnoser();
         }
 
         result(session);
         return "main";
     }
 
-    int sortOrderCount = 0;
-
-    private SortOrderField mkSortOrderField(String name) {
-        SortOrderField sof = new SortOrderField();
-        sof.setName("kod");
-        sof.setOrder(sortOrderCount++);
-        return sof;
+    private void markColumnAsSorting(String fieldName, MainForm mf) {
+        for (Column column : mf.getColumns()) {
+            column.setSorting(fieldName.equals(column.getName()));
+        }
     }
 
     @RequestMapping(value = "/conf-columns")
@@ -254,11 +233,11 @@ public class VerticalPrioController extends ControllerBase {
         if (id.longValue() == -1l) {
             boolean b = form.getAllSektorsRaad().isSelected();
             form.getAllSektorsRaad().setSelected(!b);
-            if (b) {
-                for (SektorRaad sr : form.getSectors()) {
-                    sr.setSelectedDeeply(false);
-                }
+
+            for (SektorRaad sr : form.getSectors()) {
+                sr.setSelectedDeeply(false);
             }
+
         } else {
             form.getAllSektorsRaad().setSelected(false);
             SektorRaad sector = getSectorById(id, form.getSectors());
@@ -350,7 +329,7 @@ public class VerticalPrioController extends ControllerBase {
                 // user selected to show all Prios regardless of SR.
                 // Remove all conditions that specifies specific SRs, except those that should indicate order by
                 // directive.
-                HaveNestedEntities<SektorRaad> hne = (HaveNestedEntities<SektorRaad>) condition.getSektorRaad();
+                HaveNestedEntities<SektorRaad> hne = condition.getSektorRaad();
                 for (SektorRaad sr : new ArrayList<SektorRaad>(hne.content())) {
                     if (!(sr instanceof HaveQuerySortOrder)) {
                         hne.content().remove(sr);
@@ -362,8 +341,11 @@ public class VerticalPrioController extends ControllerBase {
         } else {
             List<SektorRaad> raad = getMarkedLeafs(mf.getSectors());
             raad = flatten(raad);
-            NestedSektorRaad sektorNest = new NestedSektorRaad(raad);
-            condition.setSektorRaad(sektorNest);
+
+            NestedSektorRaad sektorNest = condition.getSektorRaad();
+            sektorNest.content().clear();
+            sektorNest.content().addAll(raad);
+
             if (sektorNest.content().isEmpty()) {
                 List<Prioriteringsobjekt> zeroResult = new ArrayList<Prioriteringsobjekt>();
                 session.setAttribute("rows", zeroResult);

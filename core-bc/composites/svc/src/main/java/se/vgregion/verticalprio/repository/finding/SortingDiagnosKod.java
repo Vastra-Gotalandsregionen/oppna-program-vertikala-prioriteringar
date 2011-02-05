@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import se.vgregion.verticalprio.entity.DiagnosKod;
-import se.vgregion.verticalprio.entity.RangordningsKod;
-import se.vgregion.verticalprio.entity.SektorRaad;
 
 /**
  * @author Claes Lundahl, vgrid=clalu4
@@ -21,5 +19,13 @@ public class SortingDiagnosKod extends DiagnosKod implements HaveQuerySortOrder 
     @Override
     public List<SortOrderField> listSortOrders() {
         return fields;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public String toString() {
+        return SortingUtil.toString(this);
     }
 }

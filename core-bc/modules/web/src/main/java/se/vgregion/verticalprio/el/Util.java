@@ -143,6 +143,9 @@ public class Util {
             @SuppressWarnings("rawtypes")
             Collection c = (Collection) o;
             for (Object i : c) {
+                if (i == null) {
+                    continue;
+                }
                 sb.append("* ");
                 sb.append(i);
                 sb.append(" \n");

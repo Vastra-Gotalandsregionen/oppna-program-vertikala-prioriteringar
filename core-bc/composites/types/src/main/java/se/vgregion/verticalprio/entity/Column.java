@@ -29,7 +29,7 @@ public class Column {
 
     private boolean sorting;
 
-    private boolean sortable = true;
+    private boolean sortable = false;
 
     private String description;
 

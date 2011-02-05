@@ -2,26 +2,33 @@ package se.vgregion.verticalprio;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Transient;
 
 import org.apache.commons.beanutils.BeanMap;
+import org.hibernate.LazyInitializationException;
 
 import se.vgregion.verticalprio.controllers.ManyCodesRef;
 import se.vgregion.verticalprio.controllers.PrioriteringsobjektForm;
 import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
 import se.vgregion.verticalprio.entity.RangordningsKod;
+import se.vgregion.verticalprio.entity.SektorRaad;
 import se.vgregion.verticalprio.entity.TillstaandetsSvaarighetsgradKod;
 import se.vgregion.verticalprio.entity.VaardformsKod;
 import se.vgregion.verticalprio.repository.finding.HaveExplicitTypeToFind;
 import se.vgregion.verticalprio.repository.finding.HaveNestedEntities;
 import se.vgregion.verticalprio.repository.finding.HaveQuerySortOrder;
 import se.vgregion.verticalprio.repository.finding.NestedRangordningsKod;
+import se.vgregion.verticalprio.repository.finding.NestedSektorRaad;
 import se.vgregion.verticalprio.repository.finding.NestedTillstaandetsSvaarighetsgradKod;
 import se.vgregion.verticalprio.repository.finding.NestedVaardformsKod;
+import se.vgregion.verticalprio.repository.finding.SortingDiagnosKod;
+import se.vgregion.verticalprio.repository.finding.SortingRangordningsKod;
+import se.vgregion.verticalprio.repository.finding.SortingSektorRaad;
+import se.vgregion.verticalprio.repository.finding.SortingTillstaandetsSvaarighetsgradKod;
 
 /**
  * To be used as search argument with the <code>PrioRepository</code> implementation and its
@@ -41,8 +48,10 @@ public class PrioriteringsobjektFindCondition extends PrioriteringsobjektForm im
     public PrioriteringsobjektFindCondition() {
         super();
         setRangordningsKod(rangordningsHolder);
-        setTillstaandetsSvaarighetsgradKod(svaarighetsgradHolder);
+        super.setTillstaandetsSvaarighetsgradKod(svaarighetsgradHolder);
         setVaardform(vaardformHolder);
+        super.setSektorRaad(new NestedSektorRaad());
+        super.setTillstaandetsSvaarighetsgradKod(new NestedTillstaandetsSvaarighetsgradKod());
     }
 
     /**
@@ -139,28 +148,37 @@ public class PrioriteringsobjektFindCondition extends PrioriteringsobjektForm im
      */
     public void clearSorting() {
         listSortOrders().clear();
-        clearSorting(this);
+        clearSorting(this, new HashSet<Object>());
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    private void clearSorting(Object o) {
-        if (o == null || o instanceof ManyCodesRef || o.getClass().isPrimitive()
-                || o.getClass().getName().startsWith("java.")) {
+    private void clearSorting(Object o, Set<Object> passed) {
+        if (o == null || o instanceof ManyCodesRef || o.getClass().isPrimitive()) {
             return;
         }
-        if (o instanceof Collections) {
+        if (passed.contains(o)) {
+            return;
+        } else {
+            passed.add(o);
+        }
+        if (o instanceof Collection) {
             Collection collection = (Collection) o;
             for (Object item : new ArrayList(collection)) {
                 if (item instanceof HaveQuerySortOrder) {
                     collection.remove(item);
                 } else {
-                    clearSorting(item);
+                    try {
+                        clearSorting(item, passed);
+                    } catch (LazyInitializationException e) {
+                        // ignore and continue. If this error occurs no
+                        // sorting could be found anyway deeper down.
+                    }
                 }
             }
         }
         if (o instanceof HaveNestedEntities) {
             HaveNestedEntities hne = (HaveNestedEntities) o;
-            clearSorting(hne.content());
+            clearSorting(hne.content(), passed);
         }
 
         BeanMap bm = new BeanMap(o);
@@ -171,9 +189,98 @@ public class PrioriteringsobjektFindCondition extends PrioriteringsobjektForm im
                     bm.put(key, null);
                 }
             } else {
-                clearSorting(value);
+                clearSorting(value, passed);
             }
         }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public NestedSektorRaad getSektorRaad() {
+        return (NestedSektorRaad) super.getSektorRaad();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public void setSektorRaad(SektorRaad sektorRaad) {
+        throw new UnsupportedOperationException("Dont use this setter");
+    }
+
+    public void sortByRangordningsKod() {
+        NestedRangordningsKod nrk = (NestedRangordningsKod) getRangordningsKod();
+        if (nrk == null) {
+            setRangordningsKod(nrk = new NestedRangordningsKod());
+        }
+        SortingRangordningsKod srk = new SortingRangordningsKod();
+        nrk.content().add(srk);
+        srk.listSortOrders().add(mkSortOrderField("kod"));
+
+        NestedSektorRaad nsr = getSektorRaad();
+        SortingSektorRaad ssr = new SortingSektorRaad();
+        ssr.listSortOrders().add(mkSortOrderField("kod"));
+        nsr.content().add(ssr);
+
+        SortingDiagnosKod sdk = new SortingDiagnosKod();
+        sdk.listSortOrders().add(mkSortOrderField("kod"));
+        getDiagnoser().add(sdk);
+    }
+
+    // Svårighetsgrad (sektorsråd, diagnoskod)
+    public void sortByTillstaandetsSvaarighetsgradKod() {
+        NestedTillstaandetsSvaarighetsgradKod ntsk = getTillstaandetsSvaarighetsgradKod();
+        SortingTillstaandetsSvaarighetsgradKod stsk = new SortingTillstaandetsSvaarighetsgradKod();
+        stsk.listSortOrders().add(mkSortOrderField("kod"));
+        ntsk.content().add(stsk);
+
+        NestedSektorRaad nsr = getSektorRaad();
+        SortingSektorRaad ssr = new SortingSektorRaad();
+        ssr.listSortOrders().add(mkSortOrderField("kod"));
+        nsr.content().add(ssr);
+
+        SortingDiagnosKod sdk = new SortingDiagnosKod();
+        sdk.listSortOrders().add(mkSortOrderField("kod"));
+        getDiagnoser().add(sdk);
+    }
+
+    // Diagnoskod (sektorsråd)
+    public void sortByDiagnoser() {
+        SortingDiagnosKod sdk = new SortingDiagnosKod();
+        sdk.listSortOrders().add(mkSortOrderField("kod"));
+        getDiagnoser().add(sdk);
+
+        NestedSektorRaad nsr = getSektorRaad();
+        SortingSektorRaad ssr = new SortingSektorRaad();
+        ssr.listSortOrders().add(mkSortOrderField("kod"));
+        nsr.content().add(ssr);
+    }
+
+    private int sortOrderCount = 0;
+
+    private SortOrderField mkSortOrderField(String name) {
+        SortOrderField sof = new SortOrderField();
+        sof.setName("kod");
+        sof.setOrder(sortOrderCount++);
+        return sof;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public NestedTillstaandetsSvaarighetsgradKod getTillstaandetsSvaarighetsgradKod() {
+        return (NestedTillstaandetsSvaarighetsgradKod) super.getTillstaandetsSvaarighetsgradKod();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public void setTillstaandetsSvaarighetsgradKod(TillstaandetsSvaarighetsgradKod tillstaandetsSvaarighetsgrad) {
+        throw new UnsupportedOperationException("Dont use this setter");
     }
 
 }
