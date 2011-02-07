@@ -94,11 +94,18 @@
             <c:if test="${not empty su:toString(prioCondition[column.name])}">
               <span title='<tags:cell value="${su:toString(prioCondition[column.name])}"/>'>(*)</span>
             </c:if>
+            
             <c:if test="${column.sortable}">
+            <span style="font-family: courier">
               <c:choose>
-                <c:when test="${column.sorting}">(S)</c:when>
-                <c:otherwise><a href="main?sortField=${column.name}">S</a></c:otherwise>
+                <c:when test="${column.sorting}">
+                  <b style="text-decoration: blink;">&darr;</b>
+                </c:when>
+                <c:otherwise>
+                  <a title="Sortera" href="main?sortField=${column.name}" style="text-decoration: none;">&darr;</a>
+                </c:otherwise>
               </c:choose>
+              </span>
             </c:if>
           </td>
         </c:if>
