@@ -1,13 +1,14 @@
 package se.vgregion.verticalprio.controllers;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.beanutils.BeanMap;
@@ -18,9 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
-import se.vgregion.verticalprio.ConfColumnsForm;
 import se.vgregion.verticalprio.MainForm;
 import se.vgregion.verticalprio.PrioriteringsobjektFindCondition;
+import se.vgregion.verticalprio.controllers.ChooseFromListController.ChooseListForm;
 import se.vgregion.verticalprio.entity.Column;
 import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
 import se.vgregion.verticalprio.entity.SektorRaad;
@@ -135,65 +136,121 @@ public class VerticalPrioController extends ControllerBase {
         }
     }
 
-    @RequestMapping(value = "/conf-columns")
-    public String confColumns(final HttpSession session, @RequestParam String command,
-            @RequestParam(required = false) List<String> visibleColumns,
-            @RequestParam(required = false) List<String> hiddenColumns) {
-        ConfColumnsForm columnForm = getOrCreateSessionObj(session, "confCols", ConfColumnsForm.class);
-        if ("show".equals(command)) {
-            moveColsFromOneListToOtherByNames(hiddenColumns, columnForm.getHiddenColumns(),
-                    columnForm.getVisibleColumns());
-        } else if ("hide".equals(command)) {
-            moveColsFromOneListToOtherByNames(visibleColumns, columnForm.getVisibleColumns(),
-                    columnForm.getHiddenColumns());
-        } else if ("save".equals(command)) {
-            for (Column column : columnForm.getHiddenColumns()) {
-                column.setVisible(false);
-            }
-            for (Column column : columnForm.getVisibleColumns()) {
-                column.setVisible(true);
-            }
-            Collections.sort(getMainForm(session).getColumns(), new Column.OrderComparer());
-            return "main";
-        } else if ("cancel".equals(command)) {
-            return "main";
+    @RequestMapping(value = "/commit-conf-columns")
+    public String commColumnsCommit(final HttpSession session, HttpServletResponse response) throws IOException {
+        MainForm form = getMainForm(session);
+        List<Column> target = (List<Column>) session.getAttribute("selectedColumns");
+
+        for (Column column : form.getColumns()) {
+            column.setVisible(target.contains(column));
         }
 
-        return "conf-columns";
-    }
-
-    private void moveColsFromOneListToOtherByNames(Collection<String> names, List<Column> from, List<Column> to) {
-        if (names == null) {
-            return;
-        }
-        for (Column col : new ArrayList<Column>(from)) {
-            if (names.contains(col.getName() + "")) {
-                from.remove(col);
-                to.add(col);
-            }
-        }
+        response.sendRedirect("main");
+        return null;
     }
 
     @RequestMapping(value = "/init-conf-columns")
-    public String initConfColumns(final HttpSession session) {
-        ConfColumnsForm columnForm = getOrCreateSessionObj(session, "confCols", ConfColumnsForm.class);
-        columnForm.getHiddenColumns().clear();
-        columnForm.getVisibleColumns().clear();
+    public String confColumnsStart(final HttpSession session, HttpServletResponse response) throws IOException {
+        MainForm form = getMainForm(session);
 
-        MainForm mainForm = getMainForm(session);
+        ChooseListForm clf = new ChooseListForm();
+        clf.setDisplayKey("label");
+        clf.setIdKey("id");
+        clf.setFilterLabel("Sök kolumner med nyckelord");
+        clf.setNotYetChoosenLabel("Kolumner");
+        clf.setChoosenLabel("Valda kolumner");
+        clf.setOkLabel("Välj kolumner");
+        clf.setOkUrl("commit-conf-columns");
+        clf.setCancelUrl("main");
 
-        for (Column column : mainForm.getColumns()) {
+        List<Column> allColumns = new ArrayList<Column>();
+        List<Column> selected = new ArrayList<Column>();
+        List<Column> notYetSelected = new ArrayList<Column>();
+
+        List<Column> target = new ArrayList<Column>();
+        session.setAttribute("selectedColumns", target);
+        clf.setTarget(target);
+
+        for (Column column : form.getColumns()) {
             if (column.isHideAble()) {
+                allColumns.add(column);
                 if (column.isVisible()) {
-                    columnForm.getVisibleColumns().add(column);
+                    selected.add(column);
                 } else {
-                    columnForm.getHiddenColumns().add(column);
+                    notYetSelected.add(column);
                 }
             }
         }
 
-        return "conf-columns";
+        clf.setAllItems(allColumns);
+        clf.setAllToChoose(new ArrayList<Column>());
+        clf.setChoosen(selected);
+        session.setAttribute(ChooseListForm.class.getSimpleName(), clf);
+
+        response.sendRedirect("choose-from-list");
+        return null;
     }
+
+    // @RequestMapping(value = "/conf-columns")
+    // public String confColumns(final HttpSession session, @RequestParam String command,
+    // @RequestParam(required = false) List<String> visibleColumns,
+    // @RequestParam(required = false) List<String> hiddenColumns) {
+    // ConfColumnsForm columnForm = getOrCreateSessionObj(session, "confCols", ConfColumnsForm.class);
+    // if ("show".equals(command)) {
+    // moveColsFromOneListToOtherByNames(hiddenColumns, columnForm.getHiddenColumns(),
+    // columnForm.getVisibleColumns());
+    // } else if ("hide".equals(command)) {
+    // moveColsFromOneListToOtherByNames(visibleColumns, columnForm.getVisibleColumns(),
+    // columnForm.getHiddenColumns());
+    // } else if ("save".equals(command)) {
+    // for (Column column : columnForm.getHiddenColumns()) {
+    // column.setVisible(false);
+    // }
+    // for (Column column : columnForm.getVisibleColumns()) {
+    // column.setVisible(true);
+    // }
+    // Collections.sort(getMainForm(session).getColumns(), new Column.OrderComparer());
+    // return "main";
+    // } else if ("cancel".equals(command)) {
+    // return "main";
+    // }
+    //
+    // return "conf-columns";
+    // }
+
+    // private void moveColsFromOneListToOtherByNames(Collection<String> names, List<Column> from, List<Column> to)
+    // {
+    // if (names == null) {
+    // return;
+    // }
+    // for (Column col : new ArrayList<Column>(from)) {
+    // if (names.contains(col.getName() + "")) {
+    // from.remove(col);
+    // to.add(col);
+    // }
+    // }
+    // }
+
+    // @RequestMapping(value = "/init-conf-columnsXXX")
+    // public String initConfColumns(final HttpSession session) {
+    // ConfColumnsForm columnForm = getOrCreateSessionObj(session, "confCols", ConfColumnsForm.class);
+    // columnForm.getHiddenColumns().clear();
+    // columnForm.getVisibleColumns().clear();
+    //
+    // MainForm mainForm = getMainForm(session);
+    //
+    // for (Column column : mainForm.getColumns()) {
+    // if (column.isHideAble()) {
+    // if (column.isVisible()) {
+    // columnForm.getVisibleColumns().add(column);
+    // } else {
+    // columnForm.getHiddenColumns().add(column);
+    // }
+    // }
+    // }
+    //
+    // return "conf-columns";
+    // }
 
     @RequestMapping(value = "/approve")
     @Transactional(propagation = Propagation.REQUIRED)

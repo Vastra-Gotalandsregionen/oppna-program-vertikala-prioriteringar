@@ -72,7 +72,7 @@ public class ImportTest {
     @Rollback(false)
     public void main() throws Exception {
 
-        File file = new File("C:\\temp\\vp-import\\eye.txt");
+        File file = new File("C:\\temp\\vp-import\\onkologi.txt");
         FileReader fr = new FileReader(file);
         int c = fr.read();
         StringBuffer sb = new StringBuffer();
@@ -153,14 +153,10 @@ public class ImportTest {
 
     }
 
-    private Integer toInt(String s) {
-        if (s == null || "".equals(s)) {
-            return null;
-        }
-        return Integer.parseInt(s);
-    }
-
     private <T extends AbstractKod> T getByKod(List<T> codes, String kod) {
+        kod = kod.replace(".", "");
+        kod = kod.replace(" ", "");
+
         if (codes.isEmpty()) {
             throw new RuntimeException();
         }
@@ -173,18 +169,57 @@ public class ImportTest {
     }
 
     private <T extends AbstractKod> Set<T> getItemsByKoder(List<T> codes, String kod) {
-        kod = kod.replace(".", "");
         String[] frags = kod.split(Pattern.quote(","));
         Set<T> result = new HashSet<T>();
 
         for (String k : frags) {
-            T item = getByKod(codes, k);
-            if (item != null) {
-                result.add(item);
+            if (k.contains("-")) {
+                result.addAll(getItemsByKodInterval(codes, k));
+            } else {
+                T item = getByKod(codes, k);
+                if (item != null) {
+                    result.add(item);
+                }
             }
         }
 
         return result;
+    }
+
+    private <T extends AbstractKod> Set<T> getItemsByKodInterval(List<T> codes, String kod) {
+        Set<T> result = new HashSet<T>();
+        String[] fromTo = kod.split(Pattern.quote("-"));
+
+        String charCode = fromTo[0].replaceAll("[0-9]", "");
+        int start = toInt(fromTo[0]);
+        int end = toInt(fromTo[1]);
+
+        for (int i = start; i <= end; i++) {
+            String code = charCode;
+            if (i < 10) {
+                code += "0";
+            }
+            code += i;
+            T item = getByKod(codes, code);
+            if (item != null) {
+                result.add(item);
+            }
+        }
+        return result;
+    }
+
+    private Integer toInt(String s) {
+        if (s == null) {
+            return null;
+        }
+        s = s.replaceAll("[^0-9]", "");
+        while (s.startsWith("0")) {
+            s = s.substring(1);
+        }
+        if ("".equals(s)) {
+            return null;
+        }
+        return Integer.parseInt(s);
     }
 
 }

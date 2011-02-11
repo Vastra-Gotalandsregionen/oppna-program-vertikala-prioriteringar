@@ -41,7 +41,9 @@ public class NestedTillstaandetsSvaarighetsgradKod extends TillstaandetsSvaarigh
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (TillstaandetsSvaarighetsgradKod rk : nestedContent) {
-            sb.append(rk.getKod() + ", ");
+            if (rk.getKod() != null) {
+                sb.append(rk.getKod() + ", ");
+            }
         }
         if (sb.length() > 0) {
             sb.delete(sb.length() - 2, sb.length());

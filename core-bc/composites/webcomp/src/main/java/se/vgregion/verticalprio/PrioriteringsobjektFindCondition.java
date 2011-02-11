@@ -13,6 +13,9 @@ import org.hibernate.LazyInitializationException;
 
 import se.vgregion.verticalprio.controllers.ManyCodesRef;
 import se.vgregion.verticalprio.controllers.PrioriteringsobjektForm;
+import se.vgregion.verticalprio.entity.AatgaerdsKod;
+import se.vgregion.verticalprio.entity.AtcKod;
+import se.vgregion.verticalprio.entity.DiagnosKod;
 import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
 import se.vgregion.verticalprio.entity.RangordningsKod;
 import se.vgregion.verticalprio.entity.SektorRaad;
@@ -21,6 +24,7 @@ import se.vgregion.verticalprio.entity.VaardformsKod;
 import se.vgregion.verticalprio.repository.finding.HaveExplicitTypeToFind;
 import se.vgregion.verticalprio.repository.finding.HaveNestedEntities;
 import se.vgregion.verticalprio.repository.finding.HaveQuerySortOrder;
+import se.vgregion.verticalprio.repository.finding.NestedHashSet;
 import se.vgregion.verticalprio.repository.finding.NestedRangordningsKod;
 import se.vgregion.verticalprio.repository.finding.NestedSektorRaad;
 import se.vgregion.verticalprio.repository.finding.NestedTillstaandetsSvaarighetsgradKod;
@@ -52,6 +56,9 @@ public class PrioriteringsobjektFindCondition extends PrioriteringsobjektForm im
         setVaardform(vaardformHolder);
         super.setSektorRaad(new NestedSektorRaad());
         super.setTillstaandetsSvaarighetsgradKod(new NestedTillstaandetsSvaarighetsgradKod());
+        super.setDiagnoser(new NestedHashSet<DiagnosKod>());
+        super.setAatgaerdskoder(new NestedHashSet<AatgaerdsKod>());
+        super.setAtcKoder(new NestedHashSet<AtcKod>());
     }
 
     /**
@@ -283,4 +290,27 @@ public class PrioriteringsobjektFindCondition extends PrioriteringsobjektForm im
         throw new UnsupportedOperationException("Dont use this setter");
     }
 
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public void setDiagnoser(Set<DiagnosKod> diagnoser) {
+        throw new UnsupportedOperationException("Dont use this setter");
+    }
+
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public void setAatgaerdskoder(Set<AatgaerdsKod> aatgaerdskoder) {
+        throw new UnsupportedOperationException("Dont use this setter");
+    }
+
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public void setAtcKoder(Set<AtcKod> atcKoder) {
+        throw new UnsupportedOperationException("Dont use this setter");
+    }
 }

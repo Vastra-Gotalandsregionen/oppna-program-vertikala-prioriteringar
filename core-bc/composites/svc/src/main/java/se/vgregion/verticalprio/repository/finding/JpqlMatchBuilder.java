@@ -7,6 +7,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
@@ -258,6 +260,18 @@ public class JpqlMatchBuilder {
         return false;
     }
 
+    private boolean isAllEntitysHavingId(HaveNestedEntities<AbstractEntity<Long>> hne) {
+        if (hne.content().isEmpty()) {
+            return false;
+        }
+        for (AbstractEntity<Long> item : hne.content()) {
+            if (item.getId() == null) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     /**
      * This method is used to build up a part of the query. It is used to iterate through a collection of entities
      * (that implements the <code>HaveNestedEntities</code>) and create an inclusive condition for every item in
@@ -277,9 +291,22 @@ public class JpqlMatchBuilder {
     private int handleNestedEnteties(HaveNestedEntities<AbstractEntity<Long>> hne, String prefix,
             String parentPropertyName, Object bean, QueryParts qp, int aliasIndex) {
 
+        if (isAllEntitysHavingId(hne)) {
+            aliasIndex++;
+            // If all items inside the hne have a id then we only use those ids to match with the reference.
+            qp.fromJoin.add(prefix + parentPropertyName + " o" + aliasIndex);
+            StringBuilder sb = new StringBuilder();
+            for (AbstractEntity<Long> ent : hne.content()) {
+                sb.append("?, ");
+                qp.values.add(ent.getId());
+            }
+            sb.delete(sb.length() - 2, sb.length());
+            qp.where.add("o" + aliasIndex + ".id in (" + sb + ")");
+            return aliasIndex;
+        }
+
         List<String> allItemsWhere = new ArrayList<String>();
         for (AbstractEntity<Long> ent : hne.content()) {
-            // List<String> iterationWhere = new ArrayList<String>();
 
             QueryParts iterationQp = new QueryParts(qp);
             iterationQp.where = new ArrayList<String>();
@@ -336,6 +363,11 @@ public class JpqlMatchBuilder {
             return true;
         }
 
+        if (!(field.isAnnotationPresent(Column.class) || field.isAnnotationPresent(Id.class)
+                || field.isAnnotationPresent(ManyToMany.class) || field.isAnnotationPresent(ManyToOne.class))) {
+            return true;
+        }
+
         if (field.isAnnotationPresent(Transient.class)) {
             return true;
         }
@@ -384,9 +416,16 @@ public class JpqlMatchBuilder {
             return false;
         }
         Collection<?> collection = (Collection<?>) value;
-        if (collection.isEmpty()) {
+        try {
+            if (collection.isEmpty()) {
+                return false;
+            }
+        } catch (Exception e) {
+            // Error - for instance the LazyInitializationException from hibernate... then we should not bother
+            // with this collection anyway.
             return false;
         }
+
         // Check first item in list to see it it is of a type to be used in a query.
         for (Object o : collection) {
             if (isEntity(o)) {
@@ -396,22 +435,6 @@ public class JpqlMatchBuilder {
         }
         return false;
     }
-
-    // public List<String> getSortOrder() {
-    // return sortOrder;
-    // }
-
-    /*
-     * private String mkOrderBy(Object exampleBean) { validateSortOrderReallyAmongObjectProperties(exampleBean); if
-     * (sortOrder.isEmpty()) { return ""; } List<String> prefixedSortOrderColumns = new ArrayList<String>(); for
-     * (String item : sortOrder) { prefixedSortOrderColumns.add("o0." + item); } return "\n order by " +
-     * toString(prefixedSortOrderColumns, ", "); }
-     * 
-     * protected void validateSortOrderReallyAmongObjectProperties(Object exampleBean) { BeanMap bm = new
-     * BeanMap(exampleBean); for (String key : sortOrder) { if (!bm.keySet().contains(key)) { throw new
-     * RuntimeException("Property " + key + " used in order by is not present in the example object (" +
-     * exampleBean.getClass().getName()); } } }
-     */
 
     private class QueryParts {
 

@@ -64,7 +64,6 @@ public class JpqlMatchBuilderTest {
 
         Assert.assertTrue(values.contains("Kolera%"));
         Assert.assertTrue(values.contains("Ticks%"));
-        Assert.assertTrue(values.contains("Sektorråd med id 43."));
 
         Assert.assertTrue(jpql.contains("from"));
         Assert.assertTrue(jpql.contains("where"));
