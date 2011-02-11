@@ -15,11 +15,12 @@ import se.vgregion.dao.domain.patterns.entity.AbstractEntity;
 @MappedSuperclass
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Cacheable(value = true)
-public abstract class AbstractKod extends AbstractEntity<Long> implements Serializable {
+public abstract class AbstractKod extends AbstractEntity<Long> implements Serializable, Comparable<AbstractKod> {
 
     @Id
     private Long id;
 
+    @Column(name = "kod")
     private String kod;
 
     @Column(name = "beskrivning", length = 1000)
@@ -81,6 +82,21 @@ public abstract class AbstractKod extends AbstractEntity<Long> implements Serial
 
     public String getKortBeskrivning() {
         return kortBeskrivning;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public int compareTo(AbstractKod o) {
+        int other = 0, self = 0;
+        if (kod != null) {
+            self = hashCode();
+        }
+        if (o != null && o.kod != null) {
+            other = o.kod.hashCode();
+        }
+        return self - other;
     }
 
 }

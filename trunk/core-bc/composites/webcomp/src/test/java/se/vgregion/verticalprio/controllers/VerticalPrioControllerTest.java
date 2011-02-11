@@ -15,7 +15,6 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import se.vgregion.verticalprio.ConfColumnsForm;
 import se.vgregion.verticalprio.MainForm;
 import se.vgregion.verticalprio.entity.Column;
 import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
@@ -64,34 +63,6 @@ public class VerticalPrioControllerTest {
             result.add(column.getName());
         }
         return result;
-    }
-
-    @Test
-    public void confColumns() {
-        List<Column> visible = getVisibleColumns();
-
-        List<String> hiddenColumns = toNameList(vpc.getColumns());
-        List<String> visibleColumns = toNameList(vpc.getColumns());
-
-        vpc.initConfColumns(session);
-
-        ConfColumnsForm columnForm = (ConfColumnsForm) session.getAttribute("confCols");
-        Assert.assertEquals(0, columnForm.getHiddenColumns().size());
-
-        String result = vpc.confColumns(session, "hide", visibleColumns, hiddenColumns);
-        Assert.assertEquals("conf-columns", result);
-
-        result = vpc.confColumns(session, "show", visibleColumns, hiddenColumns);
-        Assert.assertEquals("conf-columns", result);
-
-        result = vpc.confColumns(session, "save", visibleColumns, hiddenColumns);
-        Assert.assertEquals("main", result);
-    }
-
-    @Test
-    public void initConfColumns() {
-        String result = vpc.initConfColumns(session);
-        Assert.assertEquals("conf-columns", result);
     }
 
     @Test

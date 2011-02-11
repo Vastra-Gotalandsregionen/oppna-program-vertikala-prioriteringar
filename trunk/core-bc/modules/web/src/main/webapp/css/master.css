@@ -300,3 +300,8 @@ label {
 .aatgaerdskoder {
   white-space: nowrap; 
 }
+
+.choose-from-list select {
+    height: 30em;
+    width: 100%;
+}

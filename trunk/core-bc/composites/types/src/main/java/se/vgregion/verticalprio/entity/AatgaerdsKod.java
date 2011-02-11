@@ -7,4 +7,12 @@ import javax.persistence.Table;
 @Table(name = "aatgaerds_kod")
 public class AatgaerdsKod extends AbstractKod {
 
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public String getLabel() {
+        return getKod();
+    }
+
 }
