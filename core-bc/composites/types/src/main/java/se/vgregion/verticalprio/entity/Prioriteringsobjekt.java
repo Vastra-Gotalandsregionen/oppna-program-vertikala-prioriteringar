@@ -356,7 +356,8 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
         column.setName("diagnosTexts");
         column.setLabel("Symptom / Diagnostext");
         // column.setColumnLabel("<a href='choose-codes-init?codeRefName=diagnosRef'><img src='img/filter.gif'/></a>");
-        column.setColumnLabel("<a href='start-choosing-codes?fieldName=diagnosTexts'><img src='img/filter.gif'/></a>");
+        // column.setColumnLabel("<a href='start-choosing-codes?fieldName=diagnosTexts'><img src='img/filter.gif'/></a>");
+        column.setFilterAble(true);
         column.setDisplayOrder(i++);
         result.add(column);
         column.setId(i);
@@ -367,7 +368,8 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("diagnosKodTexts");
         column.setLabel("Symptom / Diagnoskod");
-        column.setColumnLabel("<a href='start-choosing-codes?fieldName=diagnosKodTexts'><img src='img/filter.gif'/></a>");
+        // column.setColumnLabel("<a href='start-choosing-codes?fieldName=diagnosKodTexts'><img src='img/filter.gif'/></a>");
+        column.setFilterAble(true);
         column.setDisplayOrder(i++);
         result.add(column);
         column.setId(i);
@@ -379,7 +381,8 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("aatgaerdskoderTexts");
         column.setLabel("Åtgärdstext");
-        column.setColumnLabel("<a href='start-choosing-codes?fieldName=aatgaerdskoderTexts'><img src='img/filter.gif'/></a>");
+        // column.setColumnLabel("<a href='start-choosing-codes?fieldName=aatgaerdskoderTexts'><img src='img/filter.gif'/></a>");
+        column.setFilterAble(true);
         column.setDisplayOrder(i++);
         result.add(column);
         column.setId(i);
@@ -389,7 +392,8 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
         column.setName("aatgaerdskoder");
         column.setLabel("Åtgärdskod");
         // column.setColumnLabel("<a href='choose-codes-init?codeRefName=aatgaerdRef'><img src='img/filter.gif'/></a>");
-        column.setColumnLabel("<a href='start-choosing-codes?fieldName=aatgaerdskoder'><img src='img/filter.gif'/></a>");
+        // column.setColumnLabel("<a href='start-choosing-codes?fieldName=aatgaerdskoder'><img src='img/filter.gif'/></a>");
+        column.setFilterAble(true);
         column.setDisplayOrder(i++);
         result.add(column);
         column.setId(i);
@@ -399,7 +403,8 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
         column.setName("tillstaandetsSvaarighetsgradKod");
         column.setLabel("Tillståndets svårighetsgrad");
         // column.setColumnLabel("<a href='choose-codes-init?codeRefName=tillstaandetsSvaarighetsgradRef'><img src='img/filter.gif'/></a>");
-        column.setColumnLabel("<a href='start-choosing-codes?fieldName=tillstaandetsSvaarighetsgrad'><img src='img/filter.gif'/></a>");
+        // column.setColumnLabel("<a href='start-choosing-codes?fieldName=tillstaandetsSvaarighetsgrad'><img src='img/filter.gif'/></a>");
+        column.setFilterAble(true);
         column.setDisplayOrder(i++);
         result.add(column);
         column.setId(i);
@@ -419,7 +424,8 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
         column.setName("rangordningsKod");
         column.setLabel("Rang-ordning");
         // column.setColumnLabel("<a href='choose-codes-init?codeRefName=rangordningsRef'><img src='img/filter.gif'/></a>");
-        column.setColumnLabel("<a href='start-choosing-codes?fieldName=rangordningsKod'><img src='img/filter.gif'/></a>");
+        // column.setColumnLabel("<a href='start-choosing-codes?fieldName=rangordningsKod'><img src='img/filter.gif'/></a>");
+        column.setFilterAble(true);
         column.setDisplayOrder(i++);
         result.add(column);
         column.setId(i);
@@ -443,8 +449,9 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("atcText");
         column.setLabel("ATC-text");
-        column.setColumnLabel("<a href='start-choosing-codes?fieldName=atcText'><img src='img/filter.gif'/></a>");
+        // column.setColumnLabel("<a href='start-choosing-codes?fieldName=atcText'><img src='img/filter.gif'/></a>");
         // column.setColumnLabel("<a href='choose-codes-init?codeRefName=atcKoderRef'><img src='img/filter.gif'/></a>");
+        column.setFilterAble(true);
         column.setDisplayOrder(i++);
         result.add(column);
         column.setId(i);
@@ -454,7 +461,8 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
         column.setName("atcKoder");
         column.setLabel("ATC-kod");
         // column.setColumnLabel("<a href='choose-codes-init?codeRefName=atcKoderRef'><img src='img/filter.gif'/></a>");
-        column.setColumnLabel("<a href='start-choosing-codes?fieldName=atcKoder'><img src='img/filter.gif'/></a>");
+        // column.setColumnLabel("<a href='start-choosing-codes?fieldName=atcKoder'><img src='img/filter.gif'/></a>");
+        column.setFilterAble(true);
         column.setDisplayOrder(i++);
         result.add(column);
         column.setId(i);
@@ -545,7 +553,8 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
         column.setName("vaardform");
         column.setLabel("Vårdform");
         // column.setColumnLabel("<a href='choose-codes-init?codeRefName=vaardformRef'><img src='img/filter.gif'/></a>");
-        column.setColumnLabel("<a href='start-choosing-codes?fieldName=vaardform'><img src='img/filter.gif'/></a>");
+        // column.setColumnLabel("<a href='start-choosing-codes?fieldName=vaardform'><img src='img/filter.gif'/></a>");
+        column.setFilterAble(true);
         column.setDisplayOrder(i++);
         result.add(column);
         column.setId(i);
