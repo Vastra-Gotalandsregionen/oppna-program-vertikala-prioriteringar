@@ -54,9 +54,23 @@ public class PrioriteringsobjektFindCondition extends PrioriteringsobjektForm im
         setRangordningsKod(rangordningsHolder);
         super.setTillstaandetsSvaarighetsgradKod(svaarighetsgradHolder);
         setVaardform(vaardformHolder);
-        super.setSektorRaad(new NestedSektorRaad());
+
+        NestedSektorRaad nsr = new NestedSektorRaad();
+        SortingSektorRaad ssr = new SortingSektorRaad();
+        SortOrderField sof = new SortOrderField();
+        sof.setName("kod");
+        ssr.listSortOrders();
+        nsr.content().add(ssr);
+        super.setSektorRaad(nsr);
+
         super.setTillstaandetsSvaarighetsgradKod(new NestedTillstaandetsSvaarighetsgradKod());
-        super.setDiagnoser(new NestedHashSet<DiagnosKod>());
+
+        NestedHashSet<DiagnosKod> diagnoser = new NestedHashSet<DiagnosKod>();
+        SortingDiagnosKod sdk = new SortingDiagnosKod();
+        sdk.listSortOrders().add(sof);
+        diagnoser.add(new SortingDiagnosKod());
+        super.setDiagnoser(diagnoser);
+
         super.setAatgaerdskoder(new NestedHashSet<AatgaerdsKod>());
         super.setAtcKoder(new NestedHashSet<AtcKod>());
     }

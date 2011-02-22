@@ -1,8 +1,12 @@
 package se.vgregion.verticalprio.el;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
+
+import org.springframework.transaction.annotation.Transactional;
 
 import se.vgregion.verticalprio.controllers.EditDirective;
 import se.vgregion.verticalprio.entity.AbstractHirarkiskKod;
@@ -86,6 +90,9 @@ public class Util {
     }
 
     public static String toOptions(Long id, List<AbstractKod> items) {
+        if (items == null) {
+            return "";
+        }
         StringBuilder sb = new StringBuilder();
         boolean haveChildren = (items.size() > 0 && items.get(0) instanceof AbstractHirarkiskKod);
         toOptions(id, 0, items, sb, haveChildren, null);
@@ -106,8 +113,12 @@ public class Util {
         return result;
     }
 
+    @Transactional
     private static void toOptions(Long id, int level, List<? extends AbstractKod> items, StringBuilder sb,
             boolean haveChildren, List<Long> enableOnlyThese) {
+        if (items == null) {
+            return;
+        }
         for (AbstractKod item : items) {
             sb.append("<option value='");
             sb.append(item.getId().toString());
@@ -157,4 +168,13 @@ public class Util {
         }
         return o + "";
     }
+
+    public static String toStringDate(Date date) {
+        if (date == null) {
+            return "";
+        }
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        return format.format(date);
+    }
+
 }

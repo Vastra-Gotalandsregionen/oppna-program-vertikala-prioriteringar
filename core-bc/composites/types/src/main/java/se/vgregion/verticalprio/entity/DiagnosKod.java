@@ -1,8 +1,5 @@
 package se.vgregion.verticalprio.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -31,18 +28,10 @@ public class DiagnosKod extends AbstractHirarkiskKod<DiagnosKod> {
         this.open = open;
     }
 
-    public List<DiagnosKod> getOpenDiagnoses() {
-        List<DiagnosKod> openDiagnoses = new ArrayList<DiagnosKod>();
-        List<DiagnosKod> children = getChildren();
-        if (children == null) {
-            return openDiagnoses;
-        }
-        for (DiagnosKod child : children) {
-            if (child.isOpen()) {
-                openDiagnoses.add(child);
-            }
-        }
-        return openDiagnoses;
-    }
+    /*
+     * public List<DiagnosKod> getOpenDiagnoses() { List<DiagnosKod> openDiagnoses = new ArrayList<DiagnosKod>();
+     * List<DiagnosKod> children = getChildren(); if (children == null) { return openDiagnoses; } for (DiagnosKod
+     * child : children) { if (child.isOpen()) { openDiagnoses.add(child); } } return openDiagnoses; }
+     */
 
 }

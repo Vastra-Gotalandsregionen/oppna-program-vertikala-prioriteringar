@@ -5,7 +5,9 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
@@ -126,6 +128,9 @@ public class JpqlMatchBuilder {
             sb.append(" \norder by ");
             sb.append(toString(orderBy, ", "));
         }
+
+        System.out.println(sb);
+        System.out.println(values);
 
         return sb.toString();
     }
@@ -260,16 +265,16 @@ public class JpqlMatchBuilder {
         return false;
     }
 
-    private boolean isAllEntitysHavingId(HaveNestedEntities<AbstractEntity<Long>> hne) {
-        if (hne.content().isEmpty()) {
-            return false;
-        }
-        for (AbstractEntity<Long> item : hne.content()) {
-            if (item.getId() == null) {
-                return false;
+    private Collection<AbstractEntity<Long>> getOnlyThoseWithId(Collection<AbstractEntity<Long>> items) {
+        List<AbstractEntity<Long>> result = new ArrayList<AbstractEntity<Long>>();
+
+        for (AbstractEntity<Long> item : items) {
+            if (item.getId() != null) {
+                result.add(item);
             }
         }
-        return true;
+
+        return result;
     }
 
     /**
@@ -290,24 +295,30 @@ public class JpqlMatchBuilder {
      */
     private int handleNestedEnteties(HaveNestedEntities<AbstractEntity<Long>> hne, String prefix,
             String parentPropertyName, Object bean, QueryParts qp, int aliasIndex) {
+        Set<AbstractEntity<Long>> items = hne.content();
+        if (items.isEmpty()) {
+            return aliasIndex;
+        }
+        List<String> allItemsWhere = new ArrayList<String>();
 
-        if (isAllEntitysHavingId(hne)) {
+        Collection<AbstractEntity<Long>> havingId = getOnlyThoseWithId(items);
+
+        if (!havingId.isEmpty()) {
             aliasIndex++;
-            // If all items inside the hne have a id then we only use those ids to match with the reference.
+            // Make a id in (all the ids) for the items with id.
             qp.fromJoin.add(prefix + parentPropertyName + " o" + aliasIndex);
             StringBuilder sb = new StringBuilder();
-            for (AbstractEntity<Long> ent : hne.content()) {
+            for (AbstractEntity<Long> ent : havingId) {
                 sb.append("?, ");
                 qp.values.add(ent.getId());
             }
             sb.delete(sb.length() - 2, sb.length());
-            qp.where.add("o" + aliasIndex + ".id in (" + sb + ")");
-            return aliasIndex;
+            allItemsWhere.add("o" + aliasIndex + ".id in (" + sb + ")");
+            items = new HashSet<AbstractEntity<Long>>(items);
+            items.removeAll(havingId);
         }
 
-        List<String> allItemsWhere = new ArrayList<String>();
-        for (AbstractEntity<Long> ent : hne.content()) {
-
+        for (AbstractEntity<Long> ent : items) {
             QueryParts iterationQp = new QueryParts(qp);
             iterationQp.where = new ArrayList<String>();
 

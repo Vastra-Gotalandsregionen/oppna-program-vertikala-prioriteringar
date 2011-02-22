@@ -48,7 +48,7 @@ public class ChooseFromListController extends ControllerBase {
 
     @RequestMapping(value = "/choose-from-list", params = { "add" })
     public String add(HttpSession session, @RequestParam(required = false) List<String> notYetChoosenKeys,
-            ModelMap model) {
+            ModelMap model, @RequestParam(required = false) String filterText) {
         final ChooseListForm form = getChooseListForm(model, session);
         if (notYetChoosenKeys != null) {
             for (Object item : form.getAllItems()) {
@@ -60,13 +60,13 @@ public class ChooseFromListController extends ControllerBase {
             }
         }
 
-        return main(session, null, null, null, model);
+        return main(session, filterText, null, null, model);
     }
 
     @RequestMapping(value = "/choose-from-list", params = { "addAll" })
-    public String addAll(HttpSession session, ModelMap model) {
+    public String addAll(HttpSession session, ModelMap model, @RequestParam(required = false) String filterText) {
         final ChooseListForm form = getChooseListForm(model, session);
-        String result = main(session, null, null, null, model);
+        String result = main(session, filterText, null, null, model);
         form.getChoosen().clear();
         form.getChoosen().addAll(form.getAllToChoose());
         form.setChoosen(sort(form.getChoosen(), form.getDisplayKey()));
@@ -76,7 +76,7 @@ public class ChooseFromListController extends ControllerBase {
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @RequestMapping(value = "/choose-from-list", params = { "remove" })
     public String remove(HttpSession session, @RequestParam(required = false) List<String> choosenKeys,
-            ModelMap model) {
+            ModelMap model, @RequestParam(required = false) String filterText) {
         final ChooseListForm form = getChooseListForm(model, session);
         if (choosenKeys != null) {
             for (Object item : new ArrayList(form.getChoosen())) {
@@ -88,16 +88,16 @@ public class ChooseFromListController extends ControllerBase {
             }
         }
 
-        return main(session, null, null, null, model);
+        return main(session, filterText, null, null, model);
     }
 
     @SuppressWarnings({ "rawtypes" })
     @RequestMapping(value = "/choose-from-list", params = { "removeAll" })
-    public String removeAll(HttpSession session, ModelMap model) {
+    public String removeAll(HttpSession session, ModelMap model, @RequestParam(required = false) String filterText) {
         final ChooseListForm form = getChooseListForm(model, session);
         form.getChoosen().clear();
         // form.setAllToChoose(sort(form.getAllToChoose(), form.getDisplayKey()));
-        return main(session, null, null, null, model);
+        return main(session, filterText, null, null, model);
     }
 
     private ChooseListForm getChooseListForm(ModelMap model, HttpSession session) {
@@ -116,18 +116,8 @@ public class ChooseFromListController extends ControllerBase {
 
         final ChooseListForm form = getChooseListForm(model, session);
 
-        // form.setFilterText(filterText);
-        // TreeMap tm = new TreeMap();
-        // for (Object item : form.getAllItems()) {
-        // BeanMap bm = new BeanMap(item);
-        // if (!form.getChoosen().contains(item)) {
-        // Object key = bm.get(form.getDisplayKey());
-        // tm.put(key, item);
-        // }
-        // }
-        //
-        // form.getAllToChoose().addAll(tm.values());
         form.setAllToChoose(sort(form.getAllItems(), form.getDisplayKey()));
+        form.setFilterText(filterText);
 
         if (filterText != null && !"".equals(filterText.trim())) {
             removeThoseWithNoSuchSubstring(form.getAllToChoose(), form.getDisplayKey(), filterText);
@@ -144,7 +134,9 @@ public class ChooseFromListController extends ControllerBase {
         for (Object value : values) {
             BeanMap valueMap = new BeanMap(value);
             Object key = valueMap.get(sortProperty);
-            tm.put(key, value);
+            if (key != null) {
+                tm.put(key, value);
+            }
         }
         return new ArrayList(tm.values());
     }

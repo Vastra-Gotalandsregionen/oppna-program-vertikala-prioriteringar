@@ -127,6 +127,17 @@ public class ChooseCodesController extends ControllerBase {
         vaardform.setCancelUrl("main");
         vaardform.setAllItemsPropertyName("vaardform");
         formPrototypes.put("vaardform", vaardform);
+
+        ChooseListFormWithDomainProperty tillstaandetsSvaarighetsgrad = new ChooseListFormWithDomainProperty();
+        tillstaandetsSvaarighetsgrad.setFilterLabel("Sök tillståndets svårighetsgrad med nyckelord");
+        tillstaandetsSvaarighetsgrad.setNotYetChoosenLabel("Svårighetsgrader");
+        tillstaandetsSvaarighetsgrad.setChoosenLabel("Valda svårighetsgrader");
+        tillstaandetsSvaarighetsgrad.setOkLabel("Välj svårighetsgrader");
+        tillstaandetsSvaarighetsgrad.setOkUrl("main");
+        tillstaandetsSvaarighetsgrad.setCancelUrl("main");
+        tillstaandetsSvaarighetsgrad.setAllItemsPropertyName("tillstaandetsSvaarighetsgradKod");
+        formPrototypes.put("tillstaandetsSvaarighetsgrad", tillstaandetsSvaarighetsgrad);
+
     }
 
     /**
@@ -186,7 +197,7 @@ public class ChooseCodesController extends ControllerBase {
         // clf.setAllToChoose(new ArrayList(allItems));
         Collection target = extractTargetCollection(condition, clf.getAllItemsPropertyName());
         clf.setTarget(target);
-        // clf.setChoosen(sort(target, clf.getDisplayKey()));
+        clf.setChoosen(new ArrayList(target));
 
         String path = "choose-from-list";
         response.sendRedirect(path);
