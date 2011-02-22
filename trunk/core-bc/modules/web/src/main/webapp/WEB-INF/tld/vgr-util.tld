@@ -119,4 +119,12 @@
     <function-signature>java.lang.String toString(java.lang.Object)</function-signature>
   </function>
   
+  <function>
+    <description>Formats a date.</description>
+    <display-name>toStringDate</display-name>
+    <name>toStringDate</name>
+    <function-class>se.vgregion.verticalprio.el.Util</function-class>
+    <function-signature>java.lang.String toStringDate(java.util.Date)</function-signature>
+  </function>
+  
 </taglib>

@@ -5,6 +5,7 @@ package se.vgregion.verticalprio.entity;
  */
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -45,8 +46,10 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
     @JoinColumn(name = "sektor_raad_id")
     private SektorRaad sektorRaad;
 
-    @Column(name = "qualy")
-    private Integer qualy;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @Fetch(FetchMode.JOIN)
+    @JoinColumn(name = "kostnad_levnadsaar_kod_id")
+    private KostnadLevnadsaarKod kostnadLevnadsaarKod;
 
     @Column(name = "rangordning_enligt_formel")
     private Integer rangordningEnligtFormel;
@@ -58,7 +61,10 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
     private Integer volym;
 
     @Column(name = "godkaend")
-    private Boolean godkaend;
+    private Date godkaend;
+
+    @Column(name = "senast_uppdaterad")
+    private Date senastUppdaterad;
 
     @ManyToMany()
     @JoinTable(name = "link_prioriteringsobjekt_diagnos_kod", joinColumns = { @JoinColumn(name = "prio_id") }, inverseJoinColumns = { @JoinColumn(name = "diagnos_kod_id") })
@@ -392,7 +398,8 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("tillstaandetsSvaarighetsgradKod");
         column.setLabel("Tillståndets svårighetsgrad");
-        column.setColumnLabel("<a href='choose-codes-init?codeRefName=tillstaandetsSvaarighetsgradRef'><img src='img/filter.gif'/></a>");
+        // column.setColumnLabel("<a href='choose-codes-init?codeRefName=tillstaandetsSvaarighetsgradRef'><img src='img/filter.gif'/></a>");
+        column.setColumnLabel("<a href='start-choosing-codes?fieldName=tillstaandetsSvaarighetsgrad'><img src='img/filter.gif'/></a>");
         column.setDisplayOrder(i++);
         result.add(column);
         column.setId(i);
@@ -410,7 +417,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
 
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("rangordningsKod");
-        column.setLabel("Rangordning");
+        column.setLabel("Rang-ordning");
         // column.setColumnLabel("<a href='choose-codes-init?codeRefName=rangordningsRef'><img src='img/filter.gif'/></a>");
         column.setColumnLabel("<a href='start-choosing-codes?fieldName=rangordningsKod'><img src='img/filter.gif'/></a>");
         column.setDisplayOrder(i++);
@@ -490,7 +497,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
                 + "4 Sjukligheten påverkas i liten utsträckning. \n");
 
         column = new se.vgregion.verticalprio.entity.Column();
-        column.setName("qualy");
+        column.setName("kostnadLevnadsaarKod");
         column.setLabel("Kostnad vunnet levnadsår Qaly");
         column.setDisplayOrder(i++);
         result.add(column);
@@ -581,14 +588,6 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
         return result;
     }
 
-    public void setQualy(Integer qualy) {
-        this.qualy = qualy;
-    }
-
-    public Integer getQualy() {
-        return qualy;
-    }
-
     public void setRangordningEnligtFormel(Integer rangordningEnligtFormel) {
         this.rangordningEnligtFormel = rangordningEnligtFormel;
     }
@@ -613,12 +612,12 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
         return volym;
     }
 
-    public void setGodkaend(Boolean godkaend) {
-        this.godkaend = godkaend;
+    public Date getGodkaend() {
+        return godkaend;
     }
 
-    public Boolean getGodkaend() {
-        return godkaend;
+    public void setGodkaend(Date godkaend) {
+        this.godkaend = godkaend;
     }
 
     /**
@@ -634,6 +633,79 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
      */
     public VaardformsKod getVaardform() {
         return vaardform;
+    }
+
+    public void setKostnadLevnadsaarKod(KostnadLevnadsaarKod kostnadLevnadsaarKod) {
+        this.kostnadLevnadsaarKod = kostnadLevnadsaarKod;
+    }
+
+    public KostnadLevnadsaarKod getKostnadLevnadsaarKod() {
+        return kostnadLevnadsaarKod;
+    }
+
+    public void setSenastUppdaterad(Date senastUppdaterad) {
+        this.senastUppdaterad = senastUppdaterad;
+    }
+
+    public Date getSenastUppdaterad() {
+        return senastUppdaterad;
+    }
+
+    public String mkMessagesWhyNotToApprovePrio() {
+        Prioriteringsobjekt prio = this;
+        StringBuilder sb = new StringBuilder();
+        if (prio.getDiagnoser().isEmpty()) {
+            sb.append("<br/>Lägg till minst en diagnos.");
+        }
+        if (prio.getAatgaerdskoder().isEmpty()) {
+            sb.append("<br/>Lägg till minst en åtgärdskod.");
+        }
+        if (prio.getTillstaandetsSvaarighetsgradKod() == null) {
+            sb.append("<br/>Ange tillståndets svårighetsgrad.");
+        }
+        if (prio.getAatgaerdsRiskKod() == null) {
+            sb.append("<br/>Ange risk med åtgärd.");
+        }
+        if (prio.getPatientnyttaEffektAatgaerdsKod() == null) {
+            sb.append("<br/>Ange patientnytta / effekt åtgärd.");
+        }
+        if (prio.getRangordningsKod() == null) {
+            sb.append("<br/>Ange rangordning.");
+        }
+        if (prio.getPatientnyttoEvidensKod() == null) {
+            sb.append("<br/>Ange evidens patientnytta / effekt åtgärd.");
+        }
+        if (prio.getVaentetidBesookVeckor() == null) {
+            sb.append("<br/>Ange väntetid besök veckor.");
+        }
+        if (prio.getVaentetidBehandlingVeckor() == null) {
+            sb.append("<br/>Ange väntetid veckor behandling.");
+        }
+        if (prio.getVaardnivaaKod() == null) {
+            sb.append("<br/>Ange vårdnivå.");
+        }
+        if (prio.getVaardform() == null) {
+            sb.append("<br/>Ange vårdform.");
+        }
+        if (prio.getSektorRaad() == null) {
+            sb.append("<br/>Ange sektorsråd.");
+        }
+        if (sb.length() == 0) {
+            return null;
+        }
+
+        return "Posten kunde ej godkännas." + sb.toString();
+    }
+
+    public void godkaen() throws IllegalAccessError {
+        if (mkMessagesWhyNotToApprovePrio() != null) {
+            throw new IllegalAccessError(mkMessagesWhyNotToApprovePrio());
+        }
+        setGodkaend(new Date());
+    }
+
+    public void underkann() {
+        setGodkaend(null);
     }
 
 }

@@ -19,6 +19,7 @@ import se.vgregion.verticalprio.entity.AtcKod;
 import se.vgregion.verticalprio.entity.Column;
 import se.vgregion.verticalprio.entity.DiagnosKod;
 import se.vgregion.verticalprio.entity.HaelsonekonomiskEvidensKod;
+import se.vgregion.verticalprio.entity.KostnadLevnadsaarKod;
 import se.vgregion.verticalprio.entity.PatientnyttaEffektAatgaerdsKod;
 import se.vgregion.verticalprio.entity.PatientnyttoEvidensKod;
 import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
@@ -35,6 +36,10 @@ import se.vgregion.verticalprio.entity.VaentetidsKod;
  */
 public class PrioriteringsobjektForm extends Prioriteringsobjekt {
 
+    @Transient
+    private Long kostnadLevnadsaarKodId;
+    @Transient
+    private List<KostnadLevnadsaarKod> kostnadLevnadsaarKodList;
     @Transient
     private Long patientnyttaEffektAatgaerdsKodId;
     @Transient
@@ -84,6 +89,7 @@ public class PrioriteringsobjektForm extends Prioriteringsobjekt {
     private List<RangordningsKod> rangordningsKodList;
     @Transient
     private final Map<String, Column> columns = new HashMap<String, Column>();
+    private List<DiagnosKod> diagnoserList;
 
     @Transient
     @SuppressWarnings("serial")
@@ -160,7 +166,7 @@ public class PrioriteringsobjektForm extends Prioriteringsobjekt {
         vaentetidBehandlingVeckorId = getIdFromeCodeIfAny(getVaentetidBehandlingVeckor());
         vaentetidBesookVeckorId = getIdFromeCodeIfAny(getVaentetidBesookVeckor());
         vaardformId = getIdFromeCodeIfAny(getVaardform());
-
+        kostnadLevnadsaarKodId = getIdFromeCodeIfAny(getKostnadLevnadsaarKod());
     }
 
     /**
@@ -189,6 +195,7 @@ public class PrioriteringsobjektForm extends Prioriteringsobjekt {
         setVaentetidBehandlingVeckor(getKodByIdAndList(vaentetidBehandlingVeckorList, vaentetidBehandlingVeckorId));
         setVaentetidBesookVeckor(getKodByIdAndList(vaentetidBesookVeckorList, vaentetidBesookVeckorId));
         setVaardform(getKodByIdAndList(vaardformList, vaardformId));
+        setKostnadLevnadsaarKod(getKodByIdAndList(getKostnadLevnadsaarKodList(), kostnadLevnadsaarKodId));
     }
 
     public Long getPatientnyttaEffektAatgaerdsKodId() {
@@ -472,6 +479,30 @@ public class PrioriteringsobjektForm extends Prioriteringsobjekt {
 
     public Long getVaardformId() {
         return vaardformId;
+    }
+
+    public void setKostnadLevnadsaarKodId(Long kostnadLevnadsaarKodId) {
+        this.kostnadLevnadsaarKodId = kostnadLevnadsaarKodId;
+    }
+
+    public Long getKostnadLevnadsaarKodId() {
+        return kostnadLevnadsaarKodId;
+    }
+
+    public void setKostnadLevnadsaarKodList(List<KostnadLevnadsaarKod> kostnadLevnadsaarKodList) {
+        this.kostnadLevnadsaarKodList = kostnadLevnadsaarKodList;
+    }
+
+    public List<KostnadLevnadsaarKod> getKostnadLevnadsaarKodList() {
+        return kostnadLevnadsaarKodList;
+    }
+
+    public void setDiagnoserList(List<DiagnosKod> diagnoserList) {
+        this.diagnoserList = diagnoserList;
+    }
+
+    public List<DiagnosKod> getDiagnoserList() {
+        return diagnoserList;
     }
 
 }

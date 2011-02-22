@@ -81,7 +81,7 @@ public class ChooseFromListControllerTest {
         List<String> ids = new ArrayList<String>();
         ids.add("0");
 
-        String result = cfl.add(session, ids, model);
+        String result = cfl.add(session, ids, model, "");
 
         ChooseListForm clf = (ChooseListForm) session.getAttribute(ChooseListForm.class.getSimpleName());
 

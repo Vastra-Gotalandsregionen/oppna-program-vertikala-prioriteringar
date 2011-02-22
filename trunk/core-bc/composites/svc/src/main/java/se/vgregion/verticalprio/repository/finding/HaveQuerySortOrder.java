@@ -1,5 +1,6 @@
 package se.vgregion.verticalprio.repository.finding;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -10,7 +11,7 @@ public interface HaveQuerySortOrder {
 
     List<SortOrderField> listSortOrders();
 
-    public static class SortOrderField implements Comparable<SortOrderField> {
+    public static class SortOrderField implements Comparable<SortOrderField>, Serializable {
 
         /**
          * Name of the field.

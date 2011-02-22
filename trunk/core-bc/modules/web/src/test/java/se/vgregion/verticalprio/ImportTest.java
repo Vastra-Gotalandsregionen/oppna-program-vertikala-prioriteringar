@@ -115,7 +115,7 @@ public class ImportTest {
 
             prio.setPatientnyttoEvidensKod(getByKod(applicationData.getPatientnyttoEvidensKodList(), values[8]));
 
-            prio.setQualy(toInt(values[9]));
+            // prio.setQualy(toInt(values[9]));
 
             prio.setHaelsonekonomiskEvidensKod(getByKod(applicationData.getHaelsonekonomiskEvidensKodList(),
                     values[10]));

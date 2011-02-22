@@ -1,5 +1,6 @@
 package se.vgregion.verticalprio.entity;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
 /**
@@ -9,7 +10,7 @@ import java.util.Comparator;
  * @author Claes Lundahl, vgrid=clalu4
  * 
  */
-public class Column {
+public class Column implements Serializable {
     // private static final Log log = LogFactory.getLog(Column.class);
     private int id;
 

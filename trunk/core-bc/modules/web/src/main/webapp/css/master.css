@@ -192,9 +192,10 @@ button {
   text-align: left;
 }
 
-.kod, .kod-label {
+.kod-label {
   display: block;
-  font-style: italic;
+  font-style: normal;
+  font-weight: bold;
 }
 
 .prio-view {
@@ -304,4 +305,12 @@ label {
 .choose-from-list select {
     height: 30em;
     width: 100%;
+}
+
+.indikationGaf textarea {
+    width: 100%;  
+}
+
+.prio-view select, .prio-view textarea  {
+  margin:5px;
 }

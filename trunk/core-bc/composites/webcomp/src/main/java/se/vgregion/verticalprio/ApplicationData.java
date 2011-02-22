@@ -7,11 +7,11 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.commons.beanutils.BeanMap;
-import org.springframework.stereotype.Component;
 
 import se.vgregion.verticalprio.controllers.PrioriteringsobjektForm;
 import se.vgregion.verticalprio.entity.AatgaerdsKod;
 import se.vgregion.verticalprio.entity.AatgaerdsRiskKod;
+import se.vgregion.verticalprio.entity.AtcKod;
 import se.vgregion.verticalprio.entity.DiagnosKod;
 import se.vgregion.verticalprio.entity.HaelsonekonomiskEvidensKod;
 import se.vgregion.verticalprio.entity.KostnadLevnadsaarKod;
@@ -35,7 +35,7 @@ import se.vgregion.verticalprio.repository.GenerisktKodRepository;
  * @author Claes Lundahl, vgrid=clalu4
  * 
  */
-//@Component
+// @Component
 public class ApplicationData implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -155,6 +155,10 @@ public class ApplicationData implements Serializable {
         return everyVaardformsKod;
     }
 
+    public List<VaardformsKod> getVaardformList() {
+        return getVaardformsKodList();
+    }
+
     @Resource(name = "vaardnivaaKodRepository")
     GenerisktKodRepository<VaardnivaaKod> vaardnivaaKodRepository;
     List<VaardnivaaKod> everyVaardnivaaKod;
@@ -190,6 +194,31 @@ public class ApplicationData implements Serializable {
             everySektorRaad = sektorRaadRepository.getTreeRoots();
         }
         return everySektorRaad;
+    }
+
+    public List<AatgaerdsKod> getAatgaerdskoderList() {
+        return getAatgaerdsKodList();
+    }
+
+    @Resource(name = "atcKodRepository")
+    GenerisktKodRepository<AtcKod> atcKodRepository;
+    List<AtcKod> atcKodList;
+
+    /**
+     * @return the atcKodList
+     */
+    public List<AtcKod> getAtcKoderList() {
+        if (atcKodList == null) {
+            atcKodList = new ArrayList<AtcKod>(atcKodRepository.findAll());
+        }
+        return atcKodList;
+    }
+
+    /**
+     * @return the diagnoserList
+     */
+    public List<DiagnosKod> getDiagnoserList() {
+        return getDiagnosKodList();
     }
 
     public void initKodLists(PrioriteringsobjektForm pf) {

@@ -16,34 +16,19 @@
   <div class="yui3-g">
   
   <c:if test="${ChooseListForm.findingVisible}">
-    <span class="yui3-u-1-3"></span>
-    <span class="yui3-u-1-3"></span>
     <span class="yui3-u-1-3">
       <h3>${ChooseListForm.filterLabel}</h3>
       <form:input path="filterText" id="filterText" />
       <input type="submit" name="filter" value="Filtrera"/>
     </span>
+    <span class="yui3-u-1-3"></span>
+    <span class="yui3-u-1-3"></span>
   </c:if>
   
-  <span class="yui3-u-1-3"><h3>${ChooseListForm.choosenLabel}</h3></span>
-  <span class="yui3-u-1-3"></span>
   <span class="yui3-u-1-3"><h3>${ChooseListForm.notYetChoosenLabel}</h3></span>
-  
-  <span class="yui3-u-1-3">
-    <select name="choosenKeys" multiple="multiple">
-      <c:forEach items="${ChooseListForm.choosen}" var="column">
-        <option value="${column[ChooseListForm.idKey]}">${column[ChooseListForm.displayKey]}</option>
-      </c:forEach>
-    </select>
-  </span>
-  
-  <span class="yui3-u">
-    <input type="submit" name="addAll" value="Lägg till alla" /> <br/>
-    <input type="submit" name="add" value="Lägg till" /> <br/>
-    <input type="submit" name="remove" value="Ta bort" /> <br/>
-    <input type="submit" name="removeAll" value="Ta bort alla" />
-  </span>
-  
+  <span class="yui3-u-1-3"></span>
+  <span class="yui3-u-1-3"><h3>${ChooseListForm.choosenLabel}</h3></span>
+    
   <span class="yui3-u-1-3">
   <select name="notYetChoosenKeys" multiple="multiple">
     <c:forEach items="${ChooseListForm.allToChoose}" var="column">
@@ -53,7 +38,22 @@
     </c:forEach>
   </select>
   </span>
+    
+  <span class="yui3-u" style="height:100%">
   
+    <input type="submit" name="addAll" value="Lägg till alla" /> <br/>
+    <input type="submit" name="add" value="Lägg till" /> <br/>
+    <input type="submit" name="remove" value="Ta bort" /> <br/>
+    <input type="submit" name="removeAll" value="Ta bort alla" />
+  </span>
+    
+  <span class="yui3-u-1-3">
+    <select name="choosenKeys" multiple="multiple">
+      <c:forEach items="${ChooseListForm.choosen}" var="column">
+        <option value="${column[ChooseListForm.idKey]}">${column[ChooseListForm.displayKey]}</option>
+      </c:forEach>
+    </select>
+  </span>
   
   <span class="yui3-u-1-3"></span>
   <span class="yui3-u-1-3"></span>
@@ -61,7 +61,6 @@
     <input type="submit" name="cancel" value="Avbryt" />
     <input type="submit" name="ok" value="${ChooseListForm.okLabel}" />
   </span>
-  
   
   </div>
 
