@@ -320,3 +320,33 @@ label {
 .prio-view select, .prio-view textarea  {
   margin:5px;
 }
+
+.help_block {
+    display: block;
+    margin-top: 2em;
+    max-width: 10000px;
+    min-width: 540px;
+    white-space: nowrap;
+}
+
+ .help_block div {
+    margin-bottom: 5px;
+    vertical-align: top;
+ }
+ 
+.help_block div img {
+    vertical-align: middle;
+ }
+ 
+.help_indent {
+  margin-left: 2em;
+  }
+  
+  
+.help_header_blue {
+    color: blue;
+    font-size: 20px;
+    font-weight: bold;
+    padding-bottom: 14px;
+} 
+ 
