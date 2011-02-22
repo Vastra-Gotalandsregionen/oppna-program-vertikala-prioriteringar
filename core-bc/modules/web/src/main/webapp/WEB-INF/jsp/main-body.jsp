@@ -90,7 +90,9 @@
       <c:forEach items="${form.columns}" var="column" varStatus="vs">
         <c:if test="${column.visible and vs.index > 0}">
           <td style="center">
-              ${column.columnLabel}
+            <c:if test="${column.filterAble}">
+              <a href='start-choosing-codes?fieldName=${column.name}'><img src='img/tratt_unselected.png'/></a>
+            </c:if>
             <c:if test="${not empty su:toString(prioCondition[column.name])}">
               <span title='<tags:cell value="${su:toString(prioCondition[column.name])}"/>'>(*)</span>
             </c:if>
@@ -129,17 +131,10 @@
     </c:forEach>
   </tbody>
 </table>
-
-
 </form>
-
-
 <c:if test="${empty rows}">
-
   <%@ include file="help.jsp" %>
-
 </c:if>
-
 </div>
 
 </div>
