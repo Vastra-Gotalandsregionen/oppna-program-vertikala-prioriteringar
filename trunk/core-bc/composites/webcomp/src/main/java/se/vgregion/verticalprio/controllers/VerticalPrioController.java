@@ -26,7 +26,6 @@ import se.vgregion.verticalprio.entity.Column;
 import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
 import se.vgregion.verticalprio.entity.SektorRaad;
 import se.vgregion.verticalprio.entity.User;
-import se.vgregion.verticalprio.repository.GenerisktHierarkisktKodRepository;
 import se.vgregion.verticalprio.repository.GenerisktKodRepository;
 import se.vgregion.verticalprio.repository.finding.HaveNestedEntities;
 import se.vgregion.verticalprio.repository.finding.HaveQuerySortOrder;
@@ -34,29 +33,10 @@ import se.vgregion.verticalprio.repository.finding.NestedSektorRaad;
 
 @Controller
 @SessionAttributes(value = { "confCols", "form" })
-public class VerticalPrioController extends ControllerBase {
-
-    @Resource(name = "sektorRaadRepository")
-    GenerisktHierarkisktKodRepository<SektorRaad> sektorRaadRepository;
+public class VerticalPrioController extends EditPrioriteringController {
 
     @Resource(name = "userRepository")
     GenerisktKodRepository<User> userRepository;
-
-    private void initMainForm(MainForm form, HttpSession session) {
-        if (form.getSectors().isEmpty()) {
-            form.getSectors().addAll(getSectors(session));
-        }
-
-        if (form.getColumns().isEmpty()) {
-            form.getColumns().addAll(getColumns());
-        }
-    }
-
-    private MainForm getMainForm(HttpSession session) {
-        MainForm form = getOrCreateSessionObj(session, "form", MainForm.class);
-        initMainForm(form, session);
-        return form;
-    }
 
     @RequestMapping(value = "/main")
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -66,7 +46,7 @@ public class VerticalPrioController extends ControllerBase {
         return "main";
     }
 
-    @RequestMapping(value = "/logout")
+    @RequestMapping(value = "/main", params = { "logout" })
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public String logout(HttpSession session) {
         session.setAttribute("user", null);
@@ -75,7 +55,7 @@ public class VerticalPrioController extends ControllerBase {
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    @RequestMapping(value = "/login")
+    @RequestMapping(value = "/main", params = { "login" })
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public String login(HttpSession session, @RequestParam(required = false) String userName,
             @RequestParam(required = false) String password) {
@@ -149,7 +129,7 @@ public class VerticalPrioController extends ControllerBase {
         return null;
     }
 
-    @RequestMapping(value = "/init-conf-columns")
+    @RequestMapping(value = "/main", params = { "init-conf-columns" })
     public String confColumnsStart(final HttpSession session, HttpServletResponse response) throws IOException {
         MainForm form = getMainForm(session);
 
@@ -357,22 +337,6 @@ public class VerticalPrioController extends ControllerBase {
             result.add(newRaad);
         }
         return result;
-    }
-
-    @SuppressWarnings("unchecked")
-    @Transactional
-    private List<SektorRaad> getSectors(HttpSession session) {
-        final String sectorsKey = "sectors";
-        Collection<SektorRaad> sectorCache = (Collection<SektorRaad>) session.getAttribute(sectorsKey);
-        if (sectorCache == null) {
-            List<SektorRaad> raads = sektorRaadRepository.getTreeRoots();
-            sectorCache = new ArrayList<SektorRaad>();
-            session.setAttribute(sectorsKey, sectorCache);
-            for (SektorRaad sr : raads) {
-                sectorCache.add(sr.clone());
-            }
-        }
-        return new ArrayList<SektorRaad>(sectorCache);
     }
 
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

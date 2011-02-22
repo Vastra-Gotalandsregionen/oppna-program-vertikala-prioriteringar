@@ -12,9 +12,9 @@
 
 <c:choose>
   <c:when test="${user != null and loginResult}">
-    <a href="logout">Logga ut ${user.firstName} ${user.lastName}</a></c:when>
+    <a href="main?logout=true">Logga ut ${user.firstName} ${user.lastName}</a></c:when>
   <c:otherwise>
-  <form method="post" action="login">
+  <form method="post" action="main">
     Användare<br/> <input type="text" name="userName"/> <br/>
     Lösen<br/> <input type="password" name="password"/> <br/>
     <input type="submit" name="login" value="Logga in"/>
@@ -31,24 +31,32 @@
 
 </span>
 
+<form action="main" method="post">
 <div class="yui3-u rowsAndButtons">
 <span class="button-row">
 
-<label for="select-prio"><button id="showPrioButton" class="button">Visa prioriteringsobjekt</button></label>
+<c:if test="${not empty rows}">
+  <input type="submit" id="select-prio" name="select-prio" value="Visa prioriteringsobjekt" class="button"/>
+</c:if>
+
 <c:if test="${loginResult && user != null and user.editor}">
   <span class="rPadding2em">
-    
-    <label for="edit-prio"><button class="button">Ändra</button></label>
-    <form action="prio-create"> <tags:editSubmit value="Lägg till nytt" cssClass="button" /> </form>
-    <label for="delete-prio"><tags:editButton value="Ta bort" cssClass="button"></tags:editButton></label>
+    <c:if test="${not empty rows}">
+      <tags:editSubmit name="edit-prio" value="Ändra" cssClass="button"/>
+    </c:if>
+    <tags:editSubmit name="prio-create" value="Lägg till nytt" cssClass="button" />
+    <c:if test="${not empty rows}">
+      <tags:editSubmit name="delete-prio" value="Ta bort" cssClass="button"/>
+    </c:if>
   </span>
 </c:if>
 
-<c:if test="${su:canEdit(user, editDir) and user.approver}">
-  <label for="approve-prio"><tags:editButton value="Godkänn" cssClass="button"></tags:editButton></label>
+<c:if test="${su:canEdit(user, editDir) and user.approver and not empty rows}">
+  <tags:editSubmit name="approve-prio" value="Godkänn" cssClass="button"/>
 </c:if>
 
-<form action="init-conf-columns"><input class="conf-columns button" type="submit" value="Dölj/Visa kolumner" /></form>
+<input name="init-conf-columns" class="conf-columns button" type="submit" value="Dölj/Visa kolumner" />
+<%-- 
 <button class="cost button">Kostnad</button>
 <span class="export-data-buttons">
 <button class="excel button">Excel</button>
@@ -56,20 +64,13 @@
 <button class="print  button">Skriv ut</button>
 </span>
 <button class="help button">Hjälp</button>
+--%>
 </span>
 
-<c:if test="${not empty message}">
-  <div style="color:red">${message}</div>
+<c:if test="${not empty form.message}">
+  <div style="color:red">${form.message}</div>
+  <jsp:setProperty property="form" name="message" value=""/>
 </c:if>
-
-<form action="prio-open" method="post">
-
-<input type="submit" id="select-prio" name="select-prio"/>
-<input type="submit" id="delete-prio" name="delete-prio"/>
-<input type="submit" id="edit-prio" name="edit-prio"/>
-<input type="submit" id="approve-prio" name="approve-prio"/>
-
-<div style="height:8px;"></div>
 
 <table cellpadding="5">
   <thead class="headerRow">
@@ -105,7 +106,7 @@
             </c:if>
             <c:if test="${not empty su:toString(prioCondition[column.name])}">
               <span title='<tags:cell value="${su:toString(prioCondition[column.name])}"/>'>(*)</span>
-              <a href='deselect-codes?fieldName=${column.name}'>X</a>
+              <a href='deselect-codes?fieldName=${column.name}' title="Ta bort filtervillkor">X</a>
             </c:if>
             
             <c:if test="${column.sortable}">

@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.beanutils.BeanMap;
-import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -23,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import se.vgregion.verticalprio.ApplicationData;
+import se.vgregion.verticalprio.MainForm;
 import se.vgregion.verticalprio.controllers.ChooseFromListController.ChooseListForm;
 import se.vgregion.verticalprio.entity.AatgaerdsKod;
 import se.vgregion.verticalprio.entity.AbstractKod;
@@ -41,7 +41,6 @@ import se.vgregion.verticalprio.repository.PrioRepository;
  * @author Claes Lundahl, vgrid=clalu4
  * 
  */
-@Controller
 public class EditPrioriteringController extends ControllerBase {
 
     @Resource(name = "applicationData")
@@ -62,16 +61,15 @@ public class EditPrioriteringController extends ControllerBase {
     @Resource(name = "prioRepository")
     protected PrioRepository prioRepository;
 
-    @RequestMapping(value = "/prio-open", params = { "delete-prio" })
+    @RequestMapping(value = "/main", params = { "delete-prio" })
     @Transactional
     public String initDeleteView(ModelMap model, HttpSession session, @RequestParam(required = false) Long id) {
         initView(model, session, id);
         model.addAttribute("editDir", new EditDirective(false, false));
-
         return "delete-prio-view";
     }
 
-    @RequestMapping(value = "/prio-open", params = { "approve-prio" })
+    @RequestMapping(value = "/main", params = { "approve-prio" })
     @Transactional
     public String approve(HttpServletRequest request, HttpServletResponse response, ModelMap model,
             HttpSession session, @RequestParam(required = true) Long id) throws IOException {
@@ -85,13 +83,18 @@ public class EditPrioriteringController extends ControllerBase {
                     try {
                         prio.godkaen();
                     } catch (IllegalAccessError e) {
-                        session.setAttribute("message", e.getMessage());
+                        MainForm mf = new MainForm();
+                        mf.setMessage(e.getMessage());
+                        // session.setAttribute("message", e.getMessage());
+                        session.setAttribute("form", mf);
                     }
                 }
                 prioRepository.merge(prio);
             } else {
-                session.setAttribute("message",
-                        "Du saknar behörighet till prioriteringsobjektet och kan därför inte ändra dess status.");
+                String message = "Du saknar behörighet till prioriteringsobjektet och kan därför inte ändra dess status.";
+                // session.setAttribute("message", message);
+                MainForm mf = new MainForm();
+                session.setAttribute("form", mf);
             }
         }
         String path = request.getRequestURI().replace("/prio-open", "/main");
@@ -99,7 +102,7 @@ public class EditPrioriteringController extends ControllerBase {
         return null; // Will not get here anyway...
     }
 
-    @RequestMapping(value = "/prio-create")
+    @RequestMapping(value = "/main", params = { "prio-create" })
     @Transactional
     public String create(ModelMap model, HttpSession session) {
         String result = initView(model, session, null);
@@ -107,7 +110,7 @@ public class EditPrioriteringController extends ControllerBase {
         return result;
     }
 
-    @RequestMapping(value = "/prio-open", params = { "edit-prio" })
+    @RequestMapping(value = "/main", params = { "edit-prio" })
     @Transactional
     public String edit(ModelMap model, HttpSession session, @RequestParam(required = false) Long id) {
         String result = initView(model, session, id);
@@ -115,7 +118,7 @@ public class EditPrioriteringController extends ControllerBase {
         return result;
     }
 
-    @RequestMapping(value = "/prio-open", params = { "select-prio" })
+    @RequestMapping(value = "/main", params = { "select-prio" })
     @Transactional
     public String initView(ModelMap model, HttpSession session, @RequestParam(required = false) Long id) {
         PrioriteringsobjektForm form = (PrioriteringsobjektForm) model.get("prio");
@@ -127,22 +130,26 @@ public class EditPrioriteringController extends ControllerBase {
         model.addAttribute("editDir", new EditDirective(false, false));
         initKodLists(form);
 
+        BeanMap formMap = new BeanMap(form);
+        Prioriteringsobjekt prio = null;
         if (id != null) {
-            BeanMap formMap = new BeanMap(form);
-            Prioriteringsobjekt prio = prioRepository.find(id);
-            BeanMap entityMap = new BeanMap(prio);
-            formMap.putAllWriteable(entityMap);
-            form.putAllIdsFromCodesIfAnyIntoAttributeOnThisObject();
-            form.getDiagnoser().toArray(); // Are not eager so we have to make sure they are
-            form.getAatgaerdskoder().toArray(); // loaded before sending them to the jsp-layer.
-            form.getAtcKoder().toArray();
-            if (form.getId() == null) {
-                form.setId(id); // Strange... yes?
-                // putAllWriteable seems not to work for this class on Long:s at least (and in the antonio-env).
-                // TODO: own implementation of BeanMap
-            }
-            init(form.getSektorRaadList());
+            prio = prioRepository.find(id);
+        } else {
+            prio = new Prioriteringsobjekt();
         }
+        BeanMap entityMap = new BeanMap(prio);
+        formMap.putAllWriteable(entityMap);
+        form.putAllIdsFromCodesIfAnyIntoAttributeOnThisObject();
+        form.getDiagnoser().toArray(); // Are not eager so we have to make sure they are
+        form.getAatgaerdskoder().toArray(); // loaded before sending them to the jsp-layer.
+        form.getAtcKoder().toArray();
+        if (form.getId() == null) {
+            form.setId(id); // Strange... yes?
+            // putAllWriteable seems not to work for this class on Long:s at least (and in the antonio-env).
+            // TODO: own implementation of BeanMap
+        }
+
+        init(form.getSektorRaadList());
 
         return "prio-view";
     }
