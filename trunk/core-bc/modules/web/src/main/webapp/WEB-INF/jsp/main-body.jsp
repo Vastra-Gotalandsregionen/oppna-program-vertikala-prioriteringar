@@ -91,7 +91,17 @@
         <c:if test="${column.visible and vs.index > 0}">
           <td style="center">
             <c:if test="${column.filterAble}">
-              <a href='start-choosing-codes?fieldName=${column.name}'><img src='img/tratt_unselected.png'/></a>
+              <a href='start-choosing-codes?fieldName=${column.name}'>
+              <c:choose>
+                <c:when test="${not empty su:toString(prioCondition[column.name])}">
+                  <img src='img/tratt_selected.png'/>
+                </c:when>
+                <c:otherwise>
+                  <img src='img/tratt_unselected.png'/>
+                </c:otherwise>
+              </c:choose>
+                
+              </a>
             </c:if>
             <c:if test="${not empty su:toString(prioCondition[column.name])}">
               <span title='<tags:cell value="${su:toString(prioCondition[column.name])}"/>'>(*)</span>

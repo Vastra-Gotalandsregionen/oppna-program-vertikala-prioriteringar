@@ -34,6 +34,8 @@ public class Column implements Serializable {
 
     private String description;
 
+    private boolean filterAble = false;
+
     public Column() {
         // TODO Auto-generated constructor stub
     }
@@ -151,6 +153,14 @@ public class Column implements Serializable {
 
     public String getSortField() {
         return sortField;
+    }
+
+    public void setFilterAble(boolean filterAble) {
+        this.filterAble = filterAble;
+    }
+
+    public boolean isFilterAble() {
+        return filterAble;
     }
 
     public static class OrderComparer implements Comparator<Column> {
