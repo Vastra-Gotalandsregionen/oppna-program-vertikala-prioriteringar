@@ -176,7 +176,7 @@ public class EditPrioriteringController extends ControllerBase {
 
         PrioriteringsobjektForm sessionPrio = (PrioriteringsobjektForm) session.getAttribute("prio");
         Prioriteringsobjekt prio = toPrioriteringsobjekt(request, pf, session);
-        copyKodCollections(sessionPrio, prio);
+        copyKodCollectionsAndMetaDates(sessionPrio, prio);
 
         prio.setSenastUppdaterad(new Date());
         prioRepository.store(prio);
@@ -229,25 +229,37 @@ public class EditPrioriteringController extends ControllerBase {
     // }
     // }
 
-    @RequestMapping(value = "prio", params = { "diagnoser" })
+    @RequestMapping(value = "prio", params = { "choose-diagnoser" })
     @Transactional
     public String chooseDiagnoserKod(HttpSession session, HttpServletResponse response,
-            HttpServletRequest request, ModelMap model, @ModelAttribute("prio") PrioriteringsobjektForm pf,
-            @RequestParam(required = false) String kodWithField) throws IOException {
+            HttpServletRequest request, ModelMap model, @ModelAttribute("prio") PrioriteringsobjektForm pf)
+            throws IOException {
         return chooseKod(session, response, request, model, pf, "diagnoser");
     }
 
-    @RequestMapping(value = "prio", params = { "kodWithField" })
+    @RequestMapping(value = "prio", params = { "choose-aatgaerdskoder" })
     @Transactional
-    public String chooseKod(HttpSession session, HttpServletResponse response, HttpServletRequest request,
-            ModelMap model, @ModelAttribute("prio") PrioriteringsobjektForm pf,
-            @RequestParam(required = false) String kodWithField) throws IOException {
+    public String chooseAatgardskoder(HttpSession session, HttpServletResponse response,
+            HttpServletRequest request, ModelMap model, @ModelAttribute("prio") PrioriteringsobjektForm pf)
+            throws IOException {
+        return chooseKod(session, response, request, model, pf, "aatgaerdskoder");
+    }
+
+    @RequestMapping(value = "prio", params = { "choose-atcKoder" })
+    @Transactional
+    public String chooseAtcKoder(HttpSession session, HttpServletResponse response, HttpServletRequest request,
+            ModelMap model, @ModelAttribute("prio") PrioriteringsobjektForm pf) throws IOException {
+        return chooseKod(session, response, request, model, pf, "atcKoder");
+    }
+
+    private String chooseKod(HttpSession session, HttpServletResponse response, HttpServletRequest request,
+            ModelMap model, PrioriteringsobjektForm pf, String kodWithField) throws IOException {
 
         initKodLists(pf);
         pf.asignCodesFromTheListsByCorrespondingIdAttributes();
 
         PrioriteringsobjektForm sessionPrio = (PrioriteringsobjektForm) session.getAttribute("prio");
-        copyKodCollections(sessionPrio, pf);
+        copyKodCollectionsAndMetaDates(sessionPrio, pf);
         session.setAttribute("prio", pf);
         model.addAttribute("prio", pf);
 
@@ -292,7 +304,7 @@ public class EditPrioriteringController extends ControllerBase {
             HttpSession session, @ModelAttribute("prio") PrioriteringsobjektForm pf) {
 
         PrioriteringsobjektForm sessionPrio = (PrioriteringsobjektForm) session.getAttribute("prio");
-        copyKodCollections(sessionPrio, pf);
+        copyKodCollectionsAndMetaDates(sessionPrio, pf);
         model.put("prio", pf);
 
         if (removeCode != null && !removeCode.isEmpty()) {
@@ -375,10 +387,12 @@ public class EditPrioriteringController extends ControllerBase {
         }
     }
 
-    private void copyKodCollections(Prioriteringsobjekt source, Prioriteringsobjekt target) {
+    private void copyKodCollectionsAndMetaDates(Prioriteringsobjekt source, Prioriteringsobjekt target) {
         clearAndFillCollection(source.getAatgaerdskoder(), target.getAatgaerdskoder());
         clearAndFillCollection(source.getDiagnoser(), target.getDiagnoser());
         clearAndFillCollection(source.getAtcKoder(), target.getAtcKoder());
+        target.setGodkaend(source.getGodkaend());
+        target.setSenastUppdaterad(source.getSenastUppdaterad());
     }
 
     private <T extends AbstractKod> void clearAndFillCollection(Collection<T> source, Collection<T> target) {
@@ -401,7 +415,7 @@ public class EditPrioriteringController extends ControllerBase {
         }
 
         Prioriteringsobjekt sessionPrio = (Prioriteringsobjekt) session.getAttribute("prio");
-        copyKodCollections(sessionPrio, prio);
+        copyKodCollectionsAndMetaDates(sessionPrio, prio);
         session.setAttribute("prio", prio);
 
         BeanMap prioMap = new BeanMap(prio);

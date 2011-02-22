@@ -206,6 +206,13 @@ public class JpqlMatchBuilder {
         }
     }
 
+    /**
+     * This method forces sql to really make a "fetch" for every table in the query. This will create ONE complex
+     * sql query instead of many many small queries
+     * 
+     * @param bean
+     * @return
+     */
     private String mkFetchJoinForMasterEntity(Object bean) {
         StringBuilder sb = new StringBuilder();
         BeanMap bm = new BeanMap(bean);
