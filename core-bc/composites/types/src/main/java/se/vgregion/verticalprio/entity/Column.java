@@ -10,7 +10,7 @@ import java.util.Comparator;
  * @author Claes Lundahl, vgrid=clalu4
  * 
  */
-public class Column implements Serializable {
+public class Column implements Serializable, Comparable<Column> {
     // private static final Log log = LogFactory.getLog(Column.class);
     private int id;
 
@@ -172,6 +172,14 @@ public class Column implements Serializable {
             return o1.getDisplayOrder() - o2.getDisplayOrder();
         }
 
+    }
+
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public int compareTo(Column o) {
+        return getDisplayOrder() - o.getDisplayOrder();
     }
 
 }
