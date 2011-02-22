@@ -21,6 +21,7 @@ import se.vgregion.verticalprio.PrioriteringsobjektFindCondition;
 import se.vgregion.verticalprio.controllers.ChooseFromListController.ChooseListForm;
 import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
 import se.vgregion.verticalprio.repository.finding.HaveNestedEntities;
+import se.vgregion.verticalprio.repository.finding.HaveQuerySortOrder;
 
 /**
  * @author Claes Lundahl, vgrid=clalu4
@@ -202,6 +203,33 @@ public class ChooseCodesController extends ControllerBase {
         String path = "choose-from-list";
         response.sendRedirect(path);
         return null;
+    }
+
+    @RequestMapping(value = "/deselect-codes", params = { "fieldName" })
+    public String clear(HttpSession session, HttpServletResponse response, @RequestParam String fieldName)
+            throws IOException {
+        PrioriteringsobjektFindCondition condition = getOrCreateSessionObj(session, "prioCondition",
+                PrioriteringsobjektFindCondition.class);
+
+        ChooseListFormWithDomainProperty clf = formPrototypes.get(fieldName);
+        Collection target = extractTargetCollection(condition, clf.getAllItemsPropertyName());
+
+        clearAllNotHaveQuerySortOrder(target);
+
+        response.sendRedirect("main");
+        return null;
+    }
+
+    private <T> void clearAllNotHaveQuerySortOrder(Collection<T> items) {
+        for (T item : new ArrayList<T>(items)) {
+            if (!(item instanceof HaveQuerySortOrder)) {
+                items.remove(item);
+            }
+            if (item instanceof HaveNestedEntities) {
+                HaveNestedEntities hne = (HaveNestedEntities) item;
+                clearAllNotHaveQuerySortOrder(hne.content());
+            }
+        }
     }
 
     /**

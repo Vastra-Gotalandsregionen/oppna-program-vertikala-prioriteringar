@@ -100,11 +100,12 @@
                   <img src='img/tratt_unselected.png'/>
                 </c:otherwise>
               </c:choose>
-                
               </a>
+              
             </c:if>
             <c:if test="${not empty su:toString(prioCondition[column.name])}">
               <span title='<tags:cell value="${su:toString(prioCondition[column.name])}"/>'>(*)</span>
+              <a href='deselect-codes?fieldName=${column.name}'>X</a>
             </c:if>
             
             <c:if test="${column.sortable}">
