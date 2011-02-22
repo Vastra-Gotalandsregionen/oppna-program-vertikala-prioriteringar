@@ -78,7 +78,7 @@
     <c:forEach items="${form.columns}" var="column">
       <c:if test="${column.visible}">
         <th>
-          <span title="${column.description}">${column.label}</span>
+          <span title="${column.description}">${su:toUpperCase(column.label)}</span>
         </th>
       </c:if>
     </c:forEach>

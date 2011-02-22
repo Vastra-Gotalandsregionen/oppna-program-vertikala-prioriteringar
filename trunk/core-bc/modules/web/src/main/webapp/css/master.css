@@ -90,8 +90,8 @@ button {
   background-color: CadetBlue;
 }
 
-.conditionRow {
-  background-color: GoldenRod;
+.conditionRow td {
+  background-color: #DCE5EC;
   border-bottom-color: black;
   border-bottom-style: solid;
   border-bottom-width: thin;
@@ -99,6 +99,10 @@ button {
   border-top-color: black;
   border-top-style: solid;
   border-top-width: thin;
+  
+  border-left-color: black;
+  border-left-style: solid;
+  border-left-width: thin;
 }
 
 .rowsAndButtons table thead td h3 {
@@ -108,13 +112,15 @@ button {
   padding: 0px;
 }
 
-.rowsAndButtons table th,
-.rowsAndButtons table td {
+.rowsAndButtons table th {
+  font-size: 10px;
+  background: #CBD9E7;
   padding-right: 1em;
   border-left-color: black;
   border-left-style: solid;
   border-left-width: thin;
   font-family: arial;
+  color: #666666;
   vertical-align: top;
   max-width: 20em;
   overflow: hidden;
@@ -131,11 +137,11 @@ button {
 }
 
 .rowsAndButtons table .even {
-  background-color: silver;
+  background-color: #FFFFFF;
 }
 
 .rowsAndButtons table .odd {
-  background-color: #eeeeee;
+  background-color: #EDF2F4;
 }
 
 .rowsAndButtons table {
