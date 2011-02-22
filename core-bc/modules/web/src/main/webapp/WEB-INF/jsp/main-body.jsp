@@ -67,9 +67,9 @@
 --%>
 </span>
 
-<c:if test="${not empty form.message}">
+<c:if test="${not empty form and not empty form.message}">
   <div style="color:red">${form.message}</div>
-  <jsp:setProperty property="form" name="message" value=""/>
+  <jsp:setProperty property="message" name="form" value=""/>
 </c:if>
 
 <table cellpadding="5">
