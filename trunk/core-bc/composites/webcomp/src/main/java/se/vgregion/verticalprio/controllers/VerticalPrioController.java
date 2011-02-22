@@ -6,6 +6,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
@@ -119,10 +121,10 @@ public class VerticalPrioController extends EditPrioriteringController {
     @RequestMapping(value = "/commit-conf-columns")
     public String commColumnsCommit(final HttpSession session, HttpServletResponse response) throws IOException {
         MainForm form = getMainForm(session);
-        List<Column> target = (List<Column>) session.getAttribute("selectedColumns");
+        SortedSet<Column> target = (SortedSet<Column>) session.getAttribute("selectedColumns");
 
         for (Column column : form.getColumns()) {
-            column.setVisible(target.contains(column));
+            column.setVisible(target.contains(column) || !column.isHideAble());
         }
 
         response.sendRedirect("main");
@@ -147,7 +149,8 @@ public class VerticalPrioController extends EditPrioriteringController {
         List<Column> selected = new ArrayList<Column>();
         List<Column> notYetSelected = new ArrayList<Column>();
 
-        List<Column> target = new ArrayList<Column>();
+        // List<Column> target = new ArrayList<Column>();
+        SortedSet<Column> target = new TreeSet<Column>();
         session.setAttribute("selectedColumns", target);
         clf.setTarget(target);
 
