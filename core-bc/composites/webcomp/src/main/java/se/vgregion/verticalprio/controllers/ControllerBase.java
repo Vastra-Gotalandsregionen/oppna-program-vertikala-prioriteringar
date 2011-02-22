@@ -1,5 +1,7 @@
 package se.vgregion.verticalprio.controllers;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
 import java.util.SortedMap;
@@ -8,8 +10,13 @@ import java.util.TreeMap;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.transaction.annotation.Transactional;
+
+import se.vgregion.verticalprio.MainForm;
 import se.vgregion.verticalprio.entity.Column;
 import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
+import se.vgregion.verticalprio.entity.SektorRaad;
+import se.vgregion.verticalprio.repository.GenerisktHierarkisktKodRepository;
 import se.vgregion.verticalprio.repository.PrioRepository;
 
 public class ControllerBase {
@@ -22,6 +29,9 @@ public class ControllerBase {
     private List<Column> columns = getDefaultColumns();
 
     protected String columnTextsPropertiesFileName = "/column-texts.properties";
+
+    @Resource(name = "sektorRaadRepository")
+    GenerisktHierarkisktKodRepository<SektorRaad> sektorRaadRepository;
 
     private List<Column> getDefaultColumns() {
         List<Column> columns = Prioriteringsobjekt.getDefaultColumns();
@@ -115,6 +125,38 @@ public class ControllerBase {
             throw new RuntimeException(ie);
         } catch (IllegalAccessException iae) {
             throw new RuntimeException(iae);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    @Transactional
+    private List<SektorRaad> getSectors(HttpSession session) {
+        final String sectorsKey = "sectors";
+        Collection<SektorRaad> sectorCache = (Collection<SektorRaad>) session.getAttribute(sectorsKey);
+        if (sectorCache == null) {
+            List<SektorRaad> raads = sektorRaadRepository.getTreeRoots();
+            sectorCache = new ArrayList<SektorRaad>();
+            session.setAttribute(sectorsKey, sectorCache);
+            for (SektorRaad sr : raads) {
+                sectorCache.add(sr.clone());
+            }
+        }
+        return new ArrayList<SektorRaad>(sectorCache);
+    }
+
+    protected MainForm getMainForm(HttpSession session) {
+        MainForm form = getOrCreateSessionObj(session, "form", MainForm.class);
+        initMainForm(form, session);
+        return form;
+    }
+
+    protected void initMainForm(MainForm form, HttpSession session) {
+        if (form.getSectors().isEmpty()) {
+            form.getSectors().addAll(getSectors(session));
+        }
+
+        if (form.getColumns().isEmpty()) {
+            form.getColumns().addAll(getColumns());
         }
     }
 

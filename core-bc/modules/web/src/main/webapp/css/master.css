@@ -131,10 +131,12 @@ button {
   max-width: 20em;
   overflow: hidden;
   padding: 2px;
+  font-weight: bold;
 }
 
-.rowsAndButtons table th {
-    font-weight: bold;
+.rowsAndButtons table td {
+    text-align: left;
+    vertical-align: top;
 }
 
 .rowsAndButtons table .diagnosTexts {
@@ -153,15 +155,12 @@ button {
 .rowsAndButtons table {
   border-collapse:collapse;
   border:thin black solid;
+  margin-top: 8px;
 }
 
 .footer {
   background-color: yellow;
   clear: both
-}
-
-#select-prio, #delete-prio, #edit-prio, #approve-prio {
-  display: none;
 }
 
 .popup-overlay {
@@ -311,7 +310,16 @@ label {
 }
 
 .aatgaerdskoder {
-  white-space: nowrap; 
+  white-space: nowrap;
+  text-align: center; 
+}
+
+
+.main-body .sectorsAndButtons td.tillstaandetsSvaarighetsgradKod, 
+.main-body .sectorsAndButtons td.rangordningsKod, 
+.main-body .sectorsAndButtons td.vaentetidBesookVeckor,
+.main-body .sectorsAndButtons td.vaentetidBehandlingVeckor {
+  text-align: center;
 }
 
 .choose-from-list select {
