@@ -32,7 +32,7 @@
   </c:forEach>
 
   <c:if test="${util:canEdit(user, editDir)}">
-    <input type="submit" id="${codeKey}" value="${addItemLabel}" name="${codeKey}"/>
+    <br/><input type="submit" id="${codeKey}" value="${addItemLabel}" name="choose-${codeKey}"/>
     <c:if test="${not empty prio[codeKey]}">
       <input type="submit" value="${removeItemLabel}" name="removeCodes"/>
     </c:if>

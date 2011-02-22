@@ -8,4 +8,12 @@ import javax.persistence.Table;
 @Table(name = "tillstaandets_svaarighetsgrad_kod")
 public class TillstaandetsSvaarighetsgradKod extends AbstractShortLabelKod {
 
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public String getLabel() {
+        return getKod();
+    }
+
 }
