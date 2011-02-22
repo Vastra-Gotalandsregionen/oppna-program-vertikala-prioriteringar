@@ -97,9 +97,9 @@ public class EditPrioriteringController extends ControllerBase {
                 session.setAttribute("form", mf);
             }
         }
-        String path = request.getRequestURI().replace("/prio-open", "/main");
-        response.sendRedirect(path);
-        return null; // Will not get here anyway...
+        // String path = request.getRequestURI().replace("/prio-open", "/main");
+        response.sendRedirect("main");
+        return "main";
     }
 
     @RequestMapping(value = "/main", params = { "prio-create" })
