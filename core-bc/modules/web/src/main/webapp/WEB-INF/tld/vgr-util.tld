@@ -126,5 +126,13 @@
     <function-class>se.vgregion.verticalprio.el.Util</function-class>
     <function-signature>java.lang.String toStringDate(java.util.Date)</function-signature>
   </function>
+
+  <function>
+    <description>To upper case</description>
+    <display-name>toUpperCase</display-name>
+    <name>toUpperCase</name>
+    <function-class>se.vgregion.verticalprio.el.Util</function-class>
+    <function-signature>java.lang.String toUpperCase(java.lang.String)</function-signature>
+  </function>
   
 </taglib>

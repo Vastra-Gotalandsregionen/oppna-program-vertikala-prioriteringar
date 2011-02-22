@@ -177,4 +177,11 @@ public class Util {
         return format.format(date);
     }
 
+    public static String toUpperCase(String s) {
+        if (s == null) {
+            return "";
+        }
+        return s.toUpperCase();
+    }
+
 }
