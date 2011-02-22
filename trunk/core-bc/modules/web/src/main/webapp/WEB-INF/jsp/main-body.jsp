@@ -129,6 +129,13 @@
     </c:forEach>
   </tbody>
 </table>
+
+<c:if test="${empty rows}">
+
+  <%@ include file="help.jsp" %>
+
+</c:if>
+
 </form>
 
 </div>
