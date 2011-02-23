@@ -109,5 +109,9 @@
       </tbody>
     </table>
     
-  </form>            
+  </form>
+  <c:if test="${empty rows}">
+    <%@ include file="help.jsp" %>
+   </c:if>
+              
 </div>
