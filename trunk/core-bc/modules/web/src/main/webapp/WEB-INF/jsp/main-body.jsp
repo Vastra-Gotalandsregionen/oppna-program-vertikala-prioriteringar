@@ -5,6 +5,29 @@
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 <%@ taglib uri="/WEB-INF/tld/vgr-util.tld" prefix="su"%>
 
+<div class="yui3-g" id="layout">
+    
+    <% // Sidebar start %>
+    <div class="yui3-u" id="filterNav">
+        <div class="content">
+            <%@ include file="filter-sidebar.jsp" %>
+        </div>
+    </div>
+    <% // Sidebar end %>
+
+    <% // Main content start %>
+    <div class="yui3-u" id="main">
+        <div class="content">
+            <%@ include file="main-content.jsp" %>
+        </div>
+    </div>
+    <% // Main content end %>
+
+</div>
+
+
+<%--
+
 <div class="main-body">
 <div class="sectorsAndButtons yui3-g"> 
 
@@ -33,7 +56,7 @@
 
 <form action="main" method="post">
 <div class="yui3-u rowsAndButtons">
-<span class="button-row">
+<div class="button-row">
 
 <c:if test="${not empty rows}">
   <input type="submit" id="select-prio" name="select-prio" value="Visa prioriteringsobjekt" class="button"/>
@@ -56,16 +79,8 @@
 </c:if>
 
 <input name="init-conf-columns" class="conf-columns button" type="submit" value="Dölj/Visa kolumner" />
-<%-- 
-<button class="cost button">Kostnad</button>
-<span class="export-data-buttons">
-<button class="excel button">Excel</button>
-<button class="pdf button">Pdf</button>
-<button class="print  button">Skriv ut</button>
-</span>
-<button class="help button">Hjälp</button>
---%>
-</span>
+
+</div>
 
 <c:if test="${not empty form and not empty form.message}">
   <div style="color:red">${form.message}</div>
@@ -152,3 +167,5 @@
 </div>
 
 </div>
+
+--%>
