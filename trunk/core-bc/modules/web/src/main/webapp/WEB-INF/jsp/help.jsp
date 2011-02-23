@@ -8,6 +8,6 @@
 <div class="help_indent"><img src="img/tratt_selected.png"> Visar att en kolumn har en aktiv filtrering</div>
 <div class="help_indent">X  Tar bort filtrering på kolumn</div>
 <div>3. Välj vilka kolumner som skall synas med <img src="img/show_hide_columns.png"></img></div>
-<div>4. För att se detaljvy av ett prioriteringsobjekt markera raden och tryck på <img src="img/show_prioriteringsobjekt.png"></div>
+<div>4. För att se detaljvy av ett prioriteringsobjekt markera raden och tryck på <img src="img/show_prioriteringsobjekt.png"> denna knapp syns då det finns minst ett prioriteringsobjekt listan</div>
 <div>5. För att förändra ett prioriteringsobjekt krävs att du är inloggad</div>
 </div>
