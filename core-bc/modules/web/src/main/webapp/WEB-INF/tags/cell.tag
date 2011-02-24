@@ -6,6 +6,8 @@
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags"%>
 <%@ taglib uri="/WEB-INF/tld/vgr-util.tld" prefix="su"%>
 
+${su:toCellText(value)}
+<%-- 
 <c:choose>
   <c:when test="${su:isCollection(value)}">
     
@@ -20,3 +22,4 @@
   </c:otherwise>
   
 </c:choose>
+--%>

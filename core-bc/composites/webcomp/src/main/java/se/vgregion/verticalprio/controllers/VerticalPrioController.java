@@ -29,6 +29,7 @@ import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
 import se.vgregion.verticalprio.entity.SektorRaad;
 import se.vgregion.verticalprio.entity.User;
 import se.vgregion.verticalprio.repository.GenerisktKodRepository;
+import se.vgregion.verticalprio.repository.finding.DateNullLogick;
 import se.vgregion.verticalprio.repository.finding.HaveNestedEntities;
 import se.vgregion.verticalprio.repository.finding.HaveQuerySortOrder;
 import se.vgregion.verticalprio.repository.finding.NestedSektorRaad;
@@ -50,10 +51,14 @@ public class VerticalPrioController extends EditPrioriteringController {
 
     @RequestMapping(value = "/main", params = { "logout" })
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public String logout(HttpSession session) {
+    public String logout(HttpSession session, HttpServletResponse response) throws IOException {
         session.setAttribute("user", null);
         session.setAttribute("loginResult", null);
-        return main(session);
+        PrioriteringsobjektFindCondition condition = getOrCreateSessionObj(session, "prioCondition",
+                PrioriteringsobjektFindCondition.class);
+        condition.setGodkaend(new DateNullLogick(true));
+        response.sendRedirect("main");
+        return null;
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -72,6 +77,13 @@ public class VerticalPrioController extends EditPrioriteringController {
             session.setAttribute("loginResult", false);
         } else {
             User user = users.get(0);
+            PrioriteringsobjektFindCondition condition = getOrCreateSessionObj(session, "prioCondition",
+                    PrioriteringsobjektFindCondition.class);
+            if (user.isEditor() || user.isApprover()) {
+                condition.setGodkaend(null);
+            } else {
+                condition.setGodkaend(new DateNullLogick());
+            }
 
             Map userValues = new HashMap(new BeanMap(user)); // Insane... makes all lazy properties initialized.
             for (Object o : userValues.values()) {

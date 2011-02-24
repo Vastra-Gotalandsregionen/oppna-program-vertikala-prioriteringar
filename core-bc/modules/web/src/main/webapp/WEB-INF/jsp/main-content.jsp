@@ -32,11 +32,11 @@
         <input name="init-conf-columns" class="conf-columns button" type="submit" value="Dölj/Visa kolumner" />
       </div>
     
-      <c:if test="${not empty form and not empty form.message}">
-        <div style="color:red">${form.message}</div>
-        <jsp:setProperty property="message" name="form" value=""/>
-      </c:if>
+    <jsp:useBean id="messageHome" class="se.vgregion.verticalprio.controllers.MessageHome" scope="session"/>
+    <span style="color:red;"><jsp:getProperty property="message" name="messageHome"/></span>
+    <jsp:setProperty property="message" name="messageHome" value=""/>
     
+    <div style="overflow-x: auto;">
     <table cellpadding="5">
       <thead class="headerRow">
         <tr>
@@ -49,8 +49,7 @@
           </c:if>
         </c:forEach>
         </tr>
-      </thead>
-      <tbody>
+        
         <tr class="conditionRow">
           <td colspan="2">Filter:</td>
           <c:forEach items="${form.columns}" var="column" varStatus="vs">
@@ -70,8 +69,7 @@
                   
                 </c:if>
                 <c:if test="${not empty su:toString(prioCondition[column.name])}">
-                  <span title='<tags:cell value="${su:toString(prioCondition[column.name])}"/>'>(*)</span>
-                  <a href='deselect-codes?fieldName=${column.name}' title="Ta bort filtervillkor">X</a>
+                  <a href='deselect-codes?fieldName=${column.name}' title="Ta bort filtervillkor: <tags:cell value="${su:toString(prioCondition[column.name])}"/>">X</a>
                 </c:if>
                 
                 <c:if test="${column.sortable}">
@@ -90,11 +88,14 @@
             </c:if>
           </c:forEach>
         </tr>
+        
+      </thead>
+      <tbody style="overflow-y:auto; overflow-x:none; overflow-x: hidden; height: 500px;">
         <c:forEach items="${rows}" var="row" varStatus="vs">
           <tr class="${vs.index % 2 == 0 ? 'even' : 'odd'}">
             <td>
               <input type="radio" name="id" value="${row.id}"${vs.index == 0 ? ' checked' : ''}/>
-              <c:if test="${empty row.godkaend}">
+              <c:if test="${row.godkaend == null}">
                 <div style="color: red; text-align: center;" title="Ännu ej godkänd">*</div>
               </c:if>
             </td>
@@ -108,6 +109,7 @@
         </c:forEach>
       </tbody>
     </table>
+    </div>
     
   </form>
   <c:if test="${empty rows}">

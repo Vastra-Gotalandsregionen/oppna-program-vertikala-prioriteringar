@@ -422,7 +422,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
 
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("rangordningsKod");
-        column.setLabel("Rang-ordning");
+        column.setLabel("Rang- ordning");
         // column.setColumnLabel("<a href='choose-codes-init?codeRefName=rangordningsRef'><img src='img/filter.gif'/></a>");
         // column.setColumnLabel("<a href='start-choosing-codes?fieldName=rangordningsKod'><img src='img/filter.gif'/></a>");
         column.setFilterAble(true);

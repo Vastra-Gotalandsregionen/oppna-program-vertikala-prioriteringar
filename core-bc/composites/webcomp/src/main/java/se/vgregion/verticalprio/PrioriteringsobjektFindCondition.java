@@ -21,6 +21,7 @@ import se.vgregion.verticalprio.entity.RangordningsKod;
 import se.vgregion.verticalprio.entity.SektorRaad;
 import se.vgregion.verticalprio.entity.TillstaandetsSvaarighetsgradKod;
 import se.vgregion.verticalprio.entity.VaardformsKod;
+import se.vgregion.verticalprio.repository.finding.DateNullLogick;
 import se.vgregion.verticalprio.repository.finding.HaveExplicitTypeToFind;
 import se.vgregion.verticalprio.repository.finding.HaveNestedEntities;
 import se.vgregion.verticalprio.repository.finding.HaveQuerySortOrder;
@@ -73,6 +74,7 @@ public class PrioriteringsobjektFindCondition extends PrioriteringsobjektForm im
 
         super.setAatgaerdskoder(new NestedHashSet<AatgaerdsKod>());
         super.setAtcKoder(new NestedHashSet<AtcKod>());
+        setGodkaend(new DateNullLogick(true));
     }
 
     /**

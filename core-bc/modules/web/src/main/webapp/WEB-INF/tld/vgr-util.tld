@@ -135,4 +135,12 @@
     <function-signature>java.lang.String toUpperCase(java.lang.String)</function-signature>
   </function>
   
+  <function>
+    <description>Provides formatting for printing in the result table.</description>
+    <display-name>toCellText</display-name>
+    <name>toCellText</name>
+    <function-class>se.vgregion.verticalprio.el.Util</function-class>
+    <function-signature>java.lang.String toCellText(java.lang.Object)</function-signature>
+  </function>
+  
 </taglib>
