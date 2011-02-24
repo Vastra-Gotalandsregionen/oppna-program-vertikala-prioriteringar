@@ -30,7 +30,7 @@
   <div class="yui3-u-1-5"></div>
   <div class="yui3-u-1-5"></div>
   <div class="yui3-u-1-5" align="right">
-    <a href="main" class="button">Avbryt</a>
+    <input class="button" type="submit" value="Avbryt" name="cancel"/>
     <tags:editSubmit value="Spara" name="save" />
   </div>
 </div>
