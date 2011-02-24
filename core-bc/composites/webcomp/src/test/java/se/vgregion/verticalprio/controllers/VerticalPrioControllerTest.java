@@ -1,9 +1,11 @@
 package se.vgregion.verticalprio.controllers;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import junit.framework.Assert;
@@ -12,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -31,12 +34,15 @@ public class VerticalPrioControllerTest {
 
     private HttpSession session;
 
+    private HttpServletResponse response;
+
     @Before
     public void setUp() {
         request = new MockHttpServletRequest();
         session = request.getSession();
         MainForm form = new MainForm();
         session.setAttribute("form", form);
+        response = new MockHttpServletResponse();
     }
 
     @Test
@@ -66,8 +72,8 @@ public class VerticalPrioControllerTest {
     }
 
     @Test
-    public void check() {
-        String result = vpc.check(session, 1);
+    public void check() throws IOException {
+        String result = vpc.check(session, 1, response);
         Assert.assertEquals("main", result);
     }
 
