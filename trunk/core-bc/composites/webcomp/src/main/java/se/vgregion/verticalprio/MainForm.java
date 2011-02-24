@@ -24,8 +24,6 @@ public class MainForm {
 
     private String command;
 
-    private String message;
-
     public List<SektorRaad> getSectors() {
         return sectors;
     }
@@ -50,11 +48,4 @@ public class MainForm {
         return allSektorsRaad;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public String getMessage() {
-        return message;
-    }
 }

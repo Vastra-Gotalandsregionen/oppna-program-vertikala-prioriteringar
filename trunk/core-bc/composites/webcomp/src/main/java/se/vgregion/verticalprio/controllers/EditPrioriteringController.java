@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import se.vgregion.verticalprio.ApplicationData;
-import se.vgregion.verticalprio.MainForm;
 import se.vgregion.verticalprio.controllers.ChooseFromListController.ChooseListForm;
 import se.vgregion.verticalprio.entity.AatgaerdsKod;
 import se.vgregion.verticalprio.entity.AbstractKod;
@@ -83,18 +82,22 @@ public class EditPrioriteringController extends ControllerBase {
                     try {
                         prio.godkaen();
                     } catch (IllegalAccessError e) {
-                        MainForm mf = new MainForm();
-                        mf.setMessage(e.getMessage());
-                        // session.setAttribute("message", e.getMessage());
-                        session.setAttribute("form", mf);
+                        // MainForm mf = getOrCreateSessionObj(session, "form", MainForm.class);
+                        // mf.setMessage(e.getMessage());
+                        MessageHome messageHome = getOrCreateSessionObj(session, "messageHome", MessageHome.class);
+                        messageHome.setMessage(e.getMessage());
+                        // session.setAttribute("messageHome", messageHome);
                     }
                 }
                 prioRepository.merge(prio);
             } else {
                 String message = "Du saknar behörighet till prioriteringsobjektet och kan därför inte ändra dess status.";
                 // session.setAttribute("message", message);
-                MainForm mf = new MainForm();
-                session.setAttribute("form", mf);
+                // MainForm mf = getOrCreateSessionObj(session, "form", MainForm.class);
+                // mf.setMessage(message);
+                MessageHome messageHome = getOrCreateSessionObj(session, "messageHome", MessageHome.class);
+                messageHome.setMessage(message);
+                // session.setAttribute("messageHome", messageHome);
             }
         }
         // String path = request.getRequestURI().replace("/prio-open", "/main");
@@ -309,6 +312,8 @@ public class EditPrioriteringController extends ControllerBase {
     @RequestMapping(value = "prio", params = { "removeCodes" })
     public String removeCodes(@RequestParam(required = false) List<String> removeCode, ModelMap model,
             HttpSession session, @ModelAttribute("prio") PrioriteringsobjektForm pf) {
+        initKodLists(pf);
+        pf.asignCodesFromTheListsByCorrespondingIdAttributes();
 
         PrioriteringsobjektForm sessionPrio = (PrioriteringsobjektForm) session.getAttribute("prio");
         copyKodCollectionsAndMetaDates(sessionPrio, pf);

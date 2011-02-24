@@ -184,4 +184,31 @@ public class Util {
         return s.toUpperCase();
     }
 
+    /**
+     * Should be used to format values printed in the result table.
+     * 
+     * @return
+     */
+    public static String toCellText(Object o) {
+        if (o == null) {
+            return "";
+        }
+        if (o instanceof Collection) {
+            StringBuilder sb = new StringBuilder();
+            Collection c = (Collection) o;
+            for (Object item : c) {
+                sb.append("<div>");
+                sb.append(toCellText(item));
+                sb.append("</div>");
+            }
+            return sb.toString();
+        } else if (o instanceof AbstractKod) {
+            AbstractKod ak = (AbstractKod) o;
+            return ak.getKod();
+        } else {
+            return o.toString();
+        }
+
+    }
+
 }

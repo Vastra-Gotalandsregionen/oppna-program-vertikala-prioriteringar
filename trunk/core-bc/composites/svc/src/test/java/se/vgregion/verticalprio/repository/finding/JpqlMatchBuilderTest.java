@@ -55,6 +55,7 @@ public class JpqlMatchBuilderTest {
         nestedSektorRaad.content().add(raad1);
         nestedSektorRaad.content().add(raad2);
         prio.setSektorRaad(nestedSektorRaad);
+        prio.setGodkaend(new DateNullLogick());
 
         String jpql = builder.mkFindByExampleJpql(prio, values);
         System.out.println(jpql);

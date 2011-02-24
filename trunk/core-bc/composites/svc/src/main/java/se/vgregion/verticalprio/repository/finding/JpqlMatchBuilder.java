@@ -5,6 +5,7 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -157,6 +158,9 @@ public class JpqlMatchBuilder {
         prefix += ".";
 
         for (Object key : bm.keySet()) {
+            if ("godkaend".equals(key)) {
+                System.out.println("Hej Knekt!");
+            }
             String propertyName = (String) key;
             Object value = bm.get(propertyName);
             if (value == null || "".equals(value)) {
@@ -180,6 +184,14 @@ public class JpqlMatchBuilder {
                         values.add(value);
                         continue;
                     }
+                } else if (value instanceof HaveNullLogick) {
+                    HaveNullLogick hnl = (HaveNullLogick) value;
+                    if (hnl.isNotNull()) {
+                        where.add(prefix + propertyName + " is not null");
+                    } else {
+                        where.add(prefix + propertyName + " is null");
+                    }
+                    continue;
                 }
                 values.add(value);
                 where.add(prefix + propertyName + " = ?");
@@ -424,6 +436,9 @@ public class JpqlMatchBuilder {
             return true;
         }
         if (value instanceof String) {
+            return true;
+        }
+        if (value instanceof Date) {
             return true;
         }
         return false;
