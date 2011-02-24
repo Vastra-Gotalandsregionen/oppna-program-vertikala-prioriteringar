@@ -18,8 +18,8 @@
               <c:if test="${not empty rows}">
                   <tags:editSubmit name="edit-prio" value="Ändra" cssClass="button"/>
               </c:if>
-              <tags:editSubmit name="prio-create" value="Lägg till nytt" cssClass="button" />
               <c:if test="${not empty rows}">
+                  <tags:editSubmit name="prio-create" value="Lägg till nytt" cssClass="button" />
                   <tags:editSubmit name="delete-prio" value="Ta bort" cssClass="button"/>
               </c:if>
             </span>
@@ -28,8 +28,9 @@
         <c:if test="${su:canEdit(user, editDir) and user.approver and not empty rows}">
             <tags:editSubmit name="approve-prio" value="Godkänn" cssClass="button"/>
         </c:if>
-      
-        <input name="init-conf-columns" class="conf-columns button" type="submit" value="Dölj/Visa kolumner" />
+        <c:if test="${not empty rows}">
+          <input name="init-conf-columns" class="conf-columns button" type="submit" value="Dölj/Visa kolumner" />
+        </c:if>
       </div>
     
     <jsp:useBean id="messageHome" class="se.vgregion.verticalprio.controllers.MessageHome" scope="session"/>

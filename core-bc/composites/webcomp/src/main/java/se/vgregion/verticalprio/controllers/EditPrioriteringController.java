@@ -189,9 +189,16 @@ public class EditPrioriteringController extends ControllerBase {
         copyKodCollectionsAndMetaDates(sessionPrio, prio);
 
         prio.setSenastUppdaterad(new Date());
-        prioRepository.store(prio);
-        String path = request.getRequestURI().replace("/prio", "/main");
-        response.sendRedirect(path);
+
+        String error = prio.getMessagesWhyNotSaveAble();
+        if (error != null) {
+            MessageHome mh = getOrCreateSessionObj(session, "messageHome", MessageHome.class);
+            mh.setMessage(error);
+            return "prio-view";
+        } else {
+            prioRepository.store(prio);
+        }
+        response.sendRedirect("main");
         return "main";
     }
 
@@ -436,7 +443,7 @@ public class EditPrioriteringController extends ControllerBase {
 
         Prioriteringsobjekt sessionPrio = (Prioriteringsobjekt) session.getAttribute("prio");
         copyKodCollectionsAndMetaDates(sessionPrio, prio);
-        session.setAttribute("prio", prio);
+        session.setAttribute("prio", pf);
 
         BeanMap prioMap = new BeanMap(prio);
         BeanMap formMap = new BeanMap(pf);

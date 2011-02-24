@@ -660,6 +660,23 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
         return senastUppdaterad;
     }
 
+    public String getMessagesWhyNotSaveAble() {
+        Prioriteringsobjekt prio = this;
+        StringBuilder sb = new StringBuilder();
+        if (prio.getDiagnoser().isEmpty()) {
+            sb.append("<br/>Saknar diagnos(er).");
+        }
+        if (prio.getSektorRaad() == null) {
+            sb.append("<br/>Sektorsråd saknas.");
+        }
+
+        if (sb.length() == 0) {
+            return null;
+        }
+
+        return "Kunde inte spara på grund av: " + sb.toString();
+    }
+
     public String mkMessagesWhyNotToApprovePrio() {
         Prioriteringsobjekt prio = this;
         StringBuilder sb = new StringBuilder();

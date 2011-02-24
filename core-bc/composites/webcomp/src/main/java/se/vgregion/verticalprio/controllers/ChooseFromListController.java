@@ -135,7 +135,7 @@ public class ChooseFromListController extends ControllerBase {
             BeanMap valueMap = new BeanMap(value);
             Object key = valueMap.get(sortProperty);
             if (key != null) {
-                tm.put(key, value);
+                tm.put(key.toString().toLowerCase(), value);
             }
         }
         return new ArrayList(tm.values());
