@@ -76,7 +76,7 @@ public class EditPrioriteringControllerTest {
     public final void testSave() throws IOException {
         session.setAttribute("prio", new PrioriteringsobjektForm());
         String result = epc.save(request, response, session, pf);
-        Assert.assertEquals("main", result);
+        Assert.assertEquals("prio-view", result);
     }
 
     @Test
