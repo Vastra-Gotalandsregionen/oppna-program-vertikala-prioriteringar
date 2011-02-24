@@ -222,13 +222,16 @@ button {
 .sectors {
   padding: 10px;
   border: thin solid gray;
-  margin-right: 10px;
 }
 
 .sectors {
   min-width: 100px;
   float: left;
   height: 100%;
+}
+
+.sector-node {
+  margin-left: 10px;
 }
 
 .footer {
