@@ -19,7 +19,7 @@
     <span class="yui3-u-1-3">
       <h3>${ChooseListForm.filterLabel}</h3>
       <form:input path="filterText" id="filterText" />
-      <input type="submit" name="filter" value="Filtrera"/>
+      <input class="button" type="submit" name="filter" value="Filtrera"/>
     </span>
     <span class="yui3-u-1-3"></span>
     <span class="yui3-u-1-3"></span>
@@ -41,10 +41,10 @@
     
   <span class="yui3-u" style="height:100%">
   
-    <input type="submit" name="addAll" value="Lägg till alla" /> <br/>
-    <input type="submit" name="add" value="Lägg till" /> <br/>
-    <input type="submit" name="remove" value="Ta bort" /> <br/>
-    <input type="submit" name="removeAll" value="Ta bort alla" />
+    <input  class="button" type="submit" name="addAll" value="Lägg till alla" /> <br/>
+    <input class="button" type="submit" name="add" value="Lägg till" /> <br/>
+    <input class="button" type="submit" name="remove" value="Ta bort" /> <br/>
+    <input class="button" type="submit" name="removeAll" value="Ta bort alla" />
   </span>
     
   <span class="yui3-u-1-3">
@@ -58,8 +58,8 @@
   <span class="yui3-u-1-3"></span>
   <span class="yui3-u-1-3"></span>
   <span class="yui3-u-1-3">
-    <input type="submit" name="cancel" value="Avbryt" />
-    <input type="submit" name="ok" value="${ChooseListForm.okLabel}" />
+    <input class="button" type="submit" name="cancel" value="Avbryt" />
+    <input class="button" type="submit" name="ok" value="${ChooseListForm.okLabel}" />
   </span>
   
   </div>
