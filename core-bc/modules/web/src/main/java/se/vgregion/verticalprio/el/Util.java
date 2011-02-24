@@ -193,6 +193,10 @@ public class Util {
         if (o == null) {
             return "";
         }
+        if (o instanceof Date) {
+            Date d = (Date) o;
+            return toStringDate(d);
+        }
         if (o instanceof SektorRaad) {
             SektorRaad sr = (SektorRaad) o;
             return toString(sr);
