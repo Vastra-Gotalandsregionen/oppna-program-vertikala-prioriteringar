@@ -91,7 +91,7 @@
         </tr>
         
       </thead>
-      <tbody style="overflow-y:auto; overflow-x:none; overflow-x: hidden; height: 800px;">
+      <tbody class="boxed_">
         <c:forEach items="${rows}" var="row" varStatus="vs">
           <tr class="${vs.index % 2 == 0 ? 'even' : 'odd'}">
             <td>
