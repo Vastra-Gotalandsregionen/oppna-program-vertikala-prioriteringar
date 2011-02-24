@@ -1,5 +1,7 @@
 package se.vgregion.verticalprio.entity;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -16,8 +18,8 @@ public class SektorRaad extends AbstractHirarkiskKod<SektorRaad> implements Clon
         setId(id);
     }
 
-    // @Id
-    // Long id;
+    @Transient
+    private SektorRaad parent;
 
     @Transient
     private boolean able = true;
@@ -44,6 +46,30 @@ public class SektorRaad extends AbstractHirarkiskKod<SektorRaad> implements Clon
 
     public boolean isAble() {
         return able;
+    }
+
+    public void setParent(SektorRaad parent) {
+        this.parent = parent;
+    }
+
+    public SektorRaad getParent() {
+        return parent;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public List<SektorRaad> getChildren() {
+        List<SektorRaad> result = super.getChildren();
+
+        if (result != null) {
+            for (SektorRaad raad : result) {
+                raad.setParent(this);
+            }
+        }
+
+        return result;
     }
 
 }

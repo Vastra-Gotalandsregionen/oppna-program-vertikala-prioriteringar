@@ -279,7 +279,8 @@ public class VerticalPrioController extends EditPrioriteringController {
 
     @RequestMapping(value = "/check")
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public String check(final HttpSession session, @RequestParam Integer id) {
+    public String check(final HttpSession session, @RequestParam Integer id, HttpServletResponse response)
+            throws IOException {
         MainForm form = getMainForm(session);
 
         if (id.longValue() == -1l) {
@@ -296,7 +297,8 @@ public class VerticalPrioController extends EditPrioriteringController {
             sector.setSelected(!sector.isSelected());
         }
 
-        result(session);
+        // result(session);
+        response.sendRedirect("main");
         return "main";
     }
 

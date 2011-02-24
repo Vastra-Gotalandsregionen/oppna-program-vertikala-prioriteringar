@@ -36,7 +36,7 @@
     <span style="color:red;"><jsp:getProperty property="message" name="messageHome"/></span>
     <jsp:setProperty property="message" name="messageHome" value=""/>
     
-    <div style="overflow-x: auto;">
+    <c:if test="${not empty rows}">
     <table cellpadding="5">
       <thead class="headerRow">
         <tr>
@@ -90,7 +90,7 @@
         </tr>
         
       </thead>
-      <tbody style="overflow-y:auto; overflow-x:none; overflow-x: hidden; height: 500px;">
+      <tbody style="overflow-y:auto; overflow-x:none; overflow-x: hidden; height: 800px;">
         <c:forEach items="${rows}" var="row" varStatus="vs">
           <tr class="${vs.index % 2 == 0 ? 'even' : 'odd'}">
             <td>
@@ -107,9 +107,10 @@
             </c:forEach>
           </tr>
         </c:forEach>
+        <tr> <td colspan="100">&nbsp;</td> </tr>
       </tbody>
     </table>
-    </div>
+    </c:if>
     
   </form>
   <c:if test="${empty rows}">
