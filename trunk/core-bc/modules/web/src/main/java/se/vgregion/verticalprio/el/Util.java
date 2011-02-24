@@ -193,6 +193,10 @@ public class Util {
         if (o == null) {
             return "";
         }
+        if (o instanceof SektorRaad) {
+            SektorRaad sr = (SektorRaad) o;
+            return toString(sr);
+        }
         if (o instanceof Collection) {
             StringBuilder sb = new StringBuilder();
             Collection c = (Collection) o;
@@ -211,4 +215,10 @@ public class Util {
 
     }
 
+    private static String toString(SektorRaad sr) {
+        if (sr.getParent() == null) {
+            return sr.getLabel();
+        }
+        return toString(sr.getParent());
+    }
 }
