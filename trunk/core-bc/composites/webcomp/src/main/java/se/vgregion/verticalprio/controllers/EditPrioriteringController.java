@@ -287,8 +287,8 @@ public class EditPrioriteringController extends ControllerBase {
         clf.setDisplayKey("beskrivning");
         clf.setIdKey("id");
         clf.setFilterLabel("Sök kod med nyckelord");
-        clf.setNotYetChoosenLabel("Möjliga ATC-Koder");
-        clf.setChoosenLabel("Valda ATC-Koder");
+        clf.setNotYetChoosenLabel("Möjliga Koder");
+        clf.setChoosenLabel("Valda Koder");
         clf.setOkLabel("Välj koder");
         clf.setOkUrl("prio?goBack=10");
         clf.setCancelUrl("prio?goBack=10");
