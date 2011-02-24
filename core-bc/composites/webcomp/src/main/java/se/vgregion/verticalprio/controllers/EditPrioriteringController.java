@@ -195,6 +195,14 @@ public class EditPrioriteringController extends ControllerBase {
         return "main";
     }
 
+    @RequestMapping(value = "prio", params = { "cancel" })
+    public String cancel(HttpServletRequest request, HttpServletResponse response, HttpSession session,
+            @ModelAttribute("prio") PrioriteringsobjektForm pf) throws IOException {
+
+        response.sendRedirect("main");
+        return "main";
+    }
+
     @RequestMapping(value = "prio", params = { "goBack" })
     public String prio(ModelMap model, HttpSession session) {
         Prioriteringsobjekt prio = (Prioriteringsobjekt) session.getAttribute("prio");
@@ -279,8 +287,8 @@ public class EditPrioriteringController extends ControllerBase {
         clf.setDisplayKey("beskrivning");
         clf.setIdKey("id");
         clf.setFilterLabel("Sök kod med nyckelord");
-        clf.setNotYetChoosenLabel("Koder");
-        clf.setChoosenLabel("Valda");
+        clf.setNotYetChoosenLabel("Möjliga ATC-Koder");
+        clf.setChoosenLabel("Valda ATC-Koder");
         clf.setOkLabel("Välj koder");
         clf.setOkUrl("prio?goBack=10");
         clf.setCancelUrl("prio?goBack=10");
