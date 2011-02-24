@@ -8,7 +8,8 @@ AUI().ready('aui-base', 'aui-tooltip', function(A) {
 	
 	// START - handling of tool tips
 	function setupTooltips() {
-		var colHeadingSpans = A.all('.rowsAndButtons table th span');
+		
+		var colHeadingSpans = A.all('.main-content table th span');
 		
 		colHeadingSpans.each(function() {
 			// variable this stands for the active node in the loop
@@ -29,7 +30,7 @@ AUI().ready('aui-base', 'aui-tooltip', function(A) {
 		});
 		
 		tableHeaderTooltips = new A.Tooltip({
-			trigger: '.rowsAndButtons table th span.tooltip',
+			trigger: '.main-content table th span.tooltip',
 			align: { points: [ 'tc', 'bc' ] },
 			width: '300px',
 			title: true
