@@ -131,6 +131,13 @@ button {
   border: 0;
 }
 
+.main-content tbody.boxed {
+    display: block;
+    max-height: 800px;
+    overflow-y:auto;
+    overflow-x: hidden;
+}
+
 .main-content .headerRow th {
   border: 0 solid #333333;
   border-right-width: 1px;
@@ -150,6 +157,16 @@ button {
     padding: 5px;
     vertical-align: top;
 }
+
+/*
+.main-content tbody.boxed tr {
+    height: auto;
+}
+
+.main-content tbody.boxed td {
+    height: auto;
+}
+*/
 
 .main-content .conditionRow td {
   background-color: #dce5ec;
