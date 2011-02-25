@@ -99,4 +99,15 @@ public abstract class AbstractKod extends AbstractEntity<Long> implements Serial
         return self - other;
     }
 
+    public String getKodPlusBeskrivning() {
+        return (format(getKod()) + " " + format(getBeskrivning())).trim();
+    }
+
+    private String format(String s) {
+        if (s == null) {
+            return "";
+        }
+        return s.trim();
+    }
+
 }
