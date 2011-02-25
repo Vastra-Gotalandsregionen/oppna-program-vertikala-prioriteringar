@@ -43,4 +43,35 @@ public class PrioriteringsobjektTest {
                     + ".getColumns() for this warning.");
         }
     }
+
+    /**
+     * Look at javadoc, {@link Prioriteringsobjekt#getRangordningEnligtFormel}, for the example tested.
+     */
+    @Test
+    public void getRangordningEnligtFormel() {
+        Prioriteringsobjekt prio = new Prioriteringsobjekt();
+
+        TillstaandetsSvaarighetsgradKod tillstand = new TillstaandetsSvaarighetsgradKod();
+        tillstand.setKod("9");
+        prio.setTillstaandetsSvaarighetsgradKod(tillstand);
+
+        AatgaerdsRiskKod risk = new AatgaerdsRiskKod();
+        risk.setKod("1");
+        prio.setAatgaerdsRiskKod(risk);
+
+        PatientnyttaEffektAatgaerdsKod patientnytta = new PatientnyttaEffektAatgaerdsKod();
+        patientnytta.setKod("2");
+        prio.setPatientnyttaEffektAatgaerdsKod(patientnytta);
+
+        PatientnyttoEvidensKod patientevidens = new PatientnyttoEvidensKod();
+        patientevidens.setKod("4");
+        prio.setPatientnyttoEvidensKod(patientevidens);
+
+        Assert.assertEquals(9.8d, prio.getRangordningEnligtFormel());
+
+        prio.setPatientnyttoEvidensKod(null);
+
+        Assert.assertNull(prio.getRangordningEnligtFormel());
+    }
+
 }

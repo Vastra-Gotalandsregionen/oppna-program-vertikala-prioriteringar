@@ -30,17 +30,15 @@
         <div class="cell"><tags:label key="aatgaerdsRiskKod" /></div>
         <div class="cell"><tags:label key="patientnyttaEffektAatgaerdsKod" /></div>
         <div class="cell"><span class="kod-label rangordningsKod-label"> Rangordning </span></div>
-        <c:if test="${util:canEdit(user, editDir)}">
-          <div class="cell last kod-label">Rangordning enligt formel</div>
-        </c:if>
+        <div class="cell"><tags:label key="rangordningEnligtFormel" /></div>
     </div>
     
     <div style="width:100%" class="prio-form-grid">
         <div class="cell"><tags:kod key="tillstaandetsSvaarighetsgradKod" /></div> 
         <div class="cell"><tags:kod key="aatgaerdsRiskKod" /></div>
         <div class="cell"><tags:kod key="patientnyttaEffektAatgaerdsKod" /></div>
-        
-        <div class="cell last"><tags:kod key="rangordningsKod" /></div>
+        <div class="cell"><tags:kod key="rangordningsKod" /></div>
+        <div class="cell last">${util:toCellText(prio.rangordningEnligtFormel)}</div>
     </div>
     <br/><br/>
     

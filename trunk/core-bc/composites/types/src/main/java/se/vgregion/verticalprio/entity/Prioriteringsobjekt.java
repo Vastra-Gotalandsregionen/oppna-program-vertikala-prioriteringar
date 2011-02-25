@@ -51,9 +51,6 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
     @JoinColumn(name = "kostnad_levnadsaar_kod_id")
     private KostnadLevnadsaarKod kostnadLevnadsaarKod;
 
-    @Column(name = "rangordning_enligt_formel")
-    private Integer rangordningEnligtFormel;
-
     @Transient
     private Integer kostnad;
 
@@ -560,14 +557,6 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
         column.setId(i);
         column.setHideAble(true);
 
-        // column = new se.vgregion.verticalprio.entity.Column();
-        // column.setName("rangordningEnligtFormel");
-        // column.setLabel("Rangordning enligt formel");
-        // column.setDisplayOrder(i++);
-        // result.add(column);
-        // column.setId(i);
-        // column.setHideAble(true);
-
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("kommentar");
         column.setLabel("Kommentar");
@@ -600,17 +589,17 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
         column.setId(i);
         column.setHideAble(true);
 
+        column = new se.vgregion.verticalprio.entity.Column();
+        column.setName("rangordningEnligtFormel");
+        column.setLabel("Rangordning enligt formel");
+        column.setDisplayOrder(i++);
+        result.add(column);
+        column.setId(i);
+        column.setHideAble(true);
+
         columns = result;
 
         return result;
-    }
-
-    public void setRangordningEnligtFormel(Integer rangordningEnligtFormel) {
-        this.rangordningEnligtFormel = rangordningEnligtFormel;
-    }
-
-    public Integer getRangordningEnligtFormel() {
-        return rangordningEnligtFormel;
     }
 
     public void setKostnad(Integer kostnad) {
@@ -740,6 +729,48 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
 
     public void underkann() {
         setGodkaend(null);
+    }
+
+    /**
+     * Rangordning enligt formel är summan:
+     * 
+     * Kod för tillståndets svårighetsgrad -0.6 +
+     * 
+     * Kod för risk med åtgärd*0,2 +
+     * 
+     * Kod för patientnytta/effekt åtgärd *0,2 +
+     * 
+     * Kod för evidens för patientnytta /effekt åtgärd *0,2
+     * 
+     * 
+     * Ex. Tillståndets svårighetsgrad: 9
+     * 
+     * Risk med åtgärd: 1
+     * 
+     * Patientnytta /effekt åtgärd: 2
+     * 
+     * Evidens för patientnytta /effekt åtgärd: 4
+     * 
+     * 9-0,6 + 1*0,2 + 2*0,2 + 4*0,2 = 9,8
+     * 
+     * @return
+     */
+    public Double getRangordningEnligtFormel() {
+        try {
+            Float tillstandSvaarighetsgrad = Float.parseFloat(getTillstaandetsSvaarighetsgradKod().getKod());
+            Float riskMedAatgaerd = Float.parseFloat(getAatgaerdsRiskKod().getKod());
+            Float patientnyttaEffektAatgerd = Float.parseFloat(getPatientnyttaEffektAatgaerdsKod().getKod());
+            Float evidensPatientnytta = Float.parseFloat(getPatientnyttoEvidensKod().getKod());
+
+            double result = (tillstandSvaarighetsgrad.floatValue() - 0.6);
+            result += riskMedAatgaerd * 0.2;
+            result += patientnyttaEffektAatgerd * 0.2;
+            result += evidensPatientnytta * 0.2;
+
+            return result;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
 }

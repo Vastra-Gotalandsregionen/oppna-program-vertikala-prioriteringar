@@ -1,5 +1,6 @@
 package se.vgregion.verticalprio.el;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,6 +22,8 @@ import se.vgregion.verticalprio.entity.User;
  * 
  */
 public class Util {
+
+    private static DecimalFormat df = new DecimalFormat("#.##");
 
     public static final String CELL_SEPARATOR = ", ";
 
@@ -196,6 +199,10 @@ public class Util {
         if (o instanceof Date) {
             Date d = (Date) o;
             return toStringDate(d);
+        }
+        if (o instanceof Double) {
+            Double d = (Double) o;
+            return df.format(d);
         }
         if (o instanceof SektorRaad) {
             SektorRaad sr = (SektorRaad) o;
