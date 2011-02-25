@@ -70,6 +70,10 @@ public class JpqlMatchBuilderTest {
         Assert.assertTrue(jpql.contains("where"));
         Assert.assertTrue(jpql.contains("beskrivning like ?"));
         Assert.assertTrue(jpql.contains("kommentar = ?"));
+
+        jpql = builder.mkFindByExampleJpql(prio, values);
+        System.out.println("\nShould have a not null statement: " + jpql);
+
     }
 
     @SuppressWarnings("serial")

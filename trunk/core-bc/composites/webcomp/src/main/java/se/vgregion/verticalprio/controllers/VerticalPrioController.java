@@ -394,8 +394,30 @@ public class VerticalPrioController extends EditPrioriteringController {
         List<Prioriteringsobjekt> prios = new ArrayList<Prioriteringsobjekt>(prioRepository.findByExample(
                 condition, null));
 
+        List<SektorRaad> sectors = applicationData.getSektorRaadList();
+        for (Prioriteringsobjekt prio : prios) {
+            prio.setSektorRaad(findRoot(sectors, prio.getSektorRaad()));
+        }
         session.setAttribute("rows", prios);
-
         return prios;
     }
+
+    private SektorRaad findRoot(List<SektorRaad> all, SektorRaad toFind) {
+        for (SektorRaad sr : all) {
+            if (sr.getId() == null || toFind == null || toFind.getId() == null) {
+                return null;
+            }
+            if (sr != null && sr.getId().equals(toFind.getId())) {
+                return sr;
+            }
+        }
+        for (SektorRaad sr : all) {
+            SektorRaad result = findRoot(sr.getChildren(), toFind);
+            if (result != null) {
+                return result;
+            }
+        }
+        return null;
+    }
+
 }
