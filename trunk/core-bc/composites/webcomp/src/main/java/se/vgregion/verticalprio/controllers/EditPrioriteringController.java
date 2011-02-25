@@ -82,25 +82,19 @@ public class EditPrioriteringController extends ControllerBase {
                     try {
                         prio.godkaen();
                     } catch (IllegalAccessError e) {
-                        // MainForm mf = getOrCreateSessionObj(session, "form", MainForm.class);
-                        // mf.setMessage(e.getMessage());
                         MessageHome messageHome = getOrCreateSessionObj(session, "messageHome", MessageHome.class);
                         messageHome.setMessage(e.getMessage());
-                        // session.setAttribute("messageHome", messageHome);
+                        return "main";
                     }
                 }
                 prioRepository.merge(prio);
             } else {
                 String message = "Du saknar behörighet till prioriteringsobjektet och kan därför inte ändra dess status.";
-                // session.setAttribute("message", message);
-                // MainForm mf = getOrCreateSessionObj(session, "form", MainForm.class);
-                // mf.setMessage(message);
                 MessageHome messageHome = getOrCreateSessionObj(session, "messageHome", MessageHome.class);
                 messageHome.setMessage(message);
-                // session.setAttribute("messageHome", messageHome);
+                return "main";
             }
         }
-        // String path = request.getRequestURI().replace("/prio-open", "/main");
         response.sendRedirect("main");
         return "main";
     }

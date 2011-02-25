@@ -16,16 +16,12 @@
 
 <div style="vertical-align: middle;" class="yui3-g">
   <div class="yui3-u-1-5">
-    <c:if test="${su:canEdit(user, editDir)}">
-      <span class="kod-label">Godkänd</span>
-      ${su:toStringDate(prio.godkaend)}
-    </c:if>
+    <span class="kod-label">Godkänd</span>
+    ${su:toStringDate(prio.godkaend)}
   </div>
   <div class="yui3-u-1-5">
-    <c:if test="${su:canEdit(user, editDir)}">
-      <span class="kod-label">Senast uppdaterad</span>
-      ${su:toStringDate(prio.senastUppdaterad)}
-    </c:if>
+    <span class="kod-label">Senast uppdaterad</span>
+    ${su:toStringDate(prio.senastUppdaterad)}
   </div>
   <div class="yui3-u-1-5"></div>
   <div class="yui3-u-1-5"></div>
