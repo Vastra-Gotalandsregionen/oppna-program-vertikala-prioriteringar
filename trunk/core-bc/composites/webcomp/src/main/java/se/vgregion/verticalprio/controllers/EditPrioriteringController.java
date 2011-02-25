@@ -211,48 +211,16 @@ public class EditPrioriteringController extends ControllerBase {
         return "prio-view";
     }
 
-    // @RequestMapping(value = "prio", params = { "findAatgerder" })
-    // @Transactional
-    // public String findAatgerder(HttpServletRequest request, ModelMap model, PrioriteringsobjektForm pf,
-    // @RequestParam(required = false, value = "aatgaerdRef.selectedCodesId") List<String> selectedIds)
-    // throws InstantiationException, IllegalAccessException {
-    // return findCodesAction(model, pf, AatgaerdsKod.class, pf.getAatgaerdRef(), aatgaerdsKodRepository,
-    // pf.getAatgaerdskoder(), request);
-    // }
-
-    /**
-     * Sets selectedCodesId in the nested ManyCodesRef-objects inside the PrioriteringsobjektForm with values from
-     * the request.
-     * 
-     * This method should be redundant. Spring mvc should do the setting of 'selectedCodesId' property. It did this
-     * once, then after some changes it stopped.
-     * 
-     * TODO: Remove this method and make Spring Mvc do this instead.
-     * 
-     * @param pf
-     * @param request
-     */
-    // private void initNestedValues(HttpServletRequest request, PrioriteringsobjektForm pf) {
-    // copyLongValues(request, "aatgaerdRef", pf.getAatgaerdRef());
-    // copyLongValues(request, "atcKoderRef", pf.getAtcKoderRef());
-    // copyLongValues(request, "diagnosRef", pf.getDiagnosRef());
-    // }
-
-    // private void copyLongValues(HttpServletRequest request, String requestProperty, ManyCodesRef<?> target) {
-    // String[] props = request.getParameterValues(requestProperty + ".selectedCodesId");
-    // if (props == null) {
-    // return;
-    // }
-    // for (String value : props) {
-    // target.getSelectedCodesId().add(Long.parseLong(value));
-    // }
-    // }
-
     @RequestMapping(value = "prio", params = { "choose-diagnoser" })
     @Transactional
     public String chooseDiagnoserKod(HttpSession session, HttpServletResponse response,
             HttpServletRequest request, ModelMap model, @ModelAttribute("prio") PrioriteringsobjektForm pf)
             throws IOException {
+        ChooseListForm clf = new ChooseListForm();
+        session.setAttribute(ChooseListForm.class.getSimpleName(), clf);
+        clf.setFilterLabel("Sök diagnoser med nyckelord");
+        clf.setNotYetChoosenLabel("Ej valda diagnoser");
+        clf.setChoosenLabel("Valda diagnoser");
         return chooseKod(session, response, request, model, pf, "diagnoser");
     }
 
@@ -261,6 +229,12 @@ public class EditPrioriteringController extends ControllerBase {
     public String chooseAatgardskoder(HttpSession session, HttpServletResponse response,
             HttpServletRequest request, ModelMap model, @ModelAttribute("prio") PrioriteringsobjektForm pf)
             throws IOException {
+        ChooseListForm clf = new ChooseListForm();
+        session.setAttribute(ChooseListForm.class.getSimpleName(), clf);
+        clf.setFilterLabel("Sök åtgärdskoder med nyckelord");
+        clf.setNotYetChoosenLabel("Ej valda åtgärdskoder");
+        clf.setChoosenLabel("Valda åtgärdskoder");
+
         return chooseKod(session, response, request, model, pf, "aatgaerdskoder");
     }
 
@@ -268,12 +242,17 @@ public class EditPrioriteringController extends ControllerBase {
     @Transactional
     public String chooseAtcKoder(HttpSession session, HttpServletResponse response, HttpServletRequest request,
             ModelMap model, @ModelAttribute("prio") PrioriteringsobjektForm pf) throws IOException {
+        ChooseListForm clf = new ChooseListForm();
+        session.setAttribute(ChooseListForm.class.getSimpleName(), clf);
+        clf.setFilterLabel("Sök ATC-koder med nyckelord");
+        clf.setNotYetChoosenLabel("Ej valda ATC-koder");
+        clf.setChoosenLabel("Valda ATC-koder");
+
         return chooseKod(session, response, request, model, pf, "atcKoder");
     }
 
     private String chooseKod(HttpSession session, HttpServletResponse response, HttpServletRequest request,
             ModelMap model, PrioriteringsobjektForm pf, String kodWithField) throws IOException {
-
         initKodLists(pf);
         pf.asignCodesFromTheListsByCorrespondingIdAttributes();
 
@@ -284,13 +263,15 @@ public class EditPrioriteringController extends ControllerBase {
 
         BeanMap bm = new BeanMap(pf);
 
-        ChooseListForm clf = new ChooseListForm();
-        clf.setDisplayKey("beskrivning");
+        ChooseListForm clf = getOrCreateSessionObj(session, ChooseListForm.class.getSimpleName(),
+                ChooseListForm.class);
+        // clf.setFilterLabel("Sök kod med nyckelord");
+        // clf.setNotYetChoosenLabel("Möjliga Koder");
+        // clf.setChoosenLabel("Valda Koder");
+        // clf.setOkLabel("Välj koder");
+        clf.setOkLabel("Bekräfta val");
+        clf.setDisplayKey("kodPlusBeskrivning");
         clf.setIdKey("id");
-        clf.setFilterLabel("Sök kod med nyckelord");
-        clf.setNotYetChoosenLabel("Möjliga Koder");
-        clf.setChoosenLabel("Valda Koder");
-        clf.setOkLabel("Välj koder");
         clf.setOkUrl("prio?goBack=10");
         clf.setCancelUrl("prio?goBack=10");
 
@@ -304,7 +285,6 @@ public class EditPrioriteringController extends ControllerBase {
         clf.setAllItems(allItems);
 
         clf.setAllToChoose(new ArrayList<AbstractKod>(allItems));
-        session.setAttribute(ChooseListForm.class.getSimpleName(), clf);
 
         response.sendRedirect("choose-from-list");
         return null;

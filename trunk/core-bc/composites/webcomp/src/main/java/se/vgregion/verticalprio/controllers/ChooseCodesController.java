@@ -37,7 +37,7 @@ public class ChooseCodesController extends ControllerBase {
      */
     public ChooseCodesController() {
         ChooseListFormWithDomainProperty symptomDiagnosTextForm = new ChooseListFormWithDomainProperty();
-        symptomDiagnosTextForm.setDisplayKey("beskrivning");
+        symptomDiagnosTextForm.setDisplayKey("kodPlusBeskrivning");
         symptomDiagnosTextForm.setIdKey("id");
         symptomDiagnosTextForm.setFilterLabel("Sök diagnos med nyckelord");
         symptomDiagnosTextForm.setNotYetChoosenLabel("Diagnoskoder");

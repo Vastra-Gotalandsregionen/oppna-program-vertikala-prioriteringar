@@ -147,13 +147,16 @@ public class VerticalPrioController extends EditPrioriteringController {
     public String confColumnsStart(final HttpSession session, HttpServletResponse response) throws IOException {
         MainForm form = getMainForm(session);
 
-        ChooseListForm clf = new ChooseListForm();
-        clf.setDisplayKey("label");
-        clf.setIdKey("id");
-        clf.setFilterLabel("Sök kolumner med nyckelord");
+        ChooseListForm clf = getOrCreateSessionObj(session, ChooseListForm.class.getSimpleName(),
+                ChooseListForm.class);
+
         clf.setNotYetChoosenLabel("Gömda kolumner");
         clf.setChoosenLabel("Synliga kolumner");
         clf.setOkLabel("Välj kolumner");
+
+        clf.setDisplayKey("label");
+        clf.setIdKey("id");
+        clf.setFilterLabel(null);
         clf.setOkUrl("commit-conf-columns");
         clf.setCancelUrl("main");
 
@@ -161,7 +164,6 @@ public class VerticalPrioController extends EditPrioriteringController {
         List<Column> selected = new ArrayList<Column>();
         List<Column> notYetSelected = new ArrayList<Column>();
 
-        // List<Column> target = new ArrayList<Column>();
         SortedSet<Column> target = new TreeSet<Column>();
         session.setAttribute("selectedColumns", target);
         clf.setTarget(target);
@@ -180,7 +182,6 @@ public class VerticalPrioController extends EditPrioriteringController {
         clf.setAllItems(allColumns);
         clf.setAllToChoose(new ArrayList<Column>());
         clf.setChoosen(selected);
-        session.setAttribute(ChooseListForm.class.getSimpleName(), clf);
 
         response.sendRedirect("choose-from-list");
         return null;

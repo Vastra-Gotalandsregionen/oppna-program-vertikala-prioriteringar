@@ -162,7 +162,8 @@ public class ChooseFromListController extends ControllerBase {
         private Collection target = new ArrayList();
 
         public boolean isFindingVisible() {
-            return allItems.size() > 15 && filterLabel != null && !"".equals(filterLabel.trim());
+            return (allItems.size() > 25 && filterLabel != null && !"".equals(filterLabel.trim()))
+                    || (filterText != null && !"".equals(filterText.trim()));
         }
 
         public String getDisplayKey() {
