@@ -43,7 +43,7 @@ import se.vgregion.verticalprio.repository.PrioRepository;
 public class EditPrioriteringController extends ControllerBase {
 
     @Resource(name = "applicationData")
-    ApplicationData applicationData;
+    protected ApplicationData applicationData;
 
     @Resource(name = "diagnosKodRepository")
     GenerisktHierarkisktKodRepository<DiagnosKod> diagnosKodRepository;
@@ -347,6 +347,8 @@ public class EditPrioriteringController extends ControllerBase {
                     codes.remove(ak);
                 }
             }
+            Collection<AbstractKod> sessionCodes = (Collection<AbstractKod>) new BeanMap(sessionPrio).get(key);
+            sessionCodes.retainAll(codes);
         }
         return "prio-view";
     }

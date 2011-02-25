@@ -192,8 +192,18 @@ public class ApplicationData implements Serializable {
     public List<SektorRaad> getSektorRaadList() {
         if (everySektorRaad == null) {
             everySektorRaad = sektorRaadRepository.getTreeRoots();
+            loop(everySektorRaad);
         }
         return everySektorRaad;
+    }
+
+    private void loop(List<SektorRaad> raads) {
+        if (raads == null) {
+            return;
+        }
+        for (SektorRaad sr : raads) {
+            loop(sr.getChildren());
+        }
     }
 
     public List<AatgaerdsKod> getAatgaerdskoderList() {
