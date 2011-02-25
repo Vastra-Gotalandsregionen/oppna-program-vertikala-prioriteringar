@@ -151,8 +151,8 @@ public class VerticalPrioController extends EditPrioriteringController {
         clf.setDisplayKey("label");
         clf.setIdKey("id");
         clf.setFilterLabel("Sök kolumner med nyckelord");
-        clf.setNotYetChoosenLabel("Kolumner");
-        clf.setChoosenLabel("Valda kolumner");
+        clf.setNotYetChoosenLabel("Gömda kolumner");
+        clf.setChoosenLabel("Synliga kolumner");
         clf.setOkLabel("Välj kolumner");
         clf.setOkUrl("commit-conf-columns");
         clf.setCancelUrl("main");

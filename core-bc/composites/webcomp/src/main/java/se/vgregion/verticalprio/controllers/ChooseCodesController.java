@@ -30,32 +30,6 @@ import se.vgregion.verticalprio.repository.finding.HaveQuerySortOrder;
 @Controller
 public class ChooseCodesController extends ControllerBase {
 
-    // @Resource(name = "applicationData")
-    // ApplicationData applicationData;
-    //
-    // @Resource(name = "diagnosKodRepository")
-    // GenerisktHierarkisktKodRepository<DiagnosKod> diagnosKodRepository;
-    //
-    // @Resource(name = "aatgaerdsKodRepository")
-    // GenerisktKodRepository<AatgaerdsKod> aatgaerdsKodRepository;
-    //
-    // @Resource(name = "vaardformsKodRepository")
-    // GenerisktKodRepository<VaardformsKod> vaardformsKodRepository;
-    //
-    // @Resource(name = "atcKodRepository")
-    // GenerisktKodRepository<AtcKod> atcKodRepository;
-    //
-    // @Resource(name = "rangordningsKodRepository")
-    // GenerisktKodRepository<RangordningsKod> rangordningsKodRepository;
-    //
-    // @Resource(name = "tillstaandetsSvaarighetsgradKodRepository")
-    // GenerisktKodRepository<TillstaandetsSvaarighetsgradKod> tillstaandetsSvaarighetsgradKodRepository;
-    //
-    // private static final Integer MAX_ROWS_TO_FIND = 20;
-    //
-    // private Map<String, GenerisktKodRepository<?>> nameToRepository;
-    // private Map<String, Class<?>> nameToKodClass;
-
     Map<String, ChooseListFormWithDomainProperty> formPrototypes = new HashMap<String, ChooseListFormWithDomainProperty>();
 
     /**
