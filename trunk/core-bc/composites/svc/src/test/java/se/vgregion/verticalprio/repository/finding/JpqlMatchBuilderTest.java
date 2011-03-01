@@ -3,6 +3,11 @@ package se.vgregion.verticalprio.repository.finding;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+
 import junit.framework.Assert;
 
 import org.junit.Test;
@@ -76,6 +81,14 @@ public class JpqlMatchBuilderTest {
 
     }
 
+    @Test
+    public void mkFetchJoinForMasterEntity() {
+        JpqlMatchBuilder builder = new JpqlMatchBuilder();
+        OneColumnBean ocb = new OneColumnBean();
+        String result = builder.mkFetchJoinForMasterEntity(ocb);
+        Assert.assertEquals("left join fetch o0.children left join fetch o0.otherBean", result);
+    }
+
     @SuppressWarnings("serial")
     class PriorCriteria extends Prioriteringsobjekt implements HaveQuerySortOrder, HaveExplicitTypeToFind {
 
@@ -107,6 +120,53 @@ public class JpqlMatchBuilderTest {
 
         sof.setOrder(sortOrderCount++);
         return sof;
+    }
+
+    public static class OneColumnBean {
+
+        @ManyToOne(fetch = FetchType.EAGER)
+        OneColumnBean otherBean;
+
+        @ManyToMany()
+        List<OneColumnBean> children;
+
+        @Column(name = "dbField")
+        String dbField = "some value";
+
+        String notStoredInDb = "any value";
+
+        public String getDbField() {
+            return dbField;
+        }
+
+        public void setDbField(String dbField) {
+            this.dbField = dbField;
+        }
+
+        public String getNotStoredInDb() {
+            return notStoredInDb;
+        }
+
+        public void setNotStoredInDb(String notStoredInDb) {
+            this.notStoredInDb = notStoredInDb;
+        }
+
+        public OneColumnBean getOtherBean() {
+            return otherBean;
+        }
+
+        public void setOtherBean(OneColumnBean otherBean) {
+            this.otherBean = otherBean;
+        }
+
+        public List<OneColumnBean> getChildren() {
+            return children;
+        }
+
+        public void setChildren(List<OneColumnBean> children) {
+            this.children = children;
+        }
+
     }
 
 }
