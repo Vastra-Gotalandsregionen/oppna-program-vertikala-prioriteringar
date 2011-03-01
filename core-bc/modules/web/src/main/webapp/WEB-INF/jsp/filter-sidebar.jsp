@@ -24,5 +24,12 @@
         <tags:sector sector="${form.allSektorsRaad}" />
         <br />
         <tags:sectors items="${form.sectors}" />
+        
+        <br>
+        
+        <a class="sector-node" href="http://www.vgregion.se/sv/Regionkansliet/Halso--och-sjukvardsavdelningen/Strategisk-utvecklingsenhet/Medicinska-prioriteringar/Annestesioperationintensivvard">
+          <img alt="" src="img/unchecked.gif" />
+          Annestesi
+        </a>
     </form:form>
 </div>
