@@ -132,8 +132,7 @@ button {
 }
 
 .main-content tbody.boxed {
-    display: block;
-    max-height: 800px;
+    height: 800px;
     overflow-y:auto;
     overflow-x: hidden;
 }

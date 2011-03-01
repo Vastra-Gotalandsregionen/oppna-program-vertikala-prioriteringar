@@ -541,6 +541,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("vaardnivaaKod");
         column.setLabel("Vårdnivå");
+        column.setFilterAble(true);
         column.setDisplayOrder(i++);
         result.add(column);
         column.setId(i);

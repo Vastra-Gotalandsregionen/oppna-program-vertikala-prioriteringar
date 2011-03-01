@@ -4,6 +4,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 <%@ taglib uri="/WEB-INF/tld/vgr-util.tld" prefix="su"%>
+<%@ taglib prefix='fn' uri='http://java.sun.com/jsp/jstl/functions' %>
 
 <div class="main-content">
     <form action="main" method="post">
@@ -91,7 +92,7 @@
         </tr>
         
       </thead>
-      <tbody class="boxed_">
+      <tbody class="${fn:length(rows) > 10 ? 'boxed' : ''}">
         <c:forEach items="${rows}" var="row" varStatus="vs">
           <tr class="${vs.index % 2 == 0 ? 'even' : 'odd'}">
             <td>
@@ -108,7 +109,6 @@
             </c:forEach>
           </tr>
         </c:forEach>
-        <tr> <td colspan="100">&nbsp;</td> </tr>
       </tbody>
     </table>
     </c:if>

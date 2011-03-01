@@ -92,7 +92,16 @@ public class ChooseCodesController extends ControllerBase {
         atcKodForm.setDisplayKey("kod");
         formPrototypes.put("atcKoder", atcKodForm);
 
-        // vaardform
+        ChooseListFormWithDomainProperty vaardnivaa = symptomDiagnosTextForm.clone();
+        vaardnivaa.setFilterLabel("Sök vårdnivå med nyckelord");
+        vaardnivaa.setNotYetChoosenLabel("Vårdnivåer");
+        vaardnivaa.setChoosenLabel("Valda nivåer");
+        vaardnivaa.setOkLabel("Välj nivåer");
+        vaardnivaa.setOkUrl("main");
+        vaardnivaa.setCancelUrl("main");
+        vaardnivaa.setAllItemsPropertyName("vaardnivaaKod");
+        formPrototypes.put("vaardnivaaKod", vaardnivaa);
+
         ChooseListFormWithDomainProperty vaardform = symptomDiagnosTextForm.clone();
         vaardform.setFilterLabel("Sök vårdformer med nyckelord");
         vaardform.setNotYetChoosenLabel("Vårdformer");

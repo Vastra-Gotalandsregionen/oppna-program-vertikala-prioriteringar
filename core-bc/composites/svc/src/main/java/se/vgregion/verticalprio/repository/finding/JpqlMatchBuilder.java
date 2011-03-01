@@ -158,9 +158,6 @@ public class JpqlMatchBuilder {
         prefix += ".";
 
         for (Object key : bm.keySet()) {
-            if ("godkaend".equals(key)) {
-                System.out.println("Hej Knekt!");
-            }
             String propertyName = (String) key;
             Object value = bm.get(propertyName);
             if (value == null || "".equals(value)) {
@@ -225,7 +222,7 @@ public class JpqlMatchBuilder {
      * @param bean
      * @return
      */
-    private String mkFetchJoinForMasterEntity(Object bean) {
+    String mkFetchJoinForMasterEntity(Object bean) {
         StringBuilder sb = new StringBuilder();
         BeanMap bm = new BeanMap(bean);
 

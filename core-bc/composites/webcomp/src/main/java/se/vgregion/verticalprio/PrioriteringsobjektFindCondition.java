@@ -21,6 +21,7 @@ import se.vgregion.verticalprio.entity.RangordningsKod;
 import se.vgregion.verticalprio.entity.SektorRaad;
 import se.vgregion.verticalprio.entity.TillstaandetsSvaarighetsgradKod;
 import se.vgregion.verticalprio.entity.VaardformsKod;
+import se.vgregion.verticalprio.entity.VaardnivaaKod;
 import se.vgregion.verticalprio.repository.finding.DateNullLogick;
 import se.vgregion.verticalprio.repository.finding.HaveExplicitTypeToFind;
 import se.vgregion.verticalprio.repository.finding.HaveNestedEntities;
@@ -30,6 +31,7 @@ import se.vgregion.verticalprio.repository.finding.NestedRangordningsKod;
 import se.vgregion.verticalprio.repository.finding.NestedSektorRaad;
 import se.vgregion.verticalprio.repository.finding.NestedTillstaandetsSvaarighetsgradKod;
 import se.vgregion.verticalprio.repository.finding.NestedVaardformsKod;
+import se.vgregion.verticalprio.repository.finding.NestedVaardnivaaKod;
 import se.vgregion.verticalprio.repository.finding.SortingDiagnosKod;
 import se.vgregion.verticalprio.repository.finding.SortingRangordningsKod;
 import se.vgregion.verticalprio.repository.finding.SortingSektorRaad;
@@ -47,6 +49,8 @@ public class PrioriteringsobjektFindCondition extends PrioriteringsobjektForm im
     private final NestedRangordningsKod rangordningsHolder = new NestedRangordningsKod();
 
     private final NestedVaardformsKod vaardformHolder = new NestedVaardformsKod();
+
+    private final NestedVaardnivaaKod vaardnivaHolder = new NestedVaardnivaaKod();
 
     private final List<SortOrderField> sortOrder = new ArrayList<SortOrderField>();
 
@@ -328,5 +332,21 @@ public class PrioriteringsobjektFindCondition extends PrioriteringsobjektForm im
     @Override
     public void setAtcKoder(Set<AtcKod> atcKoder) {
         throw new UnsupportedOperationException("Dont use this setter");
+    }
+
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public void setVaardnivaaKod(VaardnivaaKod vaardnivaaKod) {
+        throw new UnsupportedOperationException("Dont use this setter");
+    }
+
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public NestedVaardnivaaKod getVaardnivaaKod() {
+        return vaardnivaHolder;
     }
 }
