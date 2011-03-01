@@ -370,7 +370,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
         column.setDisplayOrder(i++);
         result.add(column);
         column.setId(i);
-        column.setHideAble(false);
+        column.setHideAble(true);
         // column.setSortField("");
         // column.setSortable(true);
         // Åtgärdstext saknas!
