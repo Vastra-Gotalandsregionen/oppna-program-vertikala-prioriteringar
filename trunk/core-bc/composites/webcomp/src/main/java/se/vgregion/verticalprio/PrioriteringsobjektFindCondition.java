@@ -14,6 +14,7 @@ import org.hibernate.LazyInitializationException;
 import se.vgregion.verticalprio.controllers.ManyCodesRef;
 import se.vgregion.verticalprio.controllers.PrioriteringsobjektForm;
 import se.vgregion.verticalprio.entity.AatgaerdsKod;
+import se.vgregion.verticalprio.entity.AbstractPrioriteringsobjekt;
 import se.vgregion.verticalprio.entity.AtcKod;
 import se.vgregion.verticalprio.entity.DiagnosKod;
 import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
@@ -22,7 +23,6 @@ import se.vgregion.verticalprio.entity.SektorRaad;
 import se.vgregion.verticalprio.entity.TillstaandetsSvaarighetsgradKod;
 import se.vgregion.verticalprio.entity.VaardformsKod;
 import se.vgregion.verticalprio.entity.VaardnivaaKod;
-import se.vgregion.verticalprio.repository.finding.DateNullLogick;
 import se.vgregion.verticalprio.repository.finding.HaveExplicitTypeToFind;
 import se.vgregion.verticalprio.repository.finding.HaveNestedEntities;
 import se.vgregion.verticalprio.repository.finding.HaveQuerySortOrder;
@@ -54,6 +54,8 @@ public class PrioriteringsobjektFindCondition extends PrioriteringsobjektForm im
 
     private final List<SortOrderField> sortOrder = new ArrayList<SortOrderField>();
 
+    private Class<? extends AbstractPrioriteringsobjekt> typeToFind = Prioriteringsobjekt.class;
+
     public PrioriteringsobjektFindCondition() {
         super();
         setRangordningsKod(rangordningsHolder);
@@ -78,7 +80,7 @@ public class PrioriteringsobjektFindCondition extends PrioriteringsobjektForm im
 
         super.setAatgaerdskoder(new NestedHashSet<AatgaerdsKod>());
         super.setAtcKoder(new NestedHashSet<AtcKod>());
-        setGodkaend(new DateNullLogick(true));
+        // setGodkaend(new DateNullLogick(true));
     }
 
     /**
@@ -86,7 +88,7 @@ public class PrioriteringsobjektFindCondition extends PrioriteringsobjektForm im
      */
     @Override
     public Class<?> type() {
-        return Prioriteringsobjekt.class;
+        return typeToFind;
     }
 
     @Transient
@@ -349,4 +351,13 @@ public class PrioriteringsobjektFindCondition extends PrioriteringsobjektForm im
     public NestedVaardnivaaKod getVaardnivaaKod() {
         return vaardnivaHolder;
     }
+
+    public void setTypeToFind(Class<? extends AbstractPrioriteringsobjekt> typeToFind) {
+        this.typeToFind = typeToFind;
+    }
+
+    public Class<? extends AbstractPrioriteringsobjekt> getTypeToFind() {
+        return typeToFind;
+    }
+
 }

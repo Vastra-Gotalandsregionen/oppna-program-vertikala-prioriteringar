@@ -3,333 +3,48 @@ package se.vgregion.verticalprio.entity;
 /**
  * This is the actual Priority object
  */
-import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-
-import se.vgregion.dao.domain.patterns.entity.AbstractEntity;
+import org.apache.commons.collections.BeanMap;
 
 @Entity
 @Table(name = "prioriteringsobjekt")
-public class Prioriteringsobjekt extends AbstractEntity<Long> implements Serializable {
+public class Prioriteringsobjekt extends AbstractPrioriteringsobjekt {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @Fetch(FetchMode.JOIN)
-    @JoinColumn(name = "vaentetid_besook_veckor_kod_id")
-    private VaentetidsKod vaentetidBesookVeckor;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @Fetch(FetchMode.JOIN)
-    @JoinColumn(name = "sektor_raad_id")
-    private SektorRaad sektorRaad;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @Fetch(FetchMode.JOIN)
-    @JoinColumn(name = "kostnad_levnadsaar_kod_id")
-    private KostnadLevnadsaarKod kostnadLevnadsaarKod;
-
-    @Transient
-    private Integer kostnad;
-
-    @Transient
-    private Integer volym;
-
-    @Column(name = "godkaend")
-    private Date godkaend;
-
-    @Column(name = "senast_uppdaterad")
-    private Date senastUppdaterad;
-
-    @ManyToMany()
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "link_prioriteringsobjekt_diagnos_kod", joinColumns = { @JoinColumn(name = "prio_id") }, inverseJoinColumns = { @JoinColumn(name = "diagnos_kod_id") })
-    private Set<DiagnosKod> diagnoser = new HashSet<DiagnosKod>();
+    protected Set<DiagnosKod> diagnoser = new HashSet<DiagnosKod>();
 
-    @ManyToMany()
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "link_prioriteringsobjekt_aatgaerds_kod", joinColumns = { @JoinColumn(name = "prio_id") }, inverseJoinColumns = { @JoinColumn(name = "aatgaerds_kod_id") })
-    private Set<AatgaerdsKod> aatgaerdskoder = new HashSet<AatgaerdsKod>();
+    protected Set<AatgaerdsKod> aatgaerdskoder = new HashSet<AatgaerdsKod>();
 
-    @ManyToOne
-    @Fetch(FetchMode.JOIN)
-    @JoinColumn(name = "vaardforms_kod_id")
-    private VaardformsKod vaardform;
-
-    // @ManyToMany()
-    // @JoinTable(name = "link_prioriteringsobjekt_vaardforms_kod", joinColumns = { @JoinColumn(name = "prio_id")
-    // }, inverseJoinColumns = { @JoinColumn(name = "vaardforms_kod_id") })
-    // private List<VaardformsKod> vaardformskoder = new ArrayList<VaardformsKod>();
-
-    @ManyToMany()
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "link_prioriteringsobjekt_atc_kod", joinColumns = { @JoinColumn(name = "prio_id") }, inverseJoinColumns = { @JoinColumn(name = "atc_kod_id") })
-    private Set<AtcKod> atcKoder = new HashSet<AtcKod>();
+    protected Set<AtcKod> atcKoder = new HashSet<AtcKod>();
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @Fetch(FetchMode.JOIN)
-    @JoinColumn(name = "tillstaandets_svaarighetsgrad_kod_id")
-    private TillstaandetsSvaarighetsgradKod tillstaandetsSvaarighetsgradKod;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @Fetch(FetchMode.JOIN)
-    @JoinColumn(name = "vaentetid_behandling_veckor_kod_id")
-    private VaentetidsKod vaentetidBehandlingVeckor;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @Fetch(FetchMode.JOIN)
-    @JoinColumn(name = "rangordnings_kod_id")
-    private RangordningsKod rangordningsKod;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @Fetch(FetchMode.JOIN)
-    @JoinColumn(name = "vaardnivaa_kod_id")
-    private VaardnivaaKod vaardnivaaKod;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @Fetch(FetchMode.JOIN)
-    @JoinColumn(name = "haelsonekonomisk_evidens_kod_id")
-    private HaelsonekonomiskEvidensKod haelsonekonomiskEvidensKod;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @Fetch(FetchMode.JOIN)
-    @JoinColumn(name = "aatgaerds_risk_kod_id")
-    private AatgaerdsRiskKod aatgaerdsRiskKod;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @Fetch(FetchMode.JOIN)
-    @JoinColumn(name = "patientnytto_evidens_kod_id")
-    private PatientnyttoEvidensKod patientnyttoEvidensKod;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @Fetch(FetchMode.JOIN)
-    @JoinColumn(name = "patientnytta_effekt_aatgaerds_kod_id")
-    private PatientnyttaEffektAatgaerdsKod patientnyttaEffektAatgaerdsKod;
-
-    @Column(name = "kommentar", length = 2000)
-    private String kommentar;
-
-    @Column(name = "indikation_gaf", length = 2000)
-    private String indikationGaf;
-
-    @Override
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setTillstaandetsSvaarighetsgradKod(TillstaandetsSvaarighetsgradKod tillstaandetsSvaarighetsgrad) {
-        this.tillstaandetsSvaarighetsgradKod = tillstaandetsSvaarighetsgrad;
-    }
-
-    public TillstaandetsSvaarighetsgradKod getTillstaandetsSvaarighetsgradKod() {
-        return tillstaandetsSvaarighetsgradKod;
-    }
-
-    public void setSektorRaad(SektorRaad sektorRaad) {
-        this.sektorRaad = sektorRaad;
-    }
-
-    public SektorRaad getSektorRaad() {
-        return sektorRaad;
-    }
-
-    public Set<DiagnosKod> getDiagnoser() {
-        return diagnoser;
-    }
-
-    public void setDiagnoser(Set<DiagnosKod> diagnoser) {
-        this.diagnoser = diagnoser;
-    }
-
-    public List<String> getDiagnosTexts() {
-        return mkBeskrivningsText(getDiagnoser());
-    }
-
-    public List<String> getDiagnosKodTexts() {
-        List<String> sb = new ArrayList<String>();
-        for (DiagnosKod kod : getDiagnoser()) {
-            sb.add(kod.getKod());
+    public void godkaen() throws IllegalAccessError {
+        if (mkMessagesWhyNotToApprovePrio() != null) {
+            throw new IllegalAccessError(mkMessagesWhyNotToApprovePrio());
         }
-        return sb;
+        setGodkaend(new Date());
     }
 
-    private List<String> mkBeskrivningsText(Set<? extends AbstractKod> koder) {
-        List<String> sb = new ArrayList<String>();
-        if (koder == null || koder.isEmpty()) {
-            return sb;
-        }
-        for (AbstractKod kod : koder) {
-            sb.add(kod.getBeskrivning());
-        }
-        return sb;
+    public void underkann() {
+        setGodkaend(null);
     }
-
-    public Set<AatgaerdsKod> getAatgaerdskoder() {
-        return aatgaerdskoder;
-    }
-
-    public void setAatgaerdskoder(Set<AatgaerdsKod> aatgaerdskoder) {
-        this.aatgaerdskoder = aatgaerdskoder;
-    }
-
-    public List<String> getAatgaerdskoderTexts() {
-        return mkBeskrivningsText(aatgaerdskoder);
-    }
-
-    // public List<VaardformsKod> getVaardformskoder() {
-    // return vaardformskoder;
-    // }
-    //
-    // public void setVaardformskoder(List<VaardformsKod> vaardformskoder) {
-    // this.vaardformskoder = vaardformskoder;
-    // }
-
-    public void setVaentetidBehandlingVeckor(VaentetidsKod vaentetidBehandlingVeckor) {
-        this.vaentetidBehandlingVeckor = vaentetidBehandlingVeckor;
-    }
-
-    public VaentetidsKod getVaentetidBehandlingVeckor() {
-        return vaentetidBehandlingVeckor;
-    }
-
-    public void setRangordningsKod(RangordningsKod rangordningsKod) {
-        this.rangordningsKod = rangordningsKod;
-    }
-
-    public RangordningsKod getRangordningsKod() {
-        return rangordningsKod;
-    }
-
-    public void setVaardnivaaKod(VaardnivaaKod vaardnivaaKod) {
-        this.vaardnivaaKod = vaardnivaaKod;
-    }
-
-    public VaardnivaaKod getVaardnivaaKod() {
-        return vaardnivaaKod;
-    }
-
-    public void setHaelsonekonomiskEvidensKod(HaelsonekonomiskEvidensKod haelsonekonomiskEvidensKod) {
-        this.haelsonekonomiskEvidensKod = haelsonekonomiskEvidensKod;
-    }
-
-    public HaelsonekonomiskEvidensKod getHaelsonekonomiskEvidensKod() {
-        return haelsonekonomiskEvidensKod;
-    }
-
-    public void setAatgaerdsRiskKod(AatgaerdsRiskKod aatgaerdsRiskKod) {
-        this.aatgaerdsRiskKod = aatgaerdsRiskKod;
-    }
-
-    public AatgaerdsRiskKod getAatgaerdsRiskKod() {
-        return aatgaerdsRiskKod;
-    }
-
-    public void setPatientnyttoEvidensKod(PatientnyttoEvidensKod patientnyttoEvidensKod) {
-        this.patientnyttoEvidensKod = patientnyttoEvidensKod;
-    }
-
-    public PatientnyttoEvidensKod getPatientnyttoEvidensKod() {
-        return patientnyttoEvidensKod;
-    }
-
-    public void setPatientnyttaEffektAatgaerdsKod(PatientnyttaEffektAatgaerdsKod patientnyttaEffektAatgaerdKod) {
-        this.patientnyttaEffektAatgaerdsKod = patientnyttaEffektAatgaerdKod;
-    }
-
-    public PatientnyttaEffektAatgaerdsKod getPatientnyttaEffektAatgaerdsKod() {
-        return patientnyttaEffektAatgaerdsKod;
-    }
-
-    public void setKommentar(String kommentar) {
-        this.kommentar = kommentar;
-    }
-
-    public String getKommentar() {
-        return kommentar;
-    }
-
-    public void setAtcKoder(Set<AtcKod> atcKoder) {
-        this.atcKoder = atcKoder;
-    }
-
-    public Set<AtcKod> getAtcKoder() {
-        return atcKoder;
-    }
-
-    public List<String> getAtcText() {
-        return mkBeskrivningsText(getAtcKoder());
-    }
-
-    public void setIndikationGaf(String indikationGaf) {
-        this.indikationGaf = indikationGaf;
-    }
-
-    public String getIndikationGaf() {
-        return indikationGaf;
-    }
-
-    public void setVaentetidBesookVeckor(VaentetidsKod vaentetidBesookVeckor) {
-        this.vaentetidBesookVeckor = vaentetidBesookVeckor;
-    }
-
-    public VaentetidsKod getVaentetidBesookVeckor() {
-        return vaentetidBesookVeckor;
-    }
-
-    // public static void main(String[] args) {
-    // Prioriteringsobjekt prio = new Prioriteringsobjekt();
-    // BeanMap bm = BeanMap.create(prio);
-    // StringBuilder sb = new StringBuilder();
-    //
-    // for (Object key : bm.keySet()) {
-    // String prop = (String) key;
-    // sb.append("column = new se.vgregion.verticalprio.entity.Column();\n");
-    // sb.append("column." + setterCall("name", quote(prop)) + "\n");
-    // sb.append("column." + setterCall("label", quote("")) + "\n");
-    // sb.append("column." + setterCall("displayOrder", "i++") + "\n");
-    // sb.append("result.add(column); column.setId(i); column.setHideAble(true);\n\n");
-    // }
-    //
-    // System.out.println(sb);
-    // }
-    //
-    // private static String quote(String s) {
-    // return '"' + s + '"';
-    // }
-    //
-    // private static String setterCall(String prop, String arg) {
-    // String result = "set" + prop.substring(0, 1).toUpperCase() + prop.substring(1) + "(";
-    // result += arg + ");";
-    // return result;
-    // }
-    //
-    // private static String getterCall(String prop) {
-    // String result = "set" + prop.substring(0, 1).toUpperCase() + prop.substring(1) + "();";
-    // return result;
-    // }
 
     private static List<se.vgregion.verticalprio.entity.Column> columns;
 
@@ -603,175 +318,66 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
         return result;
     }
 
-    public void setKostnad(Integer kostnad) {
-        this.kostnad = kostnad;
+    public PrioriteringsobjektUtkast mkNewUtkast() {
+        PrioriteringsobjektUtkast result = new PrioriteringsobjektUtkast();
+        BeanMap resultMap = new BeanMap(result);
+        BeanMap thisMap = new BeanMap(this);
+
+        for (Object key : thisMap.keySet()) {
+            if (resultMap.containsKey(key) && resultMap.getWriteMethod(key.toString()) != null) {
+                Object value = thisMap.get(key);
+                if (!(value instanceof Collection)) {
+                    resultMap.put(key, value);
+                }
+            }
+        }
+
+        result.setId(null);
+        result.setSkarpVersion(this);
+
+        clearCloneAndSetCollectionItems(getAatgaerdskoder(), result.getAatgaerdskoder());
+        clearCloneAndSetCollectionItems(getAtcKoder(), result.getAtcKoder());
+        clearCloneAndSetCollectionItems(getDiagnoser(), result.getDiagnoser());
+
+        return result;
     }
 
-    public Integer getKostnad() {
-        return kostnad;
+    @SuppressWarnings("unchecked")
+    private <T extends AbstractKod> void clearCloneAndSetCollectionItems(Set<T> source, Set<T> target) {
+        target.clear();
+        for (T item : source) {
+            target.add((T) item.clone());
+        }
     }
 
-    public void setVolym(Integer volym) {
-        this.volym = volym;
+    @Override
+    public Set<DiagnosKod> getDiagnoser() {
+        return diagnoser;
     }
 
-    public Integer getVolym() {
-        return volym;
+    @Override
+    public void setDiagnoser(Set<DiagnosKod> diagnoser) {
+        this.diagnoser = diagnoser;
     }
 
-    public Date getGodkaend() {
-        return godkaend;
+    @Override
+    public Set<AatgaerdsKod> getAatgaerdskoder() {
+        return aatgaerdskoder;
     }
 
-    public void setGodkaend(Date godkaend) {
-        this.godkaend = godkaend;
+    @Override
+    public void setAatgaerdskoder(Set<AatgaerdsKod> aatgaerdskoder) {
+        this.aatgaerdskoder = aatgaerdskoder;
     }
 
-    /**
-     * @param vaardform
-     *            the vaardform to set
-     */
-    public void setVaardform(VaardformsKod vaardform) {
-        this.vaardform = vaardform;
+    @Override
+    public Set<AtcKod> getAtcKoder() {
+        return atcKoder;
     }
 
-    /**
-     * @return the vaardform
-     */
-    public VaardformsKod getVaardform() {
-        return vaardform;
-    }
-
-    public void setKostnadLevnadsaarKod(KostnadLevnadsaarKod kostnadLevnadsaarKod) {
-        this.kostnadLevnadsaarKod = kostnadLevnadsaarKod;
-    }
-
-    public KostnadLevnadsaarKod getKostnadLevnadsaarKod() {
-        return kostnadLevnadsaarKod;
-    }
-
-    public void setSenastUppdaterad(Date senastUppdaterad) {
-        this.senastUppdaterad = senastUppdaterad;
-    }
-
-    public Date getSenastUppdaterad() {
-        return senastUppdaterad;
-    }
-
-    public String getMessagesWhyNotSaveAble() {
-        Prioriteringsobjekt prio = this;
-        StringBuilder sb = new StringBuilder();
-        if (prio.getDiagnoser().isEmpty()) {
-            sb.append("<br/>Saknar diagnos(er).");
-        }
-        if (prio.getSektorRaad() == null) {
-            sb.append("<br/>Sektorsråd saknas.");
-        }
-
-        if (sb.length() == 0) {
-            return null;
-        }
-
-        return "Kunde inte spara på grund av: " + sb.toString();
-    }
-
-    public String mkMessagesWhyNotToApprovePrio() {
-        Prioriteringsobjekt prio = this;
-        StringBuilder sb = new StringBuilder();
-        if (prio.getDiagnoser().isEmpty()) {
-            sb.append("<br/>Lägg till minst en diagnos.");
-        }
-        if (prio.getAatgaerdskoder().isEmpty()) {
-            sb.append("<br/>Lägg till minst en åtgärdskod.");
-        }
-        if (prio.getTillstaandetsSvaarighetsgradKod() == null) {
-            sb.append("<br/>Ange tillståndets svårighetsgrad.");
-        }
-        if (prio.getAatgaerdsRiskKod() == null) {
-            sb.append("<br/>Ange risk med åtgärd.");
-        }
-        if (prio.getPatientnyttaEffektAatgaerdsKod() == null) {
-            sb.append("<br/>Ange patientnytta / effekt åtgärd.");
-        }
-        if (prio.getRangordningsKod() == null) {
-            sb.append("<br/>Ange rangordning.");
-        }
-        if (prio.getPatientnyttoEvidensKod() == null) {
-            sb.append("<br/>Ange evidens patientnytta / effekt åtgärd.");
-        }
-        if (prio.getVaentetidBesookVeckor() == null) {
-            sb.append("<br/>Ange väntetid besök veckor.");
-        }
-        if (prio.getVaentetidBehandlingVeckor() == null) {
-            sb.append("<br/>Ange väntetid veckor behandling.");
-        }
-        if (prio.getVaardnivaaKod() == null) {
-            sb.append("<br/>Ange vårdnivå.");
-        }
-        if (prio.getVaardform() == null) {
-            sb.append("<br/>Ange vårdform.");
-        }
-        if (prio.getSektorRaad() == null) {
-            sb.append("<br/>Ange sektorsråd.");
-        }
-        if (sb.length() == 0) {
-            return null;
-        }
-
-        return "Posten kunde ej godkännas." + sb.toString();
-    }
-
-    public void godkaen() throws IllegalAccessError {
-        if (mkMessagesWhyNotToApprovePrio() != null) {
-            throw new IllegalAccessError(mkMessagesWhyNotToApprovePrio());
-        }
-        setGodkaend(new Date());
-    }
-
-    public void underkann() {
-        setGodkaend(null);
-    }
-
-    /**
-     * Rangordning enligt formel är summan:
-     * 
-     * Kod för tillståndets svårighetsgrad -0.6 +
-     * 
-     * Kod för risk med åtgärd*0,2 +
-     * 
-     * Kod för patientnytta/effekt åtgärd *0,2 +
-     * 
-     * Kod för evidens för patientnytta /effekt åtgärd *0,2
-     * 
-     * 
-     * Ex. Tillståndets svårighetsgrad: 9
-     * 
-     * Risk med åtgärd: 1
-     * 
-     * Patientnytta /effekt åtgärd: 2
-     * 
-     * Evidens för patientnytta /effekt åtgärd: 4
-     * 
-     * 9-0,6 + 1*0,2 + 2*0,2 + 4*0,2 = 9,8
-     * 
-     * @return
-     */
-    public Double getRangordningEnligtFormel() {
-        try {
-            Float tillstandSvaarighetsgrad = Float.parseFloat(getTillstaandetsSvaarighetsgradKod().getKod());
-            Float riskMedAatgaerd = Float.parseFloat(getAatgaerdsRiskKod().getKod());
-            Float patientnyttaEffektAatgerd = Float.parseFloat(getPatientnyttaEffektAatgaerdsKod().getKod());
-            Float evidensPatientnytta = Float.parseFloat(getPatientnyttoEvidensKod().getKod());
-
-            double result = (tillstandSvaarighetsgrad.floatValue() - 0.6);
-            result += riskMedAatgaerd * 0.2;
-            result += patientnyttaEffektAatgerd * 0.2;
-            result += evidensPatientnytta * 0.2;
-
-            return result;
-        } catch (Exception e) {
-            return null;
-        }
+    @Override
+    public void setAtcKoder(Set<AtcKod> atcKoder) {
+        this.atcKoder = atcKoder;
     }
 
 }

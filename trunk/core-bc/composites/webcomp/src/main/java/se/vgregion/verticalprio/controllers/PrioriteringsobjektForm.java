@@ -91,6 +91,8 @@ public class PrioriteringsobjektForm extends Prioriteringsobjekt {
     private final Map<String, Column> columns = new HashMap<String, Column>();
     private List<DiagnosKod> diagnoserList;
 
+    private Prioriteringsobjekt skarpVersion;
+
     @Transient
     @SuppressWarnings("serial")
     ManyCodesRef<AatgaerdsKod> aatgaerdRef = new ManyCodesRef<AatgaerdsKod>() {
@@ -503,6 +505,18 @@ public class PrioriteringsobjektForm extends Prioriteringsobjekt {
 
     public List<DiagnosKod> getDiagnoserList() {
         return diagnoserList;
+    }
+
+    public void setSkarpVersion(Prioriteringsobjekt skarpVersion) {
+        this.skarpVersion = skarpVersion;
+    }
+
+    public Prioriteringsobjekt getSkarpVersion() {
+        return skarpVersion;
+    }
+
+    public void setSektorRaad(String sektorRaad) {
+        throw new UnsupportedOperationException("Is this called?");
     }
 
 }

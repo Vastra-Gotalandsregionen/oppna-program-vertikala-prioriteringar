@@ -10,6 +10,9 @@
  
   <bean name="prioRepository" class="se.vgregion.verticalprio.controllers.MockPrioRepository" />
   
+  <bean name="prioUtkastRepository" class="se.vgregion.verticalprio.controllers.MockGenerisktFinderRepository">
+    <constructor-arg value="se.vgregion.verticalprio.entity.PrioriteringsobjektUtkast" />
+  </bean>
   <bean name="aatgaerdsKodRepository" class="se.vgregion.verticalprio.controllers.MockGenerisktKodRepository">
     <constructor-arg value="se.vgregion.verticalprio.entity.AatgaerdsKod" />
   </bean>

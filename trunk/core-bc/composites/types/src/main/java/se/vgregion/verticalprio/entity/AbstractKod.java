@@ -9,13 +9,16 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.MappedSuperclass;
 
+import org.apache.commons.collections.BeanMap;
+
 import se.vgregion.dao.domain.patterns.entity.AbstractEntity;
 
 @SuppressWarnings("serial")
 @MappedSuperclass
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Cacheable(value = true)
-public abstract class AbstractKod extends AbstractEntity<Long> implements Serializable, Comparable<AbstractKod> {
+public abstract class AbstractKod extends AbstractEntity<Long> implements Serializable, Comparable<AbstractKod>,
+        Cloneable {
 
     @Id
     private Long id;
@@ -108,6 +111,23 @@ public abstract class AbstractKod extends AbstractEntity<Long> implements Serial
             return "";
         }
         return s.trim();
+    }
+
+    @Override
+    public AbstractKod clone() {
+        try {
+            AbstractKod result = getClass().newInstance();
+            BeanMap thisMap = new BeanMap(this);
+            BeanMap resultMap = new BeanMap(result);
+            resultMap.putAllWriteable(thisMap);
+            result.setId(getId());
+            return result;
+        } catch (InstantiationException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
 }

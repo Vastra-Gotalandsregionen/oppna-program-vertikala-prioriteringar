@@ -61,7 +61,7 @@ public class EditPrioriteringControllerTest {
     @Test
     public final void testInitView() {
         Long id = 100l;
-        String result = epc.initView(modelMap, request.getSession(), id);
+        String result = epc.initView(modelMap, request.getSession(), id, false);
         Assert.assertEquals("prio-view", result);
     }
 
