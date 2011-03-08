@@ -24,12 +24,13 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import se.vgregion.verticalprio.MainForm;
 import se.vgregion.verticalprio.PrioriteringsobjektFindCondition;
 import se.vgregion.verticalprio.controllers.ChooseFromListController.ChooseListForm;
+import se.vgregion.verticalprio.entity.AbstractPrioriteringsobjekt;
 import se.vgregion.verticalprio.entity.Column;
 import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
+import se.vgregion.verticalprio.entity.PrioriteringsobjektUtkast;
 import se.vgregion.verticalprio.entity.SektorRaad;
 import se.vgregion.verticalprio.entity.User;
 import se.vgregion.verticalprio.repository.GenerisktKodRepository;
-import se.vgregion.verticalprio.repository.finding.DateNullLogick;
 import se.vgregion.verticalprio.repository.finding.HaveNestedEntities;
 import se.vgregion.verticalprio.repository.finding.HaveQuerySortOrder;
 import se.vgregion.verticalprio.repository.finding.NestedSektorRaad;
@@ -56,7 +57,7 @@ public class VerticalPrioController extends EditPrioriteringController {
         session.setAttribute("loginResult", null);
         PrioriteringsobjektFindCondition condition = getOrCreateSessionObj(session, "prioCondition",
                 PrioriteringsobjektFindCondition.class);
-        condition.setGodkaend(new DateNullLogick(true));
+        // condition.setGodkaend(new DateNullLogick(true));
         response.sendRedirect("main");
         return null;
     }
@@ -79,11 +80,11 @@ public class VerticalPrioController extends EditPrioriteringController {
             User user = users.get(0);
             PrioriteringsobjektFindCondition condition = getOrCreateSessionObj(session, "prioCondition",
                     PrioriteringsobjektFindCondition.class);
-            if (user.isEditor() || user.isApprover()) {
-                condition.setGodkaend(null);
-            } else {
-                condition.setGodkaend(new DateNullLogick());
-            }
+            // if (user.isEditor() || user.isApprover()) {
+            // condition.setGodkaend(null);
+            // } else {
+            // condition.setGodkaend(new DateNullLogick());
+            // }
 
             Map userValues = new HashMap(new BeanMap(user)); // Insane... makes all lazy properties initialized.
             for (Object o : userValues.values()) {
@@ -358,7 +359,7 @@ public class VerticalPrioController extends EditPrioriteringController {
     }
 
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public List<Prioriteringsobjekt> result(HttpSession session) {
+    public List<AbstractPrioriteringsobjekt> result(HttpSession session) {
         PrioriteringsobjektFindCondition condition = getOrCreateSessionObj(session, "prioCondition",
                 PrioriteringsobjektFindCondition.class);
         MainForm mf = getMainForm(session);
@@ -386,21 +387,41 @@ public class VerticalPrioController extends EditPrioriteringController {
             sektorNest.content().addAll(raad);
 
             if (sektorNest.content().isEmpty()) {
-                List<Prioriteringsobjekt> zeroResult = new ArrayList<Prioriteringsobjekt>();
+                List<AbstractPrioriteringsobjekt> zeroResult = new ArrayList<AbstractPrioriteringsobjekt>();
                 session.setAttribute("rows", zeroResult);
                 return zeroResult;
             }
         }
 
-        List<Prioriteringsobjekt> prios = new ArrayList<Prioriteringsobjekt>(prioRepository.findByExample(
-                condition, null));
+        List<AbstractPrioriteringsobjekt> result = new ArrayList<AbstractPrioriteringsobjekt>();
+
+        User user = (User) session.getAttribute("user");
+        if (user != null && (user.isApprover() || user.isEditor())) {
+            condition.setTypeToFind(PrioriteringsobjektUtkast.class);
+            prioRepository.setExtraWhere(null);
+            List<? extends AbstractPrioriteringsobjekt> prioUtkast = new ArrayList<Prioriteringsobjekt>(
+                    prioRepository.findByExample(condition, null));
+            prioRepository.setExtraWhere("o0.id not in (select pu.prioriteringsobjektId from "
+                    + "PrioriteringsobjektUtkast pu where pu.prioriteringsobjektId is not null)");
+            condition.setTypeToFind(Prioriteringsobjekt.class);
+            result.addAll(prioUtkast);
+        } else {
+            prioRepository.setExtraWhere(null);
+        }
+
+        List<? extends AbstractPrioriteringsobjekt> prios = new ArrayList<Prioriteringsobjekt>(
+                prioRepository.findByExample(condition, null));
+        result.addAll(prios);
+        prioRepository.setExtraWhere(null);
 
         List<SektorRaad> sectors = applicationData.getSektorRaadList();
-        for (Prioriteringsobjekt prio : prios) {
+
+        for (AbstractPrioriteringsobjekt prio : result) {
             prio.setSektorRaad(findRoot(sectors, prio.getSektorRaad()));
         }
-        session.setAttribute("rows", prios);
-        return prios;
+
+        session.setAttribute("rows", result);
+        return result;
     }
 
     private SektorRaad findRoot(List<SektorRaad> all, SektorRaad toFind) {

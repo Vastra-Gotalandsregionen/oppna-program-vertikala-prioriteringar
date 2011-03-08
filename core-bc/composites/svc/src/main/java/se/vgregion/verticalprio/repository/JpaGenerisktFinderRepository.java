@@ -24,6 +24,8 @@ public class JpaGenerisktFinderRepository<T extends AbstractEntity<Long>> extend
 
     private Class klass;
 
+    private String extraWhere;
+
     public JpaGenerisktFinderRepository() {
         this((Class<T>) AbstractKod.class);
     }
@@ -45,7 +47,9 @@ public class JpaGenerisktFinderRepository<T extends AbstractEntity<Long>> extend
     public List<T> findByExample(T bean, Integer maxResult) {
         List<Object> values = new ArrayList<Object>();
         JpqlMatchBuilder builder = new JpqlMatchBuilder();
-        // builder.getSortOrder().addAll(getSortOrder());
+        if (extraWhere != null && !"".equals(extraWhere)) {
+            builder.setExtraWhere(extraWhere);
+        }
         String jpql = builder.mkFindByExampleJpql(bean, values);
         // System.out.println(jpql);
         return query(jpql, maxResult, values.toArray());
@@ -100,6 +104,22 @@ public class JpaGenerisktFinderRepository<T extends AbstractEntity<Long>> extend
     @Override
     public List<String> getSortOrder() {
         return sortOrder;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public void setExtraWhere(String extraWhere) {
+        this.extraWhere = extraWhere;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public String getExtraWhere() {
+        return extraWhere;
     }
 
 }

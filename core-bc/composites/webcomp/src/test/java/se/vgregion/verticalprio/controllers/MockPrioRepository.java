@@ -13,6 +13,8 @@ import se.vgregion.verticalprio.repository.PrioRepository;
  */
 public class MockPrioRepository implements PrioRepository {
 
+    private String extraWhere;
+
     /**
      * @inheritDoc
      */
@@ -109,6 +111,22 @@ public class MockPrioRepository implements PrioRepository {
     @Override
     public List<String> getSortOrder() {
         throw new UnsupportedOperationException("TODO: Implement this method");
+    }
+
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public void setExtraWhere(String extraWhere) {
+        this.extraWhere = extraWhere;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public String getExtraWhere() {
+        return extraWhere;
     }
 
 }

@@ -29,4 +29,8 @@ public interface GenerisktFinderRepository<T extends AbstractEntity<Long>> exten
      */
     List<String> getSortOrder();
 
+    void setExtraWhere(String extraWhere);
+
+    String getExtraWhere();
+
 }

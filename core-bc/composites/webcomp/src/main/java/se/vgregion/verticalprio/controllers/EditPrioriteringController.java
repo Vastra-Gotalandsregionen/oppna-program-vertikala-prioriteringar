@@ -25,13 +25,16 @@ import se.vgregion.verticalprio.ApplicationData;
 import se.vgregion.verticalprio.controllers.ChooseFromListController.ChooseListForm;
 import se.vgregion.verticalprio.entity.AatgaerdsKod;
 import se.vgregion.verticalprio.entity.AbstractKod;
+import se.vgregion.verticalprio.entity.AbstractPrioriteringsobjekt;
 import se.vgregion.verticalprio.entity.AtcKod;
 import se.vgregion.verticalprio.entity.Column;
 import se.vgregion.verticalprio.entity.DiagnosKod;
 import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
+import se.vgregion.verticalprio.entity.PrioriteringsobjektUtkast;
 import se.vgregion.verticalprio.entity.SektorRaad;
 import se.vgregion.verticalprio.entity.User;
 import se.vgregion.verticalprio.entity.VaardformsKod;
+import se.vgregion.verticalprio.repository.GenerisktFinderRepository;
 import se.vgregion.verticalprio.repository.GenerisktHierarkisktKodRepository;
 import se.vgregion.verticalprio.repository.GenerisktKodRepository;
 import se.vgregion.verticalprio.repository.PrioRepository;
@@ -60,10 +63,13 @@ public class EditPrioriteringController extends ControllerBase {
     @Resource(name = "prioRepository")
     protected PrioRepository prioRepository;
 
+    @Resource(name = "prioUtkastRepository")
+    protected GenerisktFinderRepository<PrioriteringsobjektUtkast> prioUtkastRepository;
+
     @RequestMapping(value = "/main", params = { "delete-prio" })
     @Transactional
     public String initDeleteView(ModelMap model, HttpSession session, @RequestParam(required = false) Long id) {
-        initView(model, session, id);
+        initView(model, session, id, false);
         model.addAttribute("editDir", new EditDirective(false, false));
         return "delete-prio-view";
     }
@@ -102,7 +108,7 @@ public class EditPrioriteringController extends ControllerBase {
     @RequestMapping(value = "/main", params = { "prio-create" })
     @Transactional
     public String create(ModelMap model, HttpSession session) {
-        String result = initView(model, session, null);
+        String result = initView(model, session, null, null);
         model.addAttribute("editDir", new EditDirective(true, null));
         return result;
     }
@@ -110,42 +116,67 @@ public class EditPrioriteringController extends ControllerBase {
     @RequestMapping(value = "/main", params = { "edit-prio" })
     @Transactional
     public String edit(ModelMap model, HttpSession session, @RequestParam(required = false) Long id) {
-        String result = initView(model, session, id);
+        String result = initView(model, session, id, true);
         model.addAttribute("editDir", new EditDirective(true, null));
         return result;
     }
 
+    @Transactional
+    private PrioriteringsobjektUtkast getUtkast(Prioriteringsobjekt prio) {
+        PrioriteringsobjektUtkast rootConstraint = new PrioriteringsobjektUtkast();
+        rootConstraint.setSkarpVersion(prio);
+        List<PrioriteringsobjektUtkast> results = prioUtkastRepository.findByExample(rootConstraint, 1);
+        if (results.isEmpty()) {
+            return null;
+        }
+        return results.get(0);
+    }
+
     @RequestMapping(value = "/main", params = { "select-prio" })
     @Transactional
-    public String initView(ModelMap model, HttpSession session, @RequestParam(required = false) Long id) {
+    public String initView(ModelMap model, HttpSession session, @RequestParam(required = false) Long id,
+            Boolean forEdit) {
+
         PrioriteringsobjektForm form = (PrioriteringsobjektForm) model.get("prio");
         if (form == null) {
             form = new PrioriteringsobjektForm();
         }
+
         model.addAttribute("prio", form);
         session.setAttribute("prio", form);
         model.addAttribute("editDir", new EditDirective(false, false));
         initKodLists(form);
 
         BeanMap formMap = new BeanMap(form);
-        Prioriteringsobjekt prio = null;
+        AbstractPrioriteringsobjekt prio = null;
         if (id != null) {
-            prio = prioRepository.find(id);
+            prio = getPrioOrUtkast(id);
+            User user = (User) session.getAttribute("user");
+            if (user != null && prio instanceof Prioriteringsobjekt && (user.isApprover() || user.isEditor())) {
+                form.setSkarpVersion((Prioriteringsobjekt) prio);
+                // Keep in mind what object to use as the active one.
+            }
         } else {
-            prio = new Prioriteringsobjekt();
+            prio = new PrioriteringsobjektUtkast();
         }
+
         BeanMap entityMap = new BeanMap(prio);
         formMap.putAllWriteable(entityMap);
-        form.putAllIdsFromCodesIfAnyIntoAttributeOnThisObject();
-        form.getDiagnoser().toArray(); // Are not eager so we have to make sure they are
-        form.getAatgaerdskoder().toArray(); // loaded before sending them to the jsp-layer.
-        form.getAtcKoder().toArray();
-        if (form.getId() == null) {
+        if (prio instanceof Prioriteringsobjekt) {
+            // If this is an Prioriteringsobjekt then we don't, should, not need
+            // the id. Either the post is just for showing to the user, then we don't need it. Or
+            // we have just started editing a post that have no utkast in the db. Setting an id
+            // would fool jpa later to believe it should try to update a post instead of creating one.
+            form.setId(null);
+        } else {
             form.setId(id); // Strange... yes?
             // putAllWriteable seems not to work for this class on Long:s at least (and in the antonio-env).
             // TODO: own implementation of BeanMap
         }
-
+        form.putAllIdsFromCodesIfAnyIntoAttributeOnThisObject();
+        // form.getDiagnoser().toArray(); // Are not eager so we have to make sure they are
+        // form.getAatgaerdskoder().toArray(); // loaded before sending them to the jsp-layer.
+        // form.getAtcKoder().toArray();
         init(form.getSektorRaadList());
 
         return "prio-view";
@@ -160,16 +191,35 @@ public class EditPrioriteringController extends ControllerBase {
         }
     }
 
+    @Transactional
+    AbstractPrioriteringsobjekt getPrioOrUtkast(long id) {
+        AbstractPrioriteringsobjekt result = null;
+        result = prioRepository.find(id);
+        if (result == null) {
+            result = prioUtkastRepository.find(id);
+        }
+        return result;
+    }
+
     @RequestMapping(value = "/delete-prio")
     @Transactional
     public String deletePrio(HttpServletRequest request, HttpServletResponse response, HttpSession session)
             throws IOException {
         PrioriteringsobjektForm pf = (PrioriteringsobjektForm) session.getAttribute("prio");
-        Prioriteringsobjekt prio = toPrioriteringsobjekt(request, pf, session);
-        prioRepository.remove(prio);
+        AbstractPrioriteringsobjekt prio = getPrioOrUtkast(pf.getId());
+
+        if (prio instanceof Prioriteringsobjekt) {
+            prioRepository.remove((Prioriteringsobjekt) prio);
+        } else {
+            PrioriteringsobjektUtkast utkast = (PrioriteringsobjektUtkast) prio;
+            prioUtkastRepository.remove(utkast);
+            if (utkast.getSkarpVersion() != null) {
+                prioRepository.remove(utkast.getSkarpVersion());
+            }
+        }
+
         session.setAttribute("prio", null);
-        String path = request.getRequestURI().replace("/delete-prio", "/main");
-        response.sendRedirect(path);
+        response.sendRedirect("main");
         return "main";
     }
 
@@ -179,7 +229,7 @@ public class EditPrioriteringController extends ControllerBase {
             @ModelAttribute("prio") PrioriteringsobjektForm pf) throws IOException {
 
         PrioriteringsobjektForm sessionPrio = (PrioriteringsobjektForm) session.getAttribute("prio");
-        Prioriteringsobjekt prio = toPrioriteringsobjekt(request, pf, session);
+        PrioriteringsobjektUtkast prio = toPrioriteringsobjektUtkast(request, pf, session);
         copyKodCollectionsAndMetaDates(sessionPrio, prio);
 
         prio.setSenastUppdaterad(new Date());
@@ -190,7 +240,13 @@ public class EditPrioriteringController extends ControllerBase {
             mh.setMessage(error);
             return "prio-view";
         } else {
-            prioRepository.store(prio);
+            if (sessionPrio.getSkarpVersion() != null) {
+                // If this is a completely new 'utkast', then we have to connect it to a
+                // prioriteringsobjekt (if such exists, otherwise the line below will set null anyway).
+                // See the initView function for the setting of sessionPrio.skarpVersion.
+                prio.setSkarpVersion(sessionPrio.getSkarpVersion());
+            }
+            prioUtkastRepository.store(prio);
         }
         response.sendRedirect("main");
         return "main";
@@ -265,10 +321,7 @@ public class EditPrioriteringController extends ControllerBase {
 
         ChooseListForm clf = getOrCreateSessionObj(session, ChooseListForm.class.getSimpleName(),
                 ChooseListForm.class);
-        // clf.setFilterLabel("Sök kod med nyckelord");
-        // clf.setNotYetChoosenLabel("Möjliga Koder");
-        // clf.setChoosenLabel("Valda Koder");
-        // clf.setOkLabel("Välj koder");
+
         clf.setOkLabel("Bekräfta val");
         clf.setDisplayKey("kodPlusBeskrivning");
         clf.setIdKey("id");
@@ -333,64 +386,8 @@ public class EditPrioriteringController extends ControllerBase {
         return "prio-view";
     }
 
-    // @RequestMapping(value = "prio", params = { "findDiagnoses" })
-    // @Transactional
-    // public String findDiagnoses(HttpServletRequest request, ModelMap model,
-    // @ModelAttribute(value = "prio") PrioriteringsobjektForm pf,
-    // @RequestParam(required = false, value = "diagnosRef.selectedCodesId") List<String> selectedCodesId)
-    // throws InstantiationException, IllegalAccessException {
-    //
-    // initNestedValues(request, pf);
-    // return findCodesAction(model, pf, DiagnosKod.class, pf.getDiagnosRef(), diagnosKodRepository,
-    // pf.getDiagnoser(), request);
-    // }
-    //
-    // @RequestMapping(value = "prio", params = { "findAtcKoder" })
-    // @Transactional
-    // public String findAtckoder(HttpServletRequest request, ModelMap model, PrioriteringsobjektForm pf,
-    // @RequestParam(required = false, value = "atcKoderRef.selectedCodesId") List<String> selectedIds)
-    // throws InstantiationException, IllegalAccessException {
-    // return findCodesAction(model, pf, AtcKod.class, pf.getAtcKoderRef(), atcKodRepository, pf.getAtcKoder(),
-    // request);
-    // }
-
-    // @Transactional
-    // private <T extends AbstractKod> String findCodesAction(ModelMap model, PrioriteringsobjektForm pf,
-    // Class<T> clazz, ManyCodesRef<T> mcr, GenerisktKodRepository<T> repo, Set<T> target,
-    // HttpServletRequest request) throws InstantiationException, IllegalAccessException {
-    // model.addAttribute("editDir", new EditDirective(true, null));
-    // if (pf == null) {
-    // pf = new PrioriteringsobjektForm();
-    // }
-    // initNestedValues(request, pf);
-    // model.addAttribute("prio", pf);
-    // T kod = clazz.newInstance();
-    //
-    // kod.setBeskrivning(mcr.getSearchBeskrivningText());
-    // kod.setKod(mcr.getSearchKodText());
-    // mcr.getFindings().clear();
-    // mcr.getFindings().addAll(repo.findByExample(kod, 20));
-    //
-    // initKodLists(pf);
-    // initAllManyToOneCodes(pf);
-    // return "prio-view";
-    // }
-
-    // private void initAllManyToOneCodes(PrioriteringsobjektForm pf) {
-    // initManyToOneCode(pf.getDiagnosRef(), pf.getDiagnoser(), diagnosKodRepository);
-    // initManyToOneCode(pf.getAatgaerdRef(), pf.getAatgaerdskoder(), aatgaerdsKodRepository);
-    // initManyToOneCode(pf.getAtcKoderRef(), pf.getAtcKoder(), atcKodRepository);
-    // }
-
-    private <T extends AbstractKod> void initManyToOneCode(ManyCodesRef<T> dr, Set<T> target,
-            GenerisktKodRepository<T> repo) {
-        for (Long id : new HashSet<Long>(dr.getSelectedCodesId())) {
-            T code = repo.find(id);
-            target.add(code);
-        }
-    }
-
-    private void copyKodCollectionsAndMetaDates(Prioriteringsobjekt source, Prioriteringsobjekt target) {
+    private void copyKodCollectionsAndMetaDates(AbstractPrioriteringsobjekt source,
+            AbstractPrioriteringsobjekt target) {
         clearAndFillCollection(source.getAatgaerdskoder(), target.getAatgaerdskoder());
         clearAndFillCollection(source.getDiagnoser(), target.getDiagnoser());
         clearAndFillCollection(source.getAtcKoder(), target.getAtcKoder());
@@ -406,40 +403,55 @@ public class EditPrioriteringController extends ControllerBase {
         target.addAll(source);
     }
 
-    private Prioriteringsobjekt toPrioriteringsobjekt(HttpServletRequest request, PrioriteringsobjektForm pf,
-            HttpSession session) {
+    private PrioriteringsobjektUtkast toPrioriteringsobjektUtkast(HttpServletRequest request,
+            PrioriteringsobjektForm pf, HttpSession session) {
+        AbstractPrioriteringsobjekt prio = toPrioriteringsobjekt(request, pf, session);
+
+        PrioriteringsobjektUtkast result = new PrioriteringsobjektUtkast();
+        BeanMap resultMap = new BeanMap(result);
+        BeanMap prioMap = new BeanMap(prio);
+        resultMap.putAllWriteable(prioMap);
+
+        return result;
+    }
+
+    private AbstractPrioriteringsobjekt toPrioriteringsobjekt(HttpServletRequest request,
+            PrioriteringsobjektForm pf, HttpSession session) {
         initKodLists(pf);
+
         pf.asignCodesFromTheListsByCorrespondingIdAttributes();
-        Prioriteringsobjekt prio;
+
+        AbstractPrioriteringsobjekt prio;
         if (pf.getId() == null) {
-            prio = new Prioriteringsobjekt();
+            prio = new PrioriteringsobjektUtkast();
         } else {
             prio = prioRepository.find(pf.getId());
+            if (prio == null) {
+                prio = prioUtkastRepository.find(pf.getId());
+            }
         }
 
-        Prioriteringsobjekt sessionPrio = (Prioriteringsobjekt) session.getAttribute("prio");
+        AbstractPrioriteringsobjekt sessionPrio = (AbstractPrioriteringsobjekt) session.getAttribute("prio");
         copyKodCollectionsAndMetaDates(sessionPrio, prio);
         session.setAttribute("prio", pf);
 
         BeanMap prioMap = new BeanMap(prio);
         BeanMap formMap = new BeanMap(pf);
         prioMap.putAllWriteable(formMap);
-
         // These three lines copies attributes with the same name from pf to prio.
 
-        if (pf.getDiagnosRef().getSelectedCodesId() != null) {
-            for (Long id : pf.getDiagnosRef().getSelectedCodesId()) {
-                DiagnosKod diagnos = diagnosKodRepository.find(id);
-                prio.getDiagnoser().add(diagnos);
-            }
-        } else {
-            prio.getDiagnoser().clear();
-        }
+        // if (pf.getDiagnosRef().getSelectedCodesId() != null) {
+        // for (Long id : pf.getDiagnosRef().getSelectedCodesId()) {
+        // DiagnosKod diagnos = diagnosKodRepository.find(id);
+        // prio.getDiagnoser().add(diagnos);
+        // }
+        // } else {
+        // prio.getDiagnoser().clear();
+        // }
 
         // initNestedValues(request, pf);
         initKodLists(pf);
         // initAllManyToOneCodes(pf);
-
         return prio;
     }
 

@@ -14,6 +14,7 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
 import org.apache.commons.beanutils.BeanMap;
@@ -57,6 +58,8 @@ public class JpqlMatchBuilder {
     private String wildCard = "*";
 
     private String jpaWildCard = "%";
+
+    private String extraWhere;
 
     // private final List<String> sortOrder = new ArrayList<String>();
 
@@ -117,6 +120,10 @@ public class JpqlMatchBuilder {
         sb.append(" ");
         sb.append(mkFetchJoinForMasterEntity(bean));
 
+        if (extraWhere != null && !"".equals(extraWhere)) {
+            qp.where.add(extraWhere);
+        }
+
         if (!qp.where.isEmpty()) {
             String where = toString(qp.where, " and ");
             if (!where.trim().equals("")) {
@@ -160,6 +167,7 @@ public class JpqlMatchBuilder {
         for (Object key : bm.keySet()) {
             String propertyName = (String) key;
             Object value = bm.get(propertyName);
+
             if (value == null || "".equals(value)) {
                 continue;
             }
@@ -173,6 +181,16 @@ public class JpqlMatchBuilder {
                 continue;
             }
 
+            if (value instanceof HaveNullLogick) {
+                HaveNullLogick hnl = (HaveNullLogick) value;
+                if (hnl.isNotNull()) {
+                    where.add(prefix + propertyName + " is not null");
+                } else {
+                    where.add(prefix + propertyName + " is null");
+                }
+                continue;
+            }
+
             if (isAtomic(value)) {
                 if (value instanceof String) {
                     if (isLikeValue(value)) {
@@ -181,14 +199,6 @@ public class JpqlMatchBuilder {
                         values.add(value);
                         continue;
                     }
-                } else if (value instanceof HaveNullLogick) {
-                    HaveNullLogick hnl = (HaveNullLogick) value;
-                    if (hnl.isNotNull()) {
-                        where.add(prefix + propertyName + " is not null");
-                    } else {
-                        where.add(prefix + propertyName + " is null");
-                    }
-                    continue;
                 }
                 values.add(value);
                 where.add(prefix + propertyName + " = ?");
@@ -230,7 +240,8 @@ public class JpqlMatchBuilder {
             String propertyName = (String) key;
             Field field = getField(bean.getClass(), propertyName);
             if (field != null) {
-                if (field.isAnnotationPresent(ManyToOne.class) || field.isAnnotationPresent(ManyToMany.class)) {
+                if (field.isAnnotationPresent(ManyToOne.class) || field.isAnnotationPresent(ManyToMany.class)
+                        || field.isAnnotationPresent(OneToOne.class)) {
                     sb.append(" left join fetch o0.");
                     sb.append(propertyName);
                 }
@@ -391,7 +402,8 @@ public class JpqlMatchBuilder {
         }
 
         if (!(field.isAnnotationPresent(Column.class) || field.isAnnotationPresent(Id.class)
-                || field.isAnnotationPresent(ManyToMany.class) || field.isAnnotationPresent(ManyToOne.class))) {
+                || field.isAnnotationPresent(ManyToMany.class) || field.isAnnotationPresent(ManyToOne.class) || field
+                .isAnnotationPresent(OneToOne.class))) {
             return true;
         }
 
@@ -464,6 +476,14 @@ public class JpqlMatchBuilder {
             return false;
         }
         return false;
+    }
+
+    public void setExtraWhere(String extraWhere) {
+        this.extraWhere = extraWhere;
+    }
+
+    public String getExtraWhere() {
+        return extraWhere;
     }
 
     private class QueryParts {
