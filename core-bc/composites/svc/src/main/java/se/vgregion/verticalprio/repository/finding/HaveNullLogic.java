@@ -6,7 +6,7 @@ package se.vgregion.verticalprio.repository.finding;
  * 
  * @author Claes Lundahl, vgrid=clalu4
  */
-public interface HaveNullLogick {
+public interface HaveNullLogic {
 
     /**
      * If returns true the field referenced with this is checked for not null - 'foo is not null'. If untrue the

@@ -29,7 +29,7 @@ import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
 import se.vgregion.verticalprio.entity.SektorRaad;
 import se.vgregion.verticalprio.entity.User;
 import se.vgregion.verticalprio.repository.GenerisktKodRepository;
-import se.vgregion.verticalprio.repository.finding.DateNullLogick;
+import se.vgregion.verticalprio.repository.finding.DateNullLogic;
 import se.vgregion.verticalprio.repository.finding.HaveNestedEntities;
 import se.vgregion.verticalprio.repository.finding.HaveQuerySortOrder;
 import se.vgregion.verticalprio.repository.finding.JpqlMatchBuilder;
@@ -57,7 +57,7 @@ public class VerticalPrioController extends EditPrioriteringController {
         session.setAttribute("loginResult", null);
         PrioriteringsobjektFindCondition condition = getOrCreateSessionObj(session, "prioCondition",
                 PrioriteringsobjektFindCondition.class);
-        condition.setGodkaend(new DateNullLogick(true));
+        condition.setGodkaend(new DateNullLogic(true));
         response.sendRedirect("main");
         return null;
     }
@@ -81,9 +81,9 @@ public class VerticalPrioController extends EditPrioriteringController {
             PrioriteringsobjektFindCondition condition = getOrCreateSessionObj(session, "prioCondition",
                     PrioriteringsobjektFindCondition.class);
             if (user.isEditor() || user.isApprover()) {
-                condition.setGodkaend(null);
+                condition.setGodkaend(new DateNullLogic(false));
             } else {
-                condition.setGodkaend(new DateNullLogick());
+                condition.setGodkaend(new DateNullLogic(true));
             }
 
             Map userValues = new HashMap(new BeanMap(user)); // Insane... makes all lazy properties initialized.
@@ -362,7 +362,6 @@ public class VerticalPrioController extends EditPrioriteringController {
                 // Remove all conditions that specifies specific SRs, except those that should indicate order by
                 // directive.
                 HaveNestedEntities<SektorRaad> hne = condition.getSektorRaad();
-
                 clearAwayNonSortingLogic(hne);
             }
         } else {
@@ -371,10 +370,12 @@ public class VerticalPrioController extends EditPrioriteringController {
 
             NestedSektorRaad sektorNest = condition.getSektorRaad();
 
+            // Find out if there are selected sectors, taking regards to that there might be HaveSortOrder-objects
+            // inside.
             clearAwayNonSortingLogic(sektorNest);
             sektorNest.content().addAll(raad);
 
-            if (sektorNest.content().isEmpty()) {
+            if (raad.isEmpty()) {
                 List<Prioriteringsobjekt> zeroResult = new ArrayList<Prioriteringsobjekt>();
                 session.setAttribute("rows", zeroResult);
                 return zeroResult;

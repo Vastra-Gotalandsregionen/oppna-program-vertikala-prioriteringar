@@ -1,18 +1,16 @@
 package se.vgregion.verticalprio.repository.finding;
 
-import java.util.Date;
-
 /**
  * @author Claes Lundahl, vgrid=clalu4
  * 
  */
-public class DateNullLogick extends Date implements HaveNullLogick {
+public class SetNullLogic implements HaveNullLogic {
 
-    public DateNullLogick() {
+    public SetNullLogic() {
 
     }
 
-    public DateNullLogick(boolean notNull) {
+    public SetNullLogic(boolean notNull) {
         setNotNull(notNull);
     }
 
@@ -33,5 +31,4 @@ public class DateNullLogick extends Date implements HaveNullLogick {
     public void setNotNull(boolean notNull) {
         this.notNull = notNull;
     }
-
 }
