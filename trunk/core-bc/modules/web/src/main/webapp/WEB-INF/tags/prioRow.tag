@@ -26,7 +26,7 @@
 
 <c:if test="${row.child != null}">
   <tr class="${index % 2 == 0 ? 'even' : 'odd'}">
-    <td>hej knekt</td>
+    <td>&nbsp;</td>
     <c:forEach items="${form.columns}" var="column">
       <c:if test="${column.visible}">
         <td class="${column.name}">

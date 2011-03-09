@@ -143,4 +143,12 @@
     <function-signature>java.lang.String toCellText(java.lang.Object)</function-signature>
   </function>
   
+  <function>
+    <description>Compares two prioritetsobjekt for inequality. Ingores differences for the properties id, children/child and godkaend.</description>
+    <display-name>isPriosDifferent</display-name>
+    <name>isPriosDifferent</name>
+    <function-class>se.vgregion.verticalprio.el.Util</function-class>
+    <function-signature>java.lang.Boolean isPriosDifferent(se.vgregion.verticalprio.entity.Prioriteringsobjekt, se.vgregion.verticalprio.entity.Prioriteringsobjekt)</function-signature>
+  </function>
+  
 </taglib>
