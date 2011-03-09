@@ -14,7 +14,6 @@ import org.hibernate.LazyInitializationException;
 import se.vgregion.verticalprio.controllers.ManyCodesRef;
 import se.vgregion.verticalprio.controllers.PrioriteringsobjektForm;
 import se.vgregion.verticalprio.entity.AatgaerdsKod;
-import se.vgregion.verticalprio.entity.AbstractPrioriteringsobjekt;
 import se.vgregion.verticalprio.entity.AtcKod;
 import se.vgregion.verticalprio.entity.DiagnosKod;
 import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
@@ -54,7 +53,7 @@ public class PrioriteringsobjektFindCondition extends PrioriteringsobjektForm im
 
     private final List<SortOrderField> sortOrder = new ArrayList<SortOrderField>();
 
-    private Class<? extends AbstractPrioriteringsobjekt> typeToFind = Prioriteringsobjekt.class;
+    private Class<? extends Prioriteringsobjekt> typeToFind = Prioriteringsobjekt.class;
 
     public PrioriteringsobjektFindCondition() {
         super();
@@ -360,11 +359,11 @@ public class PrioriteringsobjektFindCondition extends PrioriteringsobjektForm im
         return vaardnivaHolder;
     }
 
-    public void setTypeToFind(Class<? extends AbstractPrioriteringsobjekt> typeToFind) {
+    public void setTypeToFind(Class<? extends Prioriteringsobjekt> typeToFind) {
         this.typeToFind = typeToFind;
     }
 
-    public Class<? extends AbstractPrioriteringsobjekt> getTypeToFind() {
+    public Class<? extends Prioriteringsobjekt> getTypeToFind() {
         return typeToFind;
     }
 
