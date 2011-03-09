@@ -64,9 +64,14 @@ public class PrioriteringsobjektFindCondition extends PrioriteringsobjektForm im
 
         NestedSektorRaad nsr = new NestedSektorRaad();
         SortingSektorRaad ssr = new SortingSektorRaad();
+
+        // Create sort order field that is used in NestedSektorRaad. It indicates that sorting should be done on
+        // the field kod in the sektor raad table.
+        // Sorting: NestedSektorsRaad -> SortingSektorsRaad -> SortOrderField ("kod")
         SortOrderField sof = new SortOrderField();
+        sof.setOrder(0);
         sof.setName("kod");
-        ssr.listSortOrders();
+        ssr.listSortOrders().add(sof);
         nsr.content().add(ssr);
         super.setSektorRaad(nsr);
 
@@ -74,6 +79,9 @@ public class PrioriteringsobjektFindCondition extends PrioriteringsobjektForm im
 
         NestedHashSet<DiagnosKod> diagnoser = new NestedHashSet<DiagnosKod>();
         SortingDiagnosKod sdk = new SortingDiagnosKod();
+        sof = new SortOrderField();
+        sof.setOrder(1);
+        sof.setName("kod");
         sdk.listSortOrders().add(sof);
         diagnoser.add(new SortingDiagnosKod());
         super.setDiagnoser(diagnoser);
