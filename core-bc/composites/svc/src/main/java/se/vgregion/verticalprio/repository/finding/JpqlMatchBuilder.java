@@ -2,6 +2,7 @@ package se.vgregion.verticalprio.repository.finding;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -172,11 +173,13 @@ public class JpqlMatchBuilder {
 
             // The FetchJoinThis annotation indicates that this object reference should be loaded via a fetch join.
 
-            Field field = getField(bm.getType(propertyName), propertyName);
-            if (field != null && field.isAnnotationPresent(FetchJoinThis.class)) {
-                aliasIndex++;
-                qp.fromJoin.add(mkFetchJoinForMasterEntity(value, "j" + aliasIndex));
-            }
+            // if ("children".equals(propertyName)) {
+            // Field field = getField(bean.getClass(), propertyName);
+            // if (field != null && field.isAnnotationPresent(FetchJoinThis.class)) {
+            // aliasIndex++;
+            // qp.fromJoin.add(mkFetchJoinForMasterEntity(value, "j" + aliasIndex));
+            // }
+            // }
 
             if (value == null || "".equals(value)) {
                 continue;
@@ -248,6 +251,10 @@ public class JpqlMatchBuilder {
      * @return
      */
     String mkFetchJoinForMasterEntity(Object bean, String alias) {
+        return mkFetchJoinForMasterEntity(bean, alias, new HashSet<String>());
+    }
+
+    String mkFetchJoinForMasterEntity(Object bean, String alias, Set<String> passedFields) {
         StringBuilder sb = new StringBuilder();
         BeanMap bm = new BeanMap(bean);
 
@@ -255,10 +262,45 @@ public class JpqlMatchBuilder {
             String propertyName = (String) key;
             Field field = getField(bean.getClass(), propertyName);
             if (field != null) {
+                String fieldKey = bean.getClass().getName() + " " + propertyName;
+
+                if (passedFields.contains(fieldKey)) {
+                    continue;
+                } else {
+                    passedFields.add(fieldKey);
+                }
+
                 if (field.isAnnotationPresent(ManyToOne.class) || field.isAnnotationPresent(ManyToMany.class)
                         || field.isAnnotationPresent(OneToMany.class) || field.isAnnotationPresent(OneToOne.class)) {
                     sb.append(" left join fetch " + alias + ".");
                     sb.append(propertyName);
+
+                    if (field.isAnnotationPresent(FetchJoinThis.class)) {
+                        Object innerBean = bm.get(propertyName);
+                        if (innerBean == null || innerBean instanceof Collection) {
+                            Class clazz = bm.getType(propertyName);
+                            if (Collection.class.isAssignableFrom(clazz)) {
+                                if (alias.equals(propertyName)) {
+                                    continue;
+                                }
+                                sb.append(" as " + propertyName + " ");
+                                ParameterizedType type = (ParameterizedType) field.getGenericType();
+                                clazz = (Class) type.getActualTypeArguments()[0];
+                            }
+                            try {
+                                innerBean = clazz.newInstance();
+                            } catch (InstantiationException e) {
+                                throw new RuntimeException(e);
+                            } catch (IllegalAccessException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+                        if (!alias.endsWith("." + propertyName)) {
+                            sb.append(" " + mkFetchJoinForMasterEntity(innerBean, propertyName, passedFields)
+                                    + " ");
+                        }
+                    }
+
                 }
             }
         }

@@ -5,13 +5,17 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.beanutils.BeanMap;
 import org.springframework.transaction.annotation.Transactional;
 
 import se.vgregion.verticalprio.controllers.EditDirective;
 import se.vgregion.verticalprio.entity.AbstractHirarkiskKod;
 import se.vgregion.verticalprio.entity.AbstractKod;
+import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
 import se.vgregion.verticalprio.entity.SektorRaad;
 import se.vgregion.verticalprio.entity.User;
 
@@ -232,4 +236,29 @@ public class Util {
         }
         return toString(sr.getParent());
     }
+
+    public static boolean isPriosDifferent(Prioriteringsobjekt one, Prioriteringsobjekt two) {
+        if (one == two) {
+            return true;
+        }
+        if (one == null || two == null) {
+            return false;
+        }
+
+        Map oneMap = new HashMap(new BeanMap(one));
+        Map twoMap = new HashMap(new BeanMap(two));
+
+        // Remove values that are not to matter in the comparison.
+        oneMap.remove("children");
+        twoMap.remove("children");
+        oneMap.remove("child");
+        twoMap.remove("child");
+        oneMap.remove("id");
+        twoMap.remove("id");
+        oneMap.remove("godkaend");
+        twoMap.remove("godkaend");
+
+        return !oneMap.equals(twoMap);
+    }
+
 }
