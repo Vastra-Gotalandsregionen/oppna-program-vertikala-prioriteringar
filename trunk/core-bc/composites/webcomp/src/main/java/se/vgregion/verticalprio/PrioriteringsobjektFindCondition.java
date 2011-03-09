@@ -22,6 +22,7 @@ import se.vgregion.verticalprio.entity.SektorRaad;
 import se.vgregion.verticalprio.entity.TillstaandetsSvaarighetsgradKod;
 import se.vgregion.verticalprio.entity.VaardformsKod;
 import se.vgregion.verticalprio.entity.VaardnivaaKod;
+import se.vgregion.verticalprio.repository.finding.DateNullLogic;
 import se.vgregion.verticalprio.repository.finding.HaveExplicitTypeToFind;
 import se.vgregion.verticalprio.repository.finding.HaveNestedEntities;
 import se.vgregion.verticalprio.repository.finding.HaveQuerySortOrder;
@@ -74,20 +75,21 @@ public class PrioriteringsobjektFindCondition extends PrioriteringsobjektForm im
         nsr.content().add(ssr);
         super.setSektorRaad(nsr);
 
-        super.setTillstaandetsSvaarighetsgradKod(new NestedTillstaandetsSvaarighetsgradKod());
-
+        // The equivalent for adding sorting on diagnoses.
         NestedHashSet<DiagnosKod> diagnoser = new NestedHashSet<DiagnosKod>();
         SortingDiagnosKod sdk = new SortingDiagnosKod();
         sof = new SortOrderField();
         sof.setOrder(1);
         sof.setName("kod");
         sdk.listSortOrders().add(sof);
-        diagnoser.add(new SortingDiagnosKod());
+        diagnoser.add(sdk);
         super.setDiagnoser(diagnoser);
+
+        super.setTillstaandetsSvaarighetsgradKod(new NestedTillstaandetsSvaarighetsgradKod());
 
         super.setAatgaerdskoder(new NestedHashSet<AatgaerdsKod>());
         super.setAtcKoder(new NestedHashSet<AtcKod>());
-        // setGodkaend(new DateNullLogick(true));
+        setGodkaend(new DateNullLogic(true));
     }
 
     /**

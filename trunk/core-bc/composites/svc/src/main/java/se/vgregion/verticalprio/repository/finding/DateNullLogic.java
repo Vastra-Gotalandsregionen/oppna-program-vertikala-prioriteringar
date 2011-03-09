@@ -1,18 +1,18 @@
 package se.vgregion.verticalprio.repository.finding;
 
-import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
+import java.util.Date;
 
 /**
  * @author Claes Lundahl, vgrid=clalu4
  * 
  */
-public class PrioriteringsobjektNullLogick extends Prioriteringsobjekt implements HaveNullLogic {
+public class DateNullLogic extends Date implements HaveNullLogic {
 
-    public PrioriteringsobjektNullLogick() {
+    public DateNullLogic() {
 
     }
 
-    public PrioriteringsobjektNullLogick(boolean notNull) {
+    public DateNullLogic(boolean notNull) {
         setNotNull(notNull);
     }
 

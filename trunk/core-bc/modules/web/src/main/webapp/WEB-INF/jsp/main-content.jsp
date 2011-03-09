@@ -94,20 +94,7 @@
       </thead>
       <tbody class="${fn:length(rows) > 10 ? 'boxed' : ''}">
         <c:forEach items="${rows}" var="row" varStatus="vs">
-          <tr class="${vs.index % 2 == 0 ? 'even' : 'odd'}">
-            <td>
-              <input title="id=${row.id}" type="radio" name="id" value="${row.id}"${vs.index == 0 ? ' checked' : ''}/>
-              <c:if test="${row.godkaend == null}">
-                <div style="color: red; text-align: center;" title="Ännu ej godkänd">*</div>
-              </c:if>
-            </td>
-            <c:forEach items="${form.columns}" var="column">
-              <c:if test="${column.visible}">
-                <td class="${column.name}"><tags:cell value="${row[column.name]}"/>
-                </td>
-              </c:if>
-            </c:forEach>
-          </tr>
+          <tags:prioRow index="${vs.index}" row="${row}"/>
         </c:forEach>
       </tbody>
     </table>

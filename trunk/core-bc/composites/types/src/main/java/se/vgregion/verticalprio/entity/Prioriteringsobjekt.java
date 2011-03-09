@@ -37,8 +37,9 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToMany()
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "parent_id")
+    @FetchJoinThis
     private Set<Prioriteringsobjekt> children = new HashSet<Prioriteringsobjekt>();
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -776,6 +777,13 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
 
     public Set<Prioriteringsobjekt> getChildren() {
         return children;
+    }
+
+    public Prioriteringsobjekt getChild() {
+        if (children == null || children.isEmpty()) {
+            return null;
+        }
+        return children.iterator().next();
     }
 
 }

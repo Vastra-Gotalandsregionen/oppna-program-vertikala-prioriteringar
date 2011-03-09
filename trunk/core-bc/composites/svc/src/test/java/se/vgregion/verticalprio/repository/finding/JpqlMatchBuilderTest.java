@@ -60,7 +60,7 @@ public class JpqlMatchBuilderTest {
         nestedSektorRaad.content().add(raad1);
         nestedSektorRaad.content().add(raad2);
         prio.setSektorRaad(nestedSektorRaad);
-        prio.setGodkaend(new DateNullLogick());
+        prio.setGodkaend(new DateNullLogic());
 
         String jpql = builder.mkFindByExampleJpql(prio, values);
         System.out.println(jpql);
@@ -85,7 +85,7 @@ public class JpqlMatchBuilderTest {
     public void mkFetchJoinForMasterEntity() {
         JpqlMatchBuilder builder = new JpqlMatchBuilder();
         OneColumnBean ocb = new OneColumnBean();
-        String result = builder.mkFetchJoinForMasterEntity(ocb);
+        String result = builder.mkFetchJoinForMasterEntity(ocb, "o0");
         Assert.assertEquals("left join fetch o0.children left join fetch o0.otherBean", result);
     }
 

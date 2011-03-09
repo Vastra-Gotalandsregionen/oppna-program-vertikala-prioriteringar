@@ -14,12 +14,14 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
 import org.apache.commons.beanutils.BeanMap;
 
 import se.vgregion.dao.domain.patterns.entity.AbstractEntity;
+import se.vgregion.verticalprio.entity.FetchJoinThis;
 import se.vgregion.verticalprio.repository.finding.HaveQuerySortOrder.SortOrderField;
 
 /**
@@ -118,7 +120,7 @@ public class JpqlMatchBuilder {
         sb.append(" from ");
         sb.append(toString(qp.fromJoin, " left join "));
         sb.append(" ");
-        sb.append(mkFetchJoinForMasterEntity(bean));
+        sb.append(mkFetchJoinForMasterEntity(bean, "o0"));
 
         if (extraWhere != null && !"".equals(extraWhere)) {
             qp.where.add(extraWhere);
@@ -168,9 +170,18 @@ public class JpqlMatchBuilder {
             String propertyName = (String) key;
             Object value = bm.get(propertyName);
 
+            // The FetchJoinThis annotation indicates that this object reference should be loaded via a fetch join.
+
+            Field field = getField(bm.getType(propertyName), propertyName);
+            if (field != null && field.isAnnotationPresent(FetchJoinThis.class)) {
+                aliasIndex++;
+                qp.fromJoin.add(mkFetchJoinForMasterEntity(value, "j" + aliasIndex));
+            }
+
             if (value == null || "".equals(value)) {
                 continue;
             }
+
             if (skipFieldForBuildingCondition(bean, propertyName)) {
                 continue;
             }
@@ -181,12 +192,16 @@ public class JpqlMatchBuilder {
                 continue;
             }
 
-            if (value instanceof HaveNullLogick) {
-                HaveNullLogick hnl = (HaveNullLogick) value;
+            if (value instanceof HaveNullLogic) {
+                HaveNullLogic hnl = (HaveNullLogic) value;
+                String nullOrEmpty = "null";
+                if (value instanceof Collection) {
+                    nullOrEmpty = "empty";
+                }
                 if (hnl.isNotNull()) {
-                    where.add(prefix + propertyName + " is not null");
+                    where.add(prefix + propertyName + " is not " + nullOrEmpty);
                 } else {
-                    where.add(prefix + propertyName + " is null");
+                    where.add(prefix + propertyName + " is " + nullOrEmpty);
                 }
                 continue;
             }
@@ -232,7 +247,7 @@ public class JpqlMatchBuilder {
      * @param bean
      * @return
      */
-    String mkFetchJoinForMasterEntity(Object bean) {
+    String mkFetchJoinForMasterEntity(Object bean, String alias) {
         StringBuilder sb = new StringBuilder();
         BeanMap bm = new BeanMap(bean);
 
@@ -241,8 +256,8 @@ public class JpqlMatchBuilder {
             Field field = getField(bean.getClass(), propertyName);
             if (field != null) {
                 if (field.isAnnotationPresent(ManyToOne.class) || field.isAnnotationPresent(ManyToMany.class)
-                        || field.isAnnotationPresent(OneToOne.class)) {
-                    sb.append(" left join fetch o0.");
+                        || field.isAnnotationPresent(OneToMany.class) || field.isAnnotationPresent(OneToOne.class)) {
+                    sb.append(" left join fetch " + alias + ".");
                     sb.append(propertyName);
                 }
             }
@@ -273,10 +288,7 @@ public class JpqlMatchBuilder {
      */
     private boolean handleSubBean(String prefix, String parentPropertyName, Object bean, QueryParts qp,
             int aliasIndex) {
-        // int valueCount = qp.values.size();
 
-        // List<String> deepWhere = new ArrayList<String>();
-        // List<String> deepFromJoin = new ArrayList<String>();
         QueryParts deepQp = new QueryParts();
 
         deepQp.fromJoin.add(prefix + parentPropertyName + " o" + aliasIndex);
@@ -402,8 +414,8 @@ public class JpqlMatchBuilder {
         }
 
         if (!(field.isAnnotationPresent(Column.class) || field.isAnnotationPresent(Id.class)
-                || field.isAnnotationPresent(ManyToMany.class) || field.isAnnotationPresent(ManyToOne.class) || field
-                .isAnnotationPresent(OneToOne.class))) {
+                || field.isAnnotationPresent(ManyToMany.class) || field.isAnnotationPresent(ManyToOne.class)
+                || field.isAnnotationPresent(OneToMany.class) || field.isAnnotationPresent(OneToOne.class))) {
             return true;
         }
 
@@ -422,6 +434,9 @@ public class JpqlMatchBuilder {
 
     private Field getField(@SuppressWarnings("rawtypes") Class klass, String name) {
         try {
+            if (klass == null) {
+                return null;
+            }
             Field field = klass.getDeclaredField(name);
             return field;
         } catch (NoSuchFieldException e) {
