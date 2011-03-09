@@ -23,10 +23,6 @@
   
   <bean name="prioRepository" class="se.vgregion.verticalprio.repository.JpaPrioRepository" />
 
-  <bean name="prioUtkastRepository" class="se.vgregion.verticalprio.repository.JpaGenerisktFinderRepository">
-    <constructor-arg value="se.vgregion.verticalprio.entity.PrioriteringsobjektUtkast" />
-  </bean>
-
   <!-- All these beans inherit the generic JpaKodRepository because they all represent common "code tables" -->
   <bean name="aatgaerdsKodRepository" class="se.vgregion.verticalprio.repository.JpaGenerisktKodRepository">
     <constructor-arg value="se.vgregion.verticalprio.entity.AatgaerdsKod" />
