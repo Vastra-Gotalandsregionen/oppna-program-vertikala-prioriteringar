@@ -114,6 +114,48 @@ button {
 
 /* -- = Filter Sidebar  -------------------------------------------------------*/
 
+.column-controls {}
+
+.column-controls ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0; 
+}
+
+.column-controls ul li {
+    float: right;
+    margin: 5px;
+    padding: 0;  
+}
+
+.column-controls ul li a {
+    display: block;
+    height: 14px;
+    width: 10px;
+}
+
+.column-controls ul li.column-control-hide a {
+    background: transparent url(../img/arrow_left.png) no-repeat 0 0;
+}
+
+.column-controls ul li.column-control-show a {
+    background: transparent url(../img/arrow_right.png) no-repeat 0 0;
+}
+
+.column-controls ul li a span {
+    font-size: 0;
+    text-indent: -9999em;
+}
+
+.filter-sidebar .logo-wrap {
+    margin: 10px auto;
+    text-align: center;
+}
+
+.filter-sidebar img.logo {
+    height: 95%; /* FLAG - bilden bör bytas ut mot en bild med rätt storlek istället för att bildens storlek skalas likt här */
+    width: 95%; /* FLAG - bilden bör bytas ut mot en bild med rätt storlek istället för att bildens storlek skalas likt här */
+}
 
 /* -- = Main Content  -------------------------------------------------------*/
 
@@ -194,6 +236,70 @@ button {
 }
 
 /* -- = Help Block  -------------*/
+
+.help-block {
+    display: block;
+    font-size: 14px;
+    margin: 0;
+    max-width: 650px;
+    min-width: 440px;
+    padding: 10px; 
+}
+
+.help-block h1 {
+    color: blue; /* FLAG - byt mot hexkod. */
+    font-size: 36px;
+    font-weight: bold;
+}
+
+.help-block h2 {
+  color: #444;
+  font-size: 16px;
+  font-weight: bold;
+  padding-bottom: 14px;
+  text-transform: uppercase;
+}
+
+.help-block ol {
+    margin: 0 0 0 15px;
+}
+
+.help-block ol li {
+    list-style-type: decimal;
+    margin: 10px 5px;
+}
+
+.help-block ol li.no-list-style {
+    list-style-type: none;
+}
+
+.help-block ol li img {
+    vertical-align: middle;
+}
+
+ .help_block div {
+  font-size: 14px;
+  margin-bottom: 6px;
+  vertical-align: top;
+ }
+ 
+.help_block div img {
+  vertical-align: middle;
+}
+ 
+.help_indent {
+    margin-left: 2em;
+}
+  
+  
+.help_header_blue {
+  color: blue; /* FLAG - byt mot hexkod. */
+  font-size: 20px;
+  font-weight: bold;
+  padding-bottom: 14px;
+} 
+
+
 
 .help_block {
   display: block;

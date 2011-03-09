@@ -5,6 +5,13 @@
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags"%>
 <%@ taglib uri="/WEB-INF/tld/vgr-util.tld" prefix="su"%>
 
+<div class="column-controls">
+    <ul class="clearfix">
+        <li class="column-control column-control-hide"><a href="" title="G&ouml;m kolumnen med sektorsr&aring;d."><span>G&ouml;m</span></a></li>
+        <li class="column-control column-control-show aui-helper-hidden"><a href="" title="Visa kolumnen med sektorsr&aring;d."><span>Visa</span></a></li>
+    </ul>
+</div>
+
 <div class="filter-sidebar">
     <c:choose>
         <c:when test="${user != null and loginResult}">
@@ -32,4 +39,7 @@
           Annestesi
         </a>
     </form:form>
+    <div class="logo-wrap">
+        <img class="logo" src="img/vg_logo.jpg" />
+    </div>
 </div>

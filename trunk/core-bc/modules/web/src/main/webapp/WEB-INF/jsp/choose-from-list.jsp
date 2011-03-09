@@ -41,10 +41,10 @@
     
   <span class="yui3-u" style="height:100%">
   
-    <input  class="button" type="submit" name="addAll" value="Lägg till alla" /> <br/>
-    <input class="button" type="submit" name="add" value="Lägg till" /> <br/>
-    <input class="button" type="submit" name="remove" value="Ta bort" /> <br/>
-    <input class="button" type="submit" name="removeAll" value="Ta bort alla" />
+    <input  class="button" type="submit" name="addAll" value="Lägg till alla &rArr;" /> <br/>
+    <input class="button" type="submit" name="add" value="Lägg till &rArr;" /> <br/>
+    <input class="button" type="submit" name="remove" value="&lArr; Ta bort" /> <br/>
+    <input class="button" type="submit" name="removeAll" value="&lArr; Ta bort alla" />
   </span>
     
   <span class="yui3-u-1-3">
