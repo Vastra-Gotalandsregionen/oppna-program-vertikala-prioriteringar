@@ -96,7 +96,7 @@
         <c:forEach items="${rows}" var="row" varStatus="vs">
           <tr class="${vs.index % 2 == 0 ? 'even' : 'odd'}">
             <td>
-              <input type="radio" name="id" value="${row.id}"${vs.index == 0 ? ' checked' : ''}/>
+              <input title="id=${row.id}" type="radio" name="id" value="${row.id}"${vs.index == 0 ? ' checked' : ''}/>
               <c:if test="${row.godkaend == null}">
                 <div style="color: red; text-align: center;" title="Ännu ej godkänd">*</div>
               </c:if>

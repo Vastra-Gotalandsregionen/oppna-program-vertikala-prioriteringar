@@ -33,6 +33,7 @@ import se.vgregion.verticalprio.entity.User;
 import se.vgregion.verticalprio.repository.GenerisktKodRepository;
 import se.vgregion.verticalprio.repository.finding.HaveNestedEntities;
 import se.vgregion.verticalprio.repository.finding.HaveQuerySortOrder;
+import se.vgregion.verticalprio.repository.finding.JpqlMatchBuilder;
 import se.vgregion.verticalprio.repository.finding.NestedSektorRaad;
 
 @Controller
@@ -188,67 +189,6 @@ public class VerticalPrioController extends EditPrioriteringController {
         return null;
     }
 
-    // @RequestMapping(value = "/conf-columns")
-    // public String confColumns(final HttpSession session, @RequestParam String command,
-    // @RequestParam(required = false) List<String> visibleColumns,
-    // @RequestParam(required = false) List<String> hiddenColumns) {
-    // ConfColumnsForm columnForm = getOrCreateSessionObj(session, "confCols", ConfColumnsForm.class);
-    // if ("show".equals(command)) {
-    // moveColsFromOneListToOtherByNames(hiddenColumns, columnForm.getHiddenColumns(),
-    // columnForm.getVisibleColumns());
-    // } else if ("hide".equals(command)) {
-    // moveColsFromOneListToOtherByNames(visibleColumns, columnForm.getVisibleColumns(),
-    // columnForm.getHiddenColumns());
-    // } else if ("save".equals(command)) {
-    // for (Column column : columnForm.getHiddenColumns()) {
-    // column.setVisible(false);
-    // }
-    // for (Column column : columnForm.getVisibleColumns()) {
-    // column.setVisible(true);
-    // }
-    // Collections.sort(getMainForm(session).getColumns(), new Column.OrderComparer());
-    // return "main";
-    // } else if ("cancel".equals(command)) {
-    // return "main";
-    // }
-    //
-    // return "conf-columns";
-    // }
-
-    // private void moveColsFromOneListToOtherByNames(Collection<String> names, List<Column> from, List<Column> to)
-    // {
-    // if (names == null) {
-    // return;
-    // }
-    // for (Column col : new ArrayList<Column>(from)) {
-    // if (names.contains(col.getName() + "")) {
-    // from.remove(col);
-    // to.add(col);
-    // }
-    // }
-    // }
-
-    // @RequestMapping(value = "/init-conf-columnsXXX")
-    // public String initConfColumns(final HttpSession session) {
-    // ConfColumnsForm columnForm = getOrCreateSessionObj(session, "confCols", ConfColumnsForm.class);
-    // columnForm.getHiddenColumns().clear();
-    // columnForm.getVisibleColumns().clear();
-    //
-    // MainForm mainForm = getMainForm(session);
-    //
-    // for (Column column : mainForm.getColumns()) {
-    // if (column.isHideAble()) {
-    // if (column.isVisible()) {
-    // columnForm.getVisibleColumns().add(column);
-    // } else {
-    // columnForm.getHiddenColumns().add(column);
-    // }
-    // }
-    // }
-    //
-    // return "conf-columns";
-    // }
-
     @RequestMapping(value = "/approve")
     @Transactional(propagation = Propagation.REQUIRED)
     public String approve(final HttpSession session, @RequestParam Long id) {
@@ -256,29 +196,44 @@ public class VerticalPrioController extends EditPrioriteringController {
         return main(session);
     }
 
-    @RequestMapping(value = "/select-prio")
-    @Transactional(propagation = Propagation.REQUIRED)
-    public String selectPrio(final HttpSession session, @RequestParam Integer selected) {
-        System.out.println("VerticalPrioController.selectPrio()");
-        List<SektorRaad> sectors = sektorRaadRepository.getTreeRoots();
-        for (SektorRaad sector : sectors.get(0).getChildren()) {
+    // @RequestMapping(value = "/select-prio")
+    // @Transactional(propagation = Propagation.REQUIRED)
+    // public String selectPrio(final HttpSession session, @RequestParam Integer selected) {
+    // System.out.println("VerticalPrioController.selectPrio()");
+    // List<SektorRaad> sectors = sektorRaadRepository.getTreeRoots();
+    // for (SektorRaad sector : sectors.get(0).getChildren()) {
+    //
+    // for (int i = 0; i < 10; i++) {
+    // Prioriteringsobjekt prio = new Prioriteringsobjekt();
+    // prio.setSektorRaad(sector);
+    // BeanMap bm = new BeanMap(prio);
+    // for (Object key : bm.keySet()) {
+    // if (bm.getType(key.toString()).equals(String.class)) {
+    // bm.put(key.toString(), sector.getKod() + " " + i);
+    // }
+    // }
+    // prioRepository.store(prio);
+    // }
+    // }
+    //
+    // return "select-prio";
+    // }
 
-            for (int i = 0; i < 10; i++) {
-                Prioriteringsobjekt prio = new Prioriteringsobjekt();
-                prio.setSektorRaad(sector);
-                BeanMap bm = new BeanMap(prio);
-                for (Object key : bm.keySet()) {
-                    if (bm.getType(key.toString()).equals(String.class)) {
-                        bm.put(key.toString(), sector.getKod() + " " + i);
-                    }
-                }
-                prioRepository.store(prio);
-            }
-        }
-
-        return "select-prio";
-    }
-
+    /**
+     * The action for selecting a specific node of in the three of {@link SektorRaad}. It gets the three out of the
+     * session and then finds the node denoted by the Id-argument sent from the client. When found it toggles
+     * (selected = !selected) the value of the 'select' property on this node.
+     * 
+     * Special case in this is when the user have clicked the allSektorsRaad property (hosted on the
+     * {@link MainForm} form object). Then it clears away all other selections in favor of this one. If any other
+     * node is selected then it reversely un-selects this property.
+     * 
+     * @param session
+     * @param id
+     * @param response
+     * @return
+     * @throws IOException
+     */
     @RequestMapping(value = "/check")
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public String check(final HttpSession session, @RequestParam Integer id, HttpServletResponse response)
@@ -299,11 +254,17 @@ public class VerticalPrioController extends EditPrioriteringController {
             sector.setSelected(!sector.isSelected());
         }
 
-        // result(session);
         response.sendRedirect("main");
         return "main";
     }
 
+    /**
+     * Loops through a collection and returns the sector with the corresponding id value provided.
+     * 
+     * @param id
+     * @param sectors
+     * @return The matched {@link SektorRaad} or null if no such match bould be made.
+     */
     private SektorRaad getSectorById(int id, List<SektorRaad> sectors) {
         for (SektorRaad sector : sectors) {
             if (id == sector.getId()) {
@@ -317,6 +278,13 @@ public class VerticalPrioController extends EditPrioriteringController {
         return null;
     }
 
+    /**
+     * Returns all nodes from a list of {@link SektorRaad} that have the 'selected' property set to true. And also
+     * includes all the nodes beneath those.
+     * 
+     * @param raads
+     * @return
+     */
     List<SektorRaad> getMarkedLeafs(List<SektorRaad> raads) {
         List<SektorRaad> result = new ArrayList<SektorRaad>();
         if (raads == null) {
@@ -333,6 +301,13 @@ public class VerticalPrioController extends EditPrioriteringController {
         return result;
     }
 
+    /**
+     * Takes a list of root nodes and returns a list of all the roots and of their children (and children's
+     * children and so on).
+     * 
+     * @param raads
+     * @return
+     */
     private List<SektorRaad> flatten(List<SektorRaad> raads) {
         List<SektorRaad> result = new ArrayList<SektorRaad>();
         flatten(raads, result);
@@ -349,6 +324,17 @@ public class VerticalPrioController extends EditPrioriteringController {
         }
     }
 
+    /**
+     * Takes a list of {@link SektorRaad} and makes a copy that only contains the id-property of the object. Reason
+     * for this is to get objects that when used as condition in the {@link JpqlMatchBuilder} only generates
+     * constraints on the id. e.g. id = ? instead of (id = ? and kod = ? and beskrivning = ? and....).
+     * 
+     * TODO: Look to see if this method could be removed. Since its creation the {@link JpqlMatchBuilder} might be
+     * smart enough to do the corresponding change in the conditions itself.
+     * 
+     * @param raads
+     * @return
+     */
     private List<SektorRaad> toBlankWithIdOnly(List<SektorRaad> raads) {
         List<SektorRaad> result = new ArrayList<SektorRaad>();
         for (SektorRaad sr : raads) {
@@ -358,6 +344,13 @@ public class VerticalPrioController extends EditPrioriteringController {
         return result;
     }
 
+    /**
+     * Produces the result list in the main view of the application. It uses a
+     * {@link PrioriteringsobjektFindCondition} as search condition - this object is stored in the session.
+     * 
+     * @param session
+     * @return
+     */
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public List<AbstractPrioriteringsobjekt> result(HttpSession session) {
         PrioriteringsobjektFindCondition condition = getOrCreateSessionObj(session, "prioCondition",
@@ -370,20 +363,16 @@ public class VerticalPrioController extends EditPrioriteringController {
                 // Remove all conditions that specifies specific SRs, except those that should indicate order by
                 // directive.
                 HaveNestedEntities<SektorRaad> hne = condition.getSektorRaad();
-                for (SektorRaad sr : new ArrayList<SektorRaad>(hne.content())) {
-                    if (!(sr instanceof HaveQuerySortOrder)) {
-                        hne.content().remove(sr);
-                    }
-                }
+
+                clearAwayNonSortingLogic(hne);
             }
-            // mf.getSectors().clear();
-            // mf.getSectors().addAll(sektorRaadRepository.getTreeRoots());
         } else {
             List<SektorRaad> raad = getMarkedLeafs(mf.getSectors());
             raad = flatten(raad);
 
             NestedSektorRaad sektorNest = condition.getSektorRaad();
-            sektorNest.content().clear();
+
+            clearAwayNonSortingLogic(sektorNest);
             sektorNest.content().addAll(raad);
 
             if (sektorNest.content().isEmpty()) {
@@ -424,6 +413,28 @@ public class VerticalPrioController extends EditPrioriteringController {
         return result;
     }
 
+    /**
+     * Removes all nodes in a {@link HaveNestedEntities} but those that implements the {@link HaveQuerySortOrder}.
+     * Makes it possible to remove condition logic and preserves any existing sorting at the same time.
+     * 
+     * @param hne
+     */
+    private void clearAwayNonSortingLogic(HaveNestedEntities<?> hne) {
+        for (Object sr : new ArrayList<Object>(hne.content())) {
+            if (!(sr instanceof HaveQuerySortOrder)) {
+                hne.content().remove(sr);
+            }
+        }
+    }
+
+    /**
+     * If you have a {@link SektorRaad} and want its root node, this method gives you that.
+     * 
+     * @param all
+     *            All existing sectors. The Method search through these to find the root.
+     * @param toFind
+     * @return
+     */
     private SektorRaad findRoot(List<SektorRaad> all, SektorRaad toFind) {
         for (SektorRaad sr : all) {
             if (sr.getId() == null || toFind == null || toFind.getId() == null) {
