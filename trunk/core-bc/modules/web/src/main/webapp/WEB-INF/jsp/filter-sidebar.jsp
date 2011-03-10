@@ -5,14 +5,14 @@
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags"%>
 <%@ taglib uri="/WEB-INF/tld/vgr-util.tld" prefix="su"%>
 
-<div class="column-controls">
+<div class="column-controls filter-sidebar-color">
     <ul class="clearfix">
         <li class="column-control column-control-hide"><a href="" title="G&ouml;m kolumnen med sektorsr&aring;d."><span>G&ouml;m</span></a></li>
         <li class="column-control column-control-show aui-helper-hidden"><a href="" title="Visa kolumnen med sektorsr&aring;d."><span>Visa</span></a></li>
     </ul>
 </div>
 
-<div class="filter-sidebar">
+<div class="filter-sidebar filter-sidebar-color">
     <c:choose>
         <c:when test="${user != null and loginResult}">
             <a href="main?logout=true">Logga ut ${user.firstName} ${user.lastName}</a>
@@ -34,8 +34,7 @@
         
         <br>
         
-        <a class="sector-node" href="http://www.vgregion.se/sv/Regionkansliet/Halso--och-sjukvardsavdelningen/Strategisk-utvecklingsenhet/Medicinska-prioriteringar/Annestesioperationintensivvard">
-          <img alt="" src="img/unchecked.gif" />
+        <a class="sector-node" href="http://www.vgregion.se/sv/Regionkansliet/Halso--och-sjukvardsavdelningen/Strategisk-utvecklingsenhet/Medicinska-prioriteringar/Annestesioperationintensivvard" target="anestesi">
           Annestesi
         </a>
     </form:form>

@@ -72,7 +72,7 @@ AUI().ready(
 			
 		    columnHideAnim = new A.Anim({
 		    	node: columnFilterNav,
-		    	to: { width: '50px' }
+		    	to: { width: '40px' }
 		    });
 		    
 		    columnHideAnim.on('end', onColumnHideAnimEnd);
