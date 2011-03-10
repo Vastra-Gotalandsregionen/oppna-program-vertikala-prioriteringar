@@ -52,6 +52,11 @@ h4 {
     padding: 10px;
 }
 
+.filter-sidebar-color {
+    background: url("../js/alloy-ui/aui-skin-classic/images/common/state_default_bg.png") repeat-x scroll 0 0 #D4D4D4;
+ }
+ 
+
 /*--- Main content ----------------------*/
 
 .main-content {
