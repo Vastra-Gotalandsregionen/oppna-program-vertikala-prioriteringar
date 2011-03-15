@@ -158,7 +158,9 @@ public class EditPrioriteringController extends ControllerBase {
         BeanMap formMap = new BeanMap(form);
         Prioriteringsobjekt prio = null;
         if (id != null) {
-            prio = prioRepository.find(id);
+            prio = new Prioriteringsobjekt();
+            prio.setId(id);
+            prio = prioRepository.findByExample(prio, 1).get(0);
         } else {
 
             prio = new Prioriteringsobjekt();
@@ -166,9 +168,8 @@ public class EditPrioriteringController extends ControllerBase {
         BeanMap entityMap = new BeanMap(prio);
         formMap.putAllWriteable(entityMap);
         form.putAllIdsFromCodesIfAnyIntoAttributeOnThisObject();
-        form.getDiagnoser().toArray(); // Are not eager so we have to make sure they are
-        form.getAatgaerdskoder().toArray(); // loaded before sending them to the jsp-layer.
-        form.getAtcKoder().toArray();
+        initPrio(form);
+
         if (form.getId() == null) {
             form.setId(id); // Strange... yes?
             // putAllWriteable seems not to work for this class on Long:s at least (and in the antonio-env).
@@ -178,6 +179,17 @@ public class EditPrioriteringController extends ControllerBase {
         init(form.getSektorRaadList());
 
         return "prio-view";
+    }
+
+    private void initPrio(Prioriteringsobjekt form) {
+        form.getDiagnoser().toArray(); // Are not eager so we have to make sure they are
+        form.getAatgaerdskoder().toArray(); // loaded before sending them to the jsp-layer.
+        form.getAtcKoder().toArray();
+        if (form.getChildren() != null && !form.getChildren().isEmpty()) {
+            for (Prioriteringsobjekt child : form.getChildren()) {
+                initPrio(child);
+            }
+        }
     }
 
     @Transactional
@@ -194,11 +206,11 @@ public class EditPrioriteringController extends ControllerBase {
     public String deletePrio(HttpServletRequest request, HttpServletResponse response, HttpSession session)
             throws IOException {
         PrioriteringsobjektForm pf = (PrioriteringsobjektForm) session.getAttribute("prio");
-        // Prioriteringsobjekt prio = toPrioriteringsobjekt(request, pf, session);
+
         prioRepository.remove(pf.getId());
         session.setAttribute("prio", null);
-        String path = request.getRequestURI().replace("/delete-prio", "/main");
-        response.sendRedirect(path);
+
+        response.sendRedirect("main");
         return "main";
     }
 
@@ -424,11 +436,13 @@ public class EditPrioriteringController extends ControllerBase {
         clearAndFillCollection(source.getAatgaerdskoder(), target.getAatgaerdskoder());
         clearAndFillCollection(source.getDiagnoser(), target.getDiagnoser());
         clearAndFillCollection(source.getAtcKoder(), target.getAtcKoder());
+        clearAndFillCollection(source.getChildren(), target.getChildren());
+
         target.setGodkaend(source.getGodkaend());
         target.setSenastUppdaterad(source.getSenastUppdaterad());
     }
 
-    private <T extends AbstractKod> void clearAndFillCollection(Collection<T> source, Collection<T> target) {
+    private <T extends Object> void clearAndFillCollection(Collection<T> source, Collection<T> target) {
         if (source == null || target == null) {
             return;
         }
