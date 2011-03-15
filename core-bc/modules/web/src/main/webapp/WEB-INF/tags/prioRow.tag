@@ -24,7 +24,7 @@
   </c:forEach>
 </tr>
 
-<c:if test="${row.child != null}">
+<c:if test="${row.child != null and su:isPriosDifferent(row, row.child)}">
   <tr class="${index % 2 == 0 ? 'even' : 'odd'}">
     <td>&nbsp;</td>
     <c:forEach items="${form.columns}" var="column">
