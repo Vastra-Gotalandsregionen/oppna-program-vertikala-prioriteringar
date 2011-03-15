@@ -106,7 +106,7 @@ public class Util {
         return sb.toString();
     }
 
-    public static String toRaadOptions(Long id, List<AbstractKod> items, List<SektorRaad> raad) {
+    public static String toRaadOptions(Long id, List<? extends AbstractKod> items, List<SektorRaad> raad) {
         StringBuilder sb = new StringBuilder();
         toOptions(id, 0, items, sb, true, toList(raad));
         return sb.toString();
@@ -239,14 +239,14 @@ public class Util {
 
     public static boolean isPriosDifferent(Prioriteringsobjekt one, Prioriteringsobjekt two) {
         if (one == two) {
-            return true;
+            throw new RuntimeException();
         }
         if (one == null || two == null) {
             return false;
         }
 
-        Map oneMap = new HashMap(new BeanMap(one));
-        Map twoMap = new HashMap(new BeanMap(two));
+        Map<String, Object> oneMap = new HashMap<String, Object>(new BeanMap(one));
+        Map<String, Object> twoMap = new HashMap<String, Object>(new BeanMap(two));
 
         // Remove values that are not to matter in the comparison.
         oneMap.remove("children");
@@ -257,8 +257,34 @@ public class Util {
         twoMap.remove("id");
         oneMap.remove("godkaend");
         twoMap.remove("godkaend");
+        oneMap.remove("senastUppdaterad");
+        twoMap.remove("senastUppdaterad");
+        oneMap.remove("parentId");
+        twoMap.remove("parentId");
+        oneMap.remove("draft");
+        twoMap.remove("draft");
 
-        return !oneMap.equals(twoMap);
+        for (String key : oneMap.keySet()) {
+            Object onesValue = oneMap.get(key);
+            Object twosValue = twoMap.get(key);
+            if (!equals(onesValue, twosValue)) {
+                System.out.println("\nVärde med nyckel " + key + " var inte samma. ");
+                System.out.println("Värde 1 var " + onesValue);
+                System.out.println("Värde 2 var " + twosValue + "\n");
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean equals(Object o1, Object o2) {
+        if (o1 == o2) {
+            return true;
+        }
+        if (o1 == null || o2 == null) {
+            return false;
+        }
+        return o1.equals(o2);
     }
 
 }

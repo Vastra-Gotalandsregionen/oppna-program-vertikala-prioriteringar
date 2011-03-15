@@ -42,6 +42,9 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
     @FetchJoinThis
     private Set<Prioriteringsobjekt> children = new HashSet<Prioriteringsobjekt>();
 
+    @Column(name = "parent_id", updatable = false)
+    private Long parentId;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "vaentetid_besook_veckor_kod_id")
@@ -784,6 +787,18 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
             return null;
         }
         return children.iterator().next();
+    }
+
+    public boolean isDraft() {
+        return getParentId() == null;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
+
+    public Long getParentId() {
+        return parentId;
     }
 
 }

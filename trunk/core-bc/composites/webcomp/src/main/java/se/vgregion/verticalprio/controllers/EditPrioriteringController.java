@@ -65,6 +65,15 @@ public class EditPrioriteringController extends ControllerBase {
     @Transactional
     public String initDeleteView(ModelMap model, HttpSession session, @RequestParam(required = false) Long id) {
         initView(model, session, id);
+        PrioriteringsobjektForm form = (PrioriteringsobjektForm) model.get("prio");
+        if (form.getChild() != null) {
+            // If this have a child - then this object should be deleted before.
+            // It means that this is a draft.
+            model.addAttribute("prio", null);
+            session.setAttribute("prio", null);
+            initView(model, session, form.getChild().getId());
+            // form.setId(form.getChild().getId());
+        }
         model.addAttribute("editDir", new EditDirective(false, false));
         return "delete-prio-view";
     }
@@ -93,12 +102,13 @@ public class EditPrioriteringController extends ControllerBase {
                     Long nullOrApprovedId = approvedVersion.getId();
                     prio.setGodkaend(null); // TODO should not be needed
                     Util.copyValuesAndSetsFromBeanToBean(prio, approvedVersion);
+                    approvedVersion.getChildren().clear();
                     approvedVersion.setId(nullOrApprovedId);
                     approvedVersion.setGodkaend(new Date());
                     prio.getChildren().add(approvedVersion);
 
                     prioRepository.store(approvedVersion);
-
+                    prioRepository.store(prio);
                 } catch (IllegalAccessError e) {
                     MessageHome messageHome = getOrCreateSessionObj(session, "messageHome", MessageHome.class);
                     messageHome.setMessage(e.getMessage());
@@ -184,8 +194,8 @@ public class EditPrioriteringController extends ControllerBase {
     public String deletePrio(HttpServletRequest request, HttpServletResponse response, HttpSession session)
             throws IOException {
         PrioriteringsobjektForm pf = (PrioriteringsobjektForm) session.getAttribute("prio");
-        Prioriteringsobjekt prio = toPrioriteringsobjekt(request, pf, session);
-        prioRepository.remove(prio);
+        // Prioriteringsobjekt prio = toPrioriteringsobjekt(request, pf, session);
+        prioRepository.remove(pf.getId());
         session.setAttribute("prio", null);
         String path = request.getRequestURI().replace("/delete-prio", "/main");
         response.sendRedirect(path);
@@ -200,6 +210,7 @@ public class EditPrioriteringController extends ControllerBase {
         PrioriteringsobjektForm sessionPrio = (PrioriteringsobjektForm) session.getAttribute("prio");
         Prioriteringsobjekt prio = toPrioriteringsobjekt(request, pf, session);
         copyKodCollectionsAndMetaDates(sessionPrio, prio);
+        prio.getChildren().addAll(sessionPrio.getChildren());
 
         prio.setSenastUppdaterad(new Date());
 

@@ -88,9 +88,6 @@ public class JpqlMatchBuilder {
         qp.values = values;
         qp.selects.add("o0");
 
-        // List<String> where = new ArrayList<String>();
-        // List<String> fromJoin = new ArrayList<String>();
-
         if (bean instanceof HaveExplicitTypeToFind) {
             HaveExplicitTypeToFind hettf = (HaveExplicitTypeToFind) bean;
             qp.fromJoin.add(hettf.type().getSimpleName() + " o0");
@@ -115,7 +112,7 @@ public class JpqlMatchBuilder {
         }
 
         StringBuilder sb = new StringBuilder();
-        // sb.append("select distinct o0 from ");
+
         sb.append("select distinct ");
         sb.append(toString(qp.selects, ", "));
         sb.append(" from ");
@@ -147,8 +144,6 @@ public class JpqlMatchBuilder {
     }
 
     private void mkFindByExampleJpql(Object bean, QueryParts qp, int aliasIndex) {
-
-        // final List<String> fromJoin = qp.fromJoin;
         final List<String> where = qp.where;
         final List<Object> values = qp.values;
 
@@ -170,16 +165,6 @@ public class JpqlMatchBuilder {
         for (Object key : bm.keySet()) {
             String propertyName = (String) key;
             Object value = bm.get(propertyName);
-
-            // The FetchJoinThis annotation indicates that this object reference should be loaded via a fetch join.
-
-            // if ("children".equals(propertyName)) {
-            // Field field = getField(bean.getClass(), propertyName);
-            // if (field != null && field.isAnnotationPresent(FetchJoinThis.class)) {
-            // aliasIndex++;
-            // qp.fromJoin.add(mkFetchJoinForMasterEntity(value, "j" + aliasIndex));
-            // }
-            // }
 
             if (value == null || "".equals(value)) {
                 continue;
@@ -330,9 +315,7 @@ public class JpqlMatchBuilder {
      */
     private boolean handleSubBean(String prefix, String parentPropertyName, Object bean, QueryParts qp,
             int aliasIndex) {
-
         QueryParts deepQp = new QueryParts();
-
         deepQp.fromJoin.add(prefix + parentPropertyName + " o" + aliasIndex);
 
         mkFindByExampleJpql(bean, deepQp, aliasIndex);
@@ -348,13 +331,11 @@ public class JpqlMatchBuilder {
 
     private Collection<AbstractEntity<Long>> getOnlyThoseWithId(Collection<AbstractEntity<Long>> items) {
         List<AbstractEntity<Long>> result = new ArrayList<AbstractEntity<Long>>();
-
         for (AbstractEntity<Long> item : items) {
             if (item.getId() != null) {
                 result.add(item);
             }
         }
-
         return result;
     }
 
@@ -413,7 +394,6 @@ public class JpqlMatchBuilder {
                     oneIterationWhere = "(" + oneIterationWhere + ")";
                 }
                 allItemsWhere.add(oneIterationWhere);
-                // qp.order.addAll(iterationQp.order);
             }
         }
 
@@ -545,14 +525,13 @@ public class JpqlMatchBuilder {
 
     private class QueryParts {
 
-        QueryParts() {
+        public QueryParts() {
         }
 
         QueryParts(QueryParts qp) {
             this.selects = qp.selects;
             this.fromJoin = qp.fromJoin;
             this.where = qp.where;
-            // this.orderBy = qp.orderBy;
             this.values = qp.values;
             this.order = qp.order;
         }
@@ -563,15 +542,12 @@ public class JpqlMatchBuilder {
             values.addAll(deepQp.values);
             selects.addAll(deepQp.selects);
             order.addAll(deepQp.order);
-            // orderBy.addAll(deepQp.orderBy);
         }
 
         public List<String> selects = new ArrayList<String>();
         public List<String> fromJoin = new ArrayList<String>();
         public List<String> where = new ArrayList<String>();
-        // public List<String> orderBy = new ArrayList<String>();
         public List<Object> values = new ArrayList<Object>();
-
         public List<SortOrderField> order = new ArrayList<HaveQuerySortOrder.SortOrderField>();
     }
 

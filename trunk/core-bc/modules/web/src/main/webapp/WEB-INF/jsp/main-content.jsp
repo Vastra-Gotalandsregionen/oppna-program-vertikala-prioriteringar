@@ -47,6 +47,20 @@
           <c:if test="${column.visible}">
             <th>
               <span title="${column.description}">${su:toUpperCase(column.label)}</span>
+              
+              <c:if test="${column.sortable}">
+                <span style="font-family: courier" style="width: 100%">
+                  <c:choose>
+                    <c:when test="${column.sorting}">
+                      <b style="text-decoration: blink; float: right;">&darr;</b>
+                    </c:when>
+                    <c:otherwise>
+                      <a title="Sortera" href="main?sortField=${column.name}" style="text-decoration: none; float: right;">&darr;</a>
+                    </c:otherwise>
+                  </c:choose>
+                </span>
+              </c:if>
+              
             </th>
           </c:if>
         </c:forEach>
@@ -71,20 +85,9 @@
                   
                 </c:if>
                 <c:if test="${not empty su:toString(prioCondition[column.name])}">
-                  <a href='deselect-codes?fieldName=${column.name}' title="Ta bort filtervillkor: <tags:cell value="${su:toString(prioCondition[column.name])}"/>">X</a>
-                </c:if>
-                
-                <c:if test="${column.sortable}">
-                <span style="font-family: courier">
-                  <c:choose>
-                    <c:when test="${column.sorting}">
-                      <b style="text-decoration: blink;">&darr;</b>
-                    </c:when>
-                    <c:otherwise>
-                      <a title="Sortera" href="main?sortField=${column.name}" style="text-decoration: none;">&darr;</a>
-                    </c:otherwise>
-                  </c:choose>
-                  </span>
+                  <a href='deselect-codes?fieldName=${column.name}' title="Ta bort filtervillkor: <tags:cell value="${su:toString(prioCondition[column.name])}"/>">
+                    <img src='img/x.png'/>
+                  </a>
                 </c:if>
               </td>
             </c:if>

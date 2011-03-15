@@ -188,12 +188,12 @@ public class VerticalPrioController extends EditPrioriteringController {
         return null;
     }
 
-    @RequestMapping(value = "/approve")
-    @Transactional(propagation = Propagation.REQUIRED)
-    public String approve(final HttpSession session, @RequestParam Long id) {
-
-        return main(session);
-    }
+    // @RequestMapping(value = "/approve")
+    // @Transactional(propagation = Propagation.REQUIRED)
+    // public String approve(final HttpSession session, @RequestParam Long id) {
+    //
+    // return main(session);
+    // }
 
     // @RequestMapping(value = "/select-prio")
     // @Transactional(propagation = Propagation.REQUIRED)
