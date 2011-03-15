@@ -52,7 +52,11 @@ public class MockPrioRepository implements PrioRepository {
      */
     @Override
     public Collection<Prioriteringsobjekt> findAll() {
-        throw new UnsupportedOperationException("TODO: Implement this method");
+        List<Prioriteringsobjekt> result = new ArrayList<Prioriteringsobjekt>();
+        for (long i = 0; i < 100; i++) {
+            result.add(find(i));
+        }
+        return result;
     }
 
     /**
@@ -102,7 +106,7 @@ public class MockPrioRepository implements PrioRepository {
      */
     @Override
     public List<Prioriteringsobjekt> findByExample(Prioriteringsobjekt bean, Integer maxResult) {
-        return new ArrayList<Prioriteringsobjekt>();
+        return new ArrayList<Prioriteringsobjekt>(findAll());
     }
 
     /**
