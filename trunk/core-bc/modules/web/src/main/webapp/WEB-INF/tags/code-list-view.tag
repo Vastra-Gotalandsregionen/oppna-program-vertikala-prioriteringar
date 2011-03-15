@@ -14,7 +14,7 @@
 <%@ taglib uri="/WEB-INF/tld/vgr-util.tld" prefix="util"%>
 
 <div class="code-list-view ${styleClass}">
-  <h4>${label}</h4>  
+  <tags:label key="${codeKey}" />
   <c:if test="${empty prio[codeKey]}">[Inga]</c:if>
   
   <c:forEach items="${prio[codeKey]}" var="item">

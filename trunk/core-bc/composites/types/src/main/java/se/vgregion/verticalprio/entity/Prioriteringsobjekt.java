@@ -74,10 +74,12 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
 
     @ManyToMany()
     @JoinTable(name = "link_prioriteringsobjekt_diagnos_kod", joinColumns = { @JoinColumn(name = "prio_id") }, inverseJoinColumns = { @JoinColumn(name = "diagnos_kod_id") })
+    @FetchJoinThis
     private Set<DiagnosKod> diagnoser = new HashSet<DiagnosKod>();
 
     @ManyToMany()
     @JoinTable(name = "link_prioriteringsobjekt_aatgaerds_kod", joinColumns = { @JoinColumn(name = "prio_id") }, inverseJoinColumns = { @JoinColumn(name = "aatgaerds_kod_id") })
+    @FetchJoinThis
     private Set<AatgaerdsKod> aatgaerdskoder = new HashSet<AatgaerdsKod>();
 
     @ManyToOne
@@ -356,8 +358,6 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("diagnosTexts");
         column.setLabel("Symptom / Diagnostext");
-        // column.setColumnLabel("<a href='choose-codes-init?codeRefName=diagnosRef'><img src='img/filter.gif'/></a>");
-        // column.setColumnLabel("<a href='start-choosing-codes?fieldName=diagnosTexts'><img src='img/filter.gif'/></a>");
         column.setFilterAble(true);
         column.setDisplayOrder(i++);
         result.add(column);
@@ -367,17 +367,21 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
         column.setSortable(true);
 
         column = new se.vgregion.verticalprio.entity.Column();
+        column.setName("diagnoser");
+        column.setLabel("Diagnoser");
+        result.add(column);
+        column.setId(i++);
+        column.setHideAble(false);
+        column.setPossibleInOverview(false);
+
+        column = new se.vgregion.verticalprio.entity.Column();
         column.setName("diagnosKodTexts");
         column.setLabel("Symptom / Diagnoskod");
-        // column.setColumnLabel("<a href='start-choosing-codes?fieldName=diagnosKodTexts'><img src='img/filter.gif'/></a>");
         column.setFilterAble(true);
         column.setDisplayOrder(i++);
         result.add(column);
         column.setId(i);
         column.setHideAble(true);
-        // column.setSortField("");
-        // column.setSortable(true);
-        // Åtgärdstext saknas!
 
         column = new se.vgregion.verticalprio.entity.Column();
         column.setName("aatgaerdskoderTexts");

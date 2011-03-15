@@ -36,6 +36,8 @@ public class Column implements Serializable, Comparable<Column> {
 
     private boolean filterAble = false;
 
+    private boolean possibleInOverview = true;
+
     public Column() {
         // TODO Auto-generated constructor stub
     }
@@ -66,7 +68,7 @@ public class Column implements Serializable, Comparable<Column> {
     }
 
     public boolean isVisible() {
-        return visible;
+        return possibleInOverview && visible;
     }
 
     @Override
@@ -180,6 +182,14 @@ public class Column implements Serializable, Comparable<Column> {
     @Override
     public int compareTo(Column o) {
         return getDisplayOrder() - o.getDisplayOrder();
+    }
+
+    public void setPossibleInOverview(boolean possibleInOverview) {
+        this.possibleInOverview = possibleInOverview;
+    }
+
+    public boolean isPossibleInOverview() {
+        return possibleInOverview;
     }
 
 }

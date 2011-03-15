@@ -17,7 +17,10 @@
 <div style="vertical-align: middle;" class="yui3-g">
   <div class="yui3-u-1-5">
     <span class="kod-label">Godkänd</span>
-    ${su:toStringDate(prio.godkaend)}
+    <c:choose>
+      <c:when test="${prio.child != null}">${su:toStringDate(prio.child.godkaend)}</c:when>
+      <c:otherwise>${su:toStringDate(prio.godkaend)}</c:otherwise>
+    </c:choose>
   </div>
   <div class="yui3-u-1-5">
     <span class="kod-label">Senast uppdaterad</span>
@@ -35,10 +38,12 @@
 <span style="color:red;"><jsp:getProperty property="message" name="messageHome"/></span>
 <jsp:setProperty property="message" name="messageHome" value=""/>
 
-</form:form>
-
+<c:if test="${prio.child != null and su:isPriosDifferent(prio, prio.child)}">
+  <div>
+    <img src='img/flag_white.gif'/> = Fältvärde som skiljer sig från den skarpa versionen.
+  </div>
+</c:if>
 </span>
-
-
+</form:form>
 </body>
 </html>
