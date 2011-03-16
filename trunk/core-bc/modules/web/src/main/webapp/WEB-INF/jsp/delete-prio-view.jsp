@@ -13,8 +13,8 @@
 <form:form action="delete-prio" method="post" modelAttribute="prio" cssClass="values">
 <jsp:include page="jsp/prio-form.jsp" />
 <div style="vertical-align: middle;">
-  <tags:editSubmit value="Radera det här prioriteringsobjektet *" overrideEdit="true"/>
-  <a href="main" class="button">Stäng</a>
+  <tags:editSubmit name="ok" value="Radera det här prioriteringsobjektet *" overrideEdit="true"/>
+  <input class="button" type="submit" value="Avbryt" name="cancel"/>
 </div>
 <br/>
 <div>
@@ -24,7 +24,7 @@
       permanent från applikationen.
     </c:when>
     <c:otherwise>
-      * Det här kommer ta bort den skarpa versionen av posten - den som vanliga användare ser i applikationen. 
+      * Det här kommer ta bort den godkända versionen av posten - den som vanliga användare ser i applikationen. 
       <br/> Utkast-versionen kommer fortfarande finnas kvar (den går också att radera genom att återigen 
       välja posten och trycka på 'Ta bort'-knappen).
     </c:otherwise>
