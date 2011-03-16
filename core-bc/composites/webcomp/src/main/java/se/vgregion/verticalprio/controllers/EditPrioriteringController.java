@@ -100,6 +100,27 @@ public class EditPrioriteringController extends ControllerBase {
         }
     }
 
+    private boolean isUserInSektorsRaadIfNotWarnWithMessage(User user, Prioriteringsobjekt prio,
+            HttpSession session) {
+        if (user.getSektorRaad().contains(prio.getSektorRaad())) {
+            return true;
+        } else {
+            String message = "Du saknar behörighet att utföra denna åtgärd på prioriteringsobjektet som tillhör Sektorsråd '"
+                    + prio.getSektorRaad().getLabel()
+                    + "' <br>."
+                    + "Du är idag definierad inom följande Sektorsråd:";
+            StringBuffer buf = new StringBuffer();
+            for (SektorRaad sektorsRaad : user.getSektorRaad()) {
+                buf.append("&nbsp;").append(sektorsRaad).append("<br/>");
+            }
+            message += buf;
+
+            MessageHome messageHome = getOrCreateSessionObj(session, "messageHome", MessageHome.class);
+            messageHome.setMessage(message);
+            return false;
+        }
+    }
+
     @RequestMapping(value = "/main", params = { "approve-prio" })
     @Transactional
     public String approve(HttpServletRequest request, HttpServletResponse response, ModelMap model,
@@ -112,7 +133,7 @@ public class EditPrioriteringController extends ControllerBase {
         User user = (User) session.getAttribute("user");
         if (user != null && user.isApprover()) {
             Prioriteringsobjekt prio = prioRepository.find(id);
-            if (user.getSektorRaad().contains(prio.getSektorRaad())) {
+            if (isUserInSektorsRaadIfNotWarnWithMessage(user, prio, session)) {
 
                 try {
                     prio.godkaen();
@@ -144,9 +165,6 @@ public class EditPrioriteringController extends ControllerBase {
 
                 prioRepository.merge(prio);
             } else {
-                String message = "Du saknar behörighet till prioriteringsobjektet och kan därför inte ändra dess status.";
-                MessageHome messageHome = getOrCreateSessionObj(session, "messageHome", MessageHome.class);
-                messageHome.setMessage(message);
                 return "main";
             }
         }
