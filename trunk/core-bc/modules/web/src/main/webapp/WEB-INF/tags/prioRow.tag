@@ -31,7 +31,10 @@
       <c:if test="${column.visible}">
         <td class="${column.name}">
           <hr/>
-          <tags:cell value="${row.child[column.name]}"/>
+          <c:if test="${row.child[column.name] != row[column.name]}">
+            <span></span><tags:cell value="${row.child[column.name]}"/></span>
+            <img src='img/flag_white.gif' title="Annat värde i godkänd version." style="float:right; display:inline;"/>
+          </c:if>
         </td>
       </c:if>
     </c:forEach>
