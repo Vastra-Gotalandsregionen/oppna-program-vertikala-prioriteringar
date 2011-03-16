@@ -64,6 +64,11 @@ public class EditPrioriteringController extends ControllerBase {
     @RequestMapping(value = "/main", params = { "delete-prio" })
     @Transactional
     public String initDeleteView(ModelMap model, HttpSession session, @RequestParam(required = false) Long id) {
+
+        if (!validateIdIsSelected(session, id)) {
+            return "main";
+        }
+
         initView(model, session, id);
         PrioriteringsobjektForm form = (PrioriteringsobjektForm) model.get("prio");
         if (form.getChild() != null) {
@@ -78,10 +83,32 @@ public class EditPrioriteringController extends ControllerBase {
         return "delete-prio-view";
     }
 
+    /**
+     * @param session
+     * @param id
+     * @return
+     */
+    private boolean validateIdIsSelected(HttpSession session, Long id) {
+        if (id == null) {
+            // No id has been selected
+            String message = "Var vänlig och markera det prioriteringsobjekt du vill arbeta med innan du trycker på knappen.";
+            MessageHome messageHome = getOrCreateSessionObj(session, "messageHome", MessageHome.class);
+            messageHome.setMessage(message);
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     @RequestMapping(value = "/main", params = { "approve-prio" })
     @Transactional
     public String approve(HttpServletRequest request, HttpServletResponse response, ModelMap model,
-            HttpSession session, @RequestParam(required = true) Long id) throws IOException {
+            HttpSession session, @RequestParam(required = false) Long id) throws IOException {
+
+        if (!validateIdIsSelected(session, id)) {
+            return "main";
+        }
+
         User user = (User) session.getAttribute("user");
         if (user != null && user.isApprover()) {
             Prioriteringsobjekt prio = prioRepository.find(id);
@@ -138,6 +165,10 @@ public class EditPrioriteringController extends ControllerBase {
     @RequestMapping(value = "/main", params = { "edit-prio" })
     @Transactional
     public String edit(ModelMap model, HttpSession session, @RequestParam(required = false) Long id) {
+        if (!validateIdIsSelected(session, id)) {
+            return "main";
+        }
+
         String result = initView(model, session, id);
         model.addAttribute("editDir", new EditDirective(true, null));
         return result;
@@ -145,7 +176,14 @@ public class EditPrioriteringController extends ControllerBase {
 
     @RequestMapping(value = "/main", params = { "select-prio" })
     @Transactional
-    public String initView(ModelMap model, HttpSession session, @RequestParam(required = false) Long id) {
+    public String view(ModelMap model, HttpSession session, @RequestParam(required = false) Long id) {
+        if (!validateIdIsSelected(session, id)) {
+            return "main";
+        }
+        return initView(model, session, id);
+    }
+
+    private String initView(ModelMap model, HttpSession session, Long id) {
         PrioriteringsobjektForm form = (PrioriteringsobjektForm) model.get("prio");
         if (form == null) {
             form = new PrioriteringsobjektForm();
