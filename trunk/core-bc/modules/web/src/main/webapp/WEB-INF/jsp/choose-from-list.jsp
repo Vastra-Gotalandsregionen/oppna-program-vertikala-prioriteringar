@@ -25,7 +25,7 @@
     <span class="yui3-u-1-3"></span>
   </c:if>
   
-  <span class="yui3-u-1-3"><h3>${ChooseListForm.notYetChoosenLabel}</h3> (${ChooseListForm.sizeOfAllToChoose} stycken)</span>
+  <span class="yui3-u-1-3"><h3>${ChooseListForm.notYetChoosenLabel}</h3> (${ChooseListForm.sizeOfAllToChoose-ChooseListForm.sizeOfChoosen} stycken)</span>
   <span class="yui3-u-1-3"></span>
   <span class="yui3-u-1-3"><h3>${ChooseListForm.choosenLabel}</h3> (${ChooseListForm.sizeOfChoosen} stycken)</span>
     
