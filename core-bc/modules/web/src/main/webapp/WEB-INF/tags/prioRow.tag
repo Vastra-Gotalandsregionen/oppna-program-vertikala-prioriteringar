@@ -18,7 +18,15 @@
   </td>
   <c:forEach items="${form.columns}" var="column">
     <c:if test="${column.visible}">
-      <td class="${column.name}"><tags:cell value="${row[column.name]}"/>
+      <td class="${column.name}">
+        <c:choose>
+          <c:when test="${row.child == null}">
+            <tags:cell value="${row[column.name]}"/>
+          </c:when>
+          <c:otherwise>
+            <tags:cell value="${row.child[column.name]}"/>
+          </c:otherwise>
+        </c:choose>
       </td>
     </c:if>
   </c:forEach>
@@ -32,8 +40,8 @@
         <td class="${column.name}">
           <hr/>
           <c:if test="${row.child[column.name] != row[column.name]}">
-            <span></span><tags:cell value="${row.child[column.name]}"/></span>
-            <img src='img/flag_white.gif' title="Annat värde i godkänd version." style="float:right; display:inline;"/>
+            <span></span><tags:cell value="${row[column.name]}"/></span>
+            <img src='img/flag_white.gif' title="Värde i utkast-version." style="float:right; display:inline;"/>
           </c:if>
         </td>
       </c:if>
