@@ -210,12 +210,20 @@ public class ChooseFromListController extends ControllerBase {
             return allToChoose;
         }
 
+        public int getSizeOfAllToChoose() {
+            return allToChoose.size();
+        }
+
         public void setAllToChoose(List allToChoose) {
             this.allToChoose = allToChoose;
         }
 
         public List getChoosen() {
             return choosen;
+        }
+
+        public int getSizeOfChoosen() {
+            return choosen.size();
         }
 
         public void setChoosen(List choosen) {
