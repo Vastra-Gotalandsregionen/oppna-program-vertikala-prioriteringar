@@ -84,7 +84,7 @@
                   </a>
                   
                 </c:if>
-                <c:if test="${not empty su:toString(prioCondition[column.name])}">
+                <c:if test="${column.sortable and not empty su:toString(prioCondition[column.name])}">
                   <a href='deselect-codes?fieldName=${column.name}' title="Ta bort filtervillkor: <tags:cell value="${su:toString(prioCondition[column.name])}"/>">
                     <img src='img/x.png'/>
                   </a>
