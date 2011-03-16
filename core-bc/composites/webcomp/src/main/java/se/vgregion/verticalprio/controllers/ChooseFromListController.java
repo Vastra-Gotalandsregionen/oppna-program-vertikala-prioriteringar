@@ -22,11 +22,18 @@ import org.springframework.web.bind.annotation.RequestParam;
  * 
  */
 @Controller
+@SuppressWarnings(value = { "rawtypes", "unchecked" })
 public class ChooseFromListController extends ControllerBase {
 
     @RequestMapping(value = "/choose-from-list", params = { "ok" })
     public String ok(HttpServletResponse response, HttpSession session, ModelMap model) throws IOException {
         final ChooseListForm form = getChooseListForm(model, session);
+        if (form.maxSelection != null && form.maxSelection < form.choosen.size()) {
+            MessageHome messageHome = getOrCreateSessionObj(session, "messageHome", MessageHome.class);
+            String message = "Du kan maximalt välja " + form.maxSelection + " samtidigt.";
+            messageHome.setMessage(message);
+            return "choose-from-list";
+        }
         form.target.clear();
         form.target.addAll(form.getChoosen());
         response.sendRedirect(form.getOkUrl());
@@ -73,7 +80,6 @@ public class ChooseFromListController extends ControllerBase {
         return result;
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     @RequestMapping(value = "/choose-from-list", params = { "remove" })
     public String remove(HttpSession session, @RequestParam(required = false) List<String> choosenKeys,
             ModelMap model, @RequestParam(required = false) String filterText) {
@@ -91,7 +97,6 @@ public class ChooseFromListController extends ControllerBase {
         return main(session, filterText, null, null, model);
     }
 
-    @SuppressWarnings({ "rawtypes" })
     @RequestMapping(value = "/choose-from-list", params = { "removeAll" })
     public String removeAll(HttpSession session, ModelMap model, @RequestParam(required = false) String filterText) {
         final ChooseListForm form = getChooseListForm(model, session);
@@ -130,7 +135,7 @@ public class ChooseFromListController extends ControllerBase {
     }
 
     private List sort(Collection values, String sortProperty) {
-        SortedMap tm = new TreeMap();
+        SortedMap<String, Object> tm = new TreeMap<String, Object>();
         for (Object value : values) {
             BeanMap valueMap = new BeanMap(value);
             Object key = valueMap.get(sortProperty);
@@ -141,7 +146,6 @@ public class ChooseFromListController extends ControllerBase {
         return new ArrayList(tm.values());
     }
 
-    @SuppressWarnings("unchecked")
     private void removeThoseWithNoSuchSubstring(List items, String propertyName, String subString) {
         subString = subString.toLowerCase();
         for (Object item : new ArrayList(items)) {
@@ -154,12 +158,17 @@ public class ChooseFromListController extends ControllerBase {
     }
 
     public static class ChooseListForm implements Serializable, Cloneable {
+
+        private static final long serialVersionUID = 1L;
+
         private String displayKey, idKey, choosenLabel, notYetChoosenLabel, filterLabel, filterText, cancelUrl,
                 okUrl, okLabel;
+
         private List allToChoose = new ArrayList();
         private List choosen = new ArrayList();
         private List allItems = new ArrayList();
         private Collection target = new ArrayList();
+        private Integer maxSelection = 100;
 
         public boolean isFindingVisible() {
             return (allItems.size() > 25 && filterLabel != null && !"".equals(filterLabel.trim()))
@@ -303,6 +312,14 @@ public class ChooseFromListController extends ControllerBase {
             }
 
             return result;
+        }
+
+        public void setMaxSelection(Integer maxSelection) {
+            this.maxSelection = maxSelection;
+        }
+
+        public Integer getMaxSelection() {
+            return maxSelection;
         }
     }
 

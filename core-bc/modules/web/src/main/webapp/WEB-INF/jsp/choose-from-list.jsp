@@ -64,6 +64,8 @@
   
   </div>
 
+<tags:message-out/>
+
 </form:form>
 
 </span>

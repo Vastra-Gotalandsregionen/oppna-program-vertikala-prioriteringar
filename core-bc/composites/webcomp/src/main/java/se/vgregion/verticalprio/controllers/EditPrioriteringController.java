@@ -65,7 +65,9 @@ public class EditPrioriteringController extends ControllerBase {
     @Transactional
     public String initDeleteView(ModelMap model, HttpSession session, @RequestParam(required = false) Long id) {
 
-        if (!validateIdIsSelected(session, id)) {
+        User user = (User) session.getAttribute("user");
+        if (!validateIdIsSelected(session, id)
+                || !isUserInSektorsRaadIfNotWarnWithMessage(user, prioRepository.find(id), session)) {
             return "main";
         }
 
@@ -106,14 +108,17 @@ public class EditPrioriteringController extends ControllerBase {
             return true;
         } else {
             String message = "Du saknar behörighet att utföra denna åtgärd på prioriteringsobjektet som tillhör Sektorsråd '"
-                    + prio.getSektorRaad().getLabel()
-                    + "' <br>."
-                    + "Du är idag definierad inom följande Sektorsråd:";
-            StringBuffer buf = new StringBuffer();
-            for (SektorRaad sektorsRaad : user.getSektorRaad()) {
-                buf.append("&nbsp;").append(sektorsRaad).append("<br/>");
+                    + prio.getSektorRaad().getLabel() + ".";
+            if (!user.getSektorRaad().isEmpty()) {
+                message += "<br>" + "Du är idag definierad inom följande Sektorsråd:";
+                StringBuilder buf = new StringBuilder();
+                for (SektorRaad sektorsRaad : user.getSektorRaad()) {
+                    buf.append("&nbsp;").append(sektorsRaad).append("<br/>");
+                }
+                message += buf;
+            } else {
+                message += "Din användare är för närvarande inte medlem i något sektorsråd själv.";
             }
-            message += buf;
 
             MessageHome messageHome = getOrCreateSessionObj(session, "messageHome", MessageHome.class);
             messageHome.setMessage(message);
@@ -183,7 +188,9 @@ public class EditPrioriteringController extends ControllerBase {
     @RequestMapping(value = "/main", params = { "edit-prio" })
     @Transactional
     public String edit(ModelMap model, HttpSession session, @RequestParam(required = false) Long id) {
-        if (!validateIdIsSelected(session, id)) {
+        User user = (User) session.getAttribute("user");
+        if (!validateIdIsSelected(session, id)
+                || !isUserInSektorsRaadIfNotWarnWithMessage(user, prioRepository.find(id), session)) {
             return "main";
         }
 
@@ -201,7 +208,7 @@ public class EditPrioriteringController extends ControllerBase {
         return initView(model, session, id);
     }
 
-    private String initView(ModelMap model, HttpSession session, Long id) {
+    String initView(ModelMap model, HttpSession session, Long id) {
         PrioriteringsobjektForm form = (PrioriteringsobjektForm) model.get("prio");
         if (form == null) {
             form = new PrioriteringsobjektForm();
@@ -257,7 +264,13 @@ public class EditPrioriteringController extends ControllerBase {
         }
     }
 
-    @RequestMapping(value = "/delete-prio")
+    @RequestMapping(value = "/delete-prio", params = { "cancel" })
+    public String cancelDelete(HttpServletResponse response) throws IOException {
+        response.sendRedirect("main");
+        return "main";
+    }
+
+    @RequestMapping(value = "/delete-prio", params = { "ok" })
     @Transactional
     public String deletePrio(HttpServletRequest request, HttpServletResponse response, HttpSession session)
             throws IOException {
