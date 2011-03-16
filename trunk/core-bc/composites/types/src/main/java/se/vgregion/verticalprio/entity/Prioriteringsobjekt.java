@@ -33,6 +33,15 @@ import se.vgregion.dao.domain.patterns.entity.AbstractEntity;
 @Table(name = "prioriteringsobjekt")
 public class Prioriteringsobjekt extends AbstractEntity<Long> implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
+    public Prioriteringsobjekt() {
+    }
+
+    public Prioriteringsobjekt(Long id) {
+        setId(id);
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
