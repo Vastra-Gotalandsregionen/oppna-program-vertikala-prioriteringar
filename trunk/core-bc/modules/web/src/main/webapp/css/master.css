@@ -342,6 +342,10 @@ button {
 
 /* -- = Leftovers  -------------------------------------------------------*/
 
+.aatgaerdskoderTexts, .diagnosTexts {
+  min-width: 250px;
+ }
+ 
 .main {
   width: 100%;
 }
@@ -432,7 +436,11 @@ button {
   margin: auto;
   padding: 1em;
   text-align: left;
-  width: 60em;
+  width: 80em;
+}
+
+.prio-view .values select {
+  max-width: 172px;
 }
 
 .find-select-code {
@@ -521,3 +529,4 @@ button {
 .prio-view select, .prio-view textarea  {
   margin:5px;
 }
+

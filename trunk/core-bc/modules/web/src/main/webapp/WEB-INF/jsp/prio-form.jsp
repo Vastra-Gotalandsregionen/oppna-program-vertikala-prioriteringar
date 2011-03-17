@@ -61,12 +61,16 @@
     </div>
     <br/><br/>
     
+    
     <div style="width:100%" class="prio-form-grid yui3-g">
-        <div class="yui3-u-1-3"><tags:label key="vaardnivaaKod" /><tags:kod key="vaardnivaaKod" /></div>
-        <div class="yui3-u-1-3"><tags:label key="vaardform" /><tags:kod key="vaardform" /></div>
-        <div class="yui3-u-1-3"><tags:label key="sektorRaad"/><tags:sektorRaad key="sektorRaad"/></div>
-        <div class="yui3-u-1-4" style="float: right"><tags:label key="kommentar" /><tags:textarea key="kommentar" cssInputBoxStyle="width:100%;" /></div>
+        <div class="yui3-u-1-5"><tags:label key="vaardnivaaKod" /><tags:kod key="vaardnivaaKod" /></div>
+        <div class="yui3-u-1-5"><tags:label key="vaardform" /><tags:kod key="vaardform" /></div>
+        <div class="yui3-u-1-5"><tags:label key="sektorRaad"/><tags:sektorRaad key="sektorRaad"/></div>
+        <div class="yui3-u-2-5"><tags:label key="kommentar" /><tags:textarea key="kommentar" cssInputBoxStyle="width:100%;" /></div>
     </div>
+    
+    <hr style="clear:both"/>
+    
     <div class="yui3-u-1-2">
       <tags:code-list-view addItemLabel="Lägg till ATC-koder" removeItemLabel="Ta bort valda koder" label="ATC-koder" codeKey="atcKoder" prio="${prio}" />
     </div>

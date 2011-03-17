@@ -151,4 +151,12 @@
     <function-signature>java.lang.Boolean isPriosDifferent(se.vgregion.verticalprio.entity.Prioriteringsobjekt, se.vgregion.verticalprio.entity.Prioriteringsobjekt)</function-signature>
   </function>
   
+  <function>
+    <description>Generetas a tool tip text that tells the user a value have changed since the approved version. </description>
+    <display-name>mkChangedToolTip</display-name>
+    <name>mkChangedToolTip</name>
+    <function-class>se.vgregion.verticalprio.el.Util</function-class>
+    <function-signature>java.lang.String mkChangedToolTip(java.lang.Object, java.lang.Object)</function-signature>
+  </function>
+  
 </taglib>

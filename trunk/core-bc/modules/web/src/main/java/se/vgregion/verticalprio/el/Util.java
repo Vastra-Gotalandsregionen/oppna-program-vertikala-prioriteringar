@@ -295,4 +295,13 @@ public class Util {
         return o1.equals(o2);
     }
 
+    public static String mkChangedToolTip(Object oldValue, Object newValue) {
+        if (equals(oldValue, newValue)) {
+            return "";
+        }
+        if (oldValue == null || "".equals(oldValue.toString().trim()) || "[]".equals(oldValue.toString().trim())) {
+            return "Inget tidigare värde.";
+        }
+        return "Tidigare värde: " + oldValue;
+    }
 }
