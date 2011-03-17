@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.beanutils.BeanMap;
 import org.springframework.transaction.annotation.Transactional;
@@ -263,6 +264,13 @@ public class Util {
         twoMap.remove("parentId");
         oneMap.remove("draft");
         twoMap.remove("draft");
+        oneMap.remove("class");
+        twoMap.remove("class");
+
+        // If any of the objects are sub-classes of the Prioriteringsobjekt type.
+        Set<Object> keys = new BeanMap(new Prioriteringsobjekt()).keySet();
+        oneMap.keySet().retainAll(keys);
+        twoMap.keySet().retainAll(keys);
 
         for (String key : oneMap.keySet()) {
             Object onesValue = oneMap.get(key);
