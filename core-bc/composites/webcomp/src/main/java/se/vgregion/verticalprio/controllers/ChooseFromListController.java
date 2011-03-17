@@ -168,11 +168,17 @@ public class ChooseFromListController extends ControllerBase {
         private List choosen = new ArrayList();
         private List allItems = new ArrayList();
         private Collection target = new ArrayList();
-        private Integer maxSelection = 100;
+        private Integer maxSelection = 25; // This indicates the max number of items a user can select
+        private Integer minNumberOfItemsForShowingFindButton = 25;
 
+        /**
+         * If true the show the Find button
+         * 
+         * @return
+         */
         public boolean isFindingVisible() {
-            return (allItems.size() > 25 && filterLabel != null && !"".equals(filterLabel.trim()))
-                    || (filterText != null && !"".equals(filterText.trim()));
+            return (allItems.size() > minNumberOfItemsForShowingFindButton && filterLabel != null && !""
+                    .equals(filterLabel.trim())) || (filterText != null && !"".equals(filterText.trim()));
         }
 
         public String getDisplayKey() {
