@@ -40,7 +40,8 @@
 
 <c:if test="${prio.child != null and su:isPriosDifferent(prio, prio.child)}">
   <div>
-    <img src='img/flag_white.gif'/> = Fältvärde som skiljer sig från den skarpa versionen.
+    <br/>
+    <img src='img/flag_white.gif'/> = Fältvärde som skiljer sig från den godkända versionen.
   </div>
 </c:if>
 </span>
