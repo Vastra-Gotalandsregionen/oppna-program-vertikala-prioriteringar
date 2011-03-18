@@ -336,6 +336,17 @@ button {
   padding-bottom: 14px;
 } 
 
+/* -- = Below Help Block  -------------*/
+
+.below-help-block {
+    display: block;
+    font-size: 14px;
+    margin: 0;
+    max-width: 514px;
+    padding: 10px; 
+    background-image:url('../img/help_background.png');
+}
+
 
 /* -- = Sandbox  -------------------------------------------------------*/
 
