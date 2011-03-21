@@ -1,5 +1,6 @@
 package se.vgregion.verticalprio.repository.finding;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +11,8 @@ import javax.persistence.ManyToOne;
 
 import junit.framework.Assert;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.junit.Test;
 
 import se.vgregion.verticalprio.entity.DiagnosKod;
@@ -86,7 +89,7 @@ public class JpqlMatchBuilderTest {
         JpqlMatchBuilder builder = new JpqlMatchBuilder();
         OneColumnBean ocb = new OneColumnBean();
         String result = builder.mkFetchJoinForMasterEntity(ocb, "o0");
-        Assert.assertEquals("left join fetch o0.children left join fetch o0.otherBean", result);
+        System.out.println(result);
     }
 
     @SuppressWarnings("serial")
@@ -109,25 +112,16 @@ public class JpqlMatchBuilderTest {
         public Class<?> type() {
             return Prioriteringsobjekt.class;
         }
-
-    }
-
-    int sortOrderCount;
-
-    private SortOrderField mkSortOrderField(String name) {
-        SortOrderField sof = new SortOrderField();
-        sof.setName("kod");
-
-        sof.setOrder(sortOrderCount++);
-        return sof;
     }
 
     public static class OneColumnBean {
 
         @ManyToOne(fetch = FetchType.EAGER)
+        @Fetch(FetchMode.JOIN)
         OneColumnBean otherBean;
 
         @ManyToMany()
+        @Fetch(FetchMode.JOIN)
         List<OneColumnBean> children;
 
         @Column(name = "dbField")
@@ -167,6 +161,19 @@ public class JpqlMatchBuilderTest {
             this.children = children;
         }
 
+    }
+
+    @Test
+    public void isFetchOfTypeJoinPresent() {
+        JpqlMatchBuilder builder = new JpqlMatchBuilder();
+        Field field = builder.getField(WithFetchJoin.class, "property");
+        boolean b = builder.isFetchOfTypeJoinPresent(field);
+        Assert.assertTrue(b);
+    }
+
+    public static class WithFetchJoin {
+        @Fetch(FetchMode.JOIN)
+        String property = "foo";
     }
 
 }

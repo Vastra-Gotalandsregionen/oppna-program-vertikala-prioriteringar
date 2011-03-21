@@ -12,7 +12,6 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -46,25 +45,25 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany()
     @JoinColumn(name = "parent_id")
-    @FetchJoinThis
+    @Fetch(FetchMode.JOIN)
     private Set<Prioriteringsobjekt> children = new HashSet<Prioriteringsobjekt>();
 
     @Column(name = "parent_id", updatable = false)
     private Long parentId;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne()
     @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "vaentetid_besook_veckor_kod_id")
     private VaentetidsKod vaentetidBesookVeckor;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne()
     @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "sektor_raad_id")
     private SektorRaad sektorRaad;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne()
     @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "kostnad_levnadsaar_kod_id")
     private KostnadLevnadsaarKod kostnadLevnadsaarKod;
@@ -83,59 +82,57 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
 
     @ManyToMany()
     @JoinTable(name = "link_prioriteringsobjekt_diagnos_kod", joinColumns = { @JoinColumn(name = "prio_id") }, inverseJoinColumns = { @JoinColumn(name = "diagnos_kod_id") })
-    @FetchJoinThis
     private Set<DiagnosKod> diagnoser = new HashSet<DiagnosKod>();
 
     @ManyToMany()
     @JoinTable(name = "link_prioriteringsobjekt_aatgaerds_kod", joinColumns = { @JoinColumn(name = "prio_id") }, inverseJoinColumns = { @JoinColumn(name = "aatgaerds_kod_id") })
-    @FetchJoinThis
     private Set<AatgaerdsKod> aatgaerdskoder = new HashSet<AatgaerdsKod>();
+
+    @ManyToMany()
+    @JoinTable(name = "link_prioriteringsobjekt_atc_kod", joinColumns = { @JoinColumn(name = "prio_id") }, inverseJoinColumns = { @JoinColumn(name = "atc_kod_id") })
+    private Set<AtcKod> atcKoder = new HashSet<AtcKod>();
 
     @ManyToOne
     @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "vaardforms_kod_id")
     private VaardformsKod vaardform;
 
-    @ManyToMany()
-    @JoinTable(name = "link_prioriteringsobjekt_atc_kod", joinColumns = { @JoinColumn(name = "prio_id") }, inverseJoinColumns = { @JoinColumn(name = "atc_kod_id") })
-    private Set<AtcKod> atcKoder = new HashSet<AtcKod>();
-
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne()
     @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "tillstaandets_svaarighetsgrad_kod_id")
     private TillstaandetsSvaarighetsgradKod tillstaandetsSvaarighetsgradKod;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne()
     @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "vaentetid_behandling_veckor_kod_id")
     private VaentetidsKod vaentetidBehandlingVeckor;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne()
     @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "rangordnings_kod_id")
     private RangordningsKod rangordningsKod;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne()
     @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "vaardnivaa_kod_id")
     private VaardnivaaKod vaardnivaaKod;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne()
     @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "haelsonekonomisk_evidens_kod_id")
     private HaelsonekonomiskEvidensKod haelsonekonomiskEvidensKod;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne()
     @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "aatgaerds_risk_kod_id")
     private AatgaerdsRiskKod aatgaerdsRiskKod;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne()
     @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "patientnytto_evidens_kod_id")
     private PatientnyttoEvidensKod patientnyttoEvidensKod;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne()
     @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "patientnytta_effekt_aatgaerds_kod_id")
     private PatientnyttaEffektAatgaerdsKod patientnyttaEffektAatgaerdsKod;

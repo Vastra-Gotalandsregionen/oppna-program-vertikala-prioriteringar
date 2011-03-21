@@ -25,9 +25,11 @@ import se.vgregion.verticalprio.MainForm;
 import se.vgregion.verticalprio.PrioriteringsobjektFindCondition;
 import se.vgregion.verticalprio.controllers.ChooseFromListController.ChooseListForm;
 import se.vgregion.verticalprio.entity.Column;
+import se.vgregion.verticalprio.entity.DiagnosKod;
 import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
 import se.vgregion.verticalprio.entity.SektorRaad;
 import se.vgregion.verticalprio.entity.User;
+import se.vgregion.verticalprio.repository.GenerisktFinderRepository;
 import se.vgregion.verticalprio.repository.GenerisktKodRepository;
 import se.vgregion.verticalprio.repository.finding.DateNullLogic;
 import se.vgregion.verticalprio.repository.finding.HaveNestedEntities;
@@ -41,6 +43,9 @@ public class VerticalPrioController extends EditPrioriteringController {
 
     @Resource(name = "userRepository")
     GenerisktKodRepository<User> userRepository;
+
+    @Resource(name = "diagnosRepository")
+    GenerisktFinderRepository<DiagnosKod> diagnosRepository;
 
     @RequestMapping(value = "/main")
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -362,7 +367,7 @@ public class VerticalPrioController extends EditPrioriteringController {
                 // Remove all conditions that specifies specific SRs, except those that should indicate order by
                 // directive.
                 HaveNestedEntities<SektorRaad> hne = condition.getSektorRaad();
-                clearAwayNonSortingLogic(hne);
+                clearNonSortingLogic(hne);
             }
         } else {
             List<SektorRaad> raad = getMarkedLeafs(mf.getSectors());
@@ -372,7 +377,7 @@ public class VerticalPrioController extends EditPrioriteringController {
 
             // Find out if there are selected sectors, taking regards to that there might be HaveSortOrder-objects
             // inside.
-            clearAwayNonSortingLogic(sektorNest);
+            clearNonSortingLogic(sektorNest);
             sektorNest.content().addAll(raad);
 
             if (raad.isEmpty()) {
@@ -384,9 +389,21 @@ public class VerticalPrioController extends EditPrioriteringController {
 
         List<Prioriteringsobjekt> result = new ArrayList<Prioriteringsobjekt>();
 
-        List<? extends Prioriteringsobjekt> prios = new ArrayList<Prioriteringsobjekt>(
-                prioRepository.findByExample(condition, null));
-        result.addAll(prios);
+        // List<? extends Prioriteringsobjekt> prios = new ArrayList<Prioriteringsobjekt>(
+        // prioRepository.findByExample(condition, null));
+        // result.addAll(prios);
+
+        // DiagnosKod diagnosCondition = new DiagnosKod();
+        // diagnosCondition.getPrioriteringsobjekt().add(condition);
+        // List<DiagnosKod> diagnosesInResult = diagnosRepository.findByExample(diagnosCondition, null);
+        // System.out.println("diagnosesInResult.size(): " + diagnosesInResult.size());
+        //
+        // for (DiagnosKod dk : diagnosesInResult) {
+        // System.out.println(dk.getKod() + "\n " + dk.getLitePrioriteringsobjekt().size() + "\n " +
+        // dk.getLitePrioriteringsobjekt());
+        // }
+
+        result.addAll(prioRepository.findLargeResult(condition));
 
         List<SektorRaad> sectors = applicationData.getSektorRaadList();
 
@@ -404,7 +421,7 @@ public class VerticalPrioController extends EditPrioriteringController {
      * 
      * @param hne
      */
-    private void clearAwayNonSortingLogic(HaveNestedEntities<?> hne) {
+    private void clearNonSortingLogic(HaveNestedEntities<?> hne) {
         for (Object sr : new ArrayList<Object>(hne.content())) {
             if (!(sr instanceof HaveQuerySortOrder)) {
                 hne.content().remove(sr);

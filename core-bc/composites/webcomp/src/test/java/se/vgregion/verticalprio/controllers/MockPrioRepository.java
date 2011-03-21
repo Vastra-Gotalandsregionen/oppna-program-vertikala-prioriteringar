@@ -133,4 +133,14 @@ public class MockPrioRepository implements PrioRepository {
         return extraWhere;
     }
 
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public List<Prioriteringsobjekt> findLargeResult(Prioriteringsobjekt example) {
+        List<Prioriteringsobjekt> result = new ArrayList<Prioriteringsobjekt>();
+
+        return result;
+    }
+
 }
