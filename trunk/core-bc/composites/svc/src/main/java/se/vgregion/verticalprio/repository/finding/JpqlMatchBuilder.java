@@ -1,5 +1,6 @@
 package se.vgregion.verticalprio.repository.finding;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
@@ -20,9 +21,10 @@ import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
 import org.apache.commons.beanutils.BeanMap;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import se.vgregion.dao.domain.patterns.entity.AbstractEntity;
-import se.vgregion.verticalprio.entity.FetchJoinThis;
 import se.vgregion.verticalprio.repository.finding.HaveQuerySortOrder.SortOrderField;
 
 /**
@@ -66,6 +68,19 @@ public class JpqlMatchBuilder {
 
     // private final List<String> sortOrder = new ArrayList<String>();
 
+    private Class getClassToSelect(Object bean) {
+        if (bean instanceof HaveExplicitTypeToFind) {
+            HaveExplicitTypeToFind hettf = (HaveExplicitTypeToFind) bean;
+            return hettf.type();
+        } else {
+            return bean.getClass();
+        }
+    }
+
+    private String getNameOfTypeToSelect(Object bean) {
+        return getClassToSelect(bean).getSimpleName();
+    }
+
     /**
      * Produces jpql code for selecting data that matches the provided example in values and class. See description
      * of this class for more logic behind query creation.
@@ -79,7 +94,6 @@ public class JpqlMatchBuilder {
      * @return jpql representing conditions and joins between objects in the graph.
      */
     public String mkFindByExampleJpql(Object bean, List<Object> values) {
-
         if (values == null) {
             throw new RuntimeException();
         }
@@ -87,16 +101,8 @@ public class JpqlMatchBuilder {
         QueryParts qp = new QueryParts();
         qp.values = values;
         qp.selects.add("o0");
-
-        if (bean instanceof HaveExplicitTypeToFind) {
-            HaveExplicitTypeToFind hettf = (HaveExplicitTypeToFind) bean;
-            qp.fromJoin.add(hettf.type().getSimpleName() + " o0");
-        } else {
-            qp.fromJoin.add(bean.getClass().getSimpleName() + " o0");
-        }
-
+        qp.fromJoin.add(getNameOfTypeToSelect(bean) + " o0");
         mkFindByExampleJpql(bean, qp, 0);
-
         List<String> orderBy = new ArrayList<String>();
 
         if (!qp.order.isEmpty()) {
@@ -236,61 +242,58 @@ public class JpqlMatchBuilder {
      * @return
      */
     String mkFetchJoinForMasterEntity(Object bean, String alias) {
-        return mkFetchJoinForMasterEntity(bean, alias, new HashSet<String>());
+        try {
+            return mkFetchJoinForMasterEntity(getClassToSelect(bean), alias, new HashSet<String>());
+        } catch (InstantiationException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    String mkFetchJoinForMasterEntity(Object bean, String alias, Set<String> passedFields) {
+    private String mkFetchJoinForMasterEntity(Class klass, String alias, Set<String> passedFields)
+            throws InstantiationException, IllegalAccessException {
+
+        if (passedFields.contains(alias)) {
+            return "";
+        } else {
+            passedFields.add(alias);
+        }
+
         StringBuilder sb = new StringBuilder();
-        BeanMap bm = new BeanMap(bean);
 
-        for (Object key : bm.keySet()) {
-            String propertyName = (String) key;
-            Field field = getField(bean.getClass(), propertyName);
-            if (field != null) {
-                String fieldKey = bean.getClass().getName() + " " + propertyName;
+        for (Field field : klass.getDeclaredFields()) {
+            if (isFetchOfTypeJoinPresent(field)) {
+                String fieldKey = getNameOfTypeToSelect(klass.newInstance()) + "_" + field.getName();
 
-                if (passedFields.contains(fieldKey)) {
-                    continue;
-                } else {
-                    passedFields.add(fieldKey);
-                }
-
-                if (field.isAnnotationPresent(ManyToOne.class) || field.isAnnotationPresent(ManyToMany.class)
-                        || field.isAnnotationPresent(OneToMany.class) || field.isAnnotationPresent(OneToOne.class)) {
-                    sb.append(" left join fetch " + alias + ".");
-                    sb.append(propertyName);
-
-                    if (field.isAnnotationPresent(FetchJoinThis.class)) {
-                        Object innerBean = bm.get(propertyName);
-                        if (innerBean == null || innerBean instanceof Collection) {
-                            Class clazz = bm.getType(propertyName);
-                            if (Collection.class.isAssignableFrom(clazz)) {
-                                if (alias.equals(propertyName)) {
-                                    continue;
-                                }
-                                sb.append(" as " + propertyName + " ");
-                                ParameterizedType type = (ParameterizedType) field.getGenericType();
-                                clazz = (Class) type.getActualTypeArguments()[0];
-                            }
-                            try {
-                                innerBean = clazz.newInstance();
-                            } catch (InstantiationException e) {
-                                throw new RuntimeException(e);
-                            } catch (IllegalAccessException e) {
-                                throw new RuntimeException(e);
-                            }
-                        }
-                        if (!alias.endsWith("." + propertyName)) {
-                            sb.append(" " + mkFetchJoinForMasterEntity(innerBean, propertyName, passedFields)
-                                    + " ");
-                        }
-                    }
-
+                sb.append(" left outer join fetch " + alias + ".");
+                sb.append(field.getName() + " " + fieldKey + " ");
+                if (!passedFields.contains(fieldKey)) {
+                    sb.append(mkFetchJoinForMasterEntity(getPropertyClassOrGenericCollectionTypeing(field),
+                            fieldKey, passedFields));
                 }
             }
         }
 
-        return sb.toString().trim();
+        return sb.toString();
+    }
+
+    private Class getPropertyClassOrGenericCollectionTypeing(Field field) {
+        Class clazz = field.getType();
+        if (Collection.class.isAssignableFrom(clazz)) {
+            ParameterizedType type = (ParameterizedType) field.getGenericType();
+            clazz = (Class) type.getActualTypeArguments()[0];
+        }
+        return clazz;
+    }
+
+    boolean isFetchOfTypeJoinPresent(Field field) {
+        Annotation annotation = field.getAnnotation(Fetch.class);
+        if (annotation instanceof Fetch) {
+            Fetch fetch = (Fetch) annotation;
+            return FetchMode.JOIN == fetch.value();
+        }
+        return false;
     }
 
     /**
@@ -454,12 +457,13 @@ public class JpqlMatchBuilder {
         return false;
     }
 
-    private Field getField(@SuppressWarnings("rawtypes") Class klass, String name) {
+    Field getField(@SuppressWarnings("rawtypes") Class klass, String name) {
         try {
             if (klass == null) {
                 return null;
             }
             Field field = klass.getDeclaredField(name);
+
             return field;
         } catch (NoSuchFieldException e) {
             if (klass.equals(Object.class)) {

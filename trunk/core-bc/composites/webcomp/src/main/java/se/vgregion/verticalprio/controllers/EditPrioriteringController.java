@@ -224,6 +224,10 @@ public class EditPrioriteringController extends ControllerBase {
             prio = new Prioriteringsobjekt();
             prio.setId(id);
             prio = prioRepository.findByExample(prio, 1).get(0);
+            prio.getDiagnoser().toArray();
+            prio.getAatgaerdskoder().toArray();
+            prio.getAtcKoder().toArray();
+            prio.getChildren().toArray();
         } else {
 
             prio = new Prioriteringsobjekt();
