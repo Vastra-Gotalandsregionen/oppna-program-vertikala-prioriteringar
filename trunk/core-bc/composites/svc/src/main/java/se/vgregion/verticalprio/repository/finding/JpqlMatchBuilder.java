@@ -117,6 +117,14 @@ public class JpqlMatchBuilder {
             }
         }
 
+        if (bean instanceof HaveOrderByPaths) {
+            HaveOrderByPaths havePaths = (HaveOrderByPaths) bean;
+            if (!havePaths.paths().isEmpty()) {
+                qp.selects.addAll(OrderByPath.toJpqlSelectParts(havePaths.paths(), "o0"));
+                qp.fromJoin.addAll(OrderByPath.toJpqlJoinParts(havePaths.paths(), "o0"));
+            }
+        }
+
         StringBuilder sb = new StringBuilder();
 
         sb.append("select distinct ");
@@ -135,6 +143,15 @@ public class JpqlMatchBuilder {
             if (!where.trim().equals("")) {
                 sb.append(" \nwhere ");
                 sb.append(where);
+            }
+        }
+
+        if (bean instanceof HaveOrderByPaths) {
+            HaveOrderByPaths havePaths = (HaveOrderByPaths) bean;
+            if (!havePaths.paths().isEmpty()) {
+                sb.append(" \norder by ");
+                List<String> order = OrderByPath.toJpqlOrderByParts(havePaths.paths(), "o0");
+                sb.append(toString(order, ", "));
             }
         }
 
@@ -413,7 +430,7 @@ public class JpqlMatchBuilder {
         return aliasIndex;
     }
 
-    private String toString(List<String> list, String junctor) {
+    public static String toString(List<String> list, String junctor) {
         StringBuilder sb = new StringBuilder();
         while (list.remove("") || list.remove("()")) {
         }
