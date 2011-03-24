@@ -118,9 +118,11 @@ public class ChooseCodesController extends ControllerBase {
         tillstaandetsSvaarighetsgrad.setChoosenLabel("Valda svårighetsgrader");
         tillstaandetsSvaarighetsgrad.setOkLabel("Välj svårighetsgrader");
         tillstaandetsSvaarighetsgrad.setOkUrl("main");
+        tillstaandetsSvaarighetsgrad.setIdKey("id");
         tillstaandetsSvaarighetsgrad.setCancelUrl("main");
+        tillstaandetsSvaarighetsgrad.setDisplayKey("kortBeskrivning");
         tillstaandetsSvaarighetsgrad.setAllItemsPropertyName("tillstaandetsSvaarighetsgradKod");
-        formPrototypes.put("tillstaandetsSvaarighetsgrad", tillstaandetsSvaarighetsgrad);
+        formPrototypes.put("tillstaandetsSvaarighetsgradKod", tillstaandetsSvaarighetsgrad);
 
     }
 
@@ -226,7 +228,11 @@ public class ChooseCodesController extends ControllerBase {
      */
     private Collection extractTargetCollection(PrioriteringsobjektFindCondition condition, String propertyName) {
         BeanMap bm = new BeanMap(condition);
-        HaveNestedEntities hne = (HaveNestedEntities) bm.get(propertyName);
+        Object uncastHne = bm.get(propertyName);
+        if (uncastHne != null && !(uncastHne instanceof HaveNestedEntities)) {
+            System.out.println("Den här har ju inte rätt klass\n " + uncastHne.getClass());
+        }
+        HaveNestedEntities hne = (HaveNestedEntities) uncastHne;
         return hne.content();
     }
 

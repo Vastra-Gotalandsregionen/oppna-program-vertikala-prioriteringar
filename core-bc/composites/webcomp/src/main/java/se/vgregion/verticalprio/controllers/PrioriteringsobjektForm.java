@@ -11,11 +11,9 @@ import javax.persistence.Transient;
 
 import org.apache.commons.beanutils.BeanMap;
 
-import se.vgregion.verticalprio.entity.AatgaerdsKod;
 import se.vgregion.verticalprio.entity.AatgaerdsRiskKod;
 import se.vgregion.verticalprio.entity.AbstractHirarkiskKod;
 import se.vgregion.verticalprio.entity.AbstractKod;
-import se.vgregion.verticalprio.entity.AtcKod;
 import se.vgregion.verticalprio.entity.Column;
 import se.vgregion.verticalprio.entity.DiagnosKod;
 import se.vgregion.verticalprio.entity.HaelsonekonomiskEvidensKod;
@@ -93,33 +91,33 @@ public class PrioriteringsobjektForm extends Prioriteringsobjekt {
 
     private Prioriteringsobjekt skarpVersion;
 
-    @Transient
-    @SuppressWarnings("serial")
-    ManyCodesRef<AatgaerdsKod> aatgaerdRef = new ManyCodesRef<AatgaerdsKod>() {
-        @Override
-        public Set<AatgaerdsKod> getCodes() {
-            return getAatgaerdskoder();
-        }
-
-        @Override
-        public void setCodes(Set<AatgaerdsKod> codes) {
-            setAatgaerdskoder(codes);
-        }
-    };
-
-    @Transient
-    @SuppressWarnings("serial")
-    private ManyCodesRef<DiagnosKod> diagnosRef = new ManyCodesRef<DiagnosKod>() {
-        @Override
-        public Set<DiagnosKod> getCodes() {
-            return getDiagnoser();
-        }
-
-        @Override
-        public void setCodes(Set<DiagnosKod> codes) {
-            setDiagnoser(codes);
-        }
-    };
+    // @Transient
+    // @SuppressWarnings("serial")
+    // ManyCodesRef<AatgaerdsKod> aatgaerdRef = new ManyCodesRef<AatgaerdsKod>() {
+    // @Override
+    // public Set<AatgaerdsKod> getCodes() {
+    // return getAatgaerdskoder();
+    // }
+    //
+    // @Override
+    // public void setCodes(Set<AatgaerdsKod> codes) {
+    // setAatgaerdskoder(codes);
+    // }
+    // };
+    //
+    // @Transient
+    // @SuppressWarnings("serial")
+    // private ManyCodesRef<DiagnosKod> diagnosRef = new ManyCodesRef<DiagnosKod>() {
+    // @Override
+    // public Set<DiagnosKod> getCodes() {
+    // return getDiagnoser();
+    // }
+    //
+    // @Override
+    // public void setCodes(Set<DiagnosKod> codes) {
+    // setDiagnoser(codes);
+    // }
+    // };
 
     // @Transient
     // @SuppressWarnings("serial")
@@ -135,19 +133,19 @@ public class PrioriteringsobjektForm extends Prioriteringsobjekt {
     // }
     // };
 
-    @Transient
-    @SuppressWarnings("serial")
-    private ManyCodesRef<AtcKod> atcKoderRef = new ManyCodesRef<AtcKod>() {
-        @Override
-        public Set<AtcKod> getCodes() {
-            return getAtcKoder();
-        }
-
-        @Override
-        public void setCodes(Set<AtcKod> codes) {
-            setAtcKoder(codes);
-        }
-    };
+    // @Transient
+    // @SuppressWarnings("serial")
+    // private ManyCodesRef<AtcKod> atcKoderRef = new ManyCodesRef<AtcKod>() {
+    // @Override
+    // public Set<AtcKod> getCodes() {
+    // return getAtcKoder();
+    // }
+    //
+    // @Override
+    // public void setCodes(Set<AtcKod> codes) {
+    // setAtcKoder(codes);
+    // }
+    // };
 
     /**
      * Copy all id's from their codes into their corresponding local attributes.
@@ -415,21 +413,21 @@ public class PrioriteringsobjektForm extends Prioriteringsobjekt {
         return null;
     }
 
-    public ManyCodesRef<DiagnosKod> getDiagnosRef() {
-        return diagnosRef;
-    }
-
-    public ManyCodesRef<AatgaerdsKod> getAatgaerdRef() {
-        return aatgaerdRef;
-    }
-
-    // public ManyCodesRef<VaardformsKod> getVaardformskoderRef() {
-    // return vaardformskoderRef;
+    // public ManyCodesRef<DiagnosKod> getDiagnosRef() {
+    // return diagnosRef;
     // }
-
-    public ManyCodesRef<AtcKod> getAtcKoderRef() {
-        return atcKoderRef;
-    }
+    //
+    // public ManyCodesRef<AatgaerdsKod> getAatgaerdRef() {
+    // return aatgaerdRef;
+    // }
+    //
+    // // public ManyCodesRef<VaardformsKod> getVaardformskoderRef() {
+    // // return vaardformskoderRef;
+    // // }
+    //
+    // public ManyCodesRef<AtcKod> getAtcKoderRef() {
+    // return atcKoderRef;
+    // }
 
     public Map<String, Column> getColumns() {
         return columns;

@@ -11,7 +11,7 @@ import java.util.Comparator;
  * 
  */
 public class Column implements Serializable, Comparable<Column> {
-    // private static final Log log = LogFactory.getLog(Column.class);
+
     private int id;
 
     private int displayOrder;

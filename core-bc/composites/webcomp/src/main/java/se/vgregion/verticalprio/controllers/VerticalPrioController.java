@@ -378,7 +378,9 @@ public class VerticalPrioController extends EditPrioriteringController {
             // Find out if there are selected sectors, taking regards to that there might be HaveSortOrder-objects
             // inside.
             clearNonSortingLogic(sektorNest);
-            sektorNest.content().addAll(raad);
+            if (sektorNest != null && sektorNest.content() != null) {
+                sektorNest.content().addAll(raad);
+            }
 
             if (raad.isEmpty()) {
                 List<Prioriteringsobjekt> zeroResult = new ArrayList<Prioriteringsobjekt>();
@@ -422,9 +424,11 @@ public class VerticalPrioController extends EditPrioriteringController {
      * @param hne
      */
     private void clearNonSortingLogic(HaveNestedEntities<?> hne) {
-        for (Object sr : new ArrayList<Object>(hne.content())) {
-            if (!(sr instanceof HaveQuerySortOrder)) {
-                hne.content().remove(sr);
+        if (hne != null && hne.content() != null) {
+            for (Object sr : new ArrayList<Object>(hne.content())) {
+                if (!(sr instanceof HaveQuerySortOrder)) {
+                    hne.content().remove(sr);
+                }
             }
         }
     }

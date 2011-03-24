@@ -497,13 +497,13 @@ public class EditPrioriteringController extends ControllerBase {
     // initManyToOneCode(pf.getAtcKoderRef(), pf.getAtcKoder(), atcKodRepository);
     // }
 
-    private <T extends AbstractKod> void initManyToOneCode(ManyCodesRef<T> dr, Set<T> target,
-            GenerisktKodRepository<T> repo) {
-        for (Long id : new HashSet<Long>(dr.getSelectedCodesId())) {
-            T code = repo.find(id);
-            target.add(code);
-        }
-    }
+    // private <T extends AbstractKod> void initManyToOneCode(ManyCodesRef<T> dr, Set<T> target,
+    // GenerisktKodRepository<T> repo) {
+    // for (Long id : new HashSet<Long>(dr.getSelectedCodesId())) {
+    // T code = repo.find(id);
+    // target.add(code);
+    // }
+    // }
 
     private void copyKodCollectionsAndMetaDates(Prioriteringsobjekt source, Prioriteringsobjekt target) {
         clearAndFillCollection(source.getAatgaerdskoder(), target.getAatgaerdskoder());
@@ -544,14 +544,14 @@ public class EditPrioriteringController extends ControllerBase {
 
         // These three lines copies attributes with the same name from pf to prio.
 
-        if (pf.getDiagnosRef().getSelectedCodesId() != null) {
-            for (Long id : pf.getDiagnosRef().getSelectedCodesId()) {
-                DiagnosKod diagnos = diagnosKodRepository.find(id);
-                prio.getDiagnoser().add(diagnos);
-            }
-        } else {
-            prio.getDiagnoser().clear();
-        }
+        // if (pf.getDiagnosRef().getSelectedCodesId() != null) {
+        // for (Long id : pf.getDiagnosRef().getSelectedCodesId()) {
+        // DiagnosKod diagnos = diagnosKodRepository.find(id);
+        // prio.getDiagnoser().add(diagnos);
+        // }
+        // } else {
+        // prio.getDiagnoser().clear();
+        // }
 
         // initNestedValues(request, pf);
         initKodLists(pf);
