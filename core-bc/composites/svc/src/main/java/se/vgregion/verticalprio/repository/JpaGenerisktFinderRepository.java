@@ -57,7 +57,7 @@ public class JpaGenerisktFinderRepository<T extends AbstractEntity<Long>> extend
 
     @SuppressWarnings("unchecked")
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    protected List<T> query(String qt, Integer maxResult, Object... values) {
+    public List<T> query(String qt, Integer maxResult, Object... values) {
         qt = qt.replace("@", klass.getSimpleName());
         Query query = entityManager.createQuery(qt);
         if (maxResult != null) {

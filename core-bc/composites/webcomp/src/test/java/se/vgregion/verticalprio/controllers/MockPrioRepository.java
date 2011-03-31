@@ -143,4 +143,12 @@ public class MockPrioRepository implements PrioRepository {
         return result;
     }
 
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public List<Prioriteringsobjekt> query(String qt, Integer maxResult, Object... values) {
+        throw new UnsupportedOperationException("TODO: Implement this method");
+    }
+
 }

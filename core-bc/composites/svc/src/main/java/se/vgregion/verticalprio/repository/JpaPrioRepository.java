@@ -1,21 +1,26 @@
 package se.vgregion.verticalprio.repository;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
+import javax.persistence.Query;
 
+import org.apache.commons.beanutils.BeanMap;
 import org.springframework.stereotype.Repository;
 
 import se.vgregion.verticalprio.entity.AatgaerdsKod;
 import se.vgregion.verticalprio.entity.AtcKod;
 import se.vgregion.verticalprio.entity.DiagnosKod;
-import se.vgregion.verticalprio.entity.LitePrioriteringsobjekt;
+import se.vgregion.verticalprio.entity.LinkPrioriteringsobjektDiagnosKod;
 import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
+import se.vgregion.verticalprio.repository.finding.JpqlMatchBuilder;
 
 @Repository
 public class JpaPrioRepository extends JpaGenerisktFinderRepository<Prioriteringsobjekt> implements PrioRepository {
@@ -50,52 +55,69 @@ public class JpaPrioRepository extends JpaGenerisktFinderRepository<Prioritering
             result.add(item);
         }
 
-        // Diagnoser
-        DiagnosKod diagnosCondition = new DiagnosKod();
-        diagnosCondition.getPrioriteringsobjekt().add(example);
+        // Query q = entityManager.createQuery(" select p.id, d from DiagnosKod d, Prioriteringsobjekt p where "
+        // + "d in p.diagnoser ");
+        // q.getResultList().toArray();
 
-        List<DiagnosKod> diagnosesInResult = diagnosRepository.findByExample(diagnosCondition, null);
-        for (DiagnosKod kod : diagnosesInResult) {
-            for (LitePrioriteringsobjekt lp : kod.getLitePrioriteringsobjekt()) {
-                Long id = lp.getId();
-                Prioriteringsobjekt prio = idPrioMapping.get(id);
-                if (prio != null) {
-                    Set<DiagnosKod> diagnoser = prio.getDiagnoser();
-                    diagnoser.add(kod);
-                }
+        JpqlMatchBuilder builder = new JpqlMatchBuilder() {
+            /**
+             * @inheritDoc
+             */
+            @Override
+            protected String mkFetchJoinForMasterEntity(Object bean, String alias) {
+                return "";
             }
+        };
+
+        Prioriteringsobjekt plainPrio = new Prioriteringsobjekt();
+        new BeanMap(plainPrio).putAllWriteable(new BeanMap(example));
+
+        List<Object> values = new ArrayList<Object>();
+        String jpql = builder.mkFindByExampleJpql(plainPrio, values);
+        jpql = jpql.replaceAll(Pattern.quote("select distinct o0"), "select distinct dl.id.prioId, d ");
+        jpql = jpql.replaceAll(
+                Pattern.quote("from " + Prioriteringsobjekt.class.getSimpleName() + " o0"),
+                "from " + Prioriteringsobjekt.class.getSimpleName() + " o0, "
+                        + LinkPrioriteringsobjektDiagnosKod.class.getSimpleName() + " dl, "
+                        + DiagnosKod.class.getSimpleName() + " d");
+        String joiningCondition = " o0.id = dl.id.prioId and dl.id.diagnosKodId = d.id";
+        if (jpql.contains("where")) {
+            jpql += " and " + joiningCondition;
+        } else {
+            jpql += " where " + joiningCondition;
         }
+
+        int i = 1;
+        Query q = entityManager.createQuery(jpql);
+        for (Object value : values) {
+            q.setParameter(i++, value);
+        }
+        for (Object o : q.getResultList()) {
+            Object[] idAndDiagnos = (Object[]) o;
+            Prioriteringsobjekt prio = idPrioMapping.get(idAndDiagnos[0]);
+            if (prio != null) {
+                prio.getDiagnoser().add((DiagnosKod) idAndDiagnos[1]);
+            }
+            System.out.println(Arrays.asList((Object[]) o));
+        }
+
+        // Diagnoser
+        // DiagnosKod diagnosCondition = new DiagnosKod();
+        // diagnosCondition.getPrioriteringsobjekt().add(example);
+        //
+        // List<DiagnosKod> diagnosesInResult = diagnosRepository.findByExample(diagnosCondition, null);
+        // for (DiagnosKod kod : diagnosesInResult) {
+        // for (LitePrioriteringsobjekt lp : kod.getLitePrioriteringsobjekt()) {
+        // Long id = lp.getId();
+        // Prioriteringsobjekt prio = idPrioMapping.get(id);
+        // if (prio != null) {
+        // Set<DiagnosKod> diagnoser = prio.getDiagnoser();
+        // diagnoser.add(kod);
+        // }
+        // }
+        // }
 
         // ATC-koder
-        AtcKod atcCondition = new AtcKod();
-        atcCondition.getPrioriteringsobjekt().add(example);
-
-        List<AtcKod> atcInResult = atcKodRepository.findByExample(atcCondition, null);
-        for (AtcKod kod : atcInResult) {
-            for (LitePrioriteringsobjekt lp : kod.getLitePrioriteringsobjekt()) {
-                Long id = lp.getId();
-                Prioriteringsobjekt prio = idPrioMapping.get(id);
-                if (prio != null) {
-                    Set<AtcKod> atcKoder = prio.getAtcKoder();
-                    atcKoder.add(kod);
-                }
-            }
-        }
-
-        // Aatgardskoder
-        AatgaerdsKod aatgardsCondition = new AatgaerdsKod();
-        aatgardsCondition.getPrioriteringsobjekt().add(example);
-        List<AatgaerdsKod> aatgardInResult = aatgaerdsKodRepository.findByExample(aatgardsCondition, null);
-        for (AatgaerdsKod kod : aatgardInResult) {
-            for (LitePrioriteringsobjekt lp : kod.getLitePrioriteringsobjekt()) {
-                Long id = lp.getId();
-                Prioriteringsobjekt prio = idPrioMapping.get(id);
-                if (prio != null) {
-                    Set<AatgaerdsKod> aatgaerdsKoder = prio.getAatgaerdskoder();
-                    aatgaerdsKoder.add(kod);
-                }
-            }
-        }
 
         return result;
     }

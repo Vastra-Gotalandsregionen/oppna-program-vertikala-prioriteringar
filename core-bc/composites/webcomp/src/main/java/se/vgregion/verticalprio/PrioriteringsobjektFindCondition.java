@@ -1,13 +1,8 @@
 package se.vgregion.verticalprio;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import org.apache.commons.beanutils.BeanMap;
-import org.hibernate.LazyInitializationException;
 
 import se.vgregion.verticalprio.controllers.PrioriteringsobjektForm;
 import se.vgregion.verticalprio.entity.AatgaerdsKod;
@@ -19,9 +14,7 @@ import se.vgregion.verticalprio.entity.TillstaandetsSvaarighetsgradKod;
 import se.vgregion.verticalprio.entity.VaardnivaaKod;
 import se.vgregion.verticalprio.repository.finding.DateNullLogic;
 import se.vgregion.verticalprio.repository.finding.HaveExplicitTypeToFind;
-import se.vgregion.verticalprio.repository.finding.HaveNestedEntities;
 import se.vgregion.verticalprio.repository.finding.HaveOrderByPaths;
-import se.vgregion.verticalprio.repository.finding.HaveQuerySortOrder;
 import se.vgregion.verticalprio.repository.finding.NestedHashSet;
 import se.vgregion.verticalprio.repository.finding.NestedRangordningsKod;
 import se.vgregion.verticalprio.repository.finding.NestedSektorRaad;
@@ -37,15 +30,13 @@ import se.vgregion.verticalprio.repository.finding.OrderByPath;
  * @author Claes Lundahl, vgrid=clalu4
  */
 public class PrioriteringsobjektFindCondition extends PrioriteringsobjektForm implements HaveExplicitTypeToFind,
-        HaveQuerySortOrder, HaveOrderByPaths {
+        HaveOrderByPaths {
 
     private final NestedRangordningsKod rangordningsHolder = new NestedRangordningsKod();
 
     private final NestedVaardformsKod vaardformHolder = new NestedVaardformsKod();
 
     private final NestedVaardnivaaKod vaardnivaHolder = new NestedVaardnivaaKod();
-
-    private final List<SortOrderField> sortOrder = new ArrayList<SortOrderField>();
 
     private Class<? extends Prioriteringsobjekt> typeToFind = Prioriteringsobjekt.class;
 
@@ -178,66 +169,6 @@ public class PrioriteringsobjektFindCondition extends PrioriteringsobjektForm im
      * @inheritDoc
      */
     @Override
-    public List<SortOrderField> listSortOrders() {
-        return sortOrder;
-    }
-
-    /**
-     * Clears (removes) all objects that implements the {@link HaveQuerySortOrder} interface in the object graph
-     * underneath this object. It also removes all {@link SortOrderField} from itself.
-     */
-    public void clearSorting() {
-        listSortOrders().clear();
-        clearSorting(this, new HashSet<Object>());
-    }
-
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    private void clearSorting(Object o, Set<Object> passed) {
-        if (o == null /* || o instanceof ManyCodesRef */|| o.getClass().isPrimitive()) {
-            return;
-        }
-        if (passed.contains(o)) {
-            return;
-        } else {
-            passed.add(o);
-        }
-        if (o instanceof Collection) {
-            Collection collection = (Collection) o;
-            for (Object item : new ArrayList(collection)) {
-                if (item instanceof HaveQuerySortOrder) {
-                    collection.remove(item);
-                } else {
-                    try {
-                        clearSorting(item, passed);
-                    } catch (LazyInitializationException e) {
-                        // ignore and continue. If this error occurs no
-                        // sorting could be found anyway deeper down.
-                    }
-                }
-            }
-        }
-        if (o instanceof HaveNestedEntities) {
-            HaveNestedEntities hne = (HaveNestedEntities) o;
-            clearSorting(hne.content(), passed);
-        }
-
-        BeanMap bm = new BeanMap(o);
-        for (Object key : bm.keySet()) {
-            Object value = bm.get(key);
-            if (value instanceof HaveQuerySortOrder) {
-                if (bm.getWriteMethod(key.toString()) != null) {
-                    bm.put(key, null);
-                }
-            } else {
-                clearSorting(value, passed);
-            }
-        }
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
     public NestedSektorRaad getSektorRaad() {
         return (NestedSektorRaad) super.getSektorRaad();
     }
@@ -274,7 +205,6 @@ public class PrioriteringsobjektFindCondition extends PrioriteringsobjektForm im
         paths().add(new OrderByPath("diagnoser/kod"));
     }
 
-    // Svårighetsgrad (sektorsråd, diagnoskod)
     public void sortByTillstaandetsSvaarighetsgradKod() {
         // NestedTillstaandetsSvaarighetsgradKod ntsk = getTillstaandetsSvaarighetsgradKod();
         // SortingTillstaandetsSvaarighetsgradKod stsk = new SortingTillstaandetsSvaarighetsgradKod();
@@ -296,30 +226,10 @@ public class PrioriteringsobjektFindCondition extends PrioriteringsobjektForm im
         paths().add(new OrderByPath("diagnoser/kod"));
     }
 
-    // Diagnoskod (sektorsråd)
     public void sortByDiagnoser() {
-        // SortingDiagnosKod sdk = new SortingDiagnosKod();
-        // sdk.listSortOrders().add(mkSortOrderField("kod"));
-        // getDiagnoser().add(sdk);
-        //
-        // NestedSektorRaad nsr = getSektorRaad();
-        // SortingSektorRaad ssr = new SortingSektorRaad();
-        // ssr.listSortOrders().add(mkSortOrderField("kod"));
-        // nsr.content().add(ssr);
-
         paths().clear();
         paths().add(new OrderByPath("sektorRaad/kod"));
         paths().add(new OrderByPath("diagnoser/kod"));
-
-    }
-
-    private int sortOrderCount = 0;
-
-    private SortOrderField mkSortOrderField(String name) {
-        SortOrderField sof = new SortOrderField();
-        sof.setName("kod");
-        sof.setOrder(sortOrderCount++);
-        return sof;
     }
 
     /**
