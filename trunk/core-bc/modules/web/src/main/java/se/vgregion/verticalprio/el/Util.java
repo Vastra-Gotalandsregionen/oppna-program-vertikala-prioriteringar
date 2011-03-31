@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -291,6 +292,11 @@ public class Util {
         }
         if (o1 == null || o2 == null) {
             return false;
+        }
+        if (o1 instanceof Collection && o2 instanceof Collection) {
+            Set<Object> set1 = new HashSet((Collection) o1);
+            Set<Object> set2 = new HashSet((Collection) o2);
+            return set1.equals(set2);
         }
         return o1.equals(o2);
     }

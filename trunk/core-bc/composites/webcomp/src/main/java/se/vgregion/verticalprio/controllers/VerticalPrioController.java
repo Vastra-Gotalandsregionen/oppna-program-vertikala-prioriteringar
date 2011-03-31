@@ -33,7 +33,6 @@ import se.vgregion.verticalprio.repository.GenerisktFinderRepository;
 import se.vgregion.verticalprio.repository.GenerisktKodRepository;
 import se.vgregion.verticalprio.repository.finding.DateNullLogic;
 import se.vgregion.verticalprio.repository.finding.HaveNestedEntities;
-import se.vgregion.verticalprio.repository.finding.HaveQuerySortOrder;
 import se.vgregion.verticalprio.repository.finding.JpqlMatchBuilder;
 import se.vgregion.verticalprio.repository.finding.NestedSektorRaad;
 
@@ -114,7 +113,7 @@ public class VerticalPrioController extends EditPrioriteringController {
         PrioriteringsobjektFindCondition condition = getOrCreateSessionObj(session, "prioCondition",
                 PrioriteringsobjektFindCondition.class);
 
-        condition.clearSorting();
+        // condition.clearSorting();
 
         markColumnAsSorting(sortField, form);
 
@@ -367,7 +366,8 @@ public class VerticalPrioController extends EditPrioriteringController {
                 // Remove all conditions that specifies specific SRs, except those that should indicate order by
                 // directive.
                 HaveNestedEntities<SektorRaad> hne = condition.getSektorRaad();
-                clearNonSortingLogic(hne);
+                // clearNonSortingLogic(hne);
+                hne.content().clear();
             }
         } else {
             List<SektorRaad> raad = getMarkedLeafs(mf.getSectors());
@@ -377,7 +377,8 @@ public class VerticalPrioController extends EditPrioriteringController {
 
             // Find out if there are selected sectors, taking regards to that there might be HaveSortOrder-objects
             // inside.
-            clearNonSortingLogic(sektorNest);
+            // clearNonSortingLogic(sektorNest);
+            sektorNest.content().clear();
             if (sektorNest != null && sektorNest.content() != null) {
                 sektorNest.content().addAll(raad);
             }
@@ -415,22 +416,6 @@ public class VerticalPrioController extends EditPrioriteringController {
 
         session.setAttribute("rows", result);
         return result;
-    }
-
-    /**
-     * Removes all nodes in a {@link HaveNestedEntities} but those that implements the {@link HaveQuerySortOrder}.
-     * Makes it possible to remove condition logic and preserves any existing sorting at the same time.
-     * 
-     * @param hne
-     */
-    private void clearNonSortingLogic(HaveNestedEntities<?> hne) {
-        if (hne != null && hne.content() != null) {
-            for (Object sr : new ArrayList<Object>(hne.content())) {
-                if (!(sr instanceof HaveQuerySortOrder)) {
-                    hne.content().remove(sr);
-                }
-            }
-        }
     }
 
     /**

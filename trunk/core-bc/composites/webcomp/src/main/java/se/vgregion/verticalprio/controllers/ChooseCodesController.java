@@ -21,7 +21,6 @@ import se.vgregion.verticalprio.PrioriteringsobjektFindCondition;
 import se.vgregion.verticalprio.controllers.ChooseFromListController.ChooseListForm;
 import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
 import se.vgregion.verticalprio.repository.finding.HaveNestedEntities;
-import se.vgregion.verticalprio.repository.finding.HaveQuerySortOrder;
 
 /**
  * @author Claes Lundahl, vgrid=clalu4
@@ -199,23 +198,24 @@ public class ChooseCodesController extends ControllerBase {
         ChooseListFormWithDomainProperty clf = formPrototypes.get(fieldName);
         Collection target = extractTargetCollection(condition, clf.getAllItemsPropertyName());
 
-        clearAllNotHaveQuerySortOrder(target);
+        // clearAllNotHaveQuerySortOrder(target);
+        target.clear();
 
         response.sendRedirect("main");
         return null;
     }
 
-    private <T> void clearAllNotHaveQuerySortOrder(Collection<T> items) {
-        for (T item : new ArrayList<T>(items)) {
-            if (!(item instanceof HaveQuerySortOrder)) {
-                items.remove(item);
-            }
-            if (item instanceof HaveNestedEntities) {
-                HaveNestedEntities hne = (HaveNestedEntities) item;
-                clearAllNotHaveQuerySortOrder(hne.content());
-            }
-        }
-    }
+    // private <T> void clearAllNotHaveQuerySortOrder(Collection<T> items) {
+    // for (T item : new ArrayList<T>(items)) {
+    // if (!(item instanceof HaveQuerySortOrder)) {
+    // items.remove(item);
+    // }
+    // if (item instanceof HaveNestedEntities) {
+    // HaveNestedEntities hne = (HaveNestedEntities) item;
+    // clearAllNotHaveQuerySortOrder(hne.content());
+    // }
+    // }
+    // }
 
     /**
      * The condition should have a HaveNestedEntities object inside the PFC objects property with the name

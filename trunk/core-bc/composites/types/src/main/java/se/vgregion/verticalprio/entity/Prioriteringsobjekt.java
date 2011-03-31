@@ -84,6 +84,10 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
     @JoinTable(name = "link_prioriteringsobjekt_diagnos_kod", joinColumns = { @JoinColumn(name = "prio_id") }, inverseJoinColumns = { @JoinColumn(name = "diagnos_kod_id") })
     private Set<DiagnosKod> diagnoser = new HashSet<DiagnosKod>();
 
+    // @OneToMany
+    // @JoinColumn(name = "prio_id", referencedColumnName = "id")
+    // private List<LinkPrioriteringsobjektDiagnosKod> linkPrioriteringsobjektDiagnosKoder;
+
     @ManyToMany()
     @JoinTable(name = "link_prioriteringsobjekt_aatgaerds_kod", joinColumns = { @JoinColumn(name = "prio_id") }, inverseJoinColumns = { @JoinColumn(name = "aatgaerds_kod_id") })
     private Set<AatgaerdsKod> aatgaerdskoder = new HashSet<AatgaerdsKod>();

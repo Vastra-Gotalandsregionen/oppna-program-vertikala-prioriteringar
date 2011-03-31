@@ -18,7 +18,6 @@ import org.junit.Test;
 import se.vgregion.verticalprio.entity.DiagnosKod;
 import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
 import se.vgregion.verticalprio.entity.SektorRaad;
-import se.vgregion.verticalprio.repository.finding.HaveQuerySortOrder.SortOrderField;
 
 /**
  * @author Claes Lundahl, vgrid=clalu4
@@ -38,16 +37,6 @@ public class JpqlMatchBuilderTest {
         List<Object> values = new ArrayList<Object>();
 
         PriorCriteria prio = new PriorCriteria();
-
-        SortOrderField sof = new SortOrderField();
-        sof.setName("kommentar");
-        prio.listSortOrders().add(sof);
-        sof.setOrder(1);
-
-        sof = new SortOrderField();
-        sof.setName("id");
-        sof.setAscending(false);
-        prio.listSortOrders().add(sof);
 
         prio.setKommentar("kommentar");
         DiagnosKod diagnos1 = new DiagnosKod();
@@ -93,17 +82,7 @@ public class JpqlMatchBuilderTest {
     }
 
     @SuppressWarnings("serial")
-    class PriorCriteria extends Prioriteringsobjekt implements HaveQuerySortOrder, HaveExplicitTypeToFind {
-
-        final List<SortOrderField> sortOrderFields = new ArrayList<HaveQuerySortOrder.SortOrderField>();
-
-        /**
-         * @inheritDoc
-         */
-        @Override
-        public List<SortOrderField> listSortOrders() {
-            return sortOrderFields;
-        }
+    class PriorCriteria extends Prioriteringsobjekt implements HaveExplicitTypeToFind {
 
         /**
          * @inheritDoc

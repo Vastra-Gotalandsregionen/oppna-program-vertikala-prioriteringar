@@ -6,7 +6,6 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -25,7 +24,6 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import se.vgregion.dao.domain.patterns.entity.AbstractEntity;
-import se.vgregion.verticalprio.repository.finding.HaveQuerySortOrder.SortOrderField;
 
 /**
  * Help-logic to produce jpql that selects data from the db. It does "search by example". Uses values in a object
@@ -105,18 +103,6 @@ public class JpqlMatchBuilder {
         mkFindByExampleJpql(bean, qp, 0);
         List<String> orderBy = new ArrayList<String>();
 
-        if (!qp.order.isEmpty()) {
-            Collections.sort(qp.order);
-            for (SortOrderField orderField : qp.order) {
-                String fr = orderField.getAlias() + "." + orderField.getName();
-                qp.selects.add(fr);
-                if (!orderField.isAscending()) {
-                    fr += " desc";
-                }
-                orderBy.add(fr);
-            }
-        }
-
         if (bean instanceof HaveOrderByPaths) {
             HaveOrderByPaths havePaths = (HaveOrderByPaths) bean;
             if (!havePaths.paths().isEmpty()) {
@@ -155,11 +141,6 @@ public class JpqlMatchBuilder {
             }
         }
 
-        if (!orderBy.isEmpty()) {
-            sb.append(" \norder by ");
-            sb.append(toString(orderBy, ", "));
-        }
-
         System.out.println(sb);
         System.out.println(values);
 
@@ -174,14 +155,6 @@ public class JpqlMatchBuilder {
         // here is the main loop where we iterate over all properties inside a bean and build up the corresponding
         // JPQL query
         BeanMap bm = new BeanMap(bean);
-
-        if (bean instanceof HaveQuerySortOrder) {
-            HaveQuerySortOrder hqso = (HaveQuerySortOrder) bean;
-            for (SortOrderField item : hqso.listSortOrders()) {
-                item.setAlias(prefix);
-            }
-            qp.order.addAll(hqso.listSortOrders());
-        }
 
         prefix += ".";
 
@@ -258,7 +231,7 @@ public class JpqlMatchBuilder {
      * @param bean
      * @return
      */
-    String mkFetchJoinForMasterEntity(Object bean, String alias) {
+    protected String mkFetchJoinForMasterEntity(Object bean, String alias) {
         try {
             return mkFetchJoinForMasterEntity(getClassToSelect(bean), alias, new HashSet<String>());
         } catch (InstantiationException e) {
@@ -342,7 +315,7 @@ public class JpqlMatchBuilder {
         // Check to see if the new jpql should be added. It is considered irrelevant if there is no 'atoms' -
         // strings and numbers in it to use for matching.
         // boolean result = valueCount < qp.values.size();
-        if (!deepQp.values.isEmpty() || !deepQp.order.isEmpty()) {
+        if (!deepQp.values.isEmpty()) {
             qp.inc(deepQp);
             return true;
         }
@@ -554,7 +527,6 @@ public class JpqlMatchBuilder {
             this.fromJoin = qp.fromJoin;
             this.where = qp.where;
             this.values = qp.values;
-            this.order = qp.order;
         }
 
         public void inc(QueryParts deepQp) {
@@ -562,14 +534,12 @@ public class JpqlMatchBuilder {
             where.addAll(deepQp.where);
             values.addAll(deepQp.values);
             selects.addAll(deepQp.selects);
-            order.addAll(deepQp.order);
         }
 
         public List<String> selects = new ArrayList<String>();
         public List<String> fromJoin = new ArrayList<String>();
         public List<String> where = new ArrayList<String>();
         public List<Object> values = new ArrayList<Object>();
-        public List<SortOrderField> order = new ArrayList<HaveQuerySortOrder.SortOrderField>();
     }
 
 }

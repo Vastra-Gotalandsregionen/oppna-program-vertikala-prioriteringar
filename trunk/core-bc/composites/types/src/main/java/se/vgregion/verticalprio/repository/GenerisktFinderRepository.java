@@ -33,4 +33,6 @@ public interface GenerisktFinderRepository<T extends AbstractEntity<Long>> exten
 
     String getExtraWhere();
 
+    public List<T> query(String qt, Integer maxResult, Object... values);
+
 }

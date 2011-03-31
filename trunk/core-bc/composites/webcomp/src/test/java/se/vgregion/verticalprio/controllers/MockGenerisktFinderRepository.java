@@ -136,4 +136,12 @@ public class MockGenerisktFinderRepository<T extends AbstractEntity<Long>> imple
         throw new UnsupportedOperationException("TODO: Implement this method");
     }
 
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public List<T> query(String qt, Integer maxResult, Object... values) {
+        throw new UnsupportedOperationException("TODO: Implement this method");
+    }
+
 }
