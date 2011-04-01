@@ -6,9 +6,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang.text.StrBuilder;
-
-
 /**
  * @author Claes Lundahl, vgrid=clalu4
  * 
@@ -89,30 +86,33 @@ public class OrderByPath implements Serializable {
         return o1.equals(o2);
     }
 
-    public String toJpqlJoinPart(String startAlias) {
+    public List<String> toJpqlJoinPart(String startAlias) {
         List<String> remainingPath = new ArrayList<String>(Arrays.asList(path));
-        return toJpqlJoinPart(startAlias, remainingPath, 0);
+        List<String> result = new ArrayList<String>();
+        toJpqlJoinPart(startAlias, remainingPath, 0, result);
+        return result;
     }
 
-    private String toJpqlJoinPart(String startAlias, List<String> remainingPath, int count) {
-        StrBuilder sb = new StrBuilder();
+    private void toJpqlJoinPart(String startAlias, List<String> remainingPath, int count, List<String> result) {
+
         if (remainingPath.size() <= 1) {
-            return "";
+            return;
         }
 
-        // sb.append("left join " + startAlias + "." + remainingPath.remove(0));
+        StringBuilder sb = new StringBuilder();
         sb.append(startAlias + "." + remainingPath.remove(0));
         String nextAlias = "ob" + getAliasCount() + "c" + count;
-        sb.append(" " + nextAlias + " ");
-        sb.append(toJpqlJoinPart(startAlias, remainingPath, count + 1));
+        sb.append(" " + nextAlias);
+        result.add(sb.toString());
 
-        return sb.toString().trim();
+        toJpqlJoinPart(nextAlias, remainingPath, count + 1, result);
+
     }
 
     public static List<String> toJpqlJoinParts(Iterable<OrderByPath> paths, String alias) {
         List<String> result = new ArrayList<String>();
         for (OrderByPath path : paths) {
-            result.add(path.toJpqlJoinPart(alias));
+            result.addAll(path.toJpqlJoinPart(alias));
         }
         return result;
     }
