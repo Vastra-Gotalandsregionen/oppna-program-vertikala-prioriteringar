@@ -13,8 +13,8 @@ import javax.persistence.Table;
  * 
  */
 @Entity
-@Table(name = "link_prioriteringsobjekt_diagnos_kod")
-public class LinkPrioriteringsobjektDiagnosKod implements Serializable {
+@Table(name = "link_prioriteringsobjekt_atc_kod")
+public class LinkPrioriteringsobjektAtcKod implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -37,7 +37,7 @@ public class LinkPrioriteringsobjektDiagnosKod implements Serializable {
         @Column(name = "prio_id", updatable = false)
         private Long prioId;
 
-        @Column(name = "diagnos_kod_id", updatable = false, insertable = false)
+        @Column(name = "atc_kod_id", updatable = false, insertable = false)
         private Long kodId;
 
         @Override
@@ -49,16 +49,16 @@ public class LinkPrioriteringsobjektDiagnosKod implements Serializable {
             this.prioId = prioId;
         }
 
-        public void setKodId(Long diagnosKodId) {
-            this.kodId = diagnosKodId;
-        }
-
         /**
          * @inheritDoc
          */
         @Override
         public Long getKodId() {
             return kodId;
+        }
+
+        public void setKodId(Long kodId) {
+            this.kodId = kodId;
         }
 
     }
