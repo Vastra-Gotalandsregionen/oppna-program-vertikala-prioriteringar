@@ -159,4 +159,12 @@
     <function-signature>java.lang.String mkChangedToolTip(java.lang.Object, java.lang.Object)</function-signature>
   </function>
   
+  
+  <function>
+    <description>Is a certain instance null or 'empty'?</description>
+    <display-name>isEmpty</display-name>
+    <name>isEmpty</name>
+    <function-class>se.vgregion.verticalprio.el.Util</function-class>
+    <function-signature>java.lang.Boolean isEmpty(java.lang.Object)</function-signature>
+  </function>
 </taglib>

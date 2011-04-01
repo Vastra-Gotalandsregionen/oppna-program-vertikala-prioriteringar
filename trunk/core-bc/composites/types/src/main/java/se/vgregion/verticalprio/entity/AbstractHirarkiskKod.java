@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
@@ -17,14 +18,18 @@ import org.apache.commons.collections.BeanMap;
 public abstract class AbstractHirarkiskKod<T extends AbstractHirarkiskKod<?>> extends AbstractKod implements
         Cloneable {
 
-    @OneToMany
-    @JoinColumn(name = "parent_id")
+    @OneToMany(mappedBy = "parent")
+    // @JoinColumn(name = "parent_id")
     private List<T> children; // = new ArrayList<T>();
+
+    @ManyToOne
+    @JoinColumn(name = "parent_id", referencedColumnName = "id")
+    private T parent;
 
     @Transient
     private boolean selected;
 
-    @javax.persistence.Column(name = "parent_id")
+    @javax.persistence.Column(name = "parent_id", insertable = false, updatable = false)
     private Long parentId;
 
     public List<T> getChildren() {
@@ -103,6 +108,14 @@ public abstract class AbstractHirarkiskKod<T extends AbstractHirarkiskKod<?>> ex
             }
         }
         return true;
+    }
+
+    public void setParent(T parent) {
+        this.parent = parent;
+    }
+
+    public T getParent() {
+        return parent;
     }
 
 }

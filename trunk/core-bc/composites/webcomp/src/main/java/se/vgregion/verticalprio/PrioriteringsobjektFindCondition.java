@@ -61,8 +61,8 @@ public class PrioriteringsobjektFindCondition extends PrioriteringsobjektForm im
         // nsr.content().add(ssr);
         super.setSektorRaad(nsr);
 
-        OrderByPath sektorOrder = new OrderByPath("sektorRaad/kod");
-        orderByPaths.add(sektorOrder);
+        orderByPaths.add(new OrderByPath("sektorRaad/parent/kod"));
+        orderByPaths.add(new OrderByPath("sektorRaad/kod"));
 
         // The equivalent for adding sorting on diagnoses.
         NestedHashSet<DiagnosKod> diagnoser = new NestedHashSet<DiagnosKod>();
@@ -201,6 +201,7 @@ public class PrioriteringsobjektFindCondition extends PrioriteringsobjektForm im
 
         paths().clear();
         paths().add(new OrderByPath("rangordningsKod/kod"));
+        paths().add(new OrderByPath("sektorRaad/parent/kod"));
         paths().add(new OrderByPath("sektorRaad/kod"));
         paths().add(new OrderByPath("diagnoser/kod"));
     }
@@ -222,6 +223,7 @@ public class PrioriteringsobjektFindCondition extends PrioriteringsobjektForm im
 
         paths().clear();
         paths().add(new OrderByPath("tillstaandetsSvaarighetsgradKod/kod"));
+        paths().add(new OrderByPath("sektorRaad/parent/kod"));
         paths().add(new OrderByPath("sektorRaad/kod"));
         paths().add(new OrderByPath("diagnoser/kod"));
     }
@@ -229,6 +231,7 @@ public class PrioriteringsobjektFindCondition extends PrioriteringsobjektForm im
     public void sortByDiagnoser() {
         paths().clear();
         paths().add(new OrderByPath("sektorRaad/kod"));
+        paths().add(new OrderByPath("sektorRaad/parent/kod"));
         paths().add(new OrderByPath("diagnoser/kod"));
     }
 

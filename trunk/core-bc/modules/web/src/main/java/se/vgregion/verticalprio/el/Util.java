@@ -20,6 +20,7 @@ import se.vgregion.verticalprio.entity.AbstractKod;
 import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
 import se.vgregion.verticalprio.entity.SektorRaad;
 import se.vgregion.verticalprio.entity.User;
+import se.vgregion.verticalprio.repository.finding.HaveNestedEntities;
 
 /**
  * A utility class with string functions that could come in handy inside el-expressions.
@@ -309,5 +310,24 @@ public class Util {
             return "Inget tidigare värde.";
         }
         return "Tidigare värde: " + oldValue;
+    }
+
+    public static boolean isEmpty(Object obj) {
+        if (obj == null) {
+            return true;
+        }
+        if (obj instanceof String) {
+            String str = (String) obj;
+            return "".equals(str);
+        }
+        if (obj instanceof HaveNestedEntities) {
+            HaveNestedEntities hne = (HaveNestedEntities) obj;
+            return hne.content().isEmpty();
+        }
+        if (obj instanceof Collection) {
+            Collection col = (Collection) obj;
+            return col.isEmpty();
+        }
+        return false;
     }
 }
