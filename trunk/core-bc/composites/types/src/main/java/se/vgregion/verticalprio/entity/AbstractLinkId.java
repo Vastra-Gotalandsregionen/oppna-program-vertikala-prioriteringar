@@ -2,7 +2,6 @@ package se.vgregion.verticalprio.entity;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 /**
@@ -10,38 +9,18 @@ import javax.persistence.Embeddable;
  * 
  */
 @Embeddable
-public class LinkPrioriteringsobjektDiagnosKodId implements Serializable {
+public abstract class AbstractLinkId implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    public abstract Long getKodId();
 
-    @Column(name = "prio_id", updatable = false)
-    private Long prioId;
-
-    @Column(name = "diagnos_kod_id", updatable = false, insertable = false)
-    private Long diagnosKodId;
-
-    public Long getPrioId() {
-        return prioId;
-    }
-
-    public void setPrioId(Long prioId) {
-        this.prioId = prioId;
-    }
-
-    public Long getDiagnosKodId() {
-        return diagnosKodId;
-    }
-
-    public void setDiagnosKodId(Long diagnosKodId) {
-        this.diagnosKodId = diagnosKodId;
-    }
+    public abstract Long getPrioId();
 
     /**
      * @inheritDoc
      */
     @Override
     public int hashCode() {
-        return getHashCode(diagnosKodId) + getHashCode(prioId);
+        return getHashCode(getKodId()) + getHashCode(getPrioId());
     }
 
     private int getHashCode(Long l) {
@@ -63,8 +42,8 @@ public class LinkPrioriteringsobjektDiagnosKodId implements Serializable {
         if (obj == null) {
             return false;
         }
-        LinkPrioriteringsobjektDiagnosKodId other = (LinkPrioriteringsobjektDiagnosKodId) obj;
-        return equals(prioId, other.prioId) && equals(diagnosKodId, other.diagnosKodId);
+        AbstractLinkId other = (AbstractLinkId) obj;
+        return equals(getPrioId(), other.getPrioId()) && equals(getKodId(), other.getKodId());
     }
 
     private boolean equals(Long first, Long second) {

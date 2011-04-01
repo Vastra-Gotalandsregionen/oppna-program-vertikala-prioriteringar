@@ -38,7 +38,7 @@
     <c:forEach items="${form.columns}" var="column">
       <c:if test="${column.visible}">
         <td class="${column.name}">
-          <c:if test="${row.child[column.name] != row[column.name]}">
+          <c:if test="${column.name != 'godkaend' and row.child[column.name] != row[column.name]}">
             <span></span><tags:cell value="${row[column.name]}"/></span>
             <img src='img/flag_white.gif' title="Värde i utkast-version." style="float:right; display:inline;"/>
           </c:if>

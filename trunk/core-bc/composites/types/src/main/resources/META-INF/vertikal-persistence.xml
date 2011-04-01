@@ -8,7 +8,8 @@
     <class>se.vgregion.verticalprio.entity.User</class>
     <class>se.vgregion.verticalprio.entity.Prioriteringsobjekt</class>
     <class>se.vgregion.verticalprio.entity.LinkPrioriteringsobjektDiagnosKod</class>
-    <!-- <class>se.vgregion.verticalprio.entity.LitePrioriteringsobjekt</class>  -->
+    <class>se.vgregion.verticalprio.entity.LinkPrioriteringsobjektAatgaerdsKod</class>
+    <class>se.vgregion.verticalprio.entity.LinkPrioriteringsobjektAtcKod</class>
     <class>se.vgregion.verticalprio.entity.DiagnosKod</class>
     <class>se.vgregion.verticalprio.entity.AtcKod</class>
     <class>se.vgregion.verticalprio.entity.SektorRaad</class>

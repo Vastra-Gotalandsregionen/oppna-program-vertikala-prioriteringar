@@ -1,13 +1,11 @@
 package se.vgregion.verticalprio.repository;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 import javax.persistence.Query;
@@ -16,11 +14,15 @@ import org.apache.commons.beanutils.BeanMap;
 import org.springframework.stereotype.Repository;
 
 import se.vgregion.verticalprio.entity.AatgaerdsKod;
+import se.vgregion.verticalprio.entity.AbstractKod;
 import se.vgregion.verticalprio.entity.AtcKod;
 import se.vgregion.verticalprio.entity.DiagnosKod;
+import se.vgregion.verticalprio.entity.LinkPrioriteringsobjektAatgaerdsKod;
+import se.vgregion.verticalprio.entity.LinkPrioriteringsobjektAtcKod;
 import se.vgregion.verticalprio.entity.LinkPrioriteringsobjektDiagnosKod;
 import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
 import se.vgregion.verticalprio.repository.finding.JpqlMatchBuilder;
+import se.vgregion.verticalprio.repository.finding.JpqlMatchBuilder.JpqlResultParts;
 
 @Repository
 public class JpaPrioRepository extends JpaGenerisktFinderRepository<Prioriteringsobjekt> implements PrioRepository {
@@ -48,18 +50,60 @@ public class JpaPrioRepository extends JpaGenerisktFinderRepository<Prioritering
         Map<Long, Prioriteringsobjekt> idPrioMapping = new HashMap<Long, Prioriteringsobjekt>();
         List<Prioriteringsobjekt> result = new ArrayList<Prioriteringsobjekt>();
 
+        // Add all of the Prioriteringsobjekt's to a map with the id as key
         for (Prioriteringsobjekt prio : prioriteringsobjekt) {
             PrioriteringsobjectForLargeResult item = new PrioriteringsobjectForLargeResult();
             copy(prio, item);
             idPrioMapping.put(prio.getId(), item);
+            if (!item.getChildren().isEmpty()) {
+                for (Prioriteringsobjekt child : item.getChildren()) {
+                    idPrioMapping.put(child.getId(), child);
+                }
+            }
             result.add(item);
         }
 
-        // Query q = entityManager.createQuery(" select p.id, d from DiagnosKod d, Prioriteringsobjekt p where "
-        // + "d in p.diagnoser ");
-        // q.getResultList().toArray();
+        addLinkedObjects(example, LinkPrioriteringsobjektDiagnosKod.class, DiagnosKod.class, idPrioMapping,
+                new KodSetting<DiagnosKod>() {
 
-        JpqlMatchBuilder builder = new JpqlMatchBuilder() {
+                    @Override
+                    public void set(Prioriteringsobjekt p, DiagnosKod kod) {
+                        p.getDiagnoser().add(kod);
+                    }
+
+                });
+
+        addLinkedObjects(example, LinkPrioriteringsobjektAatgaerdsKod.class, AatgaerdsKod.class, idPrioMapping,
+                new KodSetting<AatgaerdsKod>() {
+
+                    @Override
+                    public void set(Prioriteringsobjekt p, AatgaerdsKod kod) {
+                        p.getAatgaerdskoder().add(kod);
+                    }
+
+                });
+
+        addLinkedObjects(example, LinkPrioriteringsobjektAtcKod.class, AtcKod.class, idPrioMapping,
+                new KodSetting<AtcKod>() {
+
+                    @Override
+                    public void set(Prioriteringsobjekt p, AtcKod kod) {
+                        p.getAtcKoder().add(kod);
+                    }
+
+                });
+
+        return result;
+    }
+
+    private interface KodSetting<T extends AbstractKod> {
+        void set(Prioriteringsobjekt p, T kod);
+    }
+
+    private void addLinkedObjects(Prioriteringsobjekt example, Class<?> linkType, Class<?> codeType,
+            Map<Long, Prioriteringsobjekt> prios, KodSetting kodSetting) {
+
+        final JpqlMatchBuilder builder = new JpqlMatchBuilder() {
             /**
              * @inheritDoc
              */
@@ -73,15 +117,18 @@ public class JpaPrioRepository extends JpaGenerisktFinderRepository<Prioritering
         new BeanMap(plainPrio).putAllWriteable(new BeanMap(example));
 
         List<Object> values = new ArrayList<Object>();
-        String jpql = builder.mkFindByExampleJpql(plainPrio, values);
-        jpql = jpql.replaceAll(Pattern.quote("select distinct o0"), "select distinct dl.id.prioId, d ");
-        jpql = jpql.replaceAll(
-                Pattern.quote("from " + Prioriteringsobjekt.class.getSimpleName() + " o0"),
-                "from " + Prioriteringsobjekt.class.getSimpleName() + " o0, "
-                        + LinkPrioriteringsobjektDiagnosKod.class.getSimpleName() + " dl, "
-                        + DiagnosKod.class.getSimpleName() + " d");
-        String joiningCondition = " o0.id = dl.id.prioId and dl.id.diagnosKodId = d.id";
-        if (jpql.contains("where")) {
+        JpqlResultParts jpqlParts = builder.mkFindByExampleJpqlParts(plainPrio, values);
+
+        String jpql = "select distinct dl.id.prioId, d ";
+
+        jpql += " from " + linkType.getSimpleName() + " dl, " + codeType.getSimpleName() + " d, "
+                + jpqlParts.fromJoin.substring(5) + " left outer join o0.children cx";
+
+        // Condition to hit both the template or / and also the approved versions.
+        String joiningCondition = " ((o0.id = dl.id.prioId or cx.id = dl.id.prioId) and dl.id.kodId = d.id)";
+
+        jpql += jpqlParts.where;
+        if (jpqlParts.where.trim().length() > 0) {
             jpql += " and " + joiningCondition;
         } else {
             jpql += " where " + joiningCondition;
@@ -94,32 +141,14 @@ public class JpaPrioRepository extends JpaGenerisktFinderRepository<Prioritering
         }
         for (Object o : q.getResultList()) {
             Object[] idAndDiagnos = (Object[]) o;
-            Prioriteringsobjekt prio = idPrioMapping.get(idAndDiagnos[0]);
+
+            Prioriteringsobjekt prio = prios.get(idAndDiagnos[0]);
             if (prio != null) {
-                prio.getDiagnoser().add((DiagnosKod) idAndDiagnos[1]);
+                kodSetting.set(prio, (AbstractKod) idAndDiagnos[1]);
+
             }
-            System.out.println(Arrays.asList((Object[]) o));
         }
 
-        // Diagnoser
-        // DiagnosKod diagnosCondition = new DiagnosKod();
-        // diagnosCondition.getPrioriteringsobjekt().add(example);
-        //
-        // List<DiagnosKod> diagnosesInResult = diagnosRepository.findByExample(diagnosCondition, null);
-        // for (DiagnosKod kod : diagnosesInResult) {
-        // for (LitePrioriteringsobjekt lp : kod.getLitePrioriteringsobjekt()) {
-        // Long id = lp.getId();
-        // Prioriteringsobjekt prio = idPrioMapping.get(id);
-        // if (prio != null) {
-        // Set<DiagnosKod> diagnoser = prio.getDiagnoser();
-        // diagnoser.add(kod);
-        // }
-        // }
-        // }
-
-        // ATC-koder
-
-        return result;
     }
 
     /**
@@ -136,6 +165,8 @@ public class JpaPrioRepository extends JpaGenerisktFinderRepository<Prioritering
         private Set<AatgaerdsKod> aatgaerdskoder = new HashSet<AatgaerdsKod>();
 
         private Set<AtcKod> atcKoder = new HashSet<AtcKod>();
+
+        private Set<Prioriteringsobjekt> childrenWithNoAnnotation = new HashSet<Prioriteringsobjekt>();
 
         @Override
         public void setDiagnoser(Set<DiagnosKod> diagnoser) {
@@ -166,6 +197,27 @@ public class JpaPrioRepository extends JpaGenerisktFinderRepository<Prioritering
         public Set<AatgaerdsKod> getAatgaerdskoder() {
             return aatgaerdskoder;
         }
+
+        @Override
+        public void setChildren(Set<Prioriteringsobjekt> children) {
+            this.childrenWithNoAnnotation = children;
+        }
+
+        @Override
+        public Set<Prioriteringsobjekt> getChildren() {
+            return childrenWithNoAnnotation;
+        }
+
+        /**
+         * @inheritDoc
+         */
+        @Override
+        public Prioriteringsobjekt getChild() {
+            if (getChildren().isEmpty()) {
+                return null;
+            }
+            return getChildren().iterator().next();
+        }
     }
 
     void copy(Prioriteringsobjekt source, Prioriteringsobjekt target) {
@@ -174,7 +226,7 @@ public class JpaPrioRepository extends JpaGenerisktFinderRepository<Prioritering
         target.setPatientnyttoEvidensKod(source.getPatientnyttoEvidensKod());
         target.setKostnad(source.getKostnad());
 
-        target.setChildren(source.getChildren());
+        target.setChildren(new HashSet<Prioriteringsobjekt>());
         for (Prioriteringsobjekt child : source.getChildren()) {
             PrioriteringsobjectForLargeResult childForLargeResult = new PrioriteringsobjectForLargeResult();
             copy(child, childForLargeResult);

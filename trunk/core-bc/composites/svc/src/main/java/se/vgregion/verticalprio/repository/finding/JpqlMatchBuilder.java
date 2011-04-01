@@ -92,6 +92,22 @@ public class JpqlMatchBuilder {
      * @return jpql representing conditions and joins between objects in the graph.
      */
     public String mkFindByExampleJpql(Object bean, List<Object> values) {
+        StringBuilder sb = new StringBuilder();
+        JpqlResultParts result = mkFindByExampleJpqlParts(bean, values);
+        sb.append(result.select);
+        sb.append(result.fromJoin);
+        sb.append(result.where);
+        sb.append(result.orderBy);
+
+        System.out.println(sb);
+        System.out.println(values);
+
+        return sb.toString();
+    }
+
+    public JpqlResultParts mkFindByExampleJpqlParts(Object bean, List<Object> values) {
+
+        final JpqlResultParts result = new JpqlResultParts();
         if (values == null) {
             throw new RuntimeException();
         }
@@ -115,10 +131,17 @@ public class JpqlMatchBuilder {
 
         sb.append("select distinct ");
         sb.append(toString(qp.selects, ", "));
+        result.select = sb.toString();
+
+        sb = new StringBuilder();
+
         sb.append(" from ");
         sb.append(toString(qp.fromJoin, " left join "));
         sb.append(" ");
         sb.append(mkFetchJoinForMasterEntity(bean, "o0"));
+
+        result.fromJoin = sb.toString();
+        sb = new StringBuilder();
 
         if (extraWhere != null && !"".equals(extraWhere)) {
             qp.where.add(extraWhere);
@@ -132,6 +155,9 @@ public class JpqlMatchBuilder {
             }
         }
 
+        result.where = sb.toString();
+        sb = new StringBuilder();
+
         if (bean instanceof HaveOrderByPaths) {
             HaveOrderByPaths havePaths = (HaveOrderByPaths) bean;
             if (!havePaths.paths().isEmpty()) {
@@ -141,10 +167,8 @@ public class JpqlMatchBuilder {
             }
         }
 
-        System.out.println(sb);
-        System.out.println(values);
-
-        return sb.toString();
+        result.orderBy = sb.toString();
+        return result;
     }
 
     private void mkFindByExampleJpql(Object bean, QueryParts qp, int aliasIndex) {
@@ -540,6 +564,10 @@ public class JpqlMatchBuilder {
         public List<String> fromJoin = new ArrayList<String>();
         public List<String> where = new ArrayList<String>();
         public List<Object> values = new ArrayList<Object>();
+    }
+
+    public static class JpqlResultParts {
+        public String fromJoin, where, select, orderBy;
     }
 
 }
