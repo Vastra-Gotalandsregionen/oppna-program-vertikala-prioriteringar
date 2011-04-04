@@ -72,7 +72,7 @@
                 <c:if test="${column.filterAble}">
                   <a href='start-choosing-codes?fieldName=${column.name}'>
                   <c:choose>
-                    <c:when test="${not empty su:toString(prioCondition[column.name])}">
+                    <c:when test="${not su:isEmpty(prioCondition[column.name])}">
                       <img src='img/tratt_selected.png'/>
                     </c:when>
                     <c:otherwise>
@@ -82,8 +82,9 @@
                   </a>
                   
                 </c:if>
-                <c:if test="${column.sortable and not empty su:toString(prioCondition[column.name])}">
-                  <a href='deselect-codes?fieldName=${column.name}' title="Ta bort filtervillkor: <tags:cell value="${su:toString(prioCondition[column.name])}"/>">
+                
+                <c:if test="${column.filterAble and not su:isEmpty(prioCondition[column.name])}">
+                  <a href='deselect-codes?fieldName=${column.name}' title="Ta bort filtervillkor: <tags:cell value="${su:toString(prioCondition[column.name])}"/>" style="text-decoration: none;">
                     <img src='img/x.png'/>
                   </a>
                 </c:if>
