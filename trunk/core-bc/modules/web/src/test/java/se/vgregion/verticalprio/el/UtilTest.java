@@ -22,6 +22,8 @@ import se.vgregion.verticalprio.entity.DiagnosKod;
 import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
 import se.vgregion.verticalprio.entity.SektorRaad;
 import se.vgregion.verticalprio.entity.User;
+import se.vgregion.verticalprio.repository.finding.HaveNestedEntities;
+import edu.emory.mathcs.backport.java.util.Arrays;
 
 /**
  * @author Claes Lundahl, vgrid=clalu4
@@ -270,4 +272,27 @@ public class UtilTest {
 
         return result;
     }
+
+    @Test
+    public void isEmpty() {
+        Assert.assertTrue(Util.isEmpty(null));
+        Assert.assertTrue(Util.isEmpty(""));
+
+        Assert.assertTrue(!Util.isEmpty("not empty"));
+        Assert.assertTrue(Util.isEmpty(new ArrayList<String>()));
+        Assert.assertTrue(!Util.isEmpty(Arrays.asList(new String[] { "one", "two" })));
+
+        HaveNestedEntities<DiagnosKod> hne = new HaveNestedEntities<DiagnosKod>() {
+            Set<DiagnosKod> result = new HashSet<DiagnosKod>();
+
+            @Override
+            public Set<DiagnosKod> content() {
+                return result;
+            }
+        };
+        Assert.assertTrue(Util.isEmpty(hne));
+        hne.content().add(new DiagnosKod());
+        Assert.assertTrue(!Util.isEmpty(hne));
+    }
+
 }

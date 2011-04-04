@@ -48,10 +48,12 @@ public class SektorRaad extends AbstractHirarkiskKod<SektorRaad> implements Clon
         return able;
     }
 
+    @Override
     public void setParent(SektorRaad parent) {
         this.parent = parent;
     }
 
+    @Override
     public SektorRaad getParent() {
         return parent;
     }
