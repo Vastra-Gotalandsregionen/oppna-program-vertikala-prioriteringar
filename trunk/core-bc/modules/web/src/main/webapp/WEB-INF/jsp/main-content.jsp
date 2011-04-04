@@ -50,10 +50,10 @@
                 <span style="font-family: courier" style="width: 100%">
                   <c:choose>
                     <c:when test="${column.sorting}">
-                      <b style="text-decoration: blink; float: right;">&darr;</b>
+                      <b style="text-decoration: blink; float: right;"><img height="20px;" width="16px" src="img/arrow-down-active.svg"/></b>
                     </c:when>
                     <c:otherwise>
-                      <a title="Sortera" href="main?sortField=${column.name}" style="text-decoration: none; float: right;">&darr;</a>
+                      <a title="Sortera" href="main?sortField=${column.name}" style="text-decoration: none; float: right;"><img height="20px;" width="16px" src="img/arrow-down.svg"/></a>
                     </c:otherwise>
                   </c:choose>
                 </span>
@@ -73,7 +73,7 @@
                   <a href='start-choosing-codes?fieldName=${column.name}'>
                   <c:choose>
                     <c:when test="${not su:isEmpty(prioCondition[column.name])}">
-                      <img src='img/tratt_selected.png'/>
+                      <img src='img/tratt_selected.png' width="15px" height="13px"/>
                     </c:when>
                     <c:otherwise>
                       <img src='img/tratt_unselected.png'/>
