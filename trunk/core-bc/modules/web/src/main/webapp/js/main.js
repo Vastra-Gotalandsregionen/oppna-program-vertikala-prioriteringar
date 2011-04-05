@@ -9,6 +9,7 @@ AUI().ready(
 		var tableHeaderTooltips, columnTriggerTooltip;
 		var columnHideTrigger, columnShowTrigger, columnFilterNav, columnFilterNavContent;
 		var columnShowAnim, columnHideAnim;
+		var logoWrap;
 	
 		setupTooltips();
 		setupColumnToggle();
@@ -53,6 +54,8 @@ AUI().ready(
 			columnFilterNavContent = A.one('.filter-sidebar');
 			columnHideTrigger = A.one('.column-control-hide');  // detect via class
 			columnShowTrigger = A.one('.column-control-show');
+			logoWrap = A.one('.logo-wrap');
+			
 			
 			// If there is no columnFilterNaw - don't proceed
 			if(!columnFilterNav) { return; }
@@ -67,7 +70,7 @@ AUI().ready(
 			
 		    columnShowAnim = new A.Anim({
 		    	node: columnFilterNav,
-		    	to: { width: '300px' }
+		    	to: { width: '250px' }
 		    });		
 			
 		    columnHideAnim = new A.Anim({
@@ -137,6 +140,9 @@ AUI().ready(
 			// Hide content when animation starts
 			columnFilterNavContent.hide();
 			
+			// Hide logo
+			logoWrap.hide();
+			
 			// Hide tooltip if shown
 			columnTriggerTooltip.hide();
 		}
@@ -147,6 +153,9 @@ AUI().ready(
 			
 			// Show content when animation ends
 			columnFilterNavContent.show();
+			
+			// Show logo
+			logoWrap.show();
 			
 			// Toggle triggers
 			columnShowTrigger.hide();
