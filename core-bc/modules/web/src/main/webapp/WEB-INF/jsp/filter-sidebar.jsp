@@ -38,7 +38,8 @@
           Annestesi
         </a>
     </form:form>
-    <div class="logo-wrap">
-        <img class="logo" src="img/vg_logo.jpg" />
-    </div>
+</div>
+
+<div class="logo-wrap">
+	<img class="logo" src="img/vgr_logo_vit.gif" alt="VGR Logo" />
 </div>
