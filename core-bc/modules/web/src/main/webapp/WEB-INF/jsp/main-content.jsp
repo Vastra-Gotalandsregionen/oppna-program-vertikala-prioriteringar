@@ -43,22 +43,18 @@
         <th>#</th>
         <c:forEach items="${form.columns}" var="column">
           <c:if test="${column.visible}">
-            <th>
-              <span title="${column.description}">${su:toUpperCase(column.label)}</span>
-              
+            <th class="${column.name}">
               <c:if test="${column.sortable}">
-                <span style="font-family: courier" style="width: 100%">
-                  <c:choose>
-                    <c:when test="${column.sorting}">
-                      <b style="text-decoration: blink; float: right;"><img src="img/arrow-down-active.png"/></b>
-                    </c:when>
-                    <c:otherwise>
-                      <a title="Sortera" href="main?sortField=${column.name}" style="text-decoration: none; float: right;"><img src="img/arrow-down.png"/></a>
-                    </c:otherwise>
-                  </c:choose>
-                </span>
+                <c:choose>
+                  <c:when test="${column.sorting}">
+                    <b style="text-decoration: blink; float: right;"><img src="img/arrow-down-active.png"/></b>
+                  </c:when>
+                  <c:otherwise>
+                    <a title="Sortera" href="main?sortField=${column.name}" style="text-decoration: none; float: right;"><img src="img/arrow-down.png"/></a>
+                  </c:otherwise>
+                </c:choose>
               </c:if>
-              
+              <span title="${column.description}">${su:toUpperCase(column.label)}</span>
             </th>
           </c:if>
         </c:forEach>
