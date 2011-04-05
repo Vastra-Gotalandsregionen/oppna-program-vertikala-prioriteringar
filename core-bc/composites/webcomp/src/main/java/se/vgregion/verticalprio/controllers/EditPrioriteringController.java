@@ -110,10 +110,10 @@ public class EditPrioriteringController extends ControllerBase {
             String message = "Du saknar behörighet att utföra denna åtgärd på prioriteringsobjektet som tillhör Sektorsråd '"
                     + prio.getSektorRaad().getLabel() + ".";
             if (!user.getSektorRaad().isEmpty()) {
-                message += "<br>" + "Du är idag definierad inom följande Sektorsråd:";
+                message += "<br>" + "Du �r idag definierad inom f�ljande Sektorsr�d:<br/>";
                 StringBuilder buf = new StringBuilder();
                 for (SektorRaad sektorsRaad : user.getSektorRaad()) {
-                    buf.append("&nbsp;").append(sektorsRaad).append("<br/>");
+                    buf.append("-&nbsp;").append(sektorsRaad).append("<br/>");
                 }
                 message += buf;
             } else {
@@ -448,62 +448,6 @@ public class EditPrioriteringController extends ControllerBase {
         return "prio-view";
     }
 
-    // @RequestMapping(value = "prio", params = { "findDiagnoses" })
-    // @Transactional
-    // public String findDiagnoses(HttpServletRequest request, ModelMap model,
-    // @ModelAttribute(value = "prio") PrioriteringsobjektForm pf,
-    // @RequestParam(required = false, value = "diagnosRef.selectedCodesId") List<String> selectedCodesId)
-    // throws InstantiationException, IllegalAccessException {
-    //
-    // initNestedValues(request, pf);
-    // return findCodesAction(model, pf, DiagnosKod.class, pf.getDiagnosRef(), diagnosKodRepository,
-    // pf.getDiagnoser(), request);
-    // }
-    //
-    // @RequestMapping(value = "prio", params = { "findAtcKoder" })
-    // @Transactional
-    // public String findAtckoder(HttpServletRequest request, ModelMap model, PrioriteringsobjektForm pf,
-    // @RequestParam(required = false, value = "atcKoderRef.selectedCodesId") List<String> selectedIds)
-    // throws InstantiationException, IllegalAccessException {
-    // return findCodesAction(model, pf, AtcKod.class, pf.getAtcKoderRef(), atcKodRepository, pf.getAtcKoder(),
-    // request);
-    // }
-
-    // @Transactional
-    // private <T extends AbstractKod> String findCodesAction(ModelMap model, PrioriteringsobjektForm pf,
-    // Class<T> clazz, ManyCodesRef<T> mcr, GenerisktKodRepository<T> repo, Set<T> target,
-    // HttpServletRequest request) throws InstantiationException, IllegalAccessException {
-    // model.addAttribute("editDir", new EditDirective(true, null));
-    // if (pf == null) {
-    // pf = new PrioriteringsobjektForm();
-    // }
-    // initNestedValues(request, pf);
-    // model.addAttribute("prio", pf);
-    // T kod = clazz.newInstance();
-    //
-    // kod.setBeskrivning(mcr.getSearchBeskrivningText());
-    // kod.setKod(mcr.getSearchKodText());
-    // mcr.getFindings().clear();
-    // mcr.getFindings().addAll(repo.findByExample(kod, 20));
-    //
-    // initKodLists(pf);
-    // initAllManyToOneCodes(pf);
-    // return "prio-view";
-    // }
-
-    // private void initAllManyToOneCodes(PrioriteringsobjektForm pf) {
-    // initManyToOneCode(pf.getDiagnosRef(), pf.getDiagnoser(), diagnosKodRepository);
-    // initManyToOneCode(pf.getAatgaerdRef(), pf.getAatgaerdskoder(), aatgaerdsKodRepository);
-    // initManyToOneCode(pf.getAtcKoderRef(), pf.getAtcKoder(), atcKodRepository);
-    // }
-
-    // private <T extends AbstractKod> void initManyToOneCode(ManyCodesRef<T> dr, Set<T> target,
-    // GenerisktKodRepository<T> repo) {
-    // for (Long id : new HashSet<Long>(dr.getSelectedCodesId())) {
-    // T code = repo.find(id);
-    // target.add(code);
-    // }
-    // }
 
     private void copyKodCollectionsAndMetaDates(Prioriteringsobjekt source, Prioriteringsobjekt target) {
         clearAndFillCollection(source.getAatgaerdskoder(), target.getAatgaerdskoder());
@@ -542,20 +486,7 @@ public class EditPrioriteringController extends ControllerBase {
         BeanMap formMap = new BeanMap(pf);
         prioMap.putAllWriteable(formMap);
 
-        // These three lines copies attributes with the same name from pf to prio.
-
-        // if (pf.getDiagnosRef().getSelectedCodesId() != null) {
-        // for (Long id : pf.getDiagnosRef().getSelectedCodesId()) {
-        // DiagnosKod diagnos = diagnosKodRepository.find(id);
-        // prio.getDiagnoser().add(diagnos);
-        // }
-        // } else {
-        // prio.getDiagnoser().clear();
-        // }
-
-        // initNestedValues(request, pf);
         initKodLists(pf);
-        // initAllManyToOneCodes(pf);
 
         return prio;
     }

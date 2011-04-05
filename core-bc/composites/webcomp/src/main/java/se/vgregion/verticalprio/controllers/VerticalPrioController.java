@@ -155,9 +155,9 @@ public class VerticalPrioController extends EditPrioriteringController {
         ChooseListForm clf = getOrCreateSessionObj(session, ChooseListForm.class.getSimpleName(),
                 ChooseListForm.class);
 
-        clf.setNotYetChoosenLabel("Gömda kolumner");
+        clf.setNotYetChoosenLabel("Dolda kolumner");
         clf.setChoosenLabel("Synliga kolumner");
-        clf.setOkLabel("Välj kolumner");
+        clf.setOkLabel("V�lj kolumner");
 
         clf.setDisplayKey("label");
         clf.setIdKey("id");
