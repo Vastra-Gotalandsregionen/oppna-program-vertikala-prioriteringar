@@ -50,10 +50,10 @@
                 <span style="font-family: courier" style="width: 100%">
                   <c:choose>
                     <c:when test="${column.sorting}">
-                      <b style="text-decoration: blink; float: right;"><img height="20px;" width="16px" src="img/arrow-down-active.svg"/></b>
+                      <b style="text-decoration: blink; float: right;"><img src="img/arrow-down-active.png"/></b>
                     </c:when>
                     <c:otherwise>
-                      <a title="Sortera" href="main?sortField=${column.name}" style="text-decoration: none; float: right;"><img height="20px;" width="16px" src="img/arrow-down.svg"/></a>
+                      <a title="Sortera" href="main?sortField=${column.name}" style="text-decoration: none; float: right;"><img src="img/arrow-down.png"/></a>
                     </c:otherwise>
                   </c:choose>
                 </span>
