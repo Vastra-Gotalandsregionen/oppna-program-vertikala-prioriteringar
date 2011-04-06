@@ -157,7 +157,7 @@ public class VerticalPrioController extends EditPrioriteringController {
 
         clf.setNotYetChoosenLabel("Dolda kolumner");
         clf.setChoosenLabel("Synliga kolumner");
-        clf.setOkLabel("Välj kolumner");
+        clf.setOkLabel("VÃ¤lj kolumner");
 
         clf.setDisplayKey("label");
         clf.setIdKey("id");

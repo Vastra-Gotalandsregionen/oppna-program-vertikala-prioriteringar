@@ -110,7 +110,7 @@ public class EditPrioriteringController extends ControllerBase {
             String message = "Du saknar behörighet att utföra denna åtgärd på prioriteringsobjektet som tillhör Sektorsråd '"
                     + prio.getSektorRaad().getLabel() + ".";
             if (!user.getSektorRaad().isEmpty()) {
-                message += "<br>" + "Du �r idag definierad inom f�ljande Sektorsr�d:<br/>";
+                message += "<br>" + "Du är idag definierad inom följande Sektorsråd:<br/>";
                 StringBuilder buf = new StringBuilder();
                 for (SektorRaad sektorsRaad : user.getSektorRaad()) {
                     buf.append("-&nbsp;").append(sektorsRaad).append("<br/>");
@@ -447,7 +447,6 @@ public class EditPrioriteringController extends ControllerBase {
         }
         return "prio-view";
     }
-
 
     private void copyKodCollectionsAndMetaDates(Prioriteringsobjekt source, Prioriteringsobjekt target) {
         clearAndFillCollection(source.getAatgaerdskoder(), target.getAatgaerdskoder());
