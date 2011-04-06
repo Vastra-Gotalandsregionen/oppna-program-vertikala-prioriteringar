@@ -10,5 +10,6 @@
 
 <span class="${key} kod"> 
   <span class="kod-label ${key}-label"> ${label} </span> 
+  <span id="${key}OldValue" style="display:none">${(prio.child[key] != null) ? prio.child[key] : ''}</span>
   <form:textarea cssStyle="${cssInputBoxStyle}" cssClass="standardInput" path="${key}" disabled="${su:canEdit(user, editDir) ? '' : 'true'}" /> 
 </span>

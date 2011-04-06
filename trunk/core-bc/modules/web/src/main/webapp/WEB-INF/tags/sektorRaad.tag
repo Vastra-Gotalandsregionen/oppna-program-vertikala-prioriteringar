@@ -7,6 +7,10 @@
 <%@ taglib uri="/WEB-INF/tld/vgr-util.tld" prefix="su"%>
 
 <span class="${key} kod">  
+  <c:if test="${prio.child != null}">
+    <span id="${key}OldValue" style="display:none">${(prio.child[key] != null) ? prio.child[key].id : ''}</span>
+  </c:if>
+      
   <c:choose>
     <c:when test="${su:canEdit(user, editDir)}">
       <form:select path="${key}Id" cssClass="standardInput">

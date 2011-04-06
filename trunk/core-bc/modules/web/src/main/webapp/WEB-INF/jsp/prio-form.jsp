@@ -29,7 +29,7 @@
         <div class="cell"><tags:label key="tillstaandetsSvaarighetsgradKod"/></div> 
         <div class="cell"><tags:label key="aatgaerdsRiskKod" /></div>
         <div class="cell"><tags:label key="patientnyttaEffektAatgaerdsKod" /></div>
-        <div class="cell"><span class="kod-label rangordningsKod-label"> Rangordning </span></div>
+        <div class="cell"><tags:label key="rangordningsKod" label="Rangordning" /></div>
         <div class="cell"><tags:label key="rangordningEnligtFormel" /></div>
     </div>
     
@@ -92,13 +92,25 @@
       }
   }
   
+  function getSelectValue(id) {
+      var select = document.getElementById(id);
+      var index = select.selectedIndex;
+      return select.options[index].value;
+  }
+  
+  function getSelectDisplay(id, value) {
+      var select = document.getElementById(id);
+      if (value) {
+          var opts = select.options;
+          for (var i = 0; i < opts.length; i++)
+              if (opts[i].value.trim() == value.trim())
+                 return select.options[i].innerHTML;
+      } 
+      var index = select.selectedIndex;
+      return select.options[index].innerHTML;
+  }
+  
   function computeApplyRangordningEnligtFormelImpl() {
-    function getSelectValue(id) {
-        var select = document.getElementById(id);
-        var index = select.selectedIndex;
-        return select.options[index].value;
-    }
-
     var tillstaandetsSvaarighetsgradKodId = getSelectValue('tillstaandetsSvaarighetsgradKodId');
     var aatgaerdsRiskKodId = getSelectValue('aatgaerdsRiskKodId');
     var patientnyttaEffektAatgaerdsKodId = getSelectValue('patientnyttaEffektAatgaerdsKodId');
@@ -126,11 +138,47 @@
     
   }  
   
+  function onChange(e) {
+      try{
+          onChangeImpl(e);
+      }catch(e) {
+          alert(e.message);
+      }
+  }
+  
+  function onChangeImpl(e) {
+      /*s = '';
+      for (var k in e.target) {
+          s += k + ' = ' + e.target[k] + '\n';
+      }
+      alert(s);*/
+      var target = e.target;
+      var id = target.get('id');
+      var tagName = target.get('tagName');
+      var value = null;
+      var idAtEnd = new RegExp('.+Id');
+      var oldValueFlagId = (id.match(idAtEnd) ? id.substring(0, id.length - 2):id) + 'ChangeFlag';
+      var changeFlag = document.getElementById(oldValueFlagId);
+      //var oldValueId =  id.substring(0, id.length - 2) + 'OldValue';
+      var oldValueId = (id.match(idAtEnd) ? id.substring(0, id.length - 2):id) + 'OldValue';
+      var oldValue = document.getElementById(oldValueId).innerHTML;
+      
+      if ('SELECT' == tagName) {
+          value = getSelectValue(id);
+      } else if ('TEXTAREA' == tagName) {
+          value = target.get('value');
+      }
+
+      changeFlag.style.display = (value.trim() != oldValue.trim()) ? 'inline' : 'none';
+  }
+  
   YUI({ filter: 'raw' }).use("node", function (Y) {
       Y.on("change", computeApplyRangordningEnligtFormel, "#tillstaandetsSvaarighetsgradKodId");
       Y.on("change", computeApplyRangordningEnligtFormel, "#aatgaerdsRiskKodId");
       Y.on("change", computeApplyRangordningEnligtFormel, "#patientnyttaEffektAatgaerdsKodId");
       Y.on("change", computeApplyRangordningEnligtFormel, "#patientnyttoEvidensKodId");
+      
+      Y.on("change", onChange, ".standardInput");
   });
   
 </script>
