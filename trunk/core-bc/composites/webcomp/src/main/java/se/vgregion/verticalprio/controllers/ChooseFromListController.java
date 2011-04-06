@@ -168,7 +168,7 @@ public class ChooseFromListController extends ControllerBase {
         private List choosen = new ArrayList();
         private List allItems = new ArrayList();
         private Collection target = new ArrayList();
-        private Integer maxSelection = 25; // This indicates the max number of items a user can select
+        private Integer maxSelection = 40; // This indicates the max number of items a user can select
         private Integer minNumberOfItemsForShowingFindButton = 25;
 
         /**

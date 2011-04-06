@@ -62,7 +62,7 @@ public class JpaPrioRepository extends JpaGenerisktFinderRepository<Prioritering
             }
             result.add(item);
         }
-
+        // Add DiagnosKod-items to the main query result.
         addLinkedObjects(example, LinkPrioriteringsobjektDiagnosKod.class, DiagnosKod.class, idPrioMapping,
                 new KodSetting<DiagnosKod>() {
 
@@ -73,6 +73,7 @@ public class JpaPrioRepository extends JpaGenerisktFinderRepository<Prioritering
 
                 });
 
+        // Add AatgaerdsKod-items to the main query result.
         addLinkedObjects(example, LinkPrioriteringsobjektAatgaerdsKod.class, AatgaerdsKod.class, idPrioMapping,
                 new KodSetting<AatgaerdsKod>() {
 
@@ -83,6 +84,7 @@ public class JpaPrioRepository extends JpaGenerisktFinderRepository<Prioritering
 
                 });
 
+        // Add AtcKod-items to the main query result.
         addLinkedObjects(example, LinkPrioriteringsobjektAtcKod.class, AtcKod.class, idPrioMapping,
                 new KodSetting<AtcKod>() {
 
