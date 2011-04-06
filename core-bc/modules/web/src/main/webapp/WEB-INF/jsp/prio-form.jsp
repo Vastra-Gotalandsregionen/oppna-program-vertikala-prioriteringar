@@ -38,7 +38,7 @@
         <div class="cell"><tags:kod key="aatgaerdsRiskKod" /></div>
         <div class="cell"><tags:kod key="patientnyttaEffektAatgaerdsKod" /></div>
         <div class="cell"><tags:kod key="rangordningsKod" /></div>
-        <div class="cell last">${util:toCellText(prio.rangordningEnligtFormel)}</div>
+        <div class="cell last" id="rangordningEnligtFormel">${util:toCellText(prio.rangordningEnligtFormel)}</div>
     </div>
     <br/><br/>
     
@@ -81,3 +81,56 @@
     </div>
     
   </div>
+  
+  <script type="text/javascript">
+
+  function computeApplyRangordningEnligtFormel() {
+      try{
+          computeApplyRangordningEnligtFormelImpl();
+      }catch(e) {
+          alert(e.message);
+      }
+  }
+  
+  function computeApplyRangordningEnligtFormelImpl() {
+    function getSelectValue(id) {
+        var select = document.getElementById(id);
+        var index = select.selectedIndex;
+        return select.options[index].value;
+    }
+
+    var tillstaandetsSvaarighetsgradKodId = getSelectValue('tillstaandetsSvaarighetsgradKodId');
+    var aatgaerdsRiskKodId = getSelectValue('aatgaerdsRiskKodId');
+    var patientnyttaEffektAatgaerdsKodId = getSelectValue('patientnyttaEffektAatgaerdsKodId');
+    var patientnyttoEvidensKodId = getSelectValue('patientnyttoEvidensKodId');
+    
+    function isDigit(s) {
+        var r = new RegExp('[0-9]+');
+        s = s + '';
+        return s.match(r);
+    }
+    
+    if (!(isDigit(tillstaandetsSvaarighetsgradKodId) 
+            && isDigit(aatgaerdsRiskKodId)
+            && isDigit(patientnyttaEffektAatgaerdsKodId) 
+            && isDigit(patientnyttoEvidensKodId))) {
+        document.getElementById('rangordningEnligtFormel').innerHTML = '-';
+    } else {
+        var result = tillstaandetsSvaarighetsgradKodId - 0.6 
+        + aatgaerdsRiskKodId * 0.2 
+        + patientnyttaEffektAatgaerdsKodId * 0.2
+        + patientnyttoEvidensKodId * 0.2;
+        result=Math.round(result * 100) / 100;
+        document.getElementById('rangordningEnligtFormel').innerHTML = result;
+    }
+    
+  }  
+  
+  YUI({ filter: 'raw' }).use("node", function (Y) {
+      Y.on("change", computeApplyRangordningEnligtFormel, "#tillstaandetsSvaarighetsgradKodId");
+      Y.on("change", computeApplyRangordningEnligtFormel, "#aatgaerdsRiskKodId");
+      Y.on("change", computeApplyRangordningEnligtFormel, "#patientnyttaEffektAatgaerdsKodId");
+      Y.on("change", computeApplyRangordningEnligtFormel, "#patientnyttoEvidensKodId");
+  });
+  
+</script>
