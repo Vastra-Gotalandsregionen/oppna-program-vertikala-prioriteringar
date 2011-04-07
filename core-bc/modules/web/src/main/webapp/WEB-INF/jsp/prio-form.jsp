@@ -61,7 +61,6 @@
     </div>
     <br/><br/>
     
-    
     <div style="width:100%" class="prio-form-grid yui3-g">
         <div class="yui3-u-1-5"><tags:label key="vaardnivaaKod" /><tags:kod key="vaardnivaaKod" /></div>
         <div class="yui3-u-1-5"><tags:label key="vaardform" /><tags:kod key="vaardform" /></div>
@@ -147,11 +146,6 @@
   }
   
   function onChangeImpl(e) {
-      /*s = '';
-      for (var k in e.target) {
-          s += k + ' = ' + e.target[k] + '\n';
-      }
-      alert(s);*/
       var target = e.target;
       var id = target.get('id');
       var tagName = target.get('tagName');
@@ -159,9 +153,10 @@
       var idAtEnd = new RegExp('.+Id');
       var oldValueFlagId = (id.match(idAtEnd) ? id.substring(0, id.length - 2):id) + 'ChangeFlag';
       var changeFlag = document.getElementById(oldValueFlagId);
-      //var oldValueId =  id.substring(0, id.length - 2) + 'OldValue';
-      var oldValueId = (id.match(idAtEnd) ? id.substring(0, id.length - 2):id) + 'OldValue';
-      var oldValue = document.getElementById(oldValueId).innerHTML;
+      var oldValueId = (id.match(idAtEnd) ? id.substring(0, id.length - 2):id) + 'ApprovedValue';
+      var oldValueTag = document.getElementById(oldValueId);
+      if (!oldValueTag) return;
+      var oldValue = oldValueTag.innerHTML;
       
       if ('SELECT' == tagName) {
           value = getSelectValue(id);
@@ -172,6 +167,34 @@
       changeFlag.style.display = (value.trim() != oldValue.trim()) ? 'inline' : 'none';
   }
   
+  function onCancel(e) {
+      var changed = document.getElementsByName('changed');
+      for (var i = 0; i < changed.length; i++) {
+          if (changed[i].style.display != 'none') {
+              var msg = 'Du har osparade ändringar. Vill du stänga den här vyn och förlora inmatad data?';
+              if (confirm(msg)) {
+                  return true;
+              } else {
+                  e.halt(true);
+                  return false;
+              }
+          }
+      }
+  }
+  
+  function foo(e) {
+      try {
+        var s = '';
+        for (var k in e) {
+            s += k + ' = ' + e[k] + '\n';
+            //s += ' ' + k;
+        }
+        alert(s);
+      }catch(ee) {
+          alert('error in foo\n' + ee.message);
+      }
+  }
+  
   YUI({ filter: 'raw' }).use("node", function (Y) {
       Y.on("change", computeApplyRangordningEnligtFormel, "#tillstaandetsSvaarighetsgradKodId");
       Y.on("change", computeApplyRangordningEnligtFormel, "#aatgaerdsRiskKodId");
@@ -179,6 +202,12 @@
       Y.on("change", computeApplyRangordningEnligtFormel, "#patientnyttoEvidensKodId");
       
       Y.on("change", onChange, ".standardInput");
+      
+      //Y.on("change", foo, ".standardInput");
+      
+      //Y.on("click", onCancel, "#cancel");
   });
+  
+  
   
 </script>

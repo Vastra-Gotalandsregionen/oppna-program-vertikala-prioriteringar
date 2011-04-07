@@ -39,7 +39,7 @@
       <c:if test="${column.visible}">
         <td class="${column.name}">
           <c:if test="${column.name != 'godkaend' and row.child[column.name] != row[column.name]}">
-            <img src='img/flag_white.gif' title="Värde i utkast-version." style="float:right; display:inline;"/>
+            <img src='img/flag_white.gif' name="changed" title="Värde i utkast-version." style="float:right; display:inline;"/>
             <tags:cell value="${row[column.name]}"/>
           </c:if>
         </td>

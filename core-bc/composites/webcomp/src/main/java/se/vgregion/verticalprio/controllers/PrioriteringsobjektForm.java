@@ -91,6 +91,8 @@ public class PrioriteringsobjektForm extends Prioriteringsobjekt {
 
     private Prioriteringsobjekt skarpVersion;
 
+    private PrioriteringsobjektForm unalteredVersion;
+
     // @Transient
     // @SuppressWarnings("serial")
     // ManyCodesRef<AatgaerdsKod> aatgaerdRef = new ManyCodesRef<AatgaerdsKod>() {
@@ -515,6 +517,14 @@ public class PrioriteringsobjektForm extends Prioriteringsobjekt {
 
     public void setSektorRaad(String sektorRaad) {
         throw new UnsupportedOperationException("Is this called?");
+    }
+
+    public void setUnalteredVersion(PrioriteringsobjektForm unalteredVersion) {
+        this.unalteredVersion = unalteredVersion;
+    }
+
+    public PrioriteringsobjektForm getUnalteredVersion() {
+        return unalteredVersion;
     }
 
 }

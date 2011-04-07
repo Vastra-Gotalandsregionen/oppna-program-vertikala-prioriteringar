@@ -192,36 +192,6 @@ public class VerticalPrioController extends EditPrioriteringController {
         return null;
     }
 
-    // @RequestMapping(value = "/approve")
-    // @Transactional(propagation = Propagation.REQUIRED)
-    // public String approve(final HttpSession session, @RequestParam Long id) {
-    //
-    // return main(session);
-    // }
-
-    // @RequestMapping(value = "/select-prio")
-    // @Transactional(propagation = Propagation.REQUIRED)
-    // public String selectPrio(final HttpSession session, @RequestParam Integer selected) {
-    // System.out.println("VerticalPrioController.selectPrio()");
-    // List<SektorRaad> sectors = sektorRaadRepository.getTreeRoots();
-    // for (SektorRaad sector : sectors.get(0).getChildren()) {
-    //
-    // for (int i = 0; i < 10; i++) {
-    // Prioriteringsobjekt prio = new Prioriteringsobjekt();
-    // prio.setSektorRaad(sector);
-    // BeanMap bm = new BeanMap(prio);
-    // for (Object key : bm.keySet()) {
-    // if (bm.getType(key.toString()).equals(String.class)) {
-    // bm.put(key.toString(), sector.getKod() + " " + i);
-    // }
-    // }
-    // prioRepository.store(prio);
-    // }
-    // }
-    //
-    // return "select-prio";
-    // }
-
     /**
      * The action for selecting a specific node of in the three of {@link SektorRaad}. It gets the three out of the
      * session and then finds the node denoted by the Id-argument sent from the client. When found it toggles
@@ -391,23 +361,7 @@ public class VerticalPrioController extends EditPrioriteringController {
         }
 
         List<Prioriteringsobjekt> result = new ArrayList<Prioriteringsobjekt>();
-
-        // List<? extends Prioriteringsobjekt> prios = new ArrayList<Prioriteringsobjekt>(
-        // prioRepository.findByExample(condition, null));
-        // result.addAll(prios);
-
-        // DiagnosKod diagnosCondition = new DiagnosKod();
-        // diagnosCondition.getPrioriteringsobjekt().add(condition);
-        // List<DiagnosKod> diagnosesInResult = diagnosRepository.findByExample(diagnosCondition, null);
-        // System.out.println("diagnosesInResult.size(): " + diagnosesInResult.size());
-        //
-        // for (DiagnosKod dk : diagnosesInResult) {
-        // System.out.println(dk.getKod() + "\n " + dk.getLitePrioriteringsobjekt().size() + "\n " +
-        // dk.getLitePrioriteringsobjekt());
-        // }
-
         result.addAll(prioRepository.findLargeResult(condition));
-
         List<SektorRaad> sectors = applicationData.getSektorRaadList();
 
         for (Prioriteringsobjekt prio : result) {

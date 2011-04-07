@@ -245,6 +245,12 @@ public class EditPrioriteringController extends ControllerBase {
 
         init(form.getSektorRaadList());
 
+        PrioriteringsobjektForm unalteredVersion = new PrioriteringsobjektForm();
+        Util.copyValuesAndSetsFromBeanToBean(form, unalteredVersion);
+        form.setUnalteredVersion(unalteredVersion);
+        System.out.println("form.getUnalteredVersion().getDiagnoser()\n "
+                + form.getUnalteredVersion().getDiagnoser());
+
         return "prio-view";
     }
 

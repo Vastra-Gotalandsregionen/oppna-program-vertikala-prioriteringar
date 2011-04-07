@@ -16,8 +16,9 @@
         ${su:toOptions(prio[su:concat(key, 'Id')], prio[su:concat(key, 'List')])}
       </form:select>
       <c:if test="${prio.child != null}">
-        <span id="${key}OldValue" style="display:none">${(prio.child[key] != null) ? prio.child[key].id : ''}</span>
+        <span id="${key}ApprovedValue" style="display:none">${(prio.child[key] != null) ? prio.child[key].id : ''}</span>
       </c:if>
+      <span id="${key}OldValue" style="display:none">${(prio.unalteredVersion[key] != null) ? prio.unalteredVersion[key].id : ''}</span>
     </c:when>
     <c:otherwise>
       ${su:labelFor(prio[su:concat(key, 'Id')], prio[su:concat(key, 'List')])} <br/>  

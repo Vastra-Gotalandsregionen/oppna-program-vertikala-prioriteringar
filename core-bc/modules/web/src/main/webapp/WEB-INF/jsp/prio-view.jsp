@@ -29,7 +29,7 @@
   <div class="yui3-u-1-5"></div>
   <div class="yui3-u-1-5"></div>
   <div class="yui3-u-1-5" align="right">
-    <input class="button" type="submit" value="Avbryt" name="cancel"/>
+    <input class="button" type="submit" value="Avbryt" id="cancel" name="cancel"/>
     <tags:editSubmit value="Spara" name="save" />
   </div>
 </div>
@@ -41,7 +41,7 @@
 <c:if test="${prio.child != null and su:isPriosDifferent(prio, prio.child)}">
   <div>
     <br/>
-    <img src='img/flag_white.gif'/> = Fältvärde som skiljer sig från den godkända versionen.
+    <img src='img/flag_white.gif' name="changed"/> = Fältvärde som skiljer sig från den godkända versionen.
   </div>
 </c:if>
 </span>
