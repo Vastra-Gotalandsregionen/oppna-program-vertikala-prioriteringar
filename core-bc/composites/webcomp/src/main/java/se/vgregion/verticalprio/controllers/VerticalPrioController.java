@@ -106,6 +106,12 @@ public class VerticalPrioController extends EditPrioriteringController {
         return main(session);
     }
 
+    @RequestMapping(value = "/excel-table")
+    public String excelTable(HttpServletResponse response) {
+        response.setContentType("application/ms-excel");
+        return "main-table";
+    }
+
     @RequestMapping(value = "/main", params = { "sortField" })
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public String alterSortOrder(HttpSession session, @RequestParam String sortField) {
