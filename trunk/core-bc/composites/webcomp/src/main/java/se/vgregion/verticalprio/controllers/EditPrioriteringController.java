@@ -104,16 +104,27 @@ public class EditPrioriteringController extends ControllerBase {
 
     private boolean isUserInSektorsRaadIfNotWarnWithMessage(User user, Prioriteringsobjekt prio,
             HttpSession session) {
+    	final int MAX_NUMBER_OF_SEKTORSRAAD_ON_ONE_ROW = 5; 
+    	int sektorsraad_count = 0;
+
         if (user.getSektorRaad().contains(prio.getSektorRaad())) {
             return true;
         } else {
-            String message = "Du saknar behörighet att utföra denna åtgärd på prioriteringsobjektet som tillhör Sektorsråd '"
-                    + prio.getSektorRaad().getLabel() + ".";
+            String message = "Du saknar behörighet att utföra denna åtgärd på prioriteringsobjektet som tillhör Sektorsråd: "
+                    + prio.getSektorRaad().getLabel() + ". <br/>";
             if (!user.getSektorRaad().isEmpty()) {
                 message += "<br>" + "Du är idag definierad inom följande Sektorsråd:<br/>";
                 StringBuilder buf = new StringBuilder();
                 for (SektorRaad sektorsRaad : user.getSektorRaad()) {
-                    buf.append("-&nbsp;").append(sektorsRaad).append("<br/>");
+                    buf.append("-&nbsp;").append(sektorsRaad); 
+                    sektorsraad_count++;
+                    if (sektorsraad_count >= MAX_NUMBER_OF_SEKTORSRAAD_ON_ONE_ROW) {
+                    	buf.append("<br/>");
+                    	sektorsraad_count=0;
+                    }
+                    else {
+                    	buf.append(", ");
+                    }
                 }
                 message += buf;
             } else {
