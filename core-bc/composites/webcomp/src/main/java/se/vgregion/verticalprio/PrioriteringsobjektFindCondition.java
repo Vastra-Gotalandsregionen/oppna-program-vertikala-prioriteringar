@@ -12,6 +12,7 @@ import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
 import se.vgregion.verticalprio.entity.SektorRaad;
 import se.vgregion.verticalprio.entity.TillstaandetsSvaarighetsgradKod;
 import se.vgregion.verticalprio.entity.VaardnivaaKod;
+import se.vgregion.verticalprio.repository.finding.CoalesceingOrderByPath;
 import se.vgregion.verticalprio.repository.finding.DateNullLogic;
 import se.vgregion.verticalprio.repository.finding.HaveExplicitTypeToFind;
 import se.vgregion.verticalprio.repository.finding.HaveOrderByPaths;
@@ -49,35 +50,16 @@ public class PrioriteringsobjektFindCondition extends PrioriteringsobjektForm im
         setVaardform(vaardformHolder);
 
         NestedSektorRaad nsr = new NestedSektorRaad();
-        // SortingSektorRaad ssr = new SortingSektorRaad();
-
-        // Create sort order field that is used in NestedSektorRaad. It indicates that sorting should be done on
-        // the field kod in the sektor raad table.
-        // Sorting: NestedSektorsRaad -> SortingSektorsRaad -> SortOrderField ("kod")
-        // SortOrderField sof = new SortOrderField();
-        // sof.setOrder(0);
-        // sof.setName("kod");
-        // ssr.listSortOrders().add(sof);
-        // nsr.content().add(ssr);
         super.setSektorRaad(nsr);
 
-        orderByPaths.add(new OrderByPath("sektorRaad/parent/kod"));
-        orderByPaths.add(new OrderByPath("sektorRaad/kod"));
+        addSortBySektorRaad();
 
         // The equivalent for adding sorting on diagnoses.
         NestedHashSet<DiagnosKod> diagnoser = new NestedHashSet<DiagnosKod>();
-        // SortingDiagnosKod sdk = new SortingDiagnosKod();
-        // sof = new SortOrderField();
-        // sof.setOrder(1);
-        // sof.setName("kod");
-        // sdk.listSortOrders().add(sof);
-        // diagnoser.add(sdk);
         super.setDiagnoser(diagnoser);
 
         OrderByPath diagnosOrder = new OrderByPath("diagnoser/kod");
         orderByPaths.add(diagnosOrder);
-
-        // super.setTillstaandetsSvaarighetsgradKod(new NestedTillstaandetsSvaarighetsgradKod());
 
         super.setAatgaerdskoder(new NestedHashSet<AatgaerdsKod>());
         super.setAtcKoder(new NestedHashSet<AtcKod>());
@@ -182,57 +164,29 @@ public class PrioriteringsobjektFindCondition extends PrioriteringsobjektForm im
     }
 
     public void sortByRangordningsKod() {
-        // NestedRangordningsKod nrk = (NestedRangordningsKod) getRangordningsKod();
-        // if (nrk == null) {
-        // setRangordningsKod(nrk = new NestedRangordningsKod());
-        // }
-        // SortingRangordningsKod srk = new SortingRangordningsKod();
-        // nrk.content().add(srk);
-        // srk.listSortOrders().add(mkSortOrderField("kod"));
-        //
-        // NestedSektorRaad nsr = getSektorRaad();
-        // SortingSektorRaad ssr = new SortingSektorRaad();
-        // ssr.listSortOrders().add(mkSortOrderField("kod"));
-        // nsr.content().add(ssr);
-        //
-        // SortingDiagnosKod sdk = new SortingDiagnosKod();
-        // sdk.listSortOrders().add(mkSortOrderField("kod"));
-        // getDiagnoser().add(sdk);
-
         paths().clear();
         paths().add(new OrderByPath("rangordningsKod/kod"));
-        paths().add(new OrderByPath("sektorRaad/parent/kod"));
-        paths().add(new OrderByPath("sektorRaad/kod"));
+        addSortBySektorRaad();
         paths().add(new OrderByPath("diagnoser/kod"));
     }
 
     public void sortByTillstaandetsSvaarighetsgradKod() {
-        // NestedTillstaandetsSvaarighetsgradKod ntsk = getTillstaandetsSvaarighetsgradKod();
-        // SortingTillstaandetsSvaarighetsgradKod stsk = new SortingTillstaandetsSvaarighetsgradKod();
-        // stsk.listSortOrders().add(mkSortOrderField("kod"));
-        // ntsk.content().add(stsk);
-        //
-        // NestedSektorRaad nsr = getSektorRaad();
-        // SortingSektorRaad ssr = new SortingSektorRaad();
-        // ssr.listSortOrders().add(mkSortOrderField("kod"));
-        // nsr.content().add(ssr);
-        //
-        // SortingDiagnosKod sdk = new SortingDiagnosKod();
-        // sdk.listSortOrders().add(mkSortOrderField("kod"));
-        // getDiagnoser().add(sdk);
-
         paths().clear();
         paths().add(new OrderByPath("tillstaandetsSvaarighetsgradKod/kod"));
-        paths().add(new OrderByPath("sektorRaad/parent/kod"));
-        paths().add(new OrderByPath("sektorRaad/kod"));
+        addSortBySektorRaad();
         paths().add(new OrderByPath("diagnoser/kod"));
     }
 
     public void sortByDiagnoser() {
         paths().clear();
-        paths().add(new OrderByPath("sektorRaad/kod"));
-        paths().add(new OrderByPath("sektorRaad/parent/kod"));
+        addSortBySektorRaad();
         paths().add(new OrderByPath("diagnoser/kod"));
+    }
+
+    private void addSortBySektorRaad() {
+        CoalesceingOrderByPath coalesor = new CoalesceingOrderByPath(new OrderByPath("sektorRaad/parent/kod"),
+                new OrderByPath("sektorRaad/kod"));
+        orderByPaths.add(coalesor);
     }
 
     /**
