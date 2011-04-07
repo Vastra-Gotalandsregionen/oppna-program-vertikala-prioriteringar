@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
  
-<div class="help-block">
+<div class="help-block help-block-color">
     <h1>Välkommen till vertikala prioriteringar!</h1>
     <h2>Så här använder du vertikala prioriteringar</h2>
     <ol>
@@ -13,7 +13,10 @@
           <ol>
             <li class="no-list-style"><img src="img/tratt_unselected.png" /> Tryck på ikonen för att aktiverings kolumnens filtrering</li>
             <li class="no-list-style"><img src="img/tratt_selected.png" /> Visar att en kolumn har en aktiv filtrering</li>
-            <li class="no-list-style"><img src="img/x.png" /> Tar bort filtrering på kolumn</li>
+            <li class="no-list-style"><img src="img/x.png" /> Ta bort filtrering på kolumn</li>
+            <li class="no-list-style"><img src="img/arrow_left.png" /> Dölj sektorsråd</li>
+            <li class="no-list-style"><img src="img/arrow_right.png" /> Visa sektorsråd</li>
+            <li class="no-list-style"><img src="img/arrow-down.png" /> Sortera kolumn</li>
           </ol>
       </li>
       <li>
@@ -26,25 +29,4 @@
           För att förändra ett prioriteringsobjekt krävs att du är inloggad
       </li>
     </ol>
-</div>
-<div class="below-help-block">
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-
 </div>
