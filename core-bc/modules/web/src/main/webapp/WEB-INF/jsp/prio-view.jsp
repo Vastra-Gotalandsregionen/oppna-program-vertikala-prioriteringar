@@ -16,15 +16,20 @@
 
 <div style="vertical-align: middle;" class="yui3-g">
   <div class="yui3-u-1-5">
-    <span class="kod-label">Godkänd</span>
+    <span class="kod-label">Godkänd datum</span>
     <c:choose>
       <c:when test="${prio.child != null}">${su:toStringDate(prio.child.godkaend)}</c:when>
       <c:otherwise>${su:toStringDate(prio.godkaend)}</c:otherwise>
     </c:choose>
   </div>
   <div class="yui3-u-1-5">
-    <span class="kod-label">Senast uppdaterad</span>
-    ${su:toStringDate(prio.senastUppdaterad)}
+    <span class="kod-label">Senast uppdaterad datum</span>   
+    <c:choose>
+   		<c:when test="${prio.senastUppdaterad != null}">
+      		${su:toStringDate(prio.senastUppdaterad)}
+     	</c:when>
+      	<c:otherwise>-</c:otherwise>
+    </c:choose>
   </div>
   <div class="yui3-u-1-5"></div>
   <div class="yui3-u-1-5"></div>
