@@ -243,12 +243,18 @@ button {
 /* -- = Help Block  -------------*/
 
 .help-block {
-    display: block;
+	display: block;
     font-size: 14px;
     margin: 0;
     max-width: 650px;
     min-width: 440px;
-    padding: 10px; 
+    padding: 10px;     
+}
+
+.help-block-color {
+    border: 1px solid #cccccc;
+    /*-- background: url("../img/state_default_bg.png") repeat-x scroll 0 0 #D4D4D4; -- */
+    background-color: #EDF2F4;
 }
 
 .help-block h1 {
@@ -335,17 +341,6 @@ button {
   font-weight: bold;
   padding-bottom: 14px;
 } 
-
-/* -- = Below Help Block  -------------*/
-
-.below-help-block {
-	/* -- background-image:url('../img/help_background.png'); -- */
-    display: block;
-    font-size: 14px;
-    margin: 0;
-    max-width: 514px;
-    padding: 10px; 
-}
 
 
 /* -- = Sandbox  -------------------------------------------------------*/
