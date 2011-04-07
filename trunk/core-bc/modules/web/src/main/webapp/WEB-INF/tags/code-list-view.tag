@@ -14,6 +14,7 @@
 <%@ taglib uri="/WEB-INF/tld/vgr-util.tld" prefix="util"%>
 
 <div class="code-list-view ${styleClass}">
+  <span id="${codeKey}OldValue" style="display:none">${(prio.unalteredVersion[codeKey] != null) ? prio.unalteredVersion[codeKey] : ''}</span>
   <tags:label key="${codeKey}" />
   <c:if test="${empty prio[codeKey]}">[Inga]</c:if>
   

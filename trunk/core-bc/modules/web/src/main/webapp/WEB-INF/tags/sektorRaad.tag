@@ -8,9 +8,9 @@
 
 <span class="${key} kod">  
   <c:if test="${prio.child != null}">
-    <span id="${key}OldValue" style="display:none">${(prio.child[key] != null) ? prio.child[key].id : ''}</span>
+    <span id="${key}ApprovedValue" style="display:none">${(prio.child[key] != null) ? prio.child[key].id : ''}</span>
   </c:if>
-      
+  <span id="${key}OldValue" style="display:none">${(prio[key] != null) ? prio[key].id : ''}</span>      
   <c:choose>
     <c:when test="${su:canEdit(user, editDir)}">
       <form:select path="${key}Id" cssClass="standardInput">
