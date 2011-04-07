@@ -7,34 +7,29 @@
 <%@ taglib prefix='fn' uri='http://java.sun.com/jsp/jstl/functions' %>
 
 <div class="main-content">
-    <form action="main" method="post">
+	<form action="main" method="post">
     
-      <div class="button-row">
-        <c:if test="${not empty rows}">
-          <input type="submit" id="select-prio" name="select-prio" value="Visa prioriteringsobjekt" class="button"/>
-        </c:if>
-    
-        <c:if test="${loginResult && user != null and user.editor}">
-            <span class="rPadding2em">
-              <c:if test="${not empty rows}">
-                  <tags:editSubmit name="edit-prio" value="Ändra" cssClass="button"/>
-              </c:if>
-              <c:if test="${not empty rows}">
-                  <tags:editSubmit name="prio-create" value="Lägg till nytt" cssClass="button" />
-                  <tags:editSubmit name="delete-prio" value="Ta bort" cssClass="button"/>
-              </c:if>
-            </span>
-        </c:if>
+   		<c:if test="${not empty rows}">
+      		<div class="button-row">
+        
+          		<input type="submit" id="select-prio" name="select-prio" value="Visa prioriteringsobjekt" class="button"/>
+        
+        		<c:if test="${loginResult && user != null and user.editor}">
+            		<span class="rPadding2em">
+						<tags:editSubmit name="edit-prio" value="Ändra" cssClass="button"/>
+						<tags:editSubmit name="prio-create" value="Lägg till nytt" cssClass="button" />
+						<tags:editSubmit name="delete-prio" value="Ta bort" cssClass="button"/>
+					</span>
+				</c:if>
       
-        <c:if test="${su:canEdit(user, editDir) and user.approver and not empty rows}">
-            <tags:editSubmit name="approve-prio" value="Godkänn" cssClass="button"/>
-        </c:if>
-        <c:if test="${not empty rows}">
-          <input name="init-conf-columns" class="conf-columns button" type="submit" value="Dölj/Visa kolumner" />
-        </c:if>
-      </div>
+        		<c:if test="${su:canEdit(user, editDir) and user.approver}">
+            		<tags:editSubmit name="approve-prio" value="Godkänn" cssClass="button"/>
+       			</c:if>
+          		<input name="init-conf-columns" class="conf-columns button" type="submit" value="Dölj/Visa kolumner" />
+      		</div>
+		</c:if>
     
-    <tags:message-out/>
+		<tags:message-out/>
     
     <c:if test="${not empty rows}">
     <table cellpadding="5">
