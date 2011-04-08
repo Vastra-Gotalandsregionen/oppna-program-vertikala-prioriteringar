@@ -17,10 +17,6 @@
             <li class="no-list-style"><img src="img/arrow_left.png" /> Dölj sektorsråd</li>
             <li class="no-list-style"><img src="img/arrow_right.png" /> Visa sektorsråd</li>
             <li class="no-list-style"><img src="img/arrow-down.png" /> Sortera kolumn</li>
-            <c:if test="${loginResult && user != null and user.editor}">
-              <li class="no-list-style"><img src="img/flag_white.gif" /> Markerar värde som ännu inte godkänts</li>
-              <li class="no-list-style"><img src="img/changed.png" /> Markerar värde som ännu inte sparats.</li>
-            </c:if>
           </ol>
       </li>
       <li>
@@ -32,5 +28,14 @@
       <li>
           För att förändra ett prioriteringsobjekt krävs att du är inloggad
       </li>
+      <c:if test="${loginResult && user != null and user.editor}">
+        <li>
+          Allt efter situation dyker symboler upp i detaljvyn som informerar om informationens status
+          <ol>
+            <li class="no-list-style"><img src="img/flag_white.gif" /> Markerar värde som skiljer sig ifrån godkänd version</li>
+            <li class="no-list-style"><img src="img/changed.png" /> Markerar värde som ännu inte sparats</li>
+          </ol>
+        </li>
+      </c:if>
     </ol>
 </div>
