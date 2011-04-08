@@ -541,8 +541,11 @@ button {
     width: 100%;
 }
 
-.prio-view select, .prio-view textarea {
+.prio-view textarea {
   height: 100px;
+}
+
+.prio-view select, .prio-view textarea {
   margin: 5px 0;
   overflow: visible;
 }
