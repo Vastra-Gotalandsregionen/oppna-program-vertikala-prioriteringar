@@ -124,7 +124,7 @@ button {
   padding-right: 2em;
 }
 
-.unsavedChange, .changedFlag {
+.unsavedChange, .changedFlag, #ChangeFlag img, #EditedFlag img {
   vertical-align: text-top;
 }
 
