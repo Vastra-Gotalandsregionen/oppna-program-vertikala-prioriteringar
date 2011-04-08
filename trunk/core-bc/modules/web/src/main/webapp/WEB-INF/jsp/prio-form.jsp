@@ -84,6 +84,13 @@
   </div>
   
   <script type="text/javascript">
+  
+  YUI({
+      //Last Gallery Build of this module
+      gallery: 'gallery-2010.03.23-17-54'
+  }).use("node", 'gallery-text-expander', function(Y) {
+      Y.all("textarea").plug(Y.TextExpander);
+  });
 
   function computeApplyRangordningEnligtFormel() {
       try{
