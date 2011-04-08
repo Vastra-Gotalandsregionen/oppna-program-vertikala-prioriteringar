@@ -124,6 +124,9 @@ button {
   padding-right: 2em;
 }
 
+.unsavedChange, .changedFlag {
+  vertical-align: text-top;
+}
 
 /* -- = Filter Sidebar  -------------------------------------------------------*/
 
@@ -542,7 +545,8 @@ button {
 }
 
 .prio-view textarea {
-  height: 100px;
+  min-height: 100px;
+  overflow: visible;
 }
 
 .prio-view select, .prio-view textarea {

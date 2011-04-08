@@ -141,21 +141,22 @@
   
   function onChange(e) {
       try{
-          onChangeImpl(e);
+          onChangeImpl(e, 'ChangeFlag', 'ApprovedValue');
+          onChangeImpl(e, 'EditedFlag', 'OldValue');
       }catch(e) {
           alert(e.message);
       }
   }
   
-  function onChangeImpl(e) {
+  function onChangeImpl(e, flagPostFixId, valuePostFixId) {
       var target = e.target;
       var id = target.get('id');
       var tagName = target.get('tagName');
       var value = null;
       var idAtEnd = new RegExp('.+Id');
-      var oldValueFlagId = (id.match(idAtEnd) ? id.substring(0, id.length - 2):id) + 'ChangeFlag';
+      var oldValueFlagId = (id.match(idAtEnd) ? id.substring(0, id.length - 2):id) + flagPostFixId;
       var changeFlag = document.getElementById(oldValueFlagId);
-      var oldValueId = (id.match(idAtEnd) ? id.substring(0, id.length - 2):id) + 'ApprovedValue';
+      var oldValueId = (id.match(idAtEnd) ? id.substring(0, id.length - 2):id) + valuePostFixId;
       var oldValueTag = document.getElementById(oldValueId);
       if (!oldValueTag) return;
       var oldValue = oldValueTag.innerHTML;
