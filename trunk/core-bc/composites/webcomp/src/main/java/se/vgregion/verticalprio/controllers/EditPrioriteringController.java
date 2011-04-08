@@ -104,8 +104,8 @@ public class EditPrioriteringController extends ControllerBase {
 
     private boolean isUserInSektorsRaadIfNotWarnWithMessage(User user, Prioriteringsobjekt prio,
             HttpSession session) {
-    	final int MAX_NUMBER_OF_SEKTORSRAAD_ON_ONE_ROW = 5; 
-    	int sektorsraad_count = 0;
+        final int MAX_NUMBER_OF_SEKTORSRAAD_ON_ONE_ROW = 5;
+        int sektorsraad_count = 0;
 
         if (user.getSektorRaad().contains(prio.getSektorRaad())) {
             return true;
@@ -116,14 +116,13 @@ public class EditPrioriteringController extends ControllerBase {
                 message += "<br>" + "Du är idag definierad inom följande Sektorsråd:<br/>";
                 StringBuilder buf = new StringBuilder();
                 for (SektorRaad sektorsRaad : user.getSektorRaad()) {
-                    buf.append("-&nbsp;").append(sektorsRaad); 
+                    buf.append("-&nbsp;").append(sektorsRaad);
                     sektorsraad_count++;
                     if (sektorsraad_count >= MAX_NUMBER_OF_SEKTORSRAAD_ON_ONE_ROW) {
-                    	buf.append("<br/>");
-                    	sektorsraad_count=0;
-                    }
-                    else {
-                    	buf.append(", ");
+                        buf.append("<br/>");
+                        sektorsraad_count = 0;
+                    } else {
+                        buf.append(", ");
                     }
                 }
                 message += buf;
@@ -338,7 +337,7 @@ public class EditPrioriteringController extends ControllerBase {
 
     @RequestMapping(value = "prio", params = { "goBack" })
     public String prio(ModelMap model, HttpSession session) {
-        Prioriteringsobjekt prio = (Prioriteringsobjekt) session.getAttribute("prio");
+        PrioriteringsobjektForm prio = (PrioriteringsobjektForm) session.getAttribute("prio");
         model.put("prio", prio);
         return "prio-view";
     }
@@ -392,15 +391,12 @@ public class EditPrioriteringController extends ControllerBase {
         copyKodCollectionsAndMetaDates(sessionPrio, pf);
         session.setAttribute("prio", pf);
         model.addAttribute("prio", pf);
+        pf.setUnalteredVersion(sessionPrio.getUnalteredVersion());
 
         BeanMap bm = new BeanMap(pf);
 
         ChooseListForm clf = getOrCreateSessionObj(session, ChooseListForm.class.getSimpleName(),
                 ChooseListForm.class);
-        // clf.setFilterLabel("Sök kod med nyckelord");
-        // clf.setNotYetChoosenLabel("Möjliga Koder");
-        // clf.setChoosenLabel("Valda Koder");
-        // clf.setOkLabel("Välj koder");
         clf.setOkLabel("Bekräfta val");
         clf.setDisplayKey("kodPlusBeskrivning");
         clf.setIdKey("id");
@@ -439,6 +435,7 @@ public class EditPrioriteringController extends ControllerBase {
         PrioriteringsobjektForm sessionPrio = (PrioriteringsobjektForm) session.getAttribute("prio");
         copyKodCollectionsAndMetaDates(sessionPrio, pf);
         model.put("prio", pf);
+        pf.setUnalteredVersion(sessionPrio.getUnalteredVersion());
 
         if (removeCode != null && !removeCode.isEmpty()) {
             String splitting = Pattern.quote(":");
@@ -494,9 +491,10 @@ public class EditPrioriteringController extends ControllerBase {
             prio = prioRepository.find(pf.getId());
         }
 
-        Prioriteringsobjekt sessionPrio = (Prioriteringsobjekt) session.getAttribute("prio");
+        PrioriteringsobjektForm sessionPrio = (PrioriteringsobjektForm) session.getAttribute("prio");
         copyKodCollectionsAndMetaDates(sessionPrio, prio);
         session.setAttribute("prio", pf);
+        pf.setUnalteredVersion(sessionPrio.getUnalteredVersion());
 
         BeanMap prioMap = new BeanMap(prio);
         BeanMap formMap = new BeanMap(pf);
