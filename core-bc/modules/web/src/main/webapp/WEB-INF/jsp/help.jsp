@@ -23,7 +23,7 @@
           Välj vilka kolumner som skall synas med <img src="img/show_hide_columns.png" />
       </li>
       <li>
-          För att se detaljvy av ett prioriteringsobjekt markera raden och tryck på <img src="img/show_prioriteringsobjekt.png" /> denna knapp syns då det finns minst ett prioriteringsobjekt listan
+          För att se detaljvy av ett prioriteringsobjekt markera raden och tryck på <br/> <img src="img/show_prioriteringsobjekt.png" /> denna knapp syns då det finns minst ett prioriteringsobjekt listan
       </li>
       <li>
           För att förändra ett prioriteringsobjekt krävs att du är inloggad

@@ -8,14 +8,21 @@
 
   <div>
 
+
+
+
   <div class="yui3-g">
-   <div class="yui3-u-3-5">
-	<tags:code-list-view addItemLabel="Lägg till åtgärder" removeItemLabel="Ta bort valda åtgärder" label="Åtgärder" codeKey="aatgaerdskoder" prio="${prio}" />
-   </div>
-   <div class="yui3-u-2-5">
-   	<tags:label key="indikationGaf" />
-   	<tags:textarea key="indikationGaf" />
-   </div>
+    <div class="yui3-u-3-5">
+      <tags:code-list-view addItemLabel="Lägg till diagnoser" removeItemLabel="Ta bort valda diagnoser" label="Diagnoser" codeKey="diagnoser" prio="${prio}" />
+      
+    </div>
+    <div class="yui3-u-2-5">
+      <tags:label key="indikationGaf" />
+      <tags:textarea key="indikationGaf" />
+    </div>
+    <div class="yui3-u-3-5">
+	  <tags:code-list-view addItemLabel="Lägg till åtgärder" removeItemLabel="Ta bort valda åtgärder" label="Åtgärder" codeKey="aatgaerdskoder" prio="${prio}" />
+    </div>
   </div>  
 
     <hr style="clear:both"/>
@@ -26,7 +33,9 @@
         <div class="cell"><tags:label key="aatgaerdsRiskKod" /></div>
         <div class="cell"><tags:label key="patientnyttaEffektAatgaerdsKod" /></div>
         <div class="cell"><tags:label key="rangordningsKod" label="Rangordning" /></div>
-        <div class="cell"><tags:label key="rangordningEnligtFormel" /></div>
+        <div class="cell">
+          <span title="" class="kod-label"> Rangordning enligt formel </span>
+        </div>
     </div>
     
     <div style="width:100%" class="prio-form-grid">
@@ -156,14 +165,14 @@
   
   function onChange(e) {
       try{
-          onChangeImpl(e, 'ChangeFlag', 'ApprovedValue');
-          onChangeImpl(e, 'EditedFlag', 'OldValue');
+          onChangeImpl(e, 'ChangeFlag', 'ApprovedValue', 'ChangeFlag');
+          onChangeImpl(e, 'EditedFlag', 'OldValue', 'EditedFlag');
       }catch(e) {
           alert(e.message);
       }
   }
   
-  function onChangeImpl(e, flagPostFixId, valuePostFixId) {
+  function onChangeImpl(e, flagPostFixId, valuePostFixId, iconName) {
       var target = e.target;
       var id = target.get('id');
       var tagName = target.get('tagName');
@@ -187,7 +196,16 @@
             return this.replace(/^\s+|\s+$/g, ''); 
           }
       }
+
       changeFlag.style.display = ((''+value).trim() != (''+oldValue).trim()) ? 'inline' : 'none';
+      var icons = document.getElementsByName(flagPostFixId);
+      for (var i = 0; i < icons.length; i++) {
+          if (icons[i].style.display != 'none') {
+              document.getElementById(flagPostFixId).style.display = 'block';
+              return;
+          }
+      }
+      document.getElementById(flagPostFixId).style.display = 'none';
   }
   
   function onCancel(e) {

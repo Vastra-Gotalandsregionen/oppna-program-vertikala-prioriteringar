@@ -34,9 +34,11 @@
   <div class="yui3-u-1-5"></div>
   <div class="yui3-u-1-5"></div>
   <div class="yui3-u-1-5" align="right">
-    <input type="button" class="button" value="Skriv ut" onclick="window.print()">
-    <input class="button" type="submit" value="Avbryt" id="cancel" name="cancel"/>
-    <tags:editSubmit value="Spara" name="save" />
+    <span>
+      <input type="button" class="button" value="Skriv ut" onclick="window.print()">
+      <input class="button" type="submit" value="Avbryt" id="cancel" name="cancel"/>
+      <tags:editSubmit value="Spara" name="save" />
+    </span>
   </div>
 </div>
 
@@ -44,12 +46,15 @@
 <span style="color:red;"><jsp:getProperty property="message" name="messageHome"/></span>
 <jsp:setProperty property="message" name="messageHome" value=""/>
 
-<c:if test="${prio.child != null and su:isPriosDifferent(prio, prio.child)}">
-  <div>
-    <br/>
-    <img src='img/flag_white.gif' name="changed"/> = Fältvärde som skiljer sig från den godkända versionen.
+  <br/>
+  <div id="ChangeFlag" style="display: ${(prio.child != null and su:isPriosDifferent(prio, prio.child)) ? 'block' : 'none'}">
+    <img src='img/flag_white.gif'/> = Fältvärde som skiljer sig från den godkända versionen.
   </div>
-</c:if>
+
+  <div id="EditedFlag" style="display: ${(su:isPriosDifferent(prio, prio.unalteredVersion)) ? 'block' : 'none'}">
+    <img src='img/changed.png'/> = Ej sparat värde.
+  </div>
+  
 </span>
 </form:form>
 </body>
