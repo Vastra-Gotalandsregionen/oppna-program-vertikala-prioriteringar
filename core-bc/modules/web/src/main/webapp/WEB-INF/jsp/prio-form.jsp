@@ -94,9 +94,17 @@
   }
   
   function getSelectValue(id) {
+      try {
+      var i = 0;
       var select = document.getElementById(id);
+      i++;
       var index = select.selectedIndex;
+      i++;
       return select.options[index].value;
+      }catch(e) {
+          alert('getSelectValue\n' + e.message + '\n' + i);
+          throw e;
+      }
   }
   
   function getSelectDisplay(id, value) {
@@ -133,7 +141,7 @@
         + aatgaerdsRiskKodId * 0.2 
         + patientnyttaEffektAatgaerdsKodId * 0.2
         + patientnyttoEvidensKodId * 0.2;
-        result=Math.round(result * 100) / 100;
+        result = Math.round(result * 100) / 100;
         document.getElementById('rangordningEnligtFormel').innerHTML = result;
     }
     
@@ -166,8 +174,13 @@
       } else if ('TEXTAREA' == tagName) {
           value = target.get('value');
       }
-
-      changeFlag.style.display = (value.trim() != oldValue.trim()) ? 'inline' : 'none';
+      // When run i ie, the trim() method is missing. Correct this: 
+      if(typeof String.prototype.trim !== 'function') {
+          String.prototype.trim = function() {
+            return this.replace(/^\s+|\s+$/g, ''); 
+          }
+      }
+      changeFlag.style.display = ((''+value).trim() != (''+oldValue).trim()) ? 'inline' : 'none';
   }
   
   function onCancel(e) {
