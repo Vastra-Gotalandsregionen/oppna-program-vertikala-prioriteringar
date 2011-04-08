@@ -546,7 +546,7 @@ button {
 
 .prio-view textarea {
   min-height: 100px;
-  overflow: visible;
+  overflow: visible; 
 }
 
 .prio-view select, .prio-view textarea {
