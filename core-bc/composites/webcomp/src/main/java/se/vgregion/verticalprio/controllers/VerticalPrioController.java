@@ -134,6 +134,8 @@ public class VerticalPrioController extends EditPrioriteringController {
             condition.sortByTillstaandetsSvaarighetsgradKod();
         } else if ("diagnosKodTexts".equals(sortField)) {
             condition.sortByDiagnoser();
+        } else if ("sektorRaad".equals(sortField)) {
+            condition.sortBySektorsRaad();
         }
 
         result(session);

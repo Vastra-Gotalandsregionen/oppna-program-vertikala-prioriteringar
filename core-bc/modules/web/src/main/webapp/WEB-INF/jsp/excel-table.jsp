@@ -2,6 +2,11 @@
 <html>
   <head>
     <link rel="stylesheet" type="text/css" href="css/excel.css">
+    <style type="text/css">
+      img {
+        display:none;
+      }
+    </style>
   </head>
   <body>
     <%@ include file="main-table.jsp" %>
