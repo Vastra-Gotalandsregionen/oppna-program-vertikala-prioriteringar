@@ -52,14 +52,10 @@ public class PrioriteringsobjektFindCondition extends PrioriteringsobjektForm im
         NestedSektorRaad nsr = new NestedSektorRaad();
         super.setSektorRaad(nsr);
 
-        addSortBySektorRaad();
+        sortBySektorsRaad();
 
-        // The equivalent for adding sorting on diagnoses.
         NestedHashSet<DiagnosKod> diagnoser = new NestedHashSet<DiagnosKod>();
         super.setDiagnoser(diagnoser);
-
-        OrderByPath diagnosOrder = new OrderByPath("diagnoser/kod");
-        orderByPaths.add(diagnosOrder);
 
         super.setAatgaerdskoder(new NestedHashSet<AatgaerdsKod>());
         super.setAtcKoder(new NestedHashSet<AtcKod>());
@@ -74,78 +70,7 @@ public class PrioriteringsobjektFindCondition extends PrioriteringsobjektForm im
         return typeToFind;
     }
 
-    // @Transient
-    // @SuppressWarnings("serial")
-    // ManyCodesRef<RangordningsKod> rangordningsRef = new ManyCodesRef<RangordningsKod>() {
-    //
-    // @Override
-    // public Set<RangordningsKod> getCodes() {
-    // return rangordningsHolder.content();
-    // }
-    //
-    // @Override
-    // public void setCodes(Set<RangordningsKod> codes) {
-    // rangordningsHolder.setNestedContent(codes);
-    // }
-    //
-    // };
-
     private NestedTillstaandetsSvaarighetsgradKod svaarighetsgradHolder = new NestedTillstaandetsSvaarighetsgradKod();
-
-    // @Transient
-    // @SuppressWarnings("serial")
-    // final ManyCodesRef<TillstaandetsSvaarighetsgradKod> tillstaandetsSvaarighetsgradRef = new
-    // ManyCodesRef<TillstaandetsSvaarighetsgradKod>() {
-    //
-    // @Override
-    // public Set<TillstaandetsSvaarighetsgradKod> getCodes() {
-    // return svaarighetsgradHolder.content();
-    // }
-    //
-    // @Override
-    // public void setCodes(Set<TillstaandetsSvaarighetsgradKod> codes) {
-    // svaarighetsgradHolder.setNestedContent(codes);
-    // }
-    //
-    // };
-    //
-    // @Transient
-    // @SuppressWarnings("serial")
-    // private ManyCodesRef<VaardformsKod> vaardformRef = new ManyCodesRef<VaardformsKod>() {
-    //
-    // @Override
-    // public Set<VaardformsKod> getCodes() {
-    // return vaardformHolder.content();
-    // }
-    //
-    // @Override
-    // public void setCodes(Set<VaardformsKod> codes) {
-    // vaardformHolder.setNestedContent(codes);
-    // }
-    //
-    // };
-    //
-    // /**
-    // * @return the rangordningsRef
-    // */
-    // public ManyCodesRef<RangordningsKod> getRangordningsRef() {
-    // return rangordningsRef;
-    // }
-    //
-    // /**
-    // * @return the tillstaandetsSvaarighetsgradRef
-    // */
-    // public ManyCodesRef<TillstaandetsSvaarighetsgradKod> getTillstaandetsSvaarighetsgradRef() {
-    // return tillstaandetsSvaarighetsgradRef;
-    // }
-    //
-    // public void setVaardformRef(ManyCodesRef<VaardformsKod> vaardformRef) {
-    // this.vaardformRef = vaardformRef;
-    // }
-    //
-    // public ManyCodesRef<VaardformsKod> getVaardformRef() {
-    // return vaardformRef;
-    // }
 
     /**
      * @inheritDoc
@@ -161,6 +86,13 @@ public class PrioriteringsobjektFindCondition extends PrioriteringsobjektForm im
     @Override
     public void setSektorRaad(SektorRaad sektorRaad) {
         throw new UnsupportedOperationException("Dont use this setter");
+    }
+
+    public void sortBySektorsRaad() {
+        paths().clear();
+        addSortBySektorRaad();
+        OrderByPath diagnosOrder = new OrderByPath("diagnoser/kod");
+        paths().add(diagnosOrder);
     }
 
     public void sortByRangordningsKod() {
