@@ -23,7 +23,4 @@
 	  	 ${su:convert2br(prio[key])}
 	  </c:otherwise>
   </c:choose>
-  
-   
-  
 </span>
