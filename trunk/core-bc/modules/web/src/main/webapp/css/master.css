@@ -359,6 +359,14 @@ button {
 
 /* -- = Leftovers  -------------------------------------------------------*/
 
+.padding_normal {
+    padding: 10px;    
+}
+
+.padding_small {
+    padding: 7px;    
+}
+
 .aatgaerdskoderTexts, .diagnosTexts {
   min-width: 250px;
  }

@@ -39,12 +39,12 @@
   </select>
   </span>
     
-  <span class="yui3-u" style="height:100%">
+  <span class="yui3-u" style="height:100%" >
   
-    <input  class="button" type="submit" name="addAll" value="Lägg till alla &rArr;" /> <br/>
-    <input class="button" type="submit" name="add" value="Lägg till &rArr;" /> <br/>
-    <input class="button" type="submit" name="remove" value="&lArr; Ta bort" /> <br/>
-    <input class="button" type="submit" name="removeAll" value="&lArr; Ta bort alla" />
+    <div class="padding_small"><input  class="button" type="submit" name="addAll" value="Lägg till alla &rArr;" /></div>
+    <div class="padding_small"><input class="button" type="submit" name="add" value="Lägg till &rArr;" /> </div>
+    <div class="padding_small"><input class="button" type="submit" name="remove" value="&lArr; Ta bort" /> </div>
+    <div class="padding_small"><input class="button" type="submit" name="removeAll" value="&lArr; Ta bort alla" /></div>
   </span>
     
   <span class="yui3-u-1-3">
