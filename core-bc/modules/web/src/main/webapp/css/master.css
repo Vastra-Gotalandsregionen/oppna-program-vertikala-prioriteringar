@@ -257,7 +257,6 @@ button {
 	display: block;
     font-size: 14px;
     margin: 0;
-    max-width: 650px;
     min-width: 440px;
     padding: 10px;     
 }
@@ -271,7 +270,7 @@ button {
 
 .help-block h1 {
     color: #0066BB;
-    font-size: 36px;
+    font-size: 30px;
     font-weight: bold;
 }
 
@@ -445,12 +444,12 @@ button {
 }
 
 .prio-view .values {
-  background-color: #ffffff;
-  /* FLAG - sätt färg med hex kod. Använd short hand för border */
-  border-bottom-color: silver;
-  border-width: thin;
-  border-style: solid;
+  background-color: #E9E9E9;
+  border-bottom-color: #C0C0C0;
+  border-right: #C0C0C0;
   border-spacing: 1em;
+  border-style: solid;
+  border-width: thin;
   margin: auto;
   padding: 1em;
   text-align: left;
@@ -521,6 +520,15 @@ button {
 .choose-code .find-select-code .findings {
     max-height: 100%;
 }
+
+.view_details_color .white{
+    background-color: #FFFFFF;
+}	
+
+
+.view_details_color div, .view_details_color span, .view_details_color textarea{
+    background-color: #E9E9E9;
+}	
 
 .aatgaerdskoder {
   text-align: center;

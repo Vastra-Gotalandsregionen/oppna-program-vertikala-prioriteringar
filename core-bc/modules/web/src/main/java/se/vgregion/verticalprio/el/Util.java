@@ -331,4 +331,20 @@ public class Util {
         return false;
     }
 
+    /**
+     * This method changes return in a text string to <br>
+     * @param text
+     * @return
+     */
+    public static String convert2br(String text) {  
+    	if (text == null) {
+    		return "";
+    	}
+    	text = text.replaceAll("\r", "<br>");
+        return text;
+    }
 }
+
+
+
+

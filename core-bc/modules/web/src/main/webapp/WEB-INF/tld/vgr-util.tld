@@ -167,4 +167,13 @@
     <function-class>se.vgregion.verticalprio.el.Util</function-class>
     <function-signature>java.lang.Boolean isEmpty(java.lang.Object)</function-signature>
   </function>
+  
+  <function>
+    <description>Convert from return to br </description>
+    <display-name>convert2br</display-name>
+    <name>convert2br</name>
+    <function-class>se.vgregion.verticalprio.el.Util</function-class>
+    <function-signature>java.lang.String convert2br(java.lang.String)</function-signature>
+  </function>
+  
 </taglib>
