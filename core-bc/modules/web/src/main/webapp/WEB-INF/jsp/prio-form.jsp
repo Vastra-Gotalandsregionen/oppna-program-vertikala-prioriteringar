@@ -18,7 +18,7 @@
     </div>
     <div class="yui3-u-2-5">
       <tags:label key="indikationGaf" />
-      <tags:textarea key="indikationGaf" />
+      <tags:textarea cssInputBoxStyle="width:100%;" key="indikationGaf" />
     </div>
     <div class="yui3-u-3-5">
 	  <tags:code-list-view addItemLabel="Lägg till åtgärder" removeItemLabel="Ta bort valda åtgärder" label="Åtgärder" codeKey="aatgaerdskoder" prio="${prio}" />
