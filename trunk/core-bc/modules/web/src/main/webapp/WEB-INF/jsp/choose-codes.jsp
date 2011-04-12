@@ -8,7 +8,7 @@
 <%@ include file="head.jsp" %>
 <body style="height: 100%;">
 
-<span class="window prio-view">
+<span class="window prio-view view_details_color">
 
 <form:form action="choose-codes" method="post" modelAttribute="prioCondition" cssClass="choose-code">
 

@@ -8,7 +8,7 @@
 <jsp:include page="jsp/head.jsp"/>
 <body style="height: 100%;">
 
-<span class="window prio-view">
+<span class="window prio-view view_details_color">
 
 <form:form action="delete-prio" method="post" modelAttribute="prio" cssClass="values">
 <jsp:include page="jsp/prio-form.jsp" />
