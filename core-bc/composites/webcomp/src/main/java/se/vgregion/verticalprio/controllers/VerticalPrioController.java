@@ -111,7 +111,7 @@ public class VerticalPrioController extends EditPrioriteringController {
         return excelTable(response);
     }
 
-    @RequestMapping(value = "/excel-table")
+    @RequestMapping(value = "/table.xls")
     public String excelTable(HttpServletResponse response) {
         response.setContentType("application/ms-excel");
         return "excel-table";
