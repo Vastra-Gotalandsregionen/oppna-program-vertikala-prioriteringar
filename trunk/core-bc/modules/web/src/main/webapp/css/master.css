@@ -410,6 +410,7 @@ button {
 .window {
   position: relative;
   z-index: 100;
+  display: inline;
 }
 
 .popup-overlay .window {

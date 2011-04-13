@@ -9,7 +9,7 @@
 <jsp:include page="jsp/head.jsp"/>
 <body style="height: 100%;">
 
-	<span class="window prio-view view_details_color">
+	<div class="window prio-view view_details_color">
 	
 	<form:form action="prio" method="post" modelAttribute="prio" cssClass="values">
 	<jsp:include page="jsp/prio-form.jsp" />
@@ -55,7 +55,7 @@
 	    <img src='img/changed.png'/> = Ej sparat värde.
 	  </div>
 	</form:form>		 
-	</span>
+	</div>
 
 </body>
 </html>
