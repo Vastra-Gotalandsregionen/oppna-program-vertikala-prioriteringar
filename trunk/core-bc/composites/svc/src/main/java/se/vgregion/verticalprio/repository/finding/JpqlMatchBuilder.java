@@ -99,8 +99,8 @@ public class JpqlMatchBuilder {
         sb.append(result.where);
         sb.append(result.orderBy);
 
-        System.out.println(sb);
-        System.out.println(values);
+        // System.out.println(sb);
+        // System.out.println(values);
 
         return sb.toString();
     }

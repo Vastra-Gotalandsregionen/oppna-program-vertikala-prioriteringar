@@ -360,7 +360,6 @@ public class VerticalPrioController extends EditPrioriteringController {
 
             // Find out if there are selected sectors, taking regards to that there might be HaveSortOrder-objects
             // inside.
-            // clearNonSortingLogic(sektorNest);
             sektorNest.content().clear();
             if (sektorNest != null && sektorNest.content() != null) {
                 sektorNest.content().addAll(raad);

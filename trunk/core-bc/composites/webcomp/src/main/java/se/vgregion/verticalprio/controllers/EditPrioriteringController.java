@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
@@ -79,7 +81,6 @@ public class EditPrioriteringController extends ControllerBase {
             model.addAttribute("prio", null);
             session.setAttribute("prio", null);
             initView(model, session, form.getChild().getId());
-            // form.setId(form.getChild().getId());
         }
         model.addAttribute("editDir", new EditDirective(false, false));
         return "delete-prio-view";
@@ -115,8 +116,14 @@ public class EditPrioriteringController extends ControllerBase {
             if (!user.getSektorRaad().isEmpty()) {
                 message += "<br>" + "Du är idag definierad inom följande Sektorsråd:<br/>";
                 StringBuilder buf = new StringBuilder();
+                SortedSet<String> codeTexts = new TreeSet<String>();
+
                 for (SektorRaad sektorsRaad : user.getSektorRaad()) {
-                    buf.append("-&nbsp;").append(sektorsRaad);
+                    codeTexts.add(sektorsRaad.getKod());
+                }
+
+                for (String code : codeTexts) {
+                    buf.append("-&nbsp;").append(code);
                     sektorsraad_count++;
                     if (sektorsraad_count >= MAX_NUMBER_OF_SEKTORSRAAD_ON_ONE_ROW) {
                         buf.append("<br/>");
@@ -258,9 +265,6 @@ public class EditPrioriteringController extends ControllerBase {
         PrioriteringsobjektForm unalteredVersion = new PrioriteringsobjektForm();
         Util.copyValuesAndSetsFromBeanToBean(form, unalteredVersion);
         form.setUnalteredVersion(unalteredVersion);
-        System.out.println("form.getUnalteredVersion().getDiagnoser()\n "
-                + form.getUnalteredVersion().getDiagnoser());
-
         return "prio-view";
     }
 
