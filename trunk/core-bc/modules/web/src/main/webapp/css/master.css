@@ -31,22 +31,34 @@ h4 {
 }
 
 .filter-sidebar {
-	min-height: 615px;
+	min-height: 635px;
+}
+
+.filter-sidebar-content {
+	overflow: hidden;
 }
 
 .help-block {
-	height: 615px;
+	height: 635px;
 }
 
  /*--- Grid skeleton ----------------------*/
- 
- #layout {
+
+#layout {
     padding-left:250px; /* "left col" width */ 
+}
+ 
+#layout.collapsed-filter-nav {
+    padding-left:40px; /* "left col" width */ 
 }
 
 #filterNav {
     margin-left:-250px; /* "left col" width */
     width:250px;
+}
+
+.collapsed-filter-nav #filterNav {
+	margin-left: -40px;
 }
 
 #main {
@@ -56,14 +68,15 @@ h4 {
 /*--- Filter sidebar ----------------------*/
 
 .filter-sidebar {
+	background: url("../img/state_default_bg.png") repeat-x scroll 0 0 #D4D4D4;	
     border: 1px solid #cccccc;
     padding: 10px;
 }
 
-.filter-sidebar-color {
-    background: url("../img/state_default_bg.png") repeat-x scroll 0 0 #D4D4D4;
- }
- 
+.filter-sidebar-collapsed {
+	background: none;
+	border: none;
+}
 
 /*--- Main content ----------------------*/
 
@@ -95,6 +108,12 @@ h4 {
 .rPadding2em {
   padding-right: 2em; 
 }
+
+/* Clearfix style clearing */
+.clearfix:after{clear:both;content:'.';display:block;visibility:hidden;height:0}
+.clearfix{display:inline-block}
+* html .clearfix{height:1%}
+.clearfix{display:block}
 
 /* -- = Forms  -------------------------------------------------------*/
 
