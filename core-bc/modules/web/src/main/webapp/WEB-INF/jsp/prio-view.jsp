@@ -34,7 +34,7 @@
 	  <div class="yui3-u-1-5"></div>
 	  <div class="yui3-u-1-5"></div>
 	  <div class="yui3-u-1-5" align="right">
-	    <span>
+	    <span style="white-space: nowrap;">
 	      <input type="button" class="button" value="Skriv ut" onclick="window.print()">
 	      <input class="button" type="submit" value="Avbryt" id="cancel" name="cancel"/>
 	      <tags:editSubmit value="Spara" name="save" />

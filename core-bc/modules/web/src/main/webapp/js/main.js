@@ -7,8 +7,9 @@ AUI().ready(
 	function(A) {
 
 		var tableHeaderTooltips, columnTriggerTooltip;
-		var columnHideTrigger, columnShowTrigger, columnFilterNav, columnFilterNavContent;
+		var columnHideTrigger, columnShowTrigger, columnFilterNav, columnFilterNavInner, columnFilterSidebarContent;
 		var columnShowAnim, columnHideAnim;
+		var layout;
 		var logoWrap;
 	
 		setupTooltips();
@@ -50,8 +51,10 @@ AUI().ready(
 		// START - Column toggle
 		function setupColumnToggle() {
 			
+			layout = A.one('#layout');
 			columnFilterNav = A.one('#filterNav'); // detect via id
-			columnFilterNavContent = A.one('.filter-sidebar');
+			columnFilterNavInner = A.one('.filter-sidebar');
+			columnFilterSidebarContent = A.one('.filter-sidebar-content');
 			columnHideTrigger = A.one('.column-control-hide');  // detect via class
 			columnShowTrigger = A.one('.column-control-show');
 			logoWrap = A.one('.logo-wrap');
@@ -130,6 +133,9 @@ AUI().ready(
 			// Toggle triggers
 			columnShowTrigger.show();
 			columnHideTrigger.hide();
+			
+			columnFilterSidebarContent.hide();
+			layout.addClass('collapsed-filter-nav');
 		}
 		// END - Handling of column hide anim start event
 		
@@ -137,8 +143,7 @@ AUI().ready(
 		// START - Handling of column hide anim start event
 		function onColumnHideAnimStart(e) {
 			
-			// Hide content when animation starts
-			columnFilterNavContent.hide();
+			columnFilterNavInner.addClass('filter-sidebar-collapsed');
 			
 			// Hide logo
 			logoWrap.hide();
@@ -151,8 +156,7 @@ AUI().ready(
 		// START - Handling of column show anim end event
 		function onColumnShowAnimEnd(e) {
 			
-			// Show content when animation ends
-			columnFilterNavContent.show();
+			columnFilterNavInner.removeClass('filter-sidebar-collapsed');
 			
 			// Show logo
 			logoWrap.show();
@@ -169,8 +173,9 @@ AUI().ready(
 		// START - Handling of column show anim start event
 		function onColumnShowAnimStart(e) {
 			
-			// Hide content when animation starts
-			columnFilterNavContent.hide();
+			layout.removeClass('collapsed-filter-nav');
+			
+			columnFilterSidebarContent.show();
 		}
 		// END - Handling of column show anim start event
 		
