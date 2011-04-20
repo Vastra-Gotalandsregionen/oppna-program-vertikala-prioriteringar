@@ -9,27 +9,102 @@
 <%@ include file="head.jsp" %>
 <body style="height: 100%;">
 
-<span class="window prio-view choose-from-list">
+<div class="window prio-view choose-from-list">
 
 <form:form cssStyle="margin:auto" action="choose-from-list" method="post" cssClass="choose-code" modelAttribute="ChooseListForm">
 
+<div class="main-wrap">
+
   <div class="yui3-g">
   
+  <div class="yui3-u-5-12 choosepage_leftsection">
+	  <c:if test="${ChooseListForm.findingVisible}">
+	      <h3 class="choosepage-header">${ChooseListForm.filterLabel}</h3>
+	      <div>
+	      	<form:input path="filterText" id="filterText" cssClass="text-input" />
+	      	<input class="button" type="submit" name="filter" value="Filtrera"/>
+	      </div>
+	  </c:if>
+  </div>
+
+  <div class="yui3-u-1-6">
+  	&nbsp;
+  </div>
+  
+  <div class="yui3-u-5-12 choosepage_rightsection">
+  	&nbsp;
+  </div>
+  
+  </div>
+
+  <div class="yui3-g">
+  
+  <div class="yui3-u-5-12 choosepage_leftsection">
+  <div><h3>${ChooseListForm.notYetChoosenLabel}</h3> (${ChooseListForm.sizeOfAllToChoose-ChooseListForm.sizeOfChoosen} stycken)</div>
+  </div>
+
+  <div class="yui3-u-1-6">
+  	&nbsp;
+  </div>
+  
+  <div class="yui3-u-5-12 choosepage_rightsection">
+  	<h3>${ChooseListForm.choosenLabel}</h3> (${ChooseListForm.sizeOfChoosen} stycken)
+  </div>
+  
+  </div>
+
+  <div class="yui3-g">
+  
+  <div class="yui3-u-5-12 choosepage_leftsection">
+	  <div>
+		  <select name="notYetChoosenKeys" multiple="multiple">
+		    <c:forEach items="${ChooseListForm.allToChoose}" var="column">
+		      <c:if test="${not su:contains(ChooseListForm.choosen, column)}">
+		        <option value="${column[ChooseListForm.idKey]}">${column[ChooseListForm.displayKey]}</option>
+		      </c:if>
+		    </c:forEach>
+		  </select>
+	  </div>
+  </div>
+
+  <div class="yui3-u-1-6" style="height:100%">
+    <div class="padding_small"><input  class="button" type="submit" name="addAll" value="Lägg till alla &rArr;" /></div>
+    <div class="padding_small"><input class="button" type="submit" name="add" value="Lägg till &rArr;" /> </div>
+    <div class="padding_small"><input class="button" type="submit" name="remove" value="&lArr; Ta bort" /> </div>
+    <div class="padding_small"><input class="button" type="submit" name="removeAll" value="&lArr; Ta bort alla" /></div>	
+  </div>
+  
+  <div class="yui3-u-5-12 choosepage_rightsection">
+  	<div>
+  	    <select name="choosenKeys" multiple="multiple">
+      	<c:forEach items="${ChooseListForm.choosen}" var="column">
+        	<option value="${column[ChooseListForm.idKey]}">${column[ChooseListForm.displayKey]}</option>
+      	</c:forEach>
+    	</select>  	
+  	</div>
+	<div class="choose-right-btn-toolbar">
+		<input class="button" type="submit" name="cancel" value="Avbryt" />
+	    <input class="button" type="submit" name="ok" value="${ChooseListForm.okLabel}" />
+	</div>
+  	<tags:message-out/>
+  </div>
+  
+  <%-- HAGY
   <c:if test="${ChooseListForm.findingVisible}">
-    <span class="yui3-u-1-3">
+    <div class="yui3-u-1-3">
       <h3>${ChooseListForm.filterLabel}</h3>
       <form:input path="filterText" id="filterText" />
       <input class="button" type="submit" name="filter" value="Filtrera"/>
-    </span>
-    <span class="yui3-u-1-3"></span>
-    <span class="yui3-u-1-3"></span>
+    </div>
+    <div class="yui3-u-1-3"></div>
+    <div class="yui3-u-1-3"></div>
   </c:if>
   
-  <span class="yui3-u-1-3"><h3>${ChooseListForm.notYetChoosenLabel}</h3> (${ChooseListForm.sizeOfAllToChoose-ChooseListForm.sizeOfChoosen} stycken)</span>
-  <span class="yui3-u-1-3"></span>
-  <span class="yui3-u-1-3"><h3>${ChooseListForm.choosenLabel}</h3> (${ChooseListForm.sizeOfChoosen} stycken)</span>
+  <div class="yui3-u-1-3"><h3>${ChooseListForm.notYetChoosenLabel}</h3> (${ChooseListForm.sizeOfAllToChoose-ChooseListForm.sizeOfChoosen} stycken)</div>
+  <div class="yui3-u-1-3"></div>
+  <div class="yui3-u-1-3"><h3>${ChooseListForm.choosenLabel}</h3> (${ChooseListForm.sizeOfChoosen} stycken)</div>
     
-  <span class="yui3-u-1-3">
+  <div class="yui3-u-1-3">
   <select name="notYetChoosenKeys" multiple="multiple">
     <c:forEach items="${ChooseListForm.allToChoose}" var="column">
       <c:if test="${not su:contains(ChooseListForm.choosen, column)}">
@@ -37,38 +112,40 @@
       </c:if>
     </c:forEach>
   </select>
-  </span>
+  </div>
     
-  <span class="yui3-u" style="height:100%" >
+  <div class="yui3-u" style="height:100%" >
   
     <div class="padding_small"><input  class="button" type="submit" name="addAll" value="Lägg till alla &rArr;" /></div>
     <div class="padding_small"><input class="button" type="submit" name="add" value="Lägg till &rArr;" /> </div>
     <div class="padding_small"><input class="button" type="submit" name="remove" value="&lArr; Ta bort" /> </div>
     <div class="padding_small"><input class="button" type="submit" name="removeAll" value="&lArr; Ta bort alla" /></div>
-  </span>
+  </div>
     
-  <span class="yui3-u-1-3">
+  <div class="yui3-u-1-3">
     <select name="choosenKeys" multiple="multiple">
       <c:forEach items="${ChooseListForm.choosen}" var="column">
         <option value="${column[ChooseListForm.idKey]}">${column[ChooseListForm.displayKey]}</option>
       </c:forEach>
     </select>
-  </span>
+  </div>
   
-  <span class="yui3-u-1-3"></span>
-  <span class="yui3-u-1-3"></span>
-  <span class="yui3-u-1-3">
+  <div class="yui3-u-1-3"></div>
+  <div class="yui3-u-1-3"></div>
+  <div class="yui3-u-1-3">
     <input class="button" type="submit" name="cancel" value="Avbryt" />
     <input class="button" type="submit" name="ok" value="${ChooseListForm.okLabel}" />
-  </span>
+  </div>
   
   </div>
 
 <tags:message-out/>
+HAGY --%>
+</div>
 
 </form:form>
 
-</span>
+</div>
 
 
 </body>
