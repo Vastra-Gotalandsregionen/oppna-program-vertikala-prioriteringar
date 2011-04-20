@@ -376,7 +376,13 @@ button {
 
 .main-wrap {
 	background: #e9e9e9;
+    border-bottom: thin solid #C0C0C0;
+    border-right: thin solid #C0C0C0;
+    border-spacing: 1em;
+    border-style: solid;
+    border-width: thin;
     margin: 0 auto;
+    margin-top: 20px;
     padding: 15px 15px;
     width: 1200px;
 }
