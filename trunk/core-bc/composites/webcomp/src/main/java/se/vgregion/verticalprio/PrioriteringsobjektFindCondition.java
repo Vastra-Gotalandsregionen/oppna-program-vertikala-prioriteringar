@@ -111,8 +111,8 @@ public class PrioriteringsobjektFindCondition extends PrioriteringsobjektForm im
 
     public void sortByDiagnoser() {
         paths().clear();
-        addSortBySektorRaad();
         paths().add(new OrderByPath("diagnoser/kod"));
+        addSortBySektorRaad();
     }
 
     private void addSortBySektorRaad() {
