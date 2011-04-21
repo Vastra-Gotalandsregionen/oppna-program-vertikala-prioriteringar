@@ -108,14 +108,13 @@ public class VerticalPrioController extends EditPrioriteringController {
 
     @RequestMapping(value = "/main", params = { "excel" })
     public String excelTableInMainWindow(HttpServletResponse response) {
-    	
         return excelTable(response);
     }
 
-    @RequestMapping(value = "/table.xls")
+    @RequestMapping(value = "/table.csv")
     public String excelTable(HttpServletResponse response) {
-        response.setContentType("application/ms-excel");
-        return "excel-table";
+        response.setContentType("text/csv");
+        return "excel-table.csv";
     }
 
     @RequestMapping(value = "/main", params = { "sortField" })
