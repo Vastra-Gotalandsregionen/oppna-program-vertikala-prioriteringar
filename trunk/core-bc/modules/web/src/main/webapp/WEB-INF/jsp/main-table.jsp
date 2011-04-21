@@ -13,25 +13,13 @@
           <c:if test="${column.visible and (not column.demandsEditRights or user != null and user.editor)}">
             <th class="${column.name}">
               <span title="${column.description}">${su:toUpperCase(column.label)}</span>
-              <c:if test="${column.sortable}">
-                <div style="height: 100%">
-                <c:choose>
-                  <c:when test="${column.sorting}">
-                    <img src="img/arrow-down-active.png"/>
-                  </c:when>
-                  <c:otherwise>
-                    <a title="Sortera" href="main?sortField=${column.name}" style="text-decoration: none;"><img src="img/arrow-down.png"/></a>
-                  </c:otherwise>
-                </c:choose>
-                </div>
-              </c:if>
             </th>
           </c:if>
         </c:forEach>
         </tr>
         
         <tr class="conditionRow">
-          <td colspan="2">Filter:</td>
+          <td colspan="2">&nbsp;</td>
           <c:forEach items="${form.columns}" var="column" varStatus="vs">
             <c:if test="${column.visible and vs.index > 0}">
               <td style="center">
@@ -39,14 +27,13 @@
                   <a href='start-choosing-codes?fieldName=${column.name}'>
                   <c:choose>
                     <c:when test="${not su:isEmpty(prioCondition[column.name])}">
-                      <img src='img/tratt_selected.png' width="15px" height="13px"/>
+                      <img src='img/tratt_selected.png' width="15px" height="13px" title="Filtrering är gjord på denna kolumn"/>
                     </c:when>
                     <c:otherwise>
-                      <img src='img/tratt_unselected.png'/>
+                      <img src='img/tratt_unselected.png' title="Filtrera"/>
                     </c:otherwise>
                   </c:choose>
-                  </a>
-                  
+                  </a>                  
                 </c:if>
                 
                 <c:if test="${column.filterAble and not su:isEmpty(prioCondition[column.name])}">
@@ -54,6 +41,19 @@
                     <img src='img/x.png'/>
                   </a>
                 </c:if>
+
+              	<c:if test="${column.sortable}">
+                	<span style="height:100%; float:right;">
+                		<c:choose>
+                  			<c:when test="${column.sorting}">
+                    			<img src="img/arrow-down-active.png" title="Sortering är gjord med denna kolumn"/>
+                  		</c:when>
+                  		<c:otherwise>
+                    		<a title="Sortera" href="main?sortField=${column.name}" style="text-decoration: none;"><img src="img/arrow-down.png"/></a>
+                  		</c:otherwise>
+                		</c:choose>
+                	</span>
+              </c:if>                
               </td>
             </c:if>
           </c:forEach>
