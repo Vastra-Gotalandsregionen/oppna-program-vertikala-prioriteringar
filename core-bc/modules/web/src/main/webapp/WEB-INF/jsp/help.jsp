@@ -17,6 +17,7 @@
             <li class="no-list-style"><img src="img/arrow_left.png" /> Dölj sektorsråd</li>
             <li class="no-list-style"><img src="img/arrow_right.png" /> Visa sektorsråd</li>
             <li class="no-list-style"><img src="img/arrow-down.png" /> Sortera kolumn</li>
+            <li class="no-list-style"><img src="img/information.png" /> Visa information</li>
           </ol>
       </li>
       <li>
