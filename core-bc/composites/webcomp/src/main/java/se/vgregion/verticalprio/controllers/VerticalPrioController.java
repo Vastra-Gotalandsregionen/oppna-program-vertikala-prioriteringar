@@ -108,6 +108,7 @@ public class VerticalPrioController extends EditPrioriteringController {
 
     @RequestMapping(value = "/main", params = { "excel" })
     public String excelTableInMainWindow(HttpServletResponse response) {
+    	
         return excelTable(response);
     }
 
@@ -123,8 +124,6 @@ public class VerticalPrioController extends EditPrioriteringController {
         MainForm form = getMainForm(session);
         PrioriteringsobjektFindCondition condition = getOrCreateSessionObj(session, "prioCondition",
                 PrioriteringsobjektFindCondition.class);
-
-        // condition.clearSorting();
 
         markColumnAsSorting(sortField, form);
 
@@ -186,8 +185,10 @@ public class VerticalPrioController extends EditPrioriteringController {
         session.setAttribute("selectedColumns", target);
         clf.setTarget(target);
 
+        User user = (User) session.getAttribute("user");
+        
         for (Column column : form.getColumns()) {
-            if (column.isHideAble()) {
+            if (column.isHideAble() && (!column.isDemandsEditRights() || user != null && user.isEditor())) {
                 allColumns.add(column);
                 if (column.isVisible()) {
                     selected.add(column);
