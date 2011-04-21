@@ -424,6 +424,14 @@ input.text-input {
 
 /* -- = Leftovers  -------------------------------------------------------*/
 
+.aatgaerdskoderTexts, .diagnosTexts {
+  min-width: 250px;
+ }
+ 
+.godkaend {
+  min-width: 66px;
+ }
+ 
 .padding_normal {
     padding: 10px;    
 }
@@ -432,10 +440,6 @@ input.text-input {
     padding: 7px;    
 }
 
-.aatgaerdskoderTexts, .diagnosTexts {
-  min-width: 250px;
- }
- 
 .main {
   width: 100%;
 }
