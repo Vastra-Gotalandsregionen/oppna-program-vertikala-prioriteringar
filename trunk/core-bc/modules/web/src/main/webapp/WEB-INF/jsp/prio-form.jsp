@@ -34,7 +34,14 @@
         <div class="cell"><tags:label key="patientnyttaEffektAatgaerdsKod" /></div>
         <div class="cell"><tags:label key="rangordningsKod" label="Rangordning" /></div>
         <div class="cell">
-          <span title="" class="kod-label"> Rangordning enligt formel </span>
+          <c:choose>
+            <c:when test="${user != null and user.editor}">
+              <span title="" class="kod-label"> Rangordning enligt formel </span>
+            </c:when>
+            <c:otherwise>
+              &nbsp;
+            </c:otherwise>
+          </c:choose>
         </div>
     </div>
     
@@ -43,7 +50,14 @@
         <div class="cell"><tags:kod key="aatgaerdsRiskKod" /></div>
         <div class="cell"><tags:kod key="patientnyttaEffektAatgaerdsKod" /></div>
         <div class="cell"><tags:kod key="rangordningsKod" /></div>
-        <div class="cell last" id="rangordningEnligtFormel">${util:toCellText(prio.rangordningEnligtFormel)}</div>
+        <c:choose>
+          <c:when test="${user != null and user.editor}">
+            <div class="cell last" id="rangordningEnligtFormel">${util:toCellText(prio.rangordningEnligtFormel)}</div>
+          </c:when>
+          <c:otherwise>
+            <div class="cell last" id="noRangordningEnligtFormel">&nbsp;</div>
+          </c:otherwise>
+        </c:choose>
     </div>
     <br/><br/>
     
