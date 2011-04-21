@@ -617,6 +617,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
         result.add(column);
         column.setId(i);
         column.setHideAble(true);
+        column.setDemandsEditRights(true);
 
         columns = result;
 

@@ -17,7 +17,7 @@
     </c:if>
   </td>
   <c:forEach items="${form.columns}" var="column">
-    <c:if test="${column.visible}">
+    <c:if test="${column.visible and (not column.demandsEditRights or user != null and user.editor)}">
       <td class="${column.name}">
         <c:choose>
           <c:when test="${row.child == null}">

@@ -10,7 +10,7 @@
         <tr>
         <th>#</th>
         <c:forEach items="${form.columns}" var="column">
-          <c:if test="${column.visible}">
+          <c:if test="${column.visible and (not column.demandsEditRights or user != null and user.editor)}">
             <th class="${column.name}">
               <span title="${column.description}">${su:toUpperCase(column.label)}</span>
               <c:if test="${column.sortable}">

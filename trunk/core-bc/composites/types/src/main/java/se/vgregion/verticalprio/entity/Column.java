@@ -37,6 +37,8 @@ public class Column implements Serializable, Comparable<Column> {
     private boolean filterAble = false;
 
     private boolean possibleInOverview = true;
+    
+    private boolean demandsEditRights = false;
 
     public Column() {
         // TODO Auto-generated constructor stub
@@ -191,5 +193,13 @@ public class Column implements Serializable, Comparable<Column> {
     public boolean isPossibleInOverview() {
         return possibleInOverview;
     }
+
+	public void setDemandsEditRights(boolean demandsEditRights) {
+		this.demandsEditRights = demandsEditRights;
+	}
+
+	public boolean isDemandsEditRights() {
+		return demandsEditRights;
+	}
 
 }
