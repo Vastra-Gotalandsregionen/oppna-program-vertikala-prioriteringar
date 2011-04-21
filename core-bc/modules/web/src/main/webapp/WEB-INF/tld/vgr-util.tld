@@ -176,4 +176,12 @@
     <function-signature>java.lang.String convert2br(java.lang.String)</function-signature>
   </function>
   
+  <function>
+    <description>Exports to csv format</description>
+    <display-name>toCsvTable</display-name>
+    <name>toCsvTable</name>
+    <function-class>se.vgregion.verticalprio.el.Util</function-class>
+    <function-signature>java.lang.String toCsvTable(java.util.List, java.util.List, se.vgregion.verticalprio.entity.User)</function-signature>
+  </function>
+  
 </taglib>

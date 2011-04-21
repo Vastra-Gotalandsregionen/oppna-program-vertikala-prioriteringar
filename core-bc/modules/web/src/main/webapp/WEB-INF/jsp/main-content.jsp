@@ -26,7 +26,7 @@
             		<tags:editSubmit name="approve-prio" value="Godkänn" cssClass="button"/>
        			</c:if>
           		<input name="init-conf-columns" class="conf-columns button" type="submit" value="Dölj/Visa kolumner" />
-                <input type="submit" name="excel" class="excel button" onclick="window.open('table.xls', '_blank'); return false;" value="Excel"/> 
+                <input type="submit" name="excel" class="excel button" onclick="window.open('table.csv', '_blank'); return false;" value="Excel"/> 
       		</div>
 		</c:if>
     

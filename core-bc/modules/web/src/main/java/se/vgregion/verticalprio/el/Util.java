@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.apache.commons.beanutils.BeanMap;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import se.vgregion.verticalprio.controllers.EditDirective;
 import se.vgregion.verticalprio.entity.AbstractHirarkiskKod;
 import se.vgregion.verticalprio.entity.AbstractKod;
+import se.vgregion.verticalprio.entity.Column;
 import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
 import se.vgregion.verticalprio.entity.SektorRaad;
 import se.vgregion.verticalprio.entity.User;
@@ -194,13 +196,14 @@ public class Util {
         return s.toUpperCase();
     }
 
+    
     /**
-     * Should be used to format values printed in the result table.
+     * Should be used to format values printed.
      * 
      * @return
      */
-    public static String toCellText(Object o) {
-        if (o == null) {
+    private static String toCellText(Object o, String startListItem, String endListItem) {
+    	if (o == null) {
             return "";
         }
         if (o instanceof Date) {
@@ -219,9 +222,9 @@ public class Util {
             StringBuilder sb = new StringBuilder();
             Collection c = (Collection) o;
             for (Object item : c) {
-                sb.append("<div>");
+                sb.append(startListItem);
                 sb.append(toCellText(item));
-                sb.append("</div>");
+                sb.append(endListItem);
             }
             return sb.toString();
         } else if (o instanceof AbstractKod) {
@@ -230,7 +233,41 @@ public class Util {
         } else {
             return o.toString();
         }
-
+    }
+    
+    
+    /**
+     * Should be used to format values printed in the result table.
+     * 
+     * @return
+     */
+    public static String toCellText(Object o) {
+        return toCellText(o, "<div>", "</div>");
+    }
+    
+    public static String toCsvTable(List<Column> columns, List<Prioriteringsobjekt> prios, User user) {
+    	StringBuilder sb = new StringBuilder();
+    	for (Column column: columns) {
+			if (column.isVisible() && (!column.isDemandsEditRights() || user != null && user.isEditor())) {
+				sb.append(column.getLabel());
+				sb.append(";");
+			}
+		}
+    	sb.append("\n");
+    	
+    	for (Prioriteringsobjekt prio: prios) {
+    		BeanMap bm = new BeanMap(prio);
+    		for (Column column: columns) {
+    			if (column.isVisible() && (!column.isDemandsEditRights() || user != null && user.isEditor())) {
+    				String value = toCellText(bm.get(column.getName()), " ", " ");
+    				value = value.replace(Pattern.quote("\n"), " ");
+    				sb.append(value);
+    				sb.append(";");
+    			}
+    		}
+    		sb.append("\n");
+    	}
+    	return sb.toString();
     }
 
     private static String toString(SektorRaad sr) {

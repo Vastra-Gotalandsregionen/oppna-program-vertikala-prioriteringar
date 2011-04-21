@@ -7,10 +7,6 @@
 <%@ taglib uri="/WEB-INF/tld/vgr-util.tld" prefix="util"%>
 
   <div>
-
-
-
-
   <div class="yui3-g">
     <div class="yui3-u-3-5">
       <tags:code-list-view addItemLabel="Lägg till diagnoser" removeItemLabel="Ta bort valda diagnoser" label="Diagnoser" codeKey="diagnoser" prio="${prio}" />
