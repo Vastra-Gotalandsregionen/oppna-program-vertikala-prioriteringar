@@ -6,49 +6,13 @@ AUI().ready(
 	'aui-tooltip',
 	function(A) {
 
-		var tableHeaderTooltips, columnTriggerTooltip;
+		var columnTriggerTooltip;
 		var columnHideTrigger, columnShowTrigger, columnFilterNav, columnFilterNavInner, columnFilterSidebarContent;
 		var columnShowAnim, columnHideAnim;
 		var layout;
 		var logoWrap;
-	
-		setupTooltips();
+
 		setupColumnToggle();
-		
-		// START - handling of tool tips
-		function setupTooltips() {
-			
-			//var colHeadingSpans = A.all('.main-content table th span');
-			var colHeadingSpans = A.all('.main-content table td span');
-			
-			colHeadingSpans.each(function() {
-				// variable this stands for the active node in the loop
-				
-				var currentTitle = this.get('title');
-				
-				if(currentTitle != '') {
-					// java script is enabled we convert all \n to <br/> in tool-tips for line break
-					var newTitle = currentTitle.replace(/\n/g, '<br />');
-					currentTitle = newTitle;
-					
-					this.addClass('tooltip');
-					this.set('title', currentTitle);
-				}
-				
-				// Set new title attribute
-				this.set('title', currentTitle);
-			});
-			
-			tableHeaderTooltips = new A.Tooltip({
-				//trigger: '.main-content table th span.tooltip',
-				trigger: '.main-content table td span.tooltip',
-				align: { points: [ 'tc', 'bc' ] },
-				width: '300px',
-				title: true
-			}).render();
-			
-		}
-		// END - handling of tool tips
 		
 		// START - Column toggle
 		function setupColumnToggle() {
