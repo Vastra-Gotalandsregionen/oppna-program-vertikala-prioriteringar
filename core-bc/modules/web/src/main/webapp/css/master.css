@@ -430,6 +430,7 @@ input.text-input {
  
 .godkaend {
   min-width: 66px;
+  white-space: nowrap;
  }
  
 .padding_normal {
