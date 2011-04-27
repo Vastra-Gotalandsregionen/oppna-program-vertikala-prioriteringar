@@ -43,7 +43,12 @@
                     <img src='img/x.png'/>
                   </a>
                 </c:if>
-              	<tags:table-sort-cell column="${column}"/>              
+              	<tags:table-sort-cell column="${column}"/>
+                <c:if test="${not empty column.description}">
+                  <span title="${column.description}">
+                    <img src='img/information.png'/>
+                  </span>
+                </c:if>
               </td>
             </c:if>
           </c:forEach>
