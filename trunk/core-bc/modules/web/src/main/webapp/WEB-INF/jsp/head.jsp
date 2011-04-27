@@ -9,8 +9,7 @@
 
 <script src="js/alloy-ui/aui/aui.js" type="text/javascript"></script>
 <script src="js/main.js" type="text/javascript"></script>
-
-
+<script src="js/tooltip.js" type="text/javascript"></script>
 
 <style type="text/css">
 </style>

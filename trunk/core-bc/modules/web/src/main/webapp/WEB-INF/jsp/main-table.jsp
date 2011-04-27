@@ -12,7 +12,7 @@
         <c:forEach items="${form.columns}" var="column">
           <c:if test="${column.visible and (not column.demandsEditRights or user != null and user.editor)}">
             <th class="${column.name}">
-              <span title="${column.description}">${su:toUpperCase(column.label)}</span>
+              <span>${su:toUpperCase(column.label)}</span>
             </th>
           </c:if>
         </c:forEach>
@@ -24,7 +24,7 @@
           </td>
           <c:forEach items="${form.columns}" var="column" varStatus="vs">
             <c:if test="${column.visible and vs.index > 0}">
-              <td style="center">
+              <td style="center" class="enhancedToolTip">
                 <c:if test="${column.filterAble}">
                   <a href='start-choosing-codes?fieldName=${column.name}'>
                   <c:choose>
