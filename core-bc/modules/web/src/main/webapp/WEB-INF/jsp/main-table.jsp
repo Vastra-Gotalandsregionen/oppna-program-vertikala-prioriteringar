@@ -19,7 +19,9 @@
         </tr>
         
         <tr class="conditionRow">
-          <td colspan="2">&nbsp;</td>
+          <td colspan="2">&nbsp;
+            <tags:table-sort-cell column="${form.columns[0]}"/>
+          </td>
           <c:forEach items="${form.columns}" var="column" varStatus="vs">
             <c:if test="${column.visible and vs.index > 0}">
               <td style="center">
@@ -41,19 +43,7 @@
                     <img src='img/x.png'/>
                   </a>
                 </c:if>
-
-              	<c:if test="${column.sortable}">
-                	<span style="height:100%; float:right;">
-                		<c:choose>
-                  			<c:when test="${column.sorting}">
-                    			<img src="img/arrow-down-active.png" title="Sortering är gjord med denna kolumn"/>
-                  		</c:when>
-                  		<c:otherwise>
-                    		<a title="Sortera" href="main?sortField=${column.name}" style="text-decoration: none;"><img src="img/arrow-down.png"/></a>
-                  		</c:otherwise>
-                		</c:choose>
-                	</span>
-              </c:if>                
+              	<tags:table-sort-cell column="${column}"/>              
               </td>
             </c:if>
           </c:forEach>
