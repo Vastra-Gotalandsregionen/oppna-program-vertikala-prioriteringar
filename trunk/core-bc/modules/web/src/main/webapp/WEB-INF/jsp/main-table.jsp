@@ -24,7 +24,12 @@
           </td>
           <c:forEach items="${form.columns}" var="column" varStatus="vs">
             <c:if test="${column.visible and vs.index > 0}">
-              <td style="center" class="enhancedToolTip">
+              <td style="center" class="enhancedToolTip yui3-g">
+                <c:if test="${not empty column.description}">
+                  <span title="${column.description}">
+                    <img src='img/information.png'/>
+                  </span>
+                </c:if>
                 <c:if test="${column.filterAble}">
                   <a href='start-choosing-codes?fieldName=${column.name}'>
                   <c:choose>
@@ -44,11 +49,6 @@
                   </a>
                 </c:if>
               	<tags:table-sort-cell column="${column}"/>
-                <c:if test="${not empty column.description}">
-                  <span title="${column.description}">
-                    <img src='img/information.png'/>
-                  </span>
-                </c:if>
               </td>
             </c:if>
           </c:forEach>

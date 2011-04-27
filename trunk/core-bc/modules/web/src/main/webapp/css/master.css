@@ -614,14 +614,6 @@ input.text-input {
   white-space: nowrap;
 }
 
-/* FLAG - tillämpas denna regel egentligen någonstans? Annars ta bort. */
-.main-body .sectorsAndButtons td.tillstaandetsSvaarighetsgradKod, 
-.main-body .sectorsAndButtons td.rangordningsKod, 
-.main-body .sectorsAndButtons td.vaentetidBesookVeckor,
-.main-body .sectorsAndButtons td.vaentetidBehandlingVeckor {
-  text-align: center;
-}
-
 .choose-from-list select {
     height: 30em;
     width: 100%;

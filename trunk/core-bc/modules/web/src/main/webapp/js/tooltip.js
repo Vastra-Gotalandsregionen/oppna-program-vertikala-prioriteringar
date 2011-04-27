@@ -8,7 +8,6 @@ AUI().ready(
 		var tableHeaderTooltips;
 
 		setupTooltips();
-		setupColumnToggle();
 		
 		// START - handling of tool tips
 		function setupTooltips() {

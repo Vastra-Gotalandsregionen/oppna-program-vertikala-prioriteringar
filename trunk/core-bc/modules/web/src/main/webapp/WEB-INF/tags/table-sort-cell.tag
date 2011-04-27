@@ -5,7 +5,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 <c:if test="${column.sortable}">
-	<span style="height: 100%; float: right;"> 
+	<span> 
 		<c:choose>
 			<c:when test="${column.sorting}">
 				<img src="img/arrow-down-active.png"
