@@ -19,7 +19,7 @@
         </tr>
         
         <tr class="conditionRow">
-          <td colspan="2">&nbsp;
+          <td colspan="2" class="first">
             <tags:table-sort-cell column="${form.columns[0]}"/>
           </td>
           <c:forEach items="${form.columns}" var="column" varStatus="vs">

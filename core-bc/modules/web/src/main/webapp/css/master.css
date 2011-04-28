@@ -256,6 +256,10 @@ button {
   vertical-align: middle;
 }
 
+.main-content .conditionRow .first {
+  text-align: right;
+}
+
 
 
 .main-content table .diagnosTexts {
