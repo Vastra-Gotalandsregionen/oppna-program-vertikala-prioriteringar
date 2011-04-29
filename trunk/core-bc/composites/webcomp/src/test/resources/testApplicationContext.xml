@@ -63,4 +63,6 @@
   
   <bean name="testChooseCodesController" class="se.vgregion.verticalprio.controllers.ChooseCodesController"/>
   
+  <bean name="testControllerBase" class="se.vgregion.verticalprio.controllers.ControllerBase"/>
+  
 </beans>
