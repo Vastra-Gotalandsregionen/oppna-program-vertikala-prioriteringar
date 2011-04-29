@@ -32,8 +32,7 @@
 	    </c:choose>
 	  </div>
 	  <div class="yui3-u-1-5"></div>
-	  <div class="yui3-u-1-5"></div>
-	  <div class="yui3-u-1-5" align="right">
+	  <div class="yui3-u-2-5" align="right">
 	    <span style="white-space: nowrap;">
 	      <input type="button" class="button" value="Skriv ut" onclick="window.print()">
 	      <input class="button" type="submit" value="Avbryt" id="cancel" name="cancel"/>
