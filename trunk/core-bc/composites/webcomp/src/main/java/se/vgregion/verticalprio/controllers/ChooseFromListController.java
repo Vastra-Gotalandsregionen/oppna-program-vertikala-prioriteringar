@@ -222,11 +222,14 @@ public class ChooseFromListController extends ControllerBase {
 		}
 
 		public List getAllToChoose() {
+			if (!allToChoose.isEmpty() && !choosen.isEmpty()) {
+				allToChoose.removeAll(getChoosen());
+			}
 			return allToChoose;
 		}
 
 		public int getSizeOfAllToChoose() {
-			return allToChoose.size();
+			return getAllToChoose().size();
 		}
 
 		public void setAllToChoose(List allToChoose) {
@@ -329,12 +332,12 @@ public class ChooseFromListController extends ControllerBase {
 		}
 
 		public void setFilterLabelToolTip(String filterLabelToolTip) {
-	        this.filterLabelToolTip = filterLabelToolTip;
-        }
+			this.filterLabelToolTip = filterLabelToolTip;
+		}
 
 		public String getFilterLabelToolTip() {
-	        return filterLabelToolTip;
-        }
+			return filterLabelToolTip;
+		}
 	}
 
 }
