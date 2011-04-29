@@ -17,14 +17,31 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import se.vgregion.verticalprio.controllers.ChooseFromListController.ChooseListForm;
+
 /**
- * @author Claes Lundahl, vgrid=clalu4
+ * Controls a dialog where the user might select from a number of items, search them by text search, and commit the
+ * changes.
  * 
+ * To use this dialog: Place a {@link ChooseListForm} in the session. Look for information in javadoc of that class
+ * to know what information to provide.
+ * 
+ * @author Claes Lundahl, vgrid=clalu4
  */
 @Controller
 @SuppressWarnings(value = { "rawtypes", "unchecked" })
 public class ChooseFromListController extends ControllerBase {
 
+	/**
+	 * When hitting the ok button on the dialog, the values are copied to the target collection and the page is
+	 * redirected.
+	 * 
+	 * @param response
+	 * @param session
+	 * @param model
+	 * @return
+	 * @throws IOException
+	 */
 	@RequestMapping(value = "/choose-from-list", params = { "ok" })
 	public String ok(HttpServletResponse response, HttpSession session, ModelMap model) throws IOException {
 		final ChooseListForm form = getChooseListForm(model, session);
@@ -40,6 +57,16 @@ public class ChooseFromListController extends ControllerBase {
 		return null;
 	}
 
+	/**
+	 * Do as little as possible. Redirect to the cancel url provided by the {@link ChooseListForm} object in the
+	 * session.
+	 * 
+	 * @param response
+	 * @param session
+	 * @param model
+	 * @return
+	 * @throws IOException
+	 */
 	@RequestMapping(value = "/choose-from-list", params = { "cancel" })
 	public String cancel(HttpServletResponse response, HttpSession session, ModelMap model) throws IOException {
 		final ChooseListForm form = getChooseListForm(model, session);
@@ -47,12 +74,31 @@ public class ChooseFromListController extends ControllerBase {
 		return null;
 	}
 
+	/**
+	 * When the user types in a filter text and hits the button, this method runs. Filter just passes on the call
+	 * to the 'main' method.
+	 * 
+	 * @param session
+	 * @param notYetChoosenKeys
+	 * @param filterText
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping(value = "/choose-from-list", params = { "filter" })
 	public String filter(HttpSession session, @RequestParam(required = false) List<String> notYetChoosenKeys,
 	        @RequestParam(required = false) String filterText, ModelMap model) {
 		return main(session, filterText, null, null, model);
 	}
 
+	/**
+	 * Adds items from the unselected part of the dialog to the selected.
+	 * 
+	 * @param session
+	 * @param notYetChoosenKeys
+	 * @param model
+	 * @param filterText
+	 * @return
+	 */
 	@RequestMapping(value = "/choose-from-list", params = { "add" })
 	public String add(HttpSession session, @RequestParam(required = false) List<String> notYetChoosenKeys,
 	        ModelMap model, @RequestParam(required = false) String filterText) {
@@ -70,6 +116,15 @@ public class ChooseFromListController extends ControllerBase {
 		return main(session, filterText, null, null, model);
 	}
 
+	/**
+	 * When the user selects to add evertything this method is run. It does just that then. Adds everything to the
+	 * chosen collection.
+	 * 
+	 * @param session
+	 * @param model
+	 * @param filterText
+	 * @return
+	 */
 	@RequestMapping(value = "/choose-from-list", params = { "addAll" })
 	public String addAll(HttpSession session, ModelMap model, @RequestParam(required = false) String filterText) {
 		final ChooseListForm form = getChooseListForm(model, session);
@@ -101,7 +156,6 @@ public class ChooseFromListController extends ControllerBase {
 	public String removeAll(HttpSession session, ModelMap model, @RequestParam(required = false) String filterText) {
 		final ChooseListForm form = getChooseListForm(model, session);
 		form.getChoosen().clear();
-		// form.setAllToChoose(sort(form.getAllToChoose(), form.getDisplayKey()));
 		return main(session, filterText, null, null, model);
 	}
 

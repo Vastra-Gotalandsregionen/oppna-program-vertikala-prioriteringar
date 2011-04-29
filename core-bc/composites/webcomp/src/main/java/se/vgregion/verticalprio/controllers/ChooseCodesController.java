@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import se.vgregion.verticalprio.PrioriteringsobjektFindCondition;
 import se.vgregion.verticalprio.controllers.ChooseFromListController.ChooseListForm;
+import se.vgregion.verticalprio.entity.AbstractKod;
 import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
 import se.vgregion.verticalprio.repository.finding.HaveNestedEntities;
 
@@ -32,8 +33,10 @@ public class ChooseCodesController extends ControllerBase {
 	Map<String, ChooseListFormWithDomainProperty> formPrototypes = new HashMap<String, ChooseListFormWithDomainProperty>();
 
 	/**
-     * 
-     */
+	 * Constructor for the class. Initialize the formPrototypes member with objects. These objects,
+	 * {@link ChooseListFormWithDomainProperty}, are later used to provide text to the gui and to point to the
+	 * collections that should receive the result of the dialog.
+	 */
 	public ChooseCodesController() {
 		ChooseListFormWithDomainProperty symptomDiagnosTextForm = new ChooseListFormWithDomainProperty();
 		symptomDiagnosTextForm.setDisplayKey("kodPlusBeskrivning");
@@ -127,6 +130,11 @@ public class ChooseCodesController extends ControllerBase {
 	}
 
 	/**
+	 * Looks through the result list in the session for all existing codes of a certain type (residing in a
+	 * collection or in a reference variable).
+	 * 
+	 * This would be the total set of items to choose for the user. Since the search always should narrow down in
+	 * findings.
 	 * 
 	 * @param pfcs
 	 * @param allItemsPropertyName
@@ -154,6 +162,18 @@ public class ChooseCodesController extends ControllerBase {
 		return values;
 	}
 
+	/**
+	 * Initialization of the view. It looks up the 'configuration' to use - texts and position of the target value
+	 * reference.
+	 * 
+	 * Then collects all possible selections from the result table already in the session.
+	 * 
+	 * @param session
+	 * @param response
+	 * @param fieldName
+	 * @return
+	 * @throws IOException
+	 */
 	@RequestMapping(value = "/start-choosing-codes", params = { "fieldName" })
 	public String start(HttpSession session, HttpServletResponse response, @RequestParam String fieldName)
 	        throws IOException {
@@ -211,8 +231,19 @@ public class ChooseCodesController extends ControllerBase {
 		return hne.content();
 	}
 
+	/**
+	 * A class that extends the {@link ChooseListForm} adding specifics concerning selecting codes (objects
+	 * extending the {@link AbstractKod} class) that is referenced by {@link Prioriteringsobjekt}.
+	 * 
+	 * @author Claes Lundahl, vgrid=clalu4.VGREGION
+	 * 
+	 */
 	public static class ChooseListFormWithDomainProperty extends ChooseListForm {
 
+		/**
+		 * This property points to a property (getter/setter) on the {@link Prioriteringsobjekt} class. From this
+		 * field all codes are acquired that the user is supposed to choose from.
+		 */
 		String allItemsPropertyName;
 
 		/**

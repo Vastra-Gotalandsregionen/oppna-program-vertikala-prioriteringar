@@ -1,5 +1,6 @@
 package se.vgregion.verticalprio.controllers;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,6 +55,11 @@ public class ChooseCodesControllerTest {
 			ccc.start(session, response, fieldName);
 			setUp();
 		}
+	}
+
+	@Test
+	public void cancel() throws IOException {
+		ccc.clear(session, response, "diagnosTexts");
 	}
 
 }
