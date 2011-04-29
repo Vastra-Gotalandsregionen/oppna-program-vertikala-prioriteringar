@@ -49,7 +49,7 @@
   <div class="yui3-g">
   
   <div class="yui3-u-5-12 choosepage_leftsection">
-  <div><h3>${ChooseListForm.notYetChoosenLabel}</h3> (${ChooseListForm.sizeOfAllToChoose-ChooseListForm.sizeOfChoosen} stycken)</div>
+  <div><h3>${ChooseListForm.notYetChoosenLabel}</h3> (${ChooseListForm.sizeOfAllToChoose} stycken)</div>
   </div>
 
   <div class="yui3-u-1-6">
@@ -68,9 +68,9 @@
 	  <div>
 		  <select name="notYetChoosenKeys" multiple="multiple">
 		    <c:forEach items="${ChooseListForm.allToChoose}" var="column">
-		      <c:if test="${not su:contains(ChooseListForm.choosen, column)}">
+
 		        <option value="${column[ChooseListForm.idKey]}">${column[ChooseListForm.displayKey]}</option>
-		      </c:if>
+
 		    </c:forEach>
 		  </select>
 	  </div>
