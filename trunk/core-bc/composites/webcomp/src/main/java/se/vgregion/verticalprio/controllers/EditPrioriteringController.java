@@ -365,6 +365,7 @@ public class EditPrioriteringController extends ControllerBase {
 		clf.setFilterLabel("Sök diagnoser med nyckelord");
 		clf.setNotYetChoosenLabel("Ej valda diagnoser");
 		clf.setChoosenLabel("Valda diagnoser");
+		clf.setFilterLabelToolTip("Här kan du söka både på kod och på beskrivning");
 		return chooseKod(session, response, request, model, pf, "diagnoser");
 	}
 

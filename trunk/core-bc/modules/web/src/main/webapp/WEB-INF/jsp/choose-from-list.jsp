@@ -17,9 +17,18 @@
 
   <div class="yui3-g">
   
-  <div class="yui3-u-5-12 choosepage_leftsection">
+  <div class="yui3-u-5-12 choosepage_leftsection enhancedToolTip">
 	  <c:if test="${ChooseListForm.findingVisible}">
-	      <h3 class="choosepage-header">${ChooseListForm.filterLabel}</h3>
+	      <h3 class="choosepage-header">
+            ${ChooseListForm.filterLabel}
+            <c:if test="${not empty ChooseListForm.filterLabelToolTip}">
+              <span title="${ChooseListForm.filterLabelToolTip}">
+                <img src='img/information.png'/>
+              </span>
+            </c:if>
+
+            
+          </h3>
 	      <div>
 	      	<form:input path="filterText" id="filterText" cssClass="text-input" />
 	      	<input class="button" type="submit" name="filter" value="Filtrera"/>
