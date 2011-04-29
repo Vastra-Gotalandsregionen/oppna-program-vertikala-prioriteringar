@@ -19,15 +19,10 @@
         </tr>
         
         <tr class="conditionRow">
-          <td colspan="2" class="first">
-            <tags:table-sort-cell column="${form.columns[0]}"/>
-          </td>
+          <td> &nbsp; </td>
           <c:forEach items="${form.columns}" var="column" varStatus="vs">
-            <c:if test="${column.visible and vs.index > 0}">
-              <td style="center" class="enhancedToolTip yui3-g">
-                          <span class="yui3-g">
-              <span style="width: 70%;" class="yui3-u">
-              
+            <c:if test="${column.visible and (not column.demandsEditRights or user != null and user.editor)}">
+              <td class="enhancedToolTip">              
                 <c:if test="${not empty column.description}">
                   <span title="${column.description}">
                     <img src='img/information.png'/>
@@ -51,13 +46,7 @@
                     <img src='img/x.png'/>
                   </a>
                 </c:if>
-              	
-              </span>
-              <span style="width: 25%; text-align: right;" class="yui3-u">
-                <tags:table-sort-cell column="${column}"/>
-              </span>
-            </span>
-                
+                <tags:table-sort-cell column="${column}"/>                
               </td>
             </c:if>
           </c:forEach>

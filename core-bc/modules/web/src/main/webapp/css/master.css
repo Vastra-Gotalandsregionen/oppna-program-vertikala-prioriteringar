@@ -250,17 +250,12 @@ button {
   border: 1px solid #333333;
   border-right-width: 0;
   vertical-align: middle;
+  white-space: nowrap;
 }
 
 .main-content .conditionRow td img {
   vertical-align: middle;
 }
-
-.main-content .conditionRow .first {
-  text-align: right;
-}
-
-
 
 .main-content table .diagnosTexts {
   min-width: 20em;
