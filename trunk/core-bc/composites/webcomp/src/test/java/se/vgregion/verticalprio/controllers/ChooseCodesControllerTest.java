@@ -25,36 +25,35 @@ import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
 @ContextConfiguration("classpath:testApplicationContext.xml")
 public class ChooseCodesControllerTest {
 
-    @Resource(name = "testChooseCodesController")
-    ChooseCodesController ccc;
+	@Resource(name = "testChooseCodesController")
+	ChooseCodesController ccc;
 
-    ModelMap modelMap;
-    MockHttpServletRequest request;
-    MockHttpSession session;
-    MockHttpServletResponse response;
+	ModelMap modelMap;
+	MockHttpServletRequest request;
+	MockHttpSession session;
+	MockHttpServletResponse response;
 
-    /**
-     * @throws java.lang.Exception
-     */
-    @Before
-    public void setUp() throws Exception {
-        session = new MockHttpSession();
-        List<Prioriteringsobjekt> rows = new ArrayList<Prioriteringsobjekt>();
-        session.setAttribute("rows", rows);
+	/**
+	 * @throws java.lang.Exception
+	 */
+	@Before
+	public void setUp() throws Exception {
+		session = new MockHttpSession();
+		List<Prioriteringsobjekt> rows = new ArrayList<Prioriteringsobjekt>();
+		session.setAttribute("rows", rows);
 
-        modelMap = new ModelMap();
-        request = new MockHttpServletRequest();
-        response = new MockHttpServletResponse();
-        ccc = new ChooseCodesController();
+		modelMap = new ModelMap();
+		request = new MockHttpServletRequest();
+		response = new MockHttpServletResponse();
+		ccc = new ChooseCodesController();
+	}
 
-    }
-
-    @Test
-    public void start() throws Exception {
-        for (String fieldName : ccc.formPrototypes.keySet()) {
-            ccc.start(session, response, fieldName);
-            setUp();
-        }
-    }
+	@Test
+	public void start() throws Exception {
+		for (String fieldName : ccc.formPrototypes.keySet()) {
+			ccc.start(session, response, fieldName);
+			setUp();
+		}
+	}
 
 }
