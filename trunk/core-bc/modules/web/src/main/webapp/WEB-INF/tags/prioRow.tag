@@ -34,7 +34,9 @@
 
 <c:if test="${row.child != null and su:isPriosDifferent(row, row.child)}">
   <tr class="${index % 2 == 0 ? 'even' : 'odd'}">
-    <td>&nbsp;</td>
+    <td>
+      <div style="color: red; text-align: center;" title="Ännu ej godkänd">*</div>
+    </td>
     <c:forEach items="${form.columns}" var="column">
       <c:if test="${column.visible}">
         <td class="${column.name}">
