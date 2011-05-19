@@ -26,7 +26,11 @@
             		<tags:editSubmit name="approve-prio" value="Godkänn" cssClass="button"/>
        			</c:if>
           		<input name="init-conf-columns" class="conf-columns button" type="submit" value="Dölj/Visa kolumner" />
-                <input type="submit" name="excel" class="excel button" onclick="window.open('table.csv', '_blank'); return false;" value="Excel"/> 
+                <input type="submit" name="excel" class="excel button" onclick="window.open('table.csv', '_blank'); return false;" value="Excel"/>
+                
+                <c:if test="${user != null and user.userEditor}">
+                    <tags:editSubmit name="edit-users" value="Hantera användare" cssClass="button"/>
+                </c:if>
       		</div>
 		</c:if>
     

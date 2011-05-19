@@ -511,6 +511,11 @@ input.text-input {
   font-weight: bold;
 }
 
+.user-label {
+  font-style: normal;
+  font-weight: bold;
+}
+
 .prio-view {
   max-width: 600px;
   min-width: 300px;
@@ -519,6 +524,11 @@ input.text-input {
 
 .prio-view form {
   text-align: center;
+}
+
+.prio-view div.otherUser {
+  text-align: left;
+  margin: auto;
 }
 
 .prio-view .values {

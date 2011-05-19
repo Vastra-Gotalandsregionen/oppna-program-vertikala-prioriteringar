@@ -53,7 +53,7 @@
         </tr>
         
       </thead>
-      <tbody class="${fn:length(rows) > 10 ? 'boxed_' : ''}">
+      <tbody class="result-tbody ${fn:length(rows) > 10 ? 'boxed_' : ''}">
         <c:forEach items="${rows}" var="row" varStatus="vs">
           <tags:prioRow index="${vs.index}" row="${row}"/>
         </c:forEach>

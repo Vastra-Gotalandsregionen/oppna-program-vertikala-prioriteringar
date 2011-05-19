@@ -40,374 +40,384 @@ import se.vgregion.verticalprio.repository.finding.NestedSektorRaad;
 @SessionAttributes(value = { "confCols", "form" })
 public class VerticalPrioController extends EditPrioriteringController {
 
-    @Resource(name = "userRepository")
-    GenerisktKodRepository<User> userRepository;
+	@Resource(name = "userRepository")
+	GenerisktKodRepository<User> userRepository;
 
-    @Resource(name = "diagnosRepository")
-    GenerisktFinderRepository<DiagnosKod> diagnosRepository;
+	@Resource(name = "diagnosRepository")
+	GenerisktFinderRepository<DiagnosKod> diagnosRepository;
 
-    @RequestMapping(value = "/main")
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public String main(HttpSession session) {
-        session.setAttribute("editDir", new EditDirective(true, null));
-        result(session);
-        return "main";
-    }
+	@RequestMapping(value = "/main")
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public String main(HttpSession session) {
+		session.setAttribute("editDir", new EditDirective(true, null));
+		result(session);
+		return "main";
+	}
 
-    @RequestMapping(value = "/main", params = { "logout" })
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public String logout(HttpSession session, HttpServletResponse response) throws IOException {
-        session.setAttribute("user", null);
-        session.setAttribute("loginResult", null);
-        PrioriteringsobjektFindCondition condition = getOrCreateSessionObj(session, "prioCondition",
-                PrioriteringsobjektFindCondition.class);
-        condition.setGodkaend(new DateNullLogic(true));
-        response.sendRedirect("main");
-        return null;
-    }
+	@RequestMapping(value = "/main", params = { "logout" })
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public String logout(HttpSession session, HttpServletResponse response) throws IOException {
+		session.setAttribute("user", null);
+		session.setAttribute("loginResult", null);
+		PrioriteringsobjektFindCondition condition = getOrCreateSessionObj(session, "prioCondition",
+		        PrioriteringsobjektFindCondition.class);
+		condition.setGodkaend(new DateNullLogic(true));
+		response.sendRedirect("main");
+		return null;
+	}
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    @RequestMapping(value = "/main", params = { "login" })
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public String login(HttpSession session, @RequestParam(required = false) String userName,
-            @RequestParam(required = false) String password) {
+	@RequestMapping(value = "/main", params = { "edit-users" })
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public String handleUsers(HttpSession session, HttpServletResponse response) throws IOException {
+		User user = (User) session.getAttribute("user");
+		if (user.getUserEditor()) {
+			response.sendRedirect("users");
+		}
+		return null;
+	}
 
-        User example = new User();
-        example.setVgrId(userName);
-        example.setPassword(password);
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@RequestMapping(value = "/main", params = { "login" })
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public String login(HttpSession session, @RequestParam(required = false) String userName,
+	        @RequestParam(required = false) String password) {
 
-        List<User> users = userRepository.findByExample(example, 1);
-        if (users.isEmpty() || "".equals(password)) {
-            session.setAttribute("user", null);
-            session.setAttribute("loginResult", false);
-        } else {
-            User user = users.get(0);
-            PrioriteringsobjektFindCondition condition = getOrCreateSessionObj(session, "prioCondition",
-                    PrioriteringsobjektFindCondition.class);
-            if (user.isEditor() || user.isApprover()) {
-                condition.setGodkaend(new DateNullLogic(false));
-            } else {
-                condition.setGodkaend(new DateNullLogic(true));
-            }
+		User example = new User();
+		example.setVgrId(userName);
+		example.setPassword(password);
 
-            Map userValues = new HashMap(new BeanMap(user)); // Insane... makes all lazy properties initialized.
-            for (Object o : userValues.values()) {
-                if (o instanceof Collection) {
-                    Collection c = (Collection) o;
-                    for (Object i : c) {
-                        new HashMap(new BeanMap(i));
-                    }
-                }
-            }
+		List<User> users = userRepository.findByExample(example, 1);
+		if (users.isEmpty() || "".equals(password)) {
+			session.setAttribute("user", null);
+			session.setAttribute("loginResult", false);
+		} else {
+			User user = users.get(0);
+			PrioriteringsobjektFindCondition condition = getOrCreateSessionObj(session, "prioCondition",
+			        PrioriteringsobjektFindCondition.class);
+			if (user.isEditor() || user.isApprover()) {
+				condition.setGodkaend(new DateNullLogic(false));
+			} else {
+				condition.setGodkaend(new DateNullLogic(true));
+			}
 
-            session.setAttribute("user", user);
-            session.setAttribute("loginResult", true);
-        }
-        return main(session);
-    }
+			Map userValues = new HashMap(new BeanMap(user)); // Insane... makes all lazy properties initialized.
+			for (Object o : userValues.values()) {
+				if (o instanceof Collection) {
+					Collection c = (Collection) o;
+					for (Object i : c) {
+						new HashMap(new BeanMap(i));
+					}
+				}
+			}
 
-    @RequestMapping(value = "/main", params = { "excel" })
-    public String excelTableInMainWindow(HttpServletResponse response) {
-        return excelTable(response);
-    }
+			session.setAttribute("user", user);
+			session.setAttribute("loginResult", true);
+		}
+		return main(session);
+	}
 
-    @RequestMapping(value = "/table.csv")
-    public String excelTable(HttpServletResponse response) {
-        response.setContentType("text/csv");
-        return "excel-table.csv";
-    }
+	@RequestMapping(value = "/main", params = { "excel" })
+	public String excelTableInMainWindow(HttpServletResponse response) {
+		return excelTable(response);
+	}
 
-    @RequestMapping(value = "/main", params = { "sortField" })
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public String alterSortOrder(HttpSession session, @RequestParam String sortField) {
-        MainForm form = getMainForm(session);
-        PrioriteringsobjektFindCondition condition = getOrCreateSessionObj(session, "prioCondition",
-                PrioriteringsobjektFindCondition.class);
+	@RequestMapping(value = "/table.csv")
+	public String excelTable(HttpServletResponse response) {
+		response.setContentType("text/csv");
+		return "excel-table.csv";
+	}
 
-        markColumnAsSorting(sortField, form);
+	@RequestMapping(value = "/main", params = { "sortField" })
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public String alterSortOrder(HttpSession session, @RequestParam String sortField) {
+		MainForm form = getMainForm(session);
+		PrioriteringsobjektFindCondition condition = getOrCreateSessionObj(session, "prioCondition",
+		        PrioriteringsobjektFindCondition.class);
 
-        if ("rangordningsKod".equals(sortField)) {
-            condition.sortByRangordningsKod();
-        } else if ("tillstaandetsSvaarighetsgradKod".equals(sortField)) {
-            condition.sortByTillstaandetsSvaarighetsgradKod();
-        } else if ("diagnosKodTexts".equals(sortField)) {
-            condition.sortByDiagnoser();
-        } else if ("sektorRaad".equals(sortField)) {
-            condition.sortBySektorsRaad();
-        }
+		markColumnAsSorting(sortField, form);
 
-        result(session);
-        return "main";
-    }
+		if ("rangordningsKod".equals(sortField)) {
+			condition.sortByRangordningsKod();
+		} else if ("tillstaandetsSvaarighetsgradKod".equals(sortField)) {
+			condition.sortByTillstaandetsSvaarighetsgradKod();
+		} else if ("diagnosKodTexts".equals(sortField)) {
+			condition.sortByDiagnoser();
+		} else if ("sektorRaad".equals(sortField)) {
+			condition.sortBySektorsRaad();
+		}
 
-    private void markColumnAsSorting(String fieldName, MainForm mf) {
-        for (Column column : mf.getColumns()) {
-            column.setSorting(fieldName.equals(column.getName()));
-        }
-    }
+		result(session);
+		return "main";
+	}
 
-    @RequestMapping(value = "/commit-conf-columns")
-    public String commColumnsCommit(final HttpSession session, HttpServletResponse response) throws IOException {
-        MainForm form = getMainForm(session);
-        SortedSet<Column> target = (SortedSet<Column>) session.getAttribute("selectedColumns");
+	private void markColumnAsSorting(String fieldName, MainForm mf) {
+		for (Column column : mf.getColumns()) {
+			column.setSorting(fieldName.equals(column.getName()));
+		}
+	}
 
-        for (Column column : form.getColumns()) {
-            column.setVisible(target.contains(column) || !column.isHideAble());
-        }
+	@RequestMapping(value = "/commit-conf-columns")
+	public String commColumnsCommit(final HttpSession session, HttpServletResponse response) throws IOException {
+		MainForm form = getMainForm(session);
+		SortedSet<Column> target = (SortedSet<Column>) session.getAttribute("selectedColumns");
 
-        response.sendRedirect("main");
-        return null;
-    }
+		for (Column column : form.getColumns()) {
+			column.setVisible(target.contains(column) || !column.isHideAble());
+		}
 
-    @RequestMapping(value = "/main", params = { "init-conf-columns" })
-    public String confColumnsStart(final HttpSession session, HttpServletResponse response) throws IOException {
-        MainForm form = getMainForm(session);
+		response.sendRedirect("main");
+		return null;
+	}
 
-        ChooseListForm clf = getOrCreateSessionObj(session, ChooseListForm.class.getSimpleName(),
-                ChooseListForm.class);
+	@RequestMapping(value = "/main", params = { "init-conf-columns" })
+	public String confColumnsStart(final HttpSession session, HttpServletResponse response) throws IOException {
+		MainForm form = getMainForm(session);
 
-        clf.setNotYetChoosenLabel("Dolda kolumner");
-        clf.setChoosenLabel("Synliga kolumner");
-        clf.setOkLabel("Välj kolumner");
+		ChooseListForm clf = getOrCreateSessionObj(session, ChooseListForm.class.getSimpleName(),
+		        ChooseListForm.class);
 
-        clf.setDisplayKey("label");
-        clf.setIdKey("id");
-        clf.setFilterLabel(null);
-        clf.setOkUrl("commit-conf-columns");
-        clf.setCancelUrl("main");
+		clf.setNotYetChoosenLabel("Dolda kolumner");
+		clf.setChoosenLabel("Synliga kolumner");
+		clf.setOkLabel("Välj kolumner");
 
-        List<Column> allColumns = new ArrayList<Column>();
-        List<Column> selected = new ArrayList<Column>();
-        List<Column> notYetSelected = new ArrayList<Column>();
+		clf.setDisplayKey("label");
+		clf.setIdKey("id");
+		clf.setFilterLabel(null);
+		clf.setOkUrl("commit-conf-columns");
+		clf.setCancelUrl("main");
 
-        SortedSet<Column> target = new TreeSet<Column>();
-        session.setAttribute("selectedColumns", target);
-        clf.setTarget(target);
+		List<Column> allColumns = new ArrayList<Column>();
+		List<Column> selected = new ArrayList<Column>();
+		List<Column> notYetSelected = new ArrayList<Column>();
 
-        User user = (User) session.getAttribute("user");
-        
-        for (Column column : form.getColumns()) {
-            if (column.isHideAble() && (!column.isDemandsEditRights() || user != null && user.isEditor())) {
-                allColumns.add(column);
-                if (column.isVisible()) {
-                    selected.add(column);
-                } else {
-                    notYetSelected.add(column);
-                }
-            }
-        }
+		SortedSet<Column> target = new TreeSet<Column>();
+		session.setAttribute("selectedColumns", target);
+		clf.setTarget(target);
 
-        clf.setAllItems(allColumns);
-        clf.setAllToChoose(new ArrayList<Column>());
-        clf.setChoosen(selected);
+		User user = (User) session.getAttribute("user");
 
-        response.sendRedirect("choose-from-list");
-        return null;
-    }
+		for (Column column : form.getColumns()) {
+			if (column.isHideAble() && (!column.isDemandsEditRights() || user != null && user.isEditor())) {
+				allColumns.add(column);
+				if (column.isVisible()) {
+					selected.add(column);
+				} else {
+					notYetSelected.add(column);
+				}
+			}
+		}
 
-    /**
-     * The action for selecting a specific node of in the three of {@link SektorRaad}. It gets the three out of the
-     * session and then finds the node denoted by the Id-argument sent from the client. When found it toggles
-     * (selected = !selected) the value of the 'select' property on this node.
-     * 
-     * Special case in this is when the user have clicked the allSektorsRaad property (hosted on the
-     * {@link MainForm} form object). Then it clears away all other selections in favor of this one. If any other
-     * node is selected then it reversely un-selects this property.
-     * 
-     * @param session
-     * @param id
-     * @param response
-     * @return
-     * @throws IOException
-     */
-    @RequestMapping(value = "/check")
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public String check(final HttpSession session, @RequestParam Integer id, HttpServletResponse response)
-            throws IOException {
-        MainForm form = getMainForm(session);
+		clf.setAllItems(allColumns);
+		clf.setAllToChoose(new ArrayList<Column>());
+		clf.setChoosen(selected);
 
-        if (id.longValue() == -1l) {
-            boolean b = form.getAllSektorsRaad().isSelected();
-            form.getAllSektorsRaad().setSelected(!b);
+		response.sendRedirect("choose-from-list");
+		return null;
+	}
 
-            for (SektorRaad sr : form.getSectors()) {
-                sr.setSelectedDeeply(false);
-            }
+	/**
+	 * The action for selecting a specific node of in the three of {@link SektorRaad}. It gets the three out of the
+	 * session and then finds the node denoted by the Id-argument sent from the client. When found it toggles
+	 * (selected = !selected) the value of the 'select' property on this node.
+	 * 
+	 * Special case in this is when the user have clicked the allSektorsRaad property (hosted on the
+	 * {@link MainForm} form object). Then it clears away all other selections in favor of this one. If any other
+	 * node is selected then it reversely un-selects this property.
+	 * 
+	 * @param session
+	 * @param id
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/check")
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public String check(final HttpSession session, @RequestParam Integer sectorId, HttpServletResponse response)
+	        throws IOException {
+		MainForm form = getMainForm(session);
 
-        } else {
-            form.getAllSektorsRaad().setSelected(false);
-            SektorRaad sector = getSectorById(id, form.getSectors());
-            sector.setSelected(!sector.isSelected());
-        }
+		if (sectorId.longValue() == -1l) {
+			boolean b = form.getAllSektorsRaad().isSelected();
+			form.getAllSektorsRaad().setSelected(!b);
 
-        response.sendRedirect("main");
-        return "main";
-    }
+			for (SektorRaad sr : form.getSectors()) {
+				sr.setSelectedDeeply(false);
+			}
 
-    /**
-     * Loops through a collection and returns the sector with the corresponding id value provided.
-     * 
-     * @param id
-     * @param sectors
-     * @return The matched {@link SektorRaad} or null if no such match bould be made.
-     */
-    private SektorRaad getSectorById(int id, List<SektorRaad> sectors) {
-        for (SektorRaad sector : sectors) {
-            if (id == sector.getId()) {
-                return sector;
-            }
-            SektorRaad subSector = getSectorById(id, sector.getChildren());
-            if (subSector != null) {
-                return subSector;
-            }
-        }
-        return null;
-    }
+		} else {
+			form.getAllSektorsRaad().setSelected(false);
+			SektorRaad sector = getSectorById(sectorId, form.getSectors());
+			sector.setSelected(!sector.isSelected());
+		}
 
-    /**
-     * Returns all nodes from a list of {@link SektorRaad} that have the 'selected' property set to true. And also
-     * includes all the nodes beneath those.
-     * 
-     * @param raads
-     * @return
-     */
-    List<SektorRaad> getMarkedLeafs(List<SektorRaad> raads) {
-        List<SektorRaad> result = new ArrayList<SektorRaad>();
-        if (raads == null) {
-            return result;
-        }
-        for (SektorRaad raad : raads) {
-            List<SektorRaad> markedChildren = getMarkedLeafs(raad.getChildren());
-            if (raad.isSelected() && markedChildren.size() == 0) {
-                result.add(raad);
-            } else {
-                result.addAll(markedChildren);
-            }
-        }
-        return result;
-    }
+		response.sendRedirect("main");
+		return "main";
+	}
 
-    /**
-     * Takes a list of root nodes and returns a list of all the roots and of their children (and children's
-     * children and so on).
-     * 
-     * @param raads
-     * @return
-     */
-    private List<SektorRaad> flatten(List<SektorRaad> raads) {
-        List<SektorRaad> result = new ArrayList<SektorRaad>();
-        flatten(raads, result);
-        result = toBlankWithIdOnly(result);
-        return result;
-    }
+	/**
+	 * Loops through a collection and returns the sector with the corresponding id value provided.
+	 * 
+	 * @param id
+	 * @param sectors
+	 * @return The matched {@link SektorRaad} or null if no such match bould be made.
+	 */
+	private SektorRaad getSectorById(int id, List<SektorRaad> sectors) {
+		for (SektorRaad sector : sectors) {
+			if (id == sector.getId()) {
+				return sector;
+			}
+			SektorRaad subSector = getSectorById(id, sector.getChildren());
+			if (subSector != null) {
+				return subSector;
+			}
+		}
+		return null;
+	}
 
-    private void flatten(List<SektorRaad> raads, List<SektorRaad> result) {
-        if (raads != null) {
-            for (SektorRaad sr : raads) {
-                result.add(sr);
-                flatten(sr.getChildren(), result);
-            }
-        }
-    }
+	/**
+	 * Returns all nodes from a list of {@link SektorRaad} that have the 'selected' property set to true. And also
+	 * includes all the nodes beneath those.
+	 * 
+	 * @param raads
+	 * @return
+	 */
+	List<SektorRaad> getMarkedLeafs(List<SektorRaad> raads) {
+		List<SektorRaad> result = new ArrayList<SektorRaad>();
+		if (raads == null) {
+			return result;
+		}
+		for (SektorRaad raad : raads) {
+			List<SektorRaad> markedChildren = getMarkedLeafs(raad.getChildren());
+			if (raad.isSelected() && markedChildren.size() == 0) {
+				result.add(raad);
+			} else {
+				result.addAll(markedChildren);
+			}
+		}
+		return result;
+	}
 
-    /**
-     * Takes a list of {@link SektorRaad} and makes a copy that only contains the id-property of the object. Reason
-     * for this is to get objects that when used as condition in the {@link JpqlMatchBuilder} only generates
-     * constraints on the id. e.g. id = ? instead of (id = ? and kod = ? and beskrivning = ? and....).
-     * 
-     * TODO: Look to see if this method could be removed. Since its creation the {@link JpqlMatchBuilder} might be
-     * smart enough to do the corresponding change in the conditions itself.
-     * 
-     * @param raads
-     * @return
-     */
-    private List<SektorRaad> toBlankWithIdOnly(List<SektorRaad> raads) {
-        List<SektorRaad> result = new ArrayList<SektorRaad>();
-        for (SektorRaad sr : raads) {
-            SektorRaad newRaad = new SektorRaad(sr.getId());
-            result.add(newRaad);
-        }
-        return result;
-    }
+	/**
+	 * Takes a list of root nodes and returns a list of all the roots and of their children (and children's
+	 * children and so on).
+	 * 
+	 * @param raads
+	 * @return
+	 */
+	private List<SektorRaad> flatten(List<SektorRaad> raads) {
+		List<SektorRaad> result = new ArrayList<SektorRaad>();
+		flatten(raads, result);
+		result = toBlankWithIdOnly(result);
+		return result;
+	}
 
-    /**
-     * Produces the result list in the main view of the application. It uses a
-     * {@link PrioriteringsobjektFindCondition} as search condition - this object is stored in the session.
-     * 
-     * @param session
-     * @return
-     */
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public List<Prioriteringsobjekt> result(HttpSession session) {
-        PrioriteringsobjektFindCondition condition = getOrCreateSessionObj(session, "prioCondition",
-                PrioriteringsobjektFindCondition.class);
-        MainForm mf = getMainForm(session);
+	private void flatten(List<SektorRaad> raads, List<SektorRaad> result) {
+		if (raads != null) {
+			for (SektorRaad sr : raads) {
+				result.add(sr);
+				flatten(sr.getChildren(), result);
+			}
+		}
+	}
 
-        if (mf.getAllSektorsRaad().isSelected()) {
-            if (condition.getSektorRaad() != null) {
-                // user selected to show all Prios regardless of SR.
-                // Remove all conditions that specifies specific SRs, except those that should indicate order by
-                // directive.
-                HaveNestedEntities<SektorRaad> hne = condition.getSektorRaad();
-                // clearNonSortingLogic(hne);
-                hne.content().clear();
-            }
-        } else {
-            List<SektorRaad> raad = getMarkedLeafs(mf.getSectors());
-            raad = flatten(raad);
+	/**
+	 * Takes a list of {@link SektorRaad} and makes a copy that only contains the id-property of the object. Reason
+	 * for this is to get objects that when used as condition in the {@link JpqlMatchBuilder} only generates
+	 * constraints on the id. e.g. id = ? instead of (id = ? and kod = ? and beskrivning = ? and....).
+	 * 
+	 * TODO: Look to see if this method could be removed. Since its creation the {@link JpqlMatchBuilder} might be
+	 * smart enough to do the corresponding change in the conditions itself.
+	 * 
+	 * @param raads
+	 * @return
+	 */
+	private List<SektorRaad> toBlankWithIdOnly(List<SektorRaad> raads) {
+		List<SektorRaad> result = new ArrayList<SektorRaad>();
+		for (SektorRaad sr : raads) {
+			SektorRaad newRaad = new SektorRaad(sr.getId());
+			result.add(newRaad);
+		}
+		return result;
+	}
 
-            NestedSektorRaad sektorNest = condition.getSektorRaad();
+	/**
+	 * Produces the result list in the main view of the application. It uses a
+	 * {@link PrioriteringsobjektFindCondition} as search condition - this object is stored in the session.
+	 * 
+	 * @param session
+	 * @return
+	 */
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Prioriteringsobjekt> result(HttpSession session) {
+		PrioriteringsobjektFindCondition condition = getOrCreateSessionObj(session, "prioCondition",
+		        PrioriteringsobjektFindCondition.class);
+		MainForm mf = getMainForm(session);
 
-            // Find out if there are selected sectors, taking regards to that there might be HaveSortOrder-objects
-            // inside.
-            sektorNest.content().clear();
-            if (sektorNest != null && sektorNest.content() != null) {
-                sektorNest.content().addAll(raad);
-            }
+		if (mf.getAllSektorsRaad().isSelected()) {
+			if (condition.getSektorRaad() != null) {
+				// user selected to show all Prios regardless of SR.
+				// Remove all conditions that specifies specific SRs, except those that should indicate order by
+				// directive.
+				HaveNestedEntities<SektorRaad> hne = condition.getSektorRaad();
+				// clearNonSortingLogic(hne);
+				hne.content().clear();
+			}
+		} else {
+			List<SektorRaad> raad = getMarkedLeafs(mf.getSectors());
+			raad = flatten(raad);
 
-            if (raad.isEmpty()) {
-                List<Prioriteringsobjekt> zeroResult = new ArrayList<Prioriteringsobjekt>();
-                session.setAttribute("rows", zeroResult);
-                return zeroResult;
-            }
-        }
+			NestedSektorRaad sektorNest = condition.getSektorRaad();
 
-        List<Prioriteringsobjekt> result = new ArrayList<Prioriteringsobjekt>();
-        result.addAll(prioRepository.findLargeResult(condition));
-        List<SektorRaad> sectors = applicationData.getSektorRaadList();
+			// Find out if there are selected sectors, taking regards to that there might be HaveSortOrder-objects
+			// inside.
+			sektorNest.content().clear();
+			if (sektorNest != null && sektorNest.content() != null) {
+				sektorNest.content().addAll(raad);
+			}
 
-        for (Prioriteringsobjekt prio : result) {
-            prio.setSektorRaad(findRoot(sectors, prio.getSektorRaad()));
-        }
+			if (raad.isEmpty()) {
+				List<Prioriteringsobjekt> zeroResult = new ArrayList<Prioriteringsobjekt>();
+				session.setAttribute("rows", zeroResult);
+				return zeroResult;
+			}
+		}
 
-        session.setAttribute("rows", result);
-        return result;
-    }
+		List<Prioriteringsobjekt> result = new ArrayList<Prioriteringsobjekt>();
+		result.addAll(prioRepository.findLargeResult(condition));
+		List<SektorRaad> sectors = applicationData.getSektorRaadList();
 
-    /**
-     * If you have a {@link SektorRaad} and want its root node, this method gives you that.
-     * 
-     * @param all
-     *            All existing sectors. The Method search through these to find the root.
-     * @param toFind
-     * @return
-     */
-    private SektorRaad findRoot(List<SektorRaad> all, SektorRaad toFind) {
-        for (SektorRaad sr : all) {
-            if (sr.getId() == null || toFind == null || toFind.getId() == null) {
-                return null;
-            }
-            if (sr != null && sr.getId().equals(toFind.getId())) {
-                return sr;
-            }
-        }
-        for (SektorRaad sr : all) {
-            SektorRaad result = findRoot(sr.getChildren(), toFind);
-            if (result != null) {
-                return result;
-            }
-        }
-        return null;
-    }
+		for (Prioriteringsobjekt prio : result) {
+			prio.setSektorRaad(findRoot(sectors, prio.getSektorRaad()));
+		}
+
+		session.setAttribute("rows", result);
+		return result;
+	}
+
+	/**
+	 * If you have a {@link SektorRaad} and want its root node, this method gives you that.
+	 * 
+	 * @param all
+	 *            All existing sectors. The Method search through these to find the root.
+	 * @param toFind
+	 * @return
+	 */
+	private SektorRaad findRoot(List<SektorRaad> all, SektorRaad toFind) {
+		for (SektorRaad sr : all) {
+			if (sr.getId() == null || toFind == null || toFind.getId() == null) {
+				return null;
+			}
+			if (sr != null && sr.getId().equals(toFind.getId())) {
+				return sr;
+			}
+		}
+		for (SektorRaad sr : all) {
+			SektorRaad result = findRoot(sr.getChildren(), toFind);
+			if (result != null) {
+				return result;
+			}
+		}
+		return null;
+	}
 
 }
