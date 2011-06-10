@@ -167,6 +167,14 @@ public class JpqlMatchBuilder {
 	}
 
 	private void mkFindByExampleJpql(Object bean, QueryParts qp, int aliasIndex) {
+
+		// See to it that there will be no endless recursive calls.
+		// if (qp.passedItems.contains(bean)) {
+		// return;
+		// } else {
+		// qp.passedItems.add(bean);
+		// }
+
 		final List<String> where = qp.where;
 		final List<Object> values = qp.values;
 
@@ -327,10 +335,20 @@ public class JpqlMatchBuilder {
 	 */
 	private boolean handleSubBean(String prefix, String parentPropertyName, Object bean, QueryParts qp,
 	        int aliasIndex) {
+
+		// See to it that there will be no endless recursive calls.
+		if (qp.passedItems.contains(bean)) {
+			return false;
+		} else {
+			qp.passedItems.add(bean);
+		}
+
 		QueryParts deepQp = new QueryParts();
+		deepQp.passedItems.addAll(qp.passedItems);
 		deepQp.fromJoin.add(prefix + parentPropertyName + " o" + aliasIndex);
 
 		mkFindByExampleJpql(bean, deepQp, aliasIndex);
+		qp.passedItems.addAll(deepQp.passedItems);
 		// Check to see if the new jpql should be added. It is considered irrelevant if there is no 'atoms' -
 		// strings and numbers in it to use for matching.
 		// boolean result = valueCount < qp.values.size();
@@ -559,6 +577,7 @@ public class JpqlMatchBuilder {
 		public List<String> fromJoin = new ArrayList<String>();
 		public List<String> where = new ArrayList<String>();
 		public List<Object> values = new ArrayList<Object>();
+		public final Set<Object> passedItems = new HashSet<Object>();
 	}
 
 	public static class JpqlResultParts {

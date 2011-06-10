@@ -31,6 +31,9 @@
                 <c:if test="${user != null and user.userEditor}">
                     <tags:editSubmit name="edit-users" value="Hantera användare" cssClass="button"/>
                 </c:if>
+                <c:if test="${user != null and (user.userEditor or user.approver)}">
+                    <tags:editSubmit name="edit-sectors" value="Hantera sektorsråd" cssClass="button"/>
+                </c:if>
       		</div>
 		</c:if>
     

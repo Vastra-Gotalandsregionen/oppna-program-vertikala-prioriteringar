@@ -110,8 +110,13 @@ public class EditPrioriteringController extends ControllerBase {
 		if (user.getSektorRaad().contains(prio.getSektorRaad())) {
 			return true;
 		} else {
-			String message = "Du saknar behörighet att utföra denna åtgärd på prioriteringsobjektet som tillhör Sektorsråd: "
-			        + prio.getSektorRaad().getLabel() + ". <br/>";
+			String message = "Du saknar behörighet att utföra denna åtgärd på prioriteringsobjektet som tillhör Sektorsråd: ";
+			SektorRaad sr = prio.getSektorRaad();
+			if (sr.getParent() != null) {
+				message += sr.getParent().getLabel() + " (" + sr.getLabel() + ") <br/>";
+			} else {
+				message += prio.getSektorRaad().getLabel() + ". <br/>";
+			}
 			if (!user.getSektorRaad().isEmpty()) {
 				message += "<br>" + "Du är idag definierad inom följande Sektorsråd: ";
 				StringBuilder buf = new StringBuilder();

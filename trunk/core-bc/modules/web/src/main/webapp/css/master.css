@@ -459,6 +459,14 @@ input.text-input {
   margin-left: 10px;
 }
 
+.edit-sectors .sector-node {
+  margin-left: 2em;
+}
+
+.edit-sectors li {
+  padding-bottom: 1em;
+}
+
 .footer {
   background-color: yellow;
   clear: both
@@ -530,6 +538,20 @@ input.text-input {
   text-align: left;
   margin: auto;
 }
+
+input.sectorAdd {
+  background-image: url('../img/page_new.gif'); 
+  background-repeat: no-repeat;
+  height: 18px; 
+  width:18px; 
+} 
+
+input.sectorDelete {
+  background-image: url('../img/page_delete.gif'); 
+  background-repeat: no-repeat;
+  height: 18px; 
+  width:18px; 
+} 
 
 .prio-view .values {
   background-color: #E9E9E9;
