@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <%@ include file="head.jsp" %>
@@ -16,10 +17,12 @@
   <input type="submit" name="create" value="Ny" />
   <input type="submit" name="toMain" value="Tillbaka" />
 
+  <tags:message-out />
+
   <table>
     <thead class="headerRow">
       <tr>
-        <td> # </td>
+        <td> <input type="radio" value="-1234567890" name="id" checked="checked" /> </td>
         <th>Vgr-Id</th>
         <th>Förnamn</th>
         <th>Efternamn</th>

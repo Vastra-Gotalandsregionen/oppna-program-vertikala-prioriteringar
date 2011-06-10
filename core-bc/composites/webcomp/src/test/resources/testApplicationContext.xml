@@ -4,6 +4,8 @@
   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
   <bean name="testVerticalPrioController" class="se.vgregion.verticalprio.controllers.VerticalPrioController" />
+  
+  <bean name="testEditUsersController" class="se.vgregion.verticalprio.controllers.EditUsersController" />
  
   <bean name="prioRepository" class="se.vgregion.verticalprio.controllers.MockPrioRepository" />
 

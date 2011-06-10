@@ -12,29 +12,36 @@ import se.vgregion.verticalprio.entity.AbstractHirarkiskKod;
 public class JpaGenerisktHierarkisktKodRepository<T extends AbstractHirarkiskKod> extends
         JpaGenerisktKodRepository<T> implements GenerisktHierarkisktKodRepository<T> {
 
-    public JpaGenerisktHierarkisktKodRepository() {
-        super((Class<T>) AbstractHirarkiskKod.class);
-    }
+	public JpaGenerisktHierarkisktKodRepository() {
+		super((Class<T>) AbstractHirarkiskKod.class);
+	}
 
-    public JpaGenerisktHierarkisktKodRepository(Class<T> klass) {
-        super(klass);
-    }
+	public JpaGenerisktHierarkisktKodRepository(Class<T> klass) {
+		super(klass);
+	}
 
-    @Override
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public List<T> getTreeRoots() {
-        List<T> result = query("select o from @ o where o.parentId is null order by LOWER(o.kod)", null);
-        // populateChildren(result);
-        return result;
-    }
+	@Override
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<T> getTreeRoots() {
+		List<T> result = query("select o from @ o where o.parentId is null order by LOWER(o.kod)", null);
+		initChildren(result);
+		return result;
+	}
 
-    /*
-     * @Transactional(propagation = Propagation.SUPPORTS, readOnly = true) private void
-     * populateChildren(Collection<T> parents) { for (T child : parents) { populateChildren(child); } }
-     * 
-     * @Transactional(propagation = Propagation.SUPPORTS, readOnly = true) private void populateChildren(T parent)
-     * { String qt = "select o from @ o where o.parent = ?1"; parent.getChildren().addAll(query(qt, parent));
-     * populateChildren(parent.getChildren()); }
-     */
+	@SuppressWarnings("unchecked")
+	private void initChildren(List<T> items) {
+		for (T item : items) {
+			initChildren(item.getChildren());
+		}
+	}
+
+	/*
+	 * @Transactional(propagation = Propagation.SUPPORTS, readOnly = true) private void
+	 * populateChildren(Collection<T> parents) { for (T child : parents) { populateChildren(child); } }
+	 * 
+	 * @Transactional(propagation = Propagation.SUPPORTS, readOnly = true) private void populateChildren(T parent)
+	 * { String qt = "select o from @ o where o.parent = ?1"; parent.getChildren().addAll(query(qt, parent));
+	 * populateChildren(parent.getChildren()); }
+	 */
 
 }

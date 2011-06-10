@@ -3,6 +3,7 @@ package se.vgregion.verticalprio.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
@@ -18,109 +19,108 @@ import org.apache.commons.collections.BeanMap;
 public abstract class AbstractHirarkiskKod<T extends AbstractHirarkiskKod<?>> extends AbstractKod implements
         Cloneable {
 
-    @OneToMany(mappedBy = "parent")
-    // @JoinColumn(name = "parent_id")
-    private List<T> children; // = new ArrayList<T>();
+	@OneToMany(mappedBy = "parent", cascade = { CascadeType.ALL })
+	private List<T> children; // = new ArrayList<T>();
 
-    @ManyToOne
-    @JoinColumn(name = "parent_id", referencedColumnName = "id")
-    private T parent;
+	@ManyToOne
+	@JoinColumn(name = "parent_id", referencedColumnName = "id")
+	private T parent;
 
-    @Transient
-    private boolean selected;
+	@Transient
+	private boolean selected;
 
-    @javax.persistence.Column(name = "parent_id", insertable = false, updatable = false)
-    private Long parentId;
+	@javax.persistence.Column(name = "parent_id", insertable = false, updatable = false)
+	private Long parentId;
 
-    public List<T> getChildren() {
-        return children;
-    }
+	public List<T> getChildren() {
+		return children;
+	}
 
-    public void setChildren(List<T> children) {
-        this.children = children;
-    }
+	public void setChildren(List<T> children) {
+		this.children = children;
+	}
 
-    public void setParentId(Long parentId) {
-        this.parentId = parentId;
-    }
+	public void setParentId(Long parentId) {
+		this.parentId = parentId;
+	}
 
-    public Long getParentId() {
-        return parentId;
-    }
+	public Long getParentId() {
+		return parentId;
+	}
 
-    public void setSelected(boolean selected) {
-        this.selected = selected;
-        if (getChildren() != null) {
-            for (AbstractHirarkiskKod ahk : getChildren()) {
-                ahk.setSelected(selected);
-            }
-        }
-    }
+	public void setSelected(boolean selected) {
+		this.selected = selected;
+		if (getChildren() != null) {
+			for (AbstractHirarkiskKod ahk : getChildren()) {
+				ahk.setSelected(selected);
+			}
+		}
+	}
 
-    public boolean isSelected() {
-        return selected;
-    }
+	public boolean isSelected() {
+		return selected;
+	}
 
-    /**
-     * @inheritDoc
-     */
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    @Override
-    public T clone() {
-        BeanMap thisMap = new BeanMap(this);
-        T result;
-        try {
-            result = (T) getClass().newInstance();
-        } catch (InstantiationException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
+	/**
+	 * @inheritDoc
+	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
+	public T clone() {
+		BeanMap thisMap = new BeanMap(this);
+		T result;
+		try {
+			result = (T) getClass().newInstance();
+		} catch (InstantiationException e) {
+			throw new RuntimeException(e);
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
 
-        new BeanMap(result).putAllWriteable(thisMap);
-        result.setId(getId());
-        List newChildren = new ArrayList();
-        result.setChildren(newChildren);
+		new BeanMap(result).putAllWriteable(thisMap);
+		result.setId(getId());
+		List newChildren = new ArrayList();
+		result.setChildren(newChildren);
 
-        if (getChildren() != null) {
-            for (AbstractHirarkiskKod kod : getChildren()) {
-                newChildren.add(kod.clone());
-            }
-        }
+		if (getChildren() != null) {
+			for (AbstractHirarkiskKod kod : getChildren()) {
+				newChildren.add(kod.clone());
+			}
+		}
 
-        return result;
-    }
+		return result;
+	}
 
-    public void setSelectedDeeply(boolean b) {
-        selected = b;
-        if (children != null) {
-            for (T child : children) {
-                child.setSelectedDeeply(b);
-            }
-        }
-    }
+	public void setSelectedDeeply(boolean b) {
+		selected = b;
+		if (children != null) {
+			for (T child : children) {
+				child.setSelectedDeeply(b);
+			}
+		}
+	}
 
-    public boolean isSelectedDeeply() {
-        if (!selected) {
-            return false;
-        }
+	public boolean isSelectedDeeply() {
+		if (!selected) {
+			return false;
+		}
 
-        if (children != null) {
-            for (T child : children) {
-                if (!child.isSelectedDeeply()) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
+		if (children != null) {
+			for (T child : children) {
+				if (!child.isSelectedDeeply()) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
 
-    public void setParent(T parent) {
-        this.parent = parent;
-    }
+	public void setParent(T parent) {
+		this.parent = parent;
+	}
 
-    public T getParent() {
-        return parent;
-    }
+	public T getParent() {
+		return parent;
+	}
 
 }

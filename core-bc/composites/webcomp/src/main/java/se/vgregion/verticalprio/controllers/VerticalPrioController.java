@@ -76,6 +76,16 @@ public class VerticalPrioController extends EditPrioriteringController {
 		return null;
 	}
 
+	@RequestMapping(value = "/main", params = { "edit-sectors" })
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public String handleSectors(HttpSession session, HttpServletResponse response) throws IOException {
+		User user = (User) session.getAttribute("user");
+		if (user.getUserEditor() || user.isApprover()) {
+			response.sendRedirect("sektorer");
+		}
+		return null;
+	}
+
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value = "/main", params = { "login" })
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

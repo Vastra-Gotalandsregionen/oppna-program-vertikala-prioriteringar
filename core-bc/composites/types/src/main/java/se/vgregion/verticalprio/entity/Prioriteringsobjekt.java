@@ -212,16 +212,8 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
 	}
 
 	public List<String> getAatgaerdskoderTexts() {
-		return mkBeskrivningsText(aatgaerdskoder);
+		return mkBeskrivningsText(getAatgaerdskoder());
 	}
-
-	// public List<VaardformsKod> getVaardformskoder() {
-	// return vaardformskoder;
-	// }
-	//
-	// public void setVaardformskoder(List<VaardformsKod> vaardformskoder) {
-	// this.vaardformskoder = vaardformskoder;
-	// }
 
 	public void setVaentetidBehandlingVeckor(VaentetidsKod vaentetidBehandlingVeckor) {
 		this.vaentetidBehandlingVeckor = vaentetidBehandlingVeckor;

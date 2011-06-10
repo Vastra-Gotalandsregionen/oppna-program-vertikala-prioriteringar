@@ -3,8 +3,10 @@ package se.vgregion.verticalprio.entity;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -26,21 +28,11 @@ public class SektorRaad extends AbstractHirarkiskKod<SektorRaad> implements Clon
 	@Transient
 	private boolean able = true;
 
-	/**
-	 * @inheritDoc
-	 */
-	// @Override
-	// public Long getId() {
-	// return id;
-	// }
-	//
-	// /**
-	// * @inheritDoc
-	// */
-	// @Override
-	// public void setId(Long id) {
-	// this.id = id;
-	// }
+	@ManyToMany(mappedBy = "sektorRaad")
+	private Set<User> users;
+
+	@ManyToMany(mappedBy = "sektorRaad")
+	private Set<Prioriteringsobjekt> prioriteringsobjekt;
 
 	public void setAble(boolean able) {
 		this.able = able;
@@ -89,5 +81,21 @@ public class SektorRaad extends AbstractHirarkiskKod<SektorRaad> implements Clon
 		}
 
 		return result;
+	}
+
+	public void setUsers(Set<User> users) {
+		this.users = users;
+	}
+
+	public Set<User> getUsers() {
+		return users;
+	}
+
+	public void setPrioriteringsobjekt(Set<Prioriteringsobjekt> prioriteringsobjekt) {
+		this.prioriteringsobjekt = prioriteringsobjekt;
+	}
+
+	public Set<Prioriteringsobjekt> getPrioriteringsobjekt() {
+		return prioriteringsobjekt;
 	}
 }
