@@ -309,13 +309,15 @@ public class EditSektorRaadController {
 
 		for (SektorRaad target : new ArrayList<SektorRaad>(targets)) {
 			if (target.getId() != null && !ids.contains(target.getId())) {
-				target.getUsers().clear();
+				if (target.getUsers() != null) {
+					target.getUsers().clear();
 
-				// If users have this assigned - remove those first.
-				for (User targetUser : target.getUsers()) {
-					targetUser.getSektorRaad().remove(target);
-					userRepository.merge(targetUser);
-					userRepository.flush();
+					// If users have this assigned - remove those first.
+					for (User targetUser : target.getUsers()) {
+						targetUser.getSektorRaad().remove(target);
+						userRepository.merge(targetUser);
+						userRepository.flush();
+					}
 				}
 
 				targets.remove(target);

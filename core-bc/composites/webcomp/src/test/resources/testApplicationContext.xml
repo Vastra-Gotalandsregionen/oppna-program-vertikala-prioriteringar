@@ -6,6 +6,8 @@
   <bean name="testVerticalPrioController" class="se.vgregion.verticalprio.controllers.VerticalPrioController" />
   
   <bean name="testEditUsersController" class="se.vgregion.verticalprio.controllers.EditUsersController" />
+  
+  <bean name="testEditSektorRaadController" class="se.vgregion.verticalprio.controllers.EditSektorRaadController" />
  
   <bean name="prioRepository" class="se.vgregion.verticalprio.controllers.MockPrioRepository" />
 
