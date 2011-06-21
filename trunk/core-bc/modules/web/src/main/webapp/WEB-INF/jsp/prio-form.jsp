@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
@@ -9,7 +9,7 @@
   <div>
   <div class="yui3-g">
     <div class="yui3-u-3-5">
-      <tags:code-list-view addItemLabel="Lägg till diagnoser" removeItemLabel="Ta bort valda diagnoser" label="Diagnoser" codeKey="diagnoser" prio="${prio}" />
+      <tags:code-list-view addItemLabel="LÃ¤gg till diagnoser" removeItemLabel="Ta bort valda diagnoser" label="Diagnoser" codeKey="diagnoser" prio="${prio}" />
       
     </div>
     <div class="yui3-u-2-5">
@@ -17,7 +17,7 @@
       <tags:textarea cssInputBoxStyle="width:100%;" key="indikationGaf" />
     </div>
     <div class="yui3-u-3-5">
-	  <tags:code-list-view addItemLabel="Lägg till åtgärder" removeItemLabel="Ta bort valda åtgärder" label="Åtgärder" codeKey="aatgaerdskoder" prio="${prio}" />
+	  <tags:code-list-view addItemLabel="LÃ¤gg till Ã¥tgÃ¤rder" removeItemLabel="Ta bort valda Ã¥tgÃ¤rder" label="Ã…tgÃ¤rder" codeKey="aatgaerdskoder" prio="${prio}" />
     </div>
   </div>  
 
@@ -87,7 +87,7 @@
    
    <div class="yui3-g">
    	<div class="yui3-u-3-5">
-		<tags:code-list-view addItemLabel="Lägg till ATC-koder" removeItemLabel="Ta bort valda koder" label="ATC-koder" codeKey="atcKoder" prio="${prio}" />
+		<tags:code-list-view addItemLabel="LÃ¤gg till ATC-koder" removeItemLabel="Ta bort valda koder" label="ATC-koder" codeKey="atcKoder" prio="${prio}" />
    	</div>
    	<div class="yui3-u-2-5">
 		<tags:label key="kommentar" /><tags:textarea key="kommentar" cssInputBoxStyle="width:100%;" />
@@ -222,7 +222,7 @@
       var changed = document.getElementsByName('changed');
       for (var i = 0; i < changed.length; i++) {
           if (changed[i].style.display != 'none') {
-              var msg = 'Du har osparade ändringar. Vill du stänga den här vyn och förlora inmatad data?';
+              var msg = 'Du har osparade Ã¤ndringar. Vill du stÃ¤nga den hÃ¤r vyn och fÃ¶rlora inmatad data?';
               if (confirm(msg)) {
                   return true;
               } else {

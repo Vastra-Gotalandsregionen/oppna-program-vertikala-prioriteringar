@@ -65,10 +65,9 @@ public class EditSektorRaadController {
 	}
 
 	@RequestMapping(value = "sektorer")
-	@Transactional()
+	@Transactional(readOnly = true)
 	public String list(ModelMap modelMap, HttpSession session, ServletResponse response) {
 		List<SektorRaadBean> sectors = SektorRaadBean.toSektorRaadBeans(sektorRaadRepository.getTreeRoots());
-
 		User user = (User) session.getAttribute("user");
 
 		for (SektorRaadBean bean : sectors) {
@@ -130,11 +129,9 @@ public class EditSektorRaadController {
 
 		if (insert.equals(-1l)) {
 			SektorRaadBean newSektorRaad = new SektorRaadBean(idForUnsavedNewPosts--);
-			System.out.println("newSektorRaad.getId(): " + newSektorRaad.getId());
 			sectors.add(newSektorRaad);
 		} else {
 			insertNewSektorIntoTree(sectors, insert);
-			System.out.println("sectors.size(2): " + sectors.size());
 		}
 
 		return "sectors";
@@ -247,7 +244,7 @@ public class EditSektorRaadController {
 		User user = (User) session.getAttribute("user");
 
 		removeFromList(sectors);
-		store(sectors, user);
+		store(sectors, user, session);
 
 		modelMap.addAttribute("sectors", null);
 		session.setAttribute("sectors", null);
@@ -274,11 +271,11 @@ public class EditSektorRaadController {
 	}
 
 	@Transactional
-	private void store(List<SektorRaadBean> beans, User user) {
+	private void store(List<SektorRaadBean> beans, User user, HttpSession session) {
 
 		List<SektorRaad> persistentData = sektorRaadRepository.getTreeRoots();
 		List<SektorRaad> source = SektorRaadBean.toSektorRaads(beans);
-		applyChange(source, persistentData, user);
+		applyChange(source, persistentData, user, session);
 
 		for (SektorRaad sr : persistentData) {
 			sektorRaadRepository.merge(sr);
@@ -288,7 +285,7 @@ public class EditSektorRaadController {
 	}
 
 	@Transactional
-	private void applyChange(List<SektorRaad> sources, List<SektorRaad> targets, User user) {
+	private void applyChange(List<SektorRaad> sources, List<SektorRaad> targets, User user, HttpSession session) {
 		Set<Long> ids = new HashSet<Long>();
 		for (SektorRaad sr : sources) {
 			if (sr.getId() > 0) {
@@ -300,9 +297,11 @@ public class EditSektorRaadController {
 				sr.getUsers().add(user);
 				sr = sektorRaadRepository.persist(sr);
 				sektorRaadRepository.flush();
+				sr = sektorRaadRepository.find(sr.getId());
 				user.getSektorRaad().add(sr);
-				userRepository.merge(user);
+				user = userRepository.merge(user);
 				userRepository.flush();
+				session.setAttribute("user", user);
 				ids.add(sr.getId());
 			}
 		}
@@ -321,10 +320,9 @@ public class EditSektorRaadController {
 				}
 
 				targets.remove(target);
-				// System.out.println("Removar " + target.getId());
 				sektorRaadRepository.remove(target.getId());
 			} else {
-				applyChange(find(sources, target.getId()), target, user);
+				applyChange(find(sources, target.getId()), target, user, session);
 			}
 		}
 
@@ -341,8 +339,8 @@ public class EditSektorRaadController {
 	}
 
 	@Transactional
-	private void applyChange(SektorRaad source, SektorRaad target, User user) {
+	private void applyChange(SektorRaad source, SektorRaad target, User user, HttpSession session) {
 		target.setKod(source.getKod());
-		applyChange(source.getChildren(), target.getChildren(), user);
+		applyChange(source.getChildren(), target.getChildren(), user, session);
 	}
 }

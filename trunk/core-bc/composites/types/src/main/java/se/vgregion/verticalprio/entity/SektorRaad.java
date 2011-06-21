@@ -23,7 +23,7 @@ public class SektorRaad extends AbstractHirarkiskKod<SektorRaad> implements Clon
 	}
 
 	@Transient
-	private SektorRaad parent;
+	private transient SektorRaad parent;
 
 	@Transient
 	private boolean able = true;
@@ -98,4 +98,5 @@ public class SektorRaad extends AbstractHirarkiskKod<SektorRaad> implements Clon
 	public Set<Prioriteringsobjekt> getPrioriteringsobjekt() {
 		return prioriteringsobjekt;
 	}
+
 }

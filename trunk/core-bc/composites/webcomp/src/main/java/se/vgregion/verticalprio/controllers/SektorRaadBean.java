@@ -35,6 +35,8 @@ public class SektorRaadBean extends SektorRaad {
 		}
 		new BeanMap(newSektorRaadBean).putAllWriteable(new BeanMap(sr));
 		newSektorRaadBean.setBeanChildren(toSektorRaadBeans(sr.getChildren()));
+		newSektorRaadBean.setId(sr.getId());
+		newSektorRaadBean.setParentId(sr.getParentId());
 		return newSektorRaadBean;
 	}
 
@@ -53,6 +55,8 @@ public class SektorRaadBean extends SektorRaad {
 		SektorRaad newSektorRaad = new SektorRaad();
 		new BeanMap(newSektorRaad).putAllWriteable(new BeanMap(sr));
 		newSektorRaad.setChildren(toSektorRaads(sr.getBeanChildren()));
+		newSektorRaad.setId(sr.getId());
+		newSektorRaad.setParentId(sr.getParentId());
 		return newSektorRaad;
 	}
 

@@ -24,8 +24,8 @@
       </c:choose>
     </span>
        
-      <c:if test="${item.deleteAble}">
-        <span><input name="delete" type="submit" ${parentDeleted ? 'disabled = disabled':''} value="       ${item.id}" class="sectorDelete"/></span>
+      <c:if test="${item.deleteAble and not item.locked and not parentDeleted and item.prioCount == 0}">
+        <span><input name="delete" type="submit" value="       ${item.id}" class="sectorDelete"/></span>
         <c:if test="${item.markedAsDeleted}"> <img src="img/flag_red.gif" alt="Raderas vid sparande" /> </c:if>
       </c:if>
       <span>
