@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
@@ -13,20 +13,20 @@
 <form:form action="delete-prio" method="post" modelAttribute="prio" cssClass="values">
 <jsp:include page="jsp/prio-form.jsp" />
 <div style="vertical-align: middle;">
-  <tags:editSubmit name="ok" value="Radera det här prioriteringsobjektet *" overrideEdit="true"/>
+  <tags:editSubmit name="ok" value="Radera det hÃ¤r prioriteringsobjektet *" overrideEdit="true"/>
   <input class="button" type="submit" value="Avbryt" name="cancel"/>
 </div>
 <br/>
 <div>
   <c:choose>
     <c:when test="${prio.draft}">
-      * Det här är utkasts-versionen av prioriteringsobjektet. Tas den här bort försvinner posten 
-      permanent från applikationen.
+      * Det hÃ¤r Ã¤r utkasts-versionen av prioriteringsobjektet. Tas den hÃ¤r bort fÃ¶rsvinner posten 
+      permanent frÃ¥n applikationen.
     </c:when>
     <c:otherwise>
-      * Det här kommer ta bort den godkända versionen av posten - den som vanliga användare ser i applikationen. 
-      <br/> Utkast-versionen kommer fortfarande finnas kvar (den går också att radera genom att återigen 
-      välja posten och trycka på 'Ta bort'-knappen).
+      * Det hÃ¤r kommer ta bort den godkÃ¤nda versionen av posten - den som vanliga anvÃ¤ndare ser i applikationen. 
+      <br/> Utkast-versionen kommer fortfarande finnas kvar (den gÃ¥r ocksÃ¥ att radera genom att Ã¥terigen 
+      vÃ¤lja posten och trycka pÃ¥ 'Ta bort'-knappen).
     </c:otherwise>
   </c:choose>  
 </div>

@@ -30,8 +30,8 @@
   <div class="yui3-u-1-2 otherUser">
     <c:if test="${user.userEditor}">
       Skapa ny <input type="submit" name="insert" value="       -1" class="sectorAdd" />
-      <tags:sectors-edit-row items="${sectors}" />
     </c:if>
+    <tags:sectors-edit-row items="${sectors}" />
   </div>
 
 <div class="yui3-u-1-2 otherUser">
@@ -47,7 +47,7 @@
       <input type="button" class="sectorAdd"/> Lägg till en sektor under en specifik 'föräldrasektor', eller 'högst upp' i trädstrukturen.
     </li> 
     <li> 
-      <input type="button" class="sectorDelete"/> Ta bort en sektor. En nod som finns sparad i databasen sedan tidiagre får en markering 
+      <input type="button" class="sectorDelete"/> Ta bort en sektor. En nod som finns sparad i databasen sedan tidigare får en markering 
       (<img alt="Raderas vid sparande" src="img/flag_red.gif">) efter att du har tryckt på knappen. 
       Denna kommer att raderas när du väl väljer att spara. Om sektorsrådet har lagts till nyligen, innan du sparat förändringarna, tas den bort med en gång istället.
     <li/>

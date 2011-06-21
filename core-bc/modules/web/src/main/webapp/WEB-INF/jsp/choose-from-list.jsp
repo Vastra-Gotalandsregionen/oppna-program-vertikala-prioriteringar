@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
@@ -77,8 +77,8 @@
   </div>
 
   <div class="yui3-u-1-6" style="height:100%">
-    <div class="padding_small"><input  class="button" type="submit" name="addAll" value="Lägg till alla &rArr;" /></div>
-    <div class="padding_small"><input class="button" type="submit" name="add" value="Lägg till &rArr;" /> </div>
+    <div class="padding_small"><input  class="button" type="submit" name="addAll" value="LÃ¤gg till alla &rArr;" /></div>
+    <div class="padding_small"><input class="button" type="submit" name="add" value="LÃ¤gg till &rArr;" /> </div>
     <div class="padding_small"><input class="button" type="submit" name="remove" value="&lArr; Ta bort" /> </div>
     <div class="padding_small"><input class="button" type="submit" name="removeAll" value="&lArr; Ta bort alla" /></div>	
   </div>
@@ -125,8 +125,8 @@
     
   <div class="yui3-u" style="height:100%" >
   
-    <div class="padding_small"><input  class="button" type="submit" name="addAll" value="Lägg till alla &rArr;" /></div>
-    <div class="padding_small"><input class="button" type="submit" name="add" value="Lägg till &rArr;" /> </div>
+    <div class="padding_small"><input  class="button" type="submit" name="addAll" value="LÃ¤gg till alla &rArr;" /></div>
+    <div class="padding_small"><input class="button" type="submit" name="add" value="LÃ¤gg till &rArr;" /> </div>
     <div class="padding_small"><input class="button" type="submit" name="remove" value="&lArr; Ta bort" /> </div>
     <div class="padding_small"><input class="button" type="submit" name="removeAll" value="&lArr; Ta bort alla" /></div>
   </div>

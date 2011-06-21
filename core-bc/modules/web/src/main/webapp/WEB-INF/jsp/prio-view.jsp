@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
@@ -16,7 +16,7 @@
 	
 	<div style="vertical-align: middle;" class="yui3-g">
 	  <div class="yui3-u-1-5">
-	    <span class="kod-label">Godk‰nd datum</span>
+	    <span class="kod-label">Godk√§nd datum</span>
 	    <c:choose>
 	      <c:when test="${prio.child != null}">${su:toStringDate(prio.child.godkaend)}</c:when>
 	      <c:otherwise>${su:toStringDate(prio.godkaend)}</c:otherwise>
@@ -47,11 +47,11 @@
 	
 	  <br/>
 	  <div id="ChangeFlag" style="display: ${(prio.child != null and su:isPriosDifferent(prio, prio.child)) ? 'block' : 'none'}">
-	    <img src='img/flag_white.gif'/> = F‰ltv‰rde som skiljer sig frÂn den godk‰nda versionen.
+	    <img src='img/flag_white.gif'/> = F√§ltv√§rde som skiljer sig fr√•n den godk√§nda versionen.
 	  </div>
 	
 	  <div id="EditedFlag" style="display: ${(su:isPriosDifferent(prio, prio.unalteredVersion)) ? 'block' : 'none'}">
-	    <img src='img/changed.png'/> = Ej sparat v‰rde.
+	    <img src='img/changed.png'/> = Ej sparat v√§rde.
 	  </div>
 	</form:form>		 
 	</div>
