@@ -37,6 +37,7 @@
 	      <input type="button" class="button" value="Skriv ut" onclick="window.print()">
 	      <input class="button" type="submit" value="Avbryt" id="cancel" name="cancel"/>
 	      <tags:editSubmit value="Spara" name="save" />
+          <tags:editSubmit value="Kopiera" name="copy" />
 	    </span>
 	  </div>
 	</div>

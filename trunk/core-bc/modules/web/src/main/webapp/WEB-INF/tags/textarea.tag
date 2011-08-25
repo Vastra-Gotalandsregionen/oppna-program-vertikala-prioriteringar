@@ -15,7 +15,7 @@
   </c:if>
   <span id="${key}OldValue" style="display:none">${(prio[key] != null) ? prio[key] : ''}</span>
 
-  <c:choose >
+  <c:choose>
 	  <c:when test="${su:canEdit(user, editDir)}">
 	    <form:textarea cssStyle="${cssInputBoxStyle}" cssClass="standardInput white" path="${key}" />
 	  </c:when>

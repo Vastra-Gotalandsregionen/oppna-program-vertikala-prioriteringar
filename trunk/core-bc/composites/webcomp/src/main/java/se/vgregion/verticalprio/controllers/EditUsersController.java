@@ -60,6 +60,7 @@ public class EditUsersController {
 		List<User> users = usersRepository.findByExample(new ExampleUser(), null);
 		modelMap.addAttribute("users", users);
 		return "users";
+
 	}
 
 	/**
@@ -103,6 +104,7 @@ public class EditUsersController {
 		modelMap.addAttribute("otherUser", user);
 		session.setAttribute("otherUser", user);
 		initSectors(user);
+		usersRepository.clear();
 		return "user-form";
 	}
 
@@ -216,13 +218,19 @@ public class EditUsersController {
 	 * @param modelMap
 	 * @param session
 	 * @return
+	 * @throws IOException
 	 */
 	@RequestMapping(value = "/user", params = { "cancel" })
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public String cancelEdit(ModelMap modelMap, HttpSession session) {
+	// @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+	public String cancelEdit(ModelMap modelMap, HttpSession session, HttpServletResponse response)
+	        throws IOException {
+
 		modelMap.remove("otherUser");
 		session.removeAttribute("otherUser");
-		return listUsers(modelMap, session);
+		usersRepository.clear();
+
+		response.sendRedirect("users");
+		return null;
 	}
 
 	/**

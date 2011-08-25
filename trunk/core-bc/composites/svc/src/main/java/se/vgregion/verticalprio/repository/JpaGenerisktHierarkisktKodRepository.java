@@ -35,13 +35,11 @@ public class JpaGenerisktHierarkisktKodRepository<T extends AbstractHirarkiskKod
 		}
 	}
 
-	/*
-	 * @Transactional(propagation = Propagation.SUPPORTS, readOnly = true) private void
+	/* @Transactional(propagation = Propagation.SUPPORTS, readOnly = true) private void
 	 * populateChildren(Collection<T> parents) { for (T child : parents) { populateChildren(child); } }
 	 * 
 	 * @Transactional(propagation = Propagation.SUPPORTS, readOnly = true) private void populateChildren(T parent)
 	 * { String qt = "select o from @ o where o.parent = ?1"; parent.getChildren().addAll(query(qt, parent));
-	 * populateChildren(parent.getChildren()); }
-	 */
+	 * populateChildren(parent.getChildren()); } */
 
 }

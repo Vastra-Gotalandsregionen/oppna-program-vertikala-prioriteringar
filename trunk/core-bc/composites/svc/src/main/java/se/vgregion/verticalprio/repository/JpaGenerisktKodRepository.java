@@ -9,22 +9,27 @@ import se.vgregion.verticalprio.entity.AbstractKod;
 public class JpaGenerisktKodRepository<T extends AbstractEntity<Long>> extends JpaGenerisktFinderRepository<T>
         implements GenerisktKodRepository<T> {
 
-    private Class klass;
+	private Class klass;
 
-    private String wildCard = "*";
+	private String wildCard = "*";
 
-    private String jpaWildCard = "%";
+	private String jpaWildCard = "%";
 
-    public JpaGenerisktKodRepository() {
-        this((Class<T>) AbstractKod.class);
-    }
+	public JpaGenerisktKodRepository() {
+		this((Class<T>) AbstractKod.class);
+	}
 
-    /**
-     * Initializing the repository with the intended type of bean to be handled.
-     */
-    public JpaGenerisktKodRepository(Class<T> klass) {
-        super(klass);
-        this.klass = klass;
-    }
+	/**
+	 * Initializing the repository with the intended type of bean to be handled.
+	 */
+	public JpaGenerisktKodRepository(Class<T> klass) {
+		super(klass);
+		this.klass = klass;
+	}
+
+	@Override
+	public void clear() {
+		entityManager.clear();
+	}
 
 }

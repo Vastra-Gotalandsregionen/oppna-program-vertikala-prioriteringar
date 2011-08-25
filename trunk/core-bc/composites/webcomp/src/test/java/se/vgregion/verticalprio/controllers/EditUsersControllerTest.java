@@ -99,8 +99,8 @@ public class EditUsersControllerTest {
 	}
 
 	@Test
-	public void cancelEdit() {
-		euc.cancelEdit(model, session);
+	public void cancelEdit() throws IOException {
+		euc.cancelEdit(model, session, response);
 		assertNull(model.get("otherUser"));
 		assertNull(session.getAttribute("otherUser"));
 	}

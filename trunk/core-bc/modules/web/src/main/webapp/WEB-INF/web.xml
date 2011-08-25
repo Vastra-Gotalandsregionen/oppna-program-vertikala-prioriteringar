@@ -36,7 +36,7 @@
     <url-pattern>/WEB-INF/jsp/*</url-pattern>
   </servlet-mapping>
   
-  
+  <!-- 
       <filter>
         <filter-name>JpaFilter</filter-name>
         <filter-class>org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter</filter-class>
@@ -45,7 +45,7 @@
         <filter-name>JpaFilter</filter-name>
         <url-pattern>*</url-pattern>
     </filter-mapping>
-    
+     -->
  <filter> 
      <filter-name>encodingFilter</filter-name> 
      <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class> 

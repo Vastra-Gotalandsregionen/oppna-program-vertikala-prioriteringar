@@ -26,7 +26,7 @@
               </div>
               <br/>
               <input name="save" type="submit" value="Spara" />
-              <input name="cancel" type="submit" value="Avbryt" />
+              <input name="cancel" type="submit" value="Avbryt" onclick="window.location='users'" />
            </div>
            
           <div class="yui3-u-1-2 otherUser">
