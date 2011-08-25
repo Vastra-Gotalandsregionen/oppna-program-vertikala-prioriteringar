@@ -497,10 +497,10 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
 		result.add(column);
 		column.setId(i);
 		column.setHideAble(true);
-		column.setDescription("* Evidensstyrka 1. \n Starkt vetenskapligt underlag. En slutsats stöds av minst två studier med högt bevisvärde. Om det finns studier som talat emot slutsatsen kan dock evidensstyrkan bli lägre. \n\n"
-		        + "* Evidensstyrka 2. \n Måttligt starkt vetenskapligt underlag. Minst en studie med högt bevisvärde och två med medelhögt bevisvärde. Vid ny indikation inom närliggande terapiområde krävs minst en stor studie med högt bevisvärde, och viss stöddokumentation.\n\n"
-		        + "* Evidensstyrka 3. \n Begränsat vetenskapligt underlag. Minst två studier med medelhögt bevisvärde.\n\n"
-		        + "* Evidensstyrka 4. \n Otillräckligt vetenskapligt stöd. Studier som uppfyller krav på bevisvärde saknas alternativt motsägande underlag.\n\n");
+		column.setDescription("1 Sjuklighet, död kan förhindras. Tillståndet kan botas. \n"
+		        + "2 Sjukligheten påverkas mycket, överlevnaden förlängs. \n"
+		        + "3 Sjukligheten påverkas i måttlig utsträckning. \n"
+		        + "4 Sjukligheten påverkas i liten utsträckning. \n");
 
 		column = new se.vgregion.verticalprio.entity.Column();
 		column.setName("patientnyttoEvidensKod");
@@ -509,10 +509,10 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
 		result.add(column);
 		column.setId(i);
 		column.setHideAble(true);
-		column.setDescription("1 Sjuklighet, död kan förhindras. Tillståndet kan botas. \n"
-		        + "2 Sjukligheten påverkas mycket, överlevnaden förlängs. \n"
-		        + "3 Sjukligheten påverkas i måttlig utsträckning. \n"
-		        + "4 Sjukligheten påverkas i liten utsträckning. \n");
+		column.setDescription("* Evidensstyrka 1. \n Starkt vetenskapligt underlag. En slutsats stöds av minst två studier med högt bevisvärde. Om det finns studier som talat emot slutsatsen kan dock evidensstyrkan bli lägre. \n\n"
+		        + "* Evidensstyrka 2. \n Måttligt starkt vetenskapligt underlag. Minst en studie med högt bevisvärde och två med medelhögt bevisvärde. Vid ny indikation inom närliggande terapiområde krävs minst en stor studie med högt bevisvärde, och viss stöddokumentation.\n\n"
+		        + "* Evidensstyrka 3. \n Begränsat vetenskapligt underlag. Minst två studier med medelhögt bevisvärde.\n\n"
+		        + "* Evidensstyrka 4. \n Otillräckligt vetenskapligt stöd. Studier som uppfyller krav på bevisvärde saknas alternativt motsägande underlag.\n\n");
 
 		column = new se.vgregion.verticalprio.entity.Column();
 		column.setName("kostnadLevnadsaarKod");

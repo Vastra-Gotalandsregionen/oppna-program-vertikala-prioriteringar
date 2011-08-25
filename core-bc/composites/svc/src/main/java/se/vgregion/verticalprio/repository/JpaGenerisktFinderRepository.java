@@ -22,104 +22,106 @@ import se.vgregion.verticalprio.repository.finding.JpqlMatchBuilder;
 public class JpaGenerisktFinderRepository<T extends AbstractEntity<Long>> extends DefaultJpaRepository<T>
         implements GenerisktFinderRepository<T> {
 
-    private Class klass;
+	private Class klass;
 
-    private String extraWhere;
+	private String extraWhere;
 
-    public JpaGenerisktFinderRepository() {
-        this((Class<T>) AbstractKod.class);
-    }
+	public JpaGenerisktFinderRepository() {
+		this((Class<T>) AbstractKod.class);
+	}
 
-    private final List<String> sortOrder = new ArrayList<String>();
+	private final List<String> sortOrder = new ArrayList<String>();
 
-    /**
-     * Initializing the repository with the intended type of bean to be handled.
-     */
-    public JpaGenerisktFinderRepository(Class<T> klass) {
-        super(klass);
-        this.klass = klass;
-    }
+	/**
+	 * Initializing the repository with the intended type of bean to be handled.
+	 */
+	public JpaGenerisktFinderRepository(Class<T> klass) {
+		super(klass);
+		this.klass = klass;
+	}
 
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public List<T> findByExample(T bean, Integer maxResult) {
-        List<Object> values = new ArrayList<Object>();
-        JpqlMatchBuilder builder = new JpqlMatchBuilder();
-        if (extraWhere != null && !"".equals(extraWhere)) {
-            builder.setExtraWhere(extraWhere);
-        }
-        String jpql = builder.mkFindByExampleJpql(bean, values);
-        // System.out.println(jpql);
-        return query(jpql, maxResult, values.toArray());
-    }
+	/**
+	 * @inheritDoc
+	 */
+	@Override
+	public List<T> findByExample(T bean, Integer maxResult) {
+		List<Object> values = new ArrayList<Object>();
+		JpqlMatchBuilder builder = new JpqlMatchBuilder();
+		if (extraWhere != null && !"".equals(extraWhere)) {
+			builder.setExtraWhere(extraWhere);
+		}
+		String jpql = builder.mkFindByExampleJpql(bean, values);
+		// System.out.println(jpql);
+		return query(jpql, maxResult, values.toArray());
+	}
 
-    @SuppressWarnings("unchecked")
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public List<T> query(String qt, Integer maxResult, Object... values) {
-        qt = qt.replace("@", klass.getSimpleName());
-        Query query = entityManager.createQuery(qt);
-        if (maxResult != null) {
-            query.setMaxResults(maxResult);
-        }
-        int i = 1;
-        for (Object value : values) {
-            query.setParameter(i++, value);
-        }
-        List<?> rawResult = query.getResultList();
+	@Override
+	@SuppressWarnings("unchecked")
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<T> query(String qt, Integer maxResult, Object... values) {
+		qt = qt.replace("@", klass.getSimpleName());
+		Query query = entityManager.createQuery(qt);
 
-        List<T> result = new ArrayList<T>();
+		if (maxResult != null) {
+			query.setMaxResults(maxResult);
+		}
+		int i = 1;
+		for (Object value : values) {
+			query.setParameter(i++, value);
+		}
+		List<?> rawResult = query.getResultList();
 
-        // Sometimes the result is an array.
-        if (!rawResult.isEmpty() && rawResult.get(0).getClass().isArray()) {
-            Object[] firstRow = (Object[]) rawResult.get(0);
-            int index = 0;
-            for (int j = 0; j < firstRow.length; j++) {
-                if (firstRow[j] instanceof AbstractEntity) {
-                    index = j;
-                    break;
-                }
-            }
-            for (Object raw : rawResult) {
-                Object[] row = (Object[]) raw;
-                result.add((T) row[index]);
-            }
-        } else {
-            result = (List<T>) rawResult;
-        }
+		List<T> result = new ArrayList<T>();
 
-        Set<Long> ids = new HashSet<Long>();
-        for (T item : new ArrayList<T>(result)) {
-            if (ids.contains(item.getId())) {
-                result.remove(item);
-            } else {
-                ids.add(item.getId());
-            }
-        }
+		// Sometimes the result is an array.
+		if (!rawResult.isEmpty() && rawResult.get(0).getClass().isArray()) {
+			Object[] firstRow = (Object[]) rawResult.get(0);
+			int index = 0;
+			for (int j = 0; j < firstRow.length; j++) {
+				if (firstRow[j] instanceof AbstractEntity) {
+					index = j;
+					break;
+				}
+			}
+			for (Object raw : rawResult) {
+				Object[] row = (Object[]) raw;
+				result.add((T) row[index]);
+			}
+		} else {
+			result = (List<T>) rawResult;
+		}
 
-        return result;
-    }
+		Set<Long> ids = new HashSet<Long>();
+		for (T item : new ArrayList<T>(result)) {
+			if (ids.contains(item.getId())) {
+				result.remove(item);
+			} else {
+				ids.add(item.getId());
+			}
+		}
 
-    @Override
-    public List<String> getSortOrder() {
-        return sortOrder;
-    }
+		return result;
+	}
 
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void setExtraWhere(String extraWhere) {
-        this.extraWhere = extraWhere;
-    }
+	@Override
+	public List<String> getSortOrder() {
+		return sortOrder;
+	}
 
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public String getExtraWhere() {
-        return extraWhere;
-    }
+	/**
+	 * @inheritDoc
+	 */
+	@Override
+	public void setExtraWhere(String extraWhere) {
+		this.extraWhere = extraWhere;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	@Override
+	public String getExtraWhere() {
+		return extraWhere;
+	}
 
 }

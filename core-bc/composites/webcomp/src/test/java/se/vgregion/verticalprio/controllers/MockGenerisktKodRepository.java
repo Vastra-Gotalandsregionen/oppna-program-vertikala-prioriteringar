@@ -174,4 +174,8 @@ public class MockGenerisktKodRepository<T extends AbstractEntity<Long>> implemen
 		return deletedItemsId;
 	}
 
+	@Override
+	public void clear() {
+	}
+
 }

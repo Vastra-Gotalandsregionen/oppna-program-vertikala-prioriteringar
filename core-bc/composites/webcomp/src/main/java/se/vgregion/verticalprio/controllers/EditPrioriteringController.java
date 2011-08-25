@@ -345,6 +345,24 @@ public class EditPrioriteringController extends ControllerBase {
 		return "main";
 	}
 
+	@RequestMapping(value = "prio", params = { "copy" })
+	public String copy(HttpServletRequest request, HttpServletResponse response, HttpSession session,
+	        @ModelAttribute("prio") PrioriteringsobjektForm pf, ModelMap model) throws IOException {
+
+		PrioriteringsobjektForm sessionPrio = (PrioriteringsobjektForm) session.getAttribute("prio");
+
+		copyKodCollectionsAndMetaDates(sessionPrio, pf);
+
+		pf.setId(null);
+		pf.setGodkaend(null);
+		pf.getChildren().clear();
+		pf.setSenastUppdaterad(new Date());
+
+		Prioriteringsobjekt prioConv = toPrioriteringsobjekt(request, pf, session);
+
+		return "prio-view";
+	}
+
 	@RequestMapping(value = "prio", params = { "cancel" })
 	public String cancel(HttpServletRequest request, HttpServletResponse response, HttpSession session,
 	        @ModelAttribute("prio") PrioriteringsobjektForm pf) throws IOException {
