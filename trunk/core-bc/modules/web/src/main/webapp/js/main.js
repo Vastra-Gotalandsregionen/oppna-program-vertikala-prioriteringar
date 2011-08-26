@@ -149,3 +149,107 @@ AUI().ready(
 
 	}
 );
+
+function alignDivsInTwoColumns(firstSelector, secondSelector) {
+    
+    function yuiCollectionToArray(yc) {
+        var r = [];
+        yc.each(function (node){
+            r.push(node);
+        });
+        return r;
+    };
+    
+    function entwine(a,b) {
+        return a.concat(b);
+        
+        var result = [];
+        if (a.length > b.length) {
+            var long = a, short = b;
+        } else {
+            var long = b, short = a;
+        }
+            
+        for (var j = 0; j < long.length; j++) {
+            result.push(long[j]);
+            if (short.length < j && short[j]) result.push(short[j]);
+        }
+        
+        var tmp = result;
+        result = [];
+        
+        for (var j = 0; j < tmp.length; j++) {
+            if (tmp[j] && tmp[j] != null) result.push(tmp[j]); 
+        }
+        
+        return result;
+    };
+    
+    function process() {
+        try {
+            var item1 = window.justifyCols.first.shift();
+            var item2 = window.justifyCols.second.shift();
+            if (!item1 || !item2) return;
+            var textsDivs = yuiCollectionToArray(item1.all('div'));
+            if (textsDivs.length < 2) return;
+            var codesDivs = yuiCollectionToArray(item2.all('div'));
+            for (var j = 0; j < textsDivs.length; j++) {
+                if (!textsDivs[j] || !codesDivs[j]) return;
+                var t = textsDivs[j].getComputedStyle('height').replace('px','');
+                var c = codesDivs[j].getComputedStyle('height').replace('px','');
+                if (t < c) {
+                    textsDivs[j].setStyle('height', c);
+                } else {
+                    codesDivs[j].setStyle('height', t);
+                }
+            }
+        }catch(ee) {
+            alert(ee.message);
+        }
+    };
+    
+    YUI().use('node', 'gallery-timer', function (Y) {
+        var texts = yuiCollectionToArray(Y.all(firstSelector));
+        var codes = yuiCollectionToArray(Y.all(secondSelector));
+
+        
+        //alert("Före " + texts.length);
+        var date = new Date();
+        
+        for (var i = 0; i < texts.length; i++) {
+            if(yuiCollectionToArray(texts[i].all('div')).length < 2 ||
+                    yuiCollectionToArray(codes[i].all('div')).length < 2) {
+                texts.splice(i,1);
+                codes.splice(i,1);
+                i--;
+            }
+        }
+        //alert("Efter " + texts.length + " tog " + (date.getTime()-new Date().getTime()) + "ms.");
+        
+        if (texts.length != codes.length || texts.length == 0) return;
+        
+        if (!window.justifyCols) window.justifyCols = {first: [], second: []};
+        
+        window.justifyCols.first = entwine(window.justifyCols.first, texts);
+        window.justifyCols.second = entwine(window.justifyCols.second, codes);
+        
+        var t = new Y.Timer({length:300, repeatCount:texts.length + 1, callback:process});
+//        t.on('timer:start',function(e){alert('start');});
+//        t.on('timer:stop',function(e){alert('stop ' + window.justifyCols.second.length + ' = ' + window.justifyCols.first.length);});
+        t.start();
+    });
+}
+
+
+try{
+    alignDivsInTwoColumns(
+            '.main-content td.diagnosTexts,.main-content td.aatgaerdskoderTexts,.main-content td.atcText', 
+            '.main-content td.diagnosKodTexts,.main-content td.aatgaerdskoder,.main-content td.atcKoder'
+    );
+    
+//    alignDivsInTwoColumns('td.diagnosTexts', 'td.diagnosKodTexts');
+//    alignDivsInTwoColumns('td.aatgaerdskoderTexts', 'td.aatgaerdskoder');
+    //alignDivsInTwoColumns('td.atcText', 'td.atcKoder');
+} catch(ee) {
+    alert(ee.message);
+}
