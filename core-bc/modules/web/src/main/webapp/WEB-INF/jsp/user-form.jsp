@@ -12,7 +12,14 @@
   	<div class="window prio-view view_details_color yui3-g">
       <div class="values">
       	<form:form action="user" method="post" modelAttribute="otherUser">
-          <h2 class="yui3-u-1">Ändra användare</h2>
+          <c:choose>
+            <c:when test="${otherUser.id != null}">
+              <h2 class="yui3-u-1">Ändra användare</h2>
+            </c:when>
+            <c:otherwise>
+              <h2 class="yui3-u-1">Lägg till ny användare</h2>
+            </c:otherwise>
+          </c:choose>
           <div style="margin: auto; text-align: left;" class="yui3-u-1-2 otherUser">
               <form:hidden path="id"/>
               <div class="yui3-g">
