@@ -57,11 +57,11 @@ public class EditSektorRaadController {
 
 		boolean result = !userSektors.contains(SektorRaadBean.toSektorRaad(bean));
 		bean.setLocked(result);
-		if (!result) {
-			for (SektorRaadBean child : bean.getBeanChildren()) {
-				initLockedValue(child, user);
-			}
+		// if (!result) {
+		for (SektorRaadBean child : bean.getBeanChildren()) {
+			initLockedValue(child, user);
 		}
+		// }
 	}
 
 	@RequestMapping(value = "sektorer")
