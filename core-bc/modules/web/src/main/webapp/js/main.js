@@ -186,21 +186,26 @@ function alignDivsInTwoColumns(firstSelector, secondSelector) {
     
     function process() {
         try {
-            var item1 = window.justifyCols.first.shift();
-            var item2 = window.justifyCols.second.shift();
-            if (!item1 || !item2) return;
-            var textsDivs = yuiCollectionToArray(item1.all('div'));
-            if (textsDivs.length < 2) return;
-            var codesDivs = yuiCollectionToArray(item2.all('div'));
-            for (var j = 0; j < textsDivs.length; j++) {
-                if (!textsDivs[j] || !codesDivs[j]) return;
-                var t = textsDivs[j].getComputedStyle('height').replace('px','');
-                var c = codesDivs[j].getComputedStyle('height').replace('px','');
-                if (t < c) {
-                    textsDivs[j].setStyle('height', c);
-                } else {
-                    codesDivs[j].setStyle('height', t);
+            for (var i = 0; i < 3; i++) {
+                var date = new Date();
+                var item1 = window.justifyCols.first.shift();
+                var item2 = window.justifyCols.second.shift();
+                if (!item1 || !item2) continue;
+                var textsDivs = yuiCollectionToArray(item1.all('div'));
+                if (textsDivs.length < 2) continue;
+                var codesDivs = yuiCollectionToArray(item2.all('div'));
+                var codeDiv = [];
+                for (var j = 0; j < textsDivs.length; j++) {
+                    if (!textsDivs[j] || !codesDivs[j]) return;
+                    var t = textsDivs[j].getComputedStyle('height').replace('px','');
+                    codeDiv.push('<div style="height:');
+                    codeDiv.push(t);
+                    codeDiv.push('px">');
+                    codeDiv.push(codesDivs[j]._node.innerHTML);
+                    codeDiv.push('</div>');
                 }
+                
+                item2.setContent(codeDiv.join(''));
             }
         }catch(ee) {
             alert(ee.message);
@@ -210,12 +215,16 @@ function alignDivsInTwoColumns(firstSelector, secondSelector) {
     YUI().use('node', 'gallery-timer', function (Y) {
         var texts = yuiCollectionToArray(Y.all(firstSelector));
         var codes = yuiCollectionToArray(Y.all(secondSelector));
+        
+        if (!texts || !codes || texts.length != codes.length) {
+            return;
+        }
 
         var date = new Date();
         
         for (var i = 0; i < texts.length; i++) {
-            if(yuiCollectionToArray(texts[i].all('div')).length < 2 ||
-                    yuiCollectionToArray(codes[i].all('div')).length < 2) {
+            if(yuiCollectionToArray(texts[i].all('div')).length < 3 ||
+                    yuiCollectionToArray(codes[i].all('div')).length < 3) {
                 texts.splice(i,1);
                 codes.splice(i,1);
                 i--;
@@ -231,7 +240,7 @@ function alignDivsInTwoColumns(firstSelector, secondSelector) {
         window.justifyCols.first = entwine(window.justifyCols.first, texts);
         window.justifyCols.second = entwine(window.justifyCols.second, codes);
         
-        var t = new Y.Timer({length:300, repeatCount:texts.length + 1, callback:process});
+        var t = new Y.Timer({length:300, repeatCount:(texts.length)/3 + 1, callback:process});
         t.start();
     });
 }
@@ -243,18 +252,18 @@ try{
 //    );
     
     alignDivsInTwoColumns(
-            '.main-content td.diagnosTexts', 
-            '.main-content td.diagnosKodTexts'
+            '.main-content td.diagnosTexts div.padded', 
+            '.main-content td.diagnosKodTexts div.padded'
     );
     
     alignDivsInTwoColumns(
-            '.main-content td.aatgaerdskoderTexts', 
-            '.main-content td.aatgaerdskoder'
+            '.main-content td.aatgaerdskoderTexts div.padded', 
+            '.main-content td.aatgaerdskoder div.padded'
     );
     
     alignDivsInTwoColumns(
-            '.main-content td.atcText', 
-            '.main-content td.atcKoder'
+            '.main-content td.atcText div.padded', 
+            '.main-content td.atcKoder div.padded'
     );
     
 } catch(ee) {
