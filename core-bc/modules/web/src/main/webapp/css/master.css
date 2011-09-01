@@ -214,7 +214,7 @@ button {
     overflow-y:auto;
     overflow-x: hidden;
 }
-
+/*
 .main-content .headerRow th {
   border: 0 solid #333333;
   border-right-width: 1px;
@@ -223,16 +223,32 @@ button {
   font-weight: bold; 
   max-width: 20em;
   overflow: hidden;
-  padding: 5px; 
   vertical-align: top;
 }
 
-.main-content td {
-    border: 1px solid #cccccc;
-    border-left-width: 0;
-    text-align: left;
+*/
+.padded {
     padding: 5px;
-    vertical-align: top;
+}
+
+
+.main-content td {
+  border: 1px solid #cccccc;
+  border-left-width: 0;
+  text-align: left;
+  vertical-align: top;
+}
+
+.main-content .headerRow th {
+  border: 0 solid #333333;
+  border-right-width: 1px;
+  color: #333333;
+  font-size: 12px;
+  font-weight: bold; 
+  /*max-width: 20em;*/
+  overflow: hidden;
+  vertical-align: top;
+  vertical-align: top;
 }
 
 /*
