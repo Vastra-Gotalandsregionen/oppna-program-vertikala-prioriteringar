@@ -150,19 +150,18 @@ AUI().ready(
 	}
 );
 
+function yuiCollectionToArray(yc) {
+    var r = [];
+    yc.each(function (node){
+        r.push(node);
+    });
+    return r;
+};
+
 function alignDivsInTwoColumns(firstSelector, secondSelector) {
-    
-    function yuiCollectionToArray(yc) {
-        var r = [];
-        yc.each(function (node){
-            r.push(node);
-        });
-        return r;
-    };
-    
+        
     function entwine(a,b) {
         return a.concat(b);
-        
         var result = [];
         if (a.length > b.length) {
             var long = a, short = b;
@@ -212,8 +211,6 @@ function alignDivsInTwoColumns(firstSelector, secondSelector) {
         var texts = yuiCollectionToArray(Y.all(firstSelector));
         var codes = yuiCollectionToArray(Y.all(secondSelector));
 
-        
-        //alert("Före " + texts.length);
         var date = new Date();
         
         for (var i = 0; i < texts.length; i++) {
@@ -224,9 +221,10 @@ function alignDivsInTwoColumns(firstSelector, secondSelector) {
                 i--;
             }
         }
-        //alert("Efter " + texts.length + " tog " + (date.getTime()-new Date().getTime()) + "ms.");
-        
-        if (texts.length != codes.length || texts.length == 0) return;
+
+        if (texts.length != codes.length || texts.length == 0) {
+            return;
+        }
         
         if (!window.justifyCols) window.justifyCols = {first: [], second: []};
         
@@ -234,22 +232,38 @@ function alignDivsInTwoColumns(firstSelector, secondSelector) {
         window.justifyCols.second = entwine(window.justifyCols.second, codes);
         
         var t = new Y.Timer({length:300, repeatCount:texts.length + 1, callback:process});
-//        t.on('timer:start',function(e){alert('start');});
-//        t.on('timer:stop',function(e){alert('stop ' + window.justifyCols.second.length + ' = ' + window.justifyCols.first.length);});
         t.start();
     });
 }
 
-
 try{
+//    alignDivsInTwoColumns(
+//            '.main-content td.diagnosTexts,.main-content td.aatgaerdskoderTexts,.main-content td.atcText', 
+//            '.main-content td.diagnosKodTexts,.main-content td.aatgaerdskoder,.main-content td.atcKoder'
+//    );
+    
     alignDivsInTwoColumns(
-            '.main-content td.diagnosTexts,.main-content td.aatgaerdskoderTexts,.main-content td.atcText', 
-            '.main-content td.diagnosKodTexts,.main-content td.aatgaerdskoder,.main-content td.atcKoder'
+            '.main-content td.diagnosTexts', 
+            '.main-content td.diagnosKodTexts'
     );
     
-//    alignDivsInTwoColumns('td.diagnosTexts', 'td.diagnosKodTexts');
-//    alignDivsInTwoColumns('td.aatgaerdskoderTexts', 'td.aatgaerdskoder');
-    //alignDivsInTwoColumns('td.atcText', 'td.atcKoder');
+    alignDivsInTwoColumns(
+            '.main-content td.aatgaerdskoderTexts', 
+            '.main-content td.aatgaerdskoder'
+    );
+    
+    alignDivsInTwoColumns(
+            '.main-content td.atcText', 
+            '.main-content td.atcKoder'
+    );
+    
 } catch(ee) {
     alert(ee.message);
 }
+
+
+
+
+    
+    
+    

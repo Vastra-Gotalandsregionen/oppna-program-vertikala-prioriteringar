@@ -5,14 +5,16 @@
 <%@ taglib uri="/WEB-INF/tld/vgr-util.tld" prefix="su"%>
 <%@ taglib prefix='fn' uri='http://java.sun.com/jsp/jstl/functions' %>
 
-    <table cellpadding="5">
+    <table cellpadding="0" class="FloatTitle">
       <thead class="headerRow">
-        <tr>
-        <th>#</th>
+        <tr id="scroll_me">
+        <th class="first_header">#</th>
         <c:forEach items="${form.columns}" var="column">
           <c:if test="${column.visible and (not column.demandsEditRights or user != null and user.editor)}">
             <th class="${column.name}">
+              <div class="padded">
               <span>${su:toUpperCase(column.label)}</span>
+              </div>
             </th>
           </c:if>
         </c:forEach>
@@ -22,7 +24,8 @@
           <td> &nbsp; </td>
           <c:forEach items="${form.columns}" var="column" varStatus="vs">
             <c:if test="${column.visible and (not column.demandsEditRights or user != null and user.editor)}">
-              <td class="enhancedToolTip">              
+              <td class="enhancedToolTip">
+                <div class="padded">              
                 <c:if test="${not empty column.description}">
                   <span title="${column.description}">
                     <img src='img/information.png'/>
@@ -46,10 +49,12 @@
                     <img src='img/x.png'/>
                   </a>
                 </c:if>
-                <tags:table-sort-cell column="${column}"/>                
+                <tags:table-sort-cell column="${column}"/>            
+                </div>    
               </td>
             </c:if>
           </c:forEach>
+          
         </tr>
         
       </thead>
@@ -59,3 +64,7 @@
         </c:forEach>
       </tbody>
     </table>
+    
+    <script type="text/javascript" src="js/TableFloaterTitle.js">
+    </script>
+    

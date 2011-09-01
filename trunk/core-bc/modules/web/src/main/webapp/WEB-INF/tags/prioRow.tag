@@ -11,14 +11,17 @@
 
 <tr class="${index % 2 == 0 ? 'even' : 'odd'}">
   <td>
+    <div class="padded"> 
     <input title="id=${row.id}" type="radio" name="id" value="${row.id}"${vs.index == 0 ? ' checked' : ''}/>
     <c:if test="${row.godkaend == null && (row.child == null || row.child.godkaend == null)}">
       <div style="color: red; text-align: center;" title="Ännu ej godkänd">*</div>
     </c:if>
+    </div>
   </td>
   <c:forEach items="${form.columns}" var="column">
     <c:if test="${column.visible and (not column.demandsEditRights or user != null and user.editor)}">
       <td class="${column.name}">
+        <div class="padded"> 
         <c:choose>
           <c:when test="${row.child == null}">
             <tags:cell value="${row[column.name]}"/>
@@ -27,6 +30,7 @@
             <tags:cell value="${row.child[column.name]}"/>
           </c:otherwise>
         </c:choose>
+        </div>
       </td>
     </c:if>
   </c:forEach>
