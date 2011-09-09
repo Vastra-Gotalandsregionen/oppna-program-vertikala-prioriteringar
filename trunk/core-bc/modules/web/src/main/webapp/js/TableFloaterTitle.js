@@ -51,13 +51,61 @@
             var nr = i;
             var id = allTableIDs[i];
             Y.on('scroll',function () {
-                floatTitle(id,nr);
+                YUI().use('event', 'node', 'gallery-timer', function(Y){
+                    function impl() {
+                        var floatTable =  Y.one('#tmpFloatTitleTableId0TitleTable');
+                        var buttonRow = Y.one('div.button-row');
+
+                        if (floatButtons.startTime != impl.startTime) {
+                            if (floatTable && floatTable.getStyle('display') != 'none') {
+                                floatTable.setStyle('display', 'none');
+                                floatTable.setStyle('top', '0px');
+                                floatTable.setStyle('zIndex', '1');
+                            }
+                            if (buttonRow) {
+                                buttonRow.setStyle('display', 'none');
+                            }
+                            return;
+                        }
+                        if (floatTable) {
+                            floatTable.setStyle('display', 'block');
+                        }
+                        if (buttonRow) {
+                            buttonRow.setStyle('display', 'block');
+                        }
+                        floatTitle(id,nr);
+                        floatButtons(); 
+                    }
+                    floatButtons.startTime = new Date().getTime();
+                    impl.startTime = new Date().getTime();
+                    var t = new Y.Timer({length:300, repeatCount:1, callback:impl});
+                    t.start();
+                });
             });
         }
-        
     });
   }
 
+  
+  function floatButtons() {
+      YUI().use('event', 'node', 'gallery-timer', function(Y){
+          var buttonRow = Y.one('div.button-row');
+          var pos = Y.one('#pos');
+          var xy = pos.getXY();
+          var buttonRowHold = Y.one('#buttonRowHold');
+          var floatTable =  Y.one('#tmpFloatTitleTableId0TitleTable');
+          if (!floatTable) return;
+          var buttonsCode = buttonRow._node.innerHTML;
+          var y = floatTable.getXY()[1] - 30;
+          //var y = floatTable.getXY()[1] - 35;
+          if (y < 0) y = 0;
+          var x = xy[0];
+          x -= pos.getComputedStyle('width');
+          var styleCode = 'style="position:absolute; z-index:300; left:' + x + 'px; top:'+ y +'px;"';
+          buttonsCode = '<div class="button-row" ' + styleCode + '>' + buttonsCode + '</div>';
+          buttonRowHold._node.innerHTML = buttonsCode;
+      });
+  }
 
   //////////////////////////////////////////////////////////////////////////////
   // floatTitle - Start the float process
@@ -203,8 +251,9 @@
           moveTop=0;
           if ( (topDiff < (-1) ) || (topDiff > (1) ) ) { moveTop=Math.round(topDiff/3);}
           newTop = oldTop + moveTop;
+          //newTop += 50;
         }
-      	
+        //newTop += 20;
       	// Move to new top position
       	if (newTop < 0) newTop = 0;
       	titleObj.style.top = newTop + "px";

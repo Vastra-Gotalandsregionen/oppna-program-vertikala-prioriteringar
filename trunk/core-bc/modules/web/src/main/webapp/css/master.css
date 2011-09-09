@@ -27,6 +27,10 @@ body {
   #white-space: nowrap;
 }
 
+#tmpFloatTitleTableId0Title {
+  background-color: white;
+}
+
 h4 {
   font-weight: bold;  
 }
@@ -91,6 +95,12 @@ h4 {
   padding-bottom: 4px;
   width: 100%;
   white-space: nowrap;
+  position: absolute;
+  z-index: 3;
+  background-color: white;
+  height: 20px;
+  padding-top: 5px;
+  top: 0px;
 }
 
 .standardInput {
@@ -198,7 +208,8 @@ button {
 .main-content table {
   border-collapse:collapse;
   border: 1px solid #333333;
-  margin-top: 8px;
+  margin-top: 30px;
+  
 }
 
 .main-content thead.headerRow {

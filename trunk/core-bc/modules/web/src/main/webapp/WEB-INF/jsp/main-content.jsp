@@ -10,8 +10,12 @@
 	<form action="main" method="post">
     
    		<c:if test="${not empty rows}">
+            <!--[if IE]>
+            <span style="background-color: white; position: fixed; top: 0px; right: 0px; width: 100%; height: 5px; display: block; z-index: 500">&nbsp;</span>
+            <![endif]-->
+            <span id="pos" style="position: static;"></span>
+            <span id="buttonRowHold">
       		<div class="button-row">
-        
           		<input type="submit" id="select-prio" name="select-prio" value="Visa prioriteringsobjekt" class="button"/>
         
         		<c:if test="${loginResult && user != null and user.editor}">
@@ -35,6 +39,8 @@
                     <tags:editSubmit name="edit-sectors" value="Hantera sektorsråd" cssClass="button"/>
                 </c:if>
       		</div>
+          </span>
+          <!-- <span style="height: 40px;">&nbsp;</span>  --> 
 		</c:if>
     
 		<tags:message-out/>

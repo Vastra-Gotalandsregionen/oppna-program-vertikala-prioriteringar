@@ -29,8 +29,11 @@ AUI().ready(
 			// If there is no columnFilterNaw - don't proceed
 			if(!columnFilterNav) { return; }
 			
-			columnHideTrigger.on('click', onColumnHideClick);
-			columnShowTrigger.on('click', onColumnShowClick);
+            columnHideTrigger.on('click', onColumnHideClick);
+            columnShowTrigger.on('click', onColumnShowClick);
+            
+//            columnHideTrigger.on('click', floatButtons);
+//            columnShowTrigger.on('click', floatButtons);
 			
 			// Hide show trigger
 			columnShowTrigger.hide();
@@ -51,7 +54,7 @@ AUI().ready(
 		    columnHideAnim.on('start', onColumnHideAnimStart);
 		    columnShowAnim.on('end', onColumnShowAnimEnd);
 		    columnShowAnim.on('start', onColumnShowAnimStart);
-		    
+
 		    // Setup tooltips for column show/hide triggers
 			columnTriggerTooltip = new A.Tooltip({
 				trigger: '.column-control a',
@@ -75,7 +78,7 @@ AUI().ready(
 			//columnFilterNav.setStyle('width', '100px');
 			columnHideAnim.run();
 			
-			
+			floatButtons();
 		}
 		
 		// END - Handling of column hide event
@@ -89,6 +92,7 @@ AUI().ready(
 			//columnFilterNav.setStyle('width', '300px');
 			columnShowAnim.run();
 			
+			floatButtons();
 		}
 		
 		// END - Handling of column showa event
@@ -102,6 +106,8 @@ AUI().ready(
 			
 			columnFilterSidebarContent.hide();
 			layout.addClass('collapsed-filter-nav');
+			
+			floatButtons();
 		}
 		// END - Handling of column hide anim start event
 		
@@ -116,6 +122,8 @@ AUI().ready(
 			
 			// Hide tooltip if shown
 			columnTriggerTooltip.hide();
+			
+			floatButtons();
 		}
 		// END - Handling of column hide anim start event
 		
@@ -133,6 +141,10 @@ AUI().ready(
 			
 			// Hide tooltip if shown
 			columnTriggerTooltip.hide();
+			YUI().use('node', 'gallery-timer', function (Y) {
+		        var t = new Y.Timer({length:1000, repeatCount:2 , callback:floatButtons});
+		        t.start();
+			});
 		}
 		// END - Handling of column show anim end event
 		
@@ -142,11 +154,11 @@ AUI().ready(
 			layout.removeClass('collapsed-filter-nav');
 			
 			columnFilterSidebarContent.show();
+			
+			floatButtons();
 		}
 		// END - Handling of column show anim start event
 		
-		
-
 	}
 );
 
@@ -270,7 +282,21 @@ try{
     alert(ee.message);
 }
 
-
+//YUI().use('event', 'node', function(Y){
+//    Y.on('scroll',function () {
+//        var xy = Y.one('#pos').getXY();
+//        if(!xy) return;
+//        var buttonRow = Y.one('div.button-row');
+//        var floatTable =  Y.one('#tmpFloatTitleTableId0TitleTable'); 
+//        //buttonRow.setStyle('position', 'absolute');
+//        buttonRow.setStyle('left', xy[0] + 'px');
+//        xy = floatTable.getXY();
+//        buttonRow.setStyle('top', xy[1] + 'px');
+//        //buttonRow.setStyle('position', 'fixed');
+//        //console.log(xy);
+//        //console.log(buttonRow);
+//    });
+//});
 
 
     
