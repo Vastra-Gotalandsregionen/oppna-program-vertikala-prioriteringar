@@ -86,11 +86,25 @@ public class VerticalPrioController extends EditPrioriteringController {
 		return null;
 	}
 
+	private boolean isBlank(String s) {
+		if (s == null) {
+			return true;
+		}
+		if ("".equals(s.trim())) {
+			return true;
+		}
+		return false;
+	}
+
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value = "/main", params = { "login" })
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public String login(HttpSession session, @RequestParam(required = false) String userName,
 	        @RequestParam(required = false) String password) {
+
+		if (isBlank(userName) || isBlank(password)) {
+			return main(session);
+		}
 
 		User example = new User();
 		example.setVgrId(userName);

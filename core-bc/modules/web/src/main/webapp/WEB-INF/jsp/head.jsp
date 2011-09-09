@@ -11,6 +11,7 @@
 <script src="js/main.js" type="text/javascript"></script>
 <script src="js/tooltip.js" type="text/javascript"></script>
 
-<style type="text/css">
-</style>
+<!--[if IE]>
+  <link rel="stylesheet" type="text/css" href="css/ie-only.css" />
+<![endif]-->
 </head>
