@@ -41,22 +41,20 @@
         cnt++;
       }
     }
-    
-    // Start floating the tables title
-    //for (i=0;i<allTableIDs.length; i++) {
-    //  floatTitle(allTableIDs[i],i);
-    //}
+
     YUI().use('event',function(Y){
         for (i=0;i<allTableIDs.length; i++) {
             var nr = i;
             var id = allTableIDs[i];
             Y.on('scroll',function () {
                 YUI().use('event', 'node', 'gallery-timer', function(Y){
+                    
                     function impl() {
                         var floatTable =  Y.one('#tmpFloatTitleTableId0TitleTable');
                         var buttonRow = Y.one('div.button-row');
 
                         if (floatButtons.startTime != impl.startTime) {
+                            // Hide the floating header and the buttons row if user i still scrolling. 
                             if (floatTable && floatTable.getStyle('display') != 'none') {
                                 floatTable.setStyle('display', 'none');
                                 floatTable.setStyle('top', '0px');
@@ -67,17 +65,22 @@
                             }
                             return;
                         }
+                        
+                        // Make sure header and buttons are visible when it comes to finally show them.
                         if (floatTable) {
                             floatTable.setStyle('display', 'block');
                         }
                         if (buttonRow) {
                             buttonRow.setStyle('display', 'block');
                         }
+                        
                         floatTitle(id,nr);
                         floatButtons(); 
                     }
-                    floatButtons.startTime = new Date().getTime();
-                    impl.startTime = new Date().getTime();
+                    
+                    var time = new Date().getTime();
+                    floatButtons.startTime = time;
+                    impl.startTime = time;
                     var t = new Y.Timer({length:300, repeatCount:1, callback:impl});
                     t.start();
                 });
@@ -89,21 +92,34 @@
   
   function floatButtons() {
       YUI().use('event', 'node', 'gallery-timer', function(Y){
+          console.log('Start floatButtons');
           var buttonRow = Y.one('div.button-row');
+          if (!buttonRow) {
+              console.log('!buttonRow');
+              return;
+          }
           var pos = Y.one('#pos');
+          if (!pos) return;
           var xy = pos.getXY();
           var buttonRowHold = Y.one('#buttonRowHold');
           var floatTable =  Y.one('#tmpFloatTitleTableId0TitleTable');
-          if (!floatTable) return;
+          if (!floatTable) {
+              console.log('!floatTable');
+              //return;
+              floatTable = Y.one('#tmpFloatTitleTableId0');
+              if (!floatTable) return;
+          }
+          console.log(floatTable);
+          
           var buttonsCode = buttonRow._node.innerHTML;
           var y = floatTable.getXY()[1] - 30;
-          //var y = floatTable.getXY()[1] - 35;
           if (y < 0) y = 0;
           var x = xy[0];
           x -= pos.getComputedStyle('width');
           var styleCode = 'style="position:absolute; z-index:300; left:' + x + 'px; top:'+ y +'px;"';
           buttonsCode = '<div class="button-row" ' + styleCode + '>' + buttonsCode + '</div>';
           buttonRowHold._node.innerHTML = buttonsCode;
+          console.log('End floatButtons');
       });
   }
 
