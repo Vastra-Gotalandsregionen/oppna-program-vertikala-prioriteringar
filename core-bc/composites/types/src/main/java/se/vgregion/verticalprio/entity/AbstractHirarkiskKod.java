@@ -50,11 +50,11 @@ public abstract class AbstractHirarkiskKod<T extends AbstractHirarkiskKod<?>> ex
 
 	public void setSelected(boolean selected) {
 		this.selected = selected;
-		if (getChildren() != null) {
-			for (AbstractHirarkiskKod ahk : getChildren()) {
-				ahk.setSelected(selected);
-			}
-		}
+		// if (getChildren() != null) {
+		// for (AbstractHirarkiskKod ahk : getChildren()) {
+		// ahk.setSelected(selected);
+		// }
+		// }
 	}
 
 	public boolean isSelected() {

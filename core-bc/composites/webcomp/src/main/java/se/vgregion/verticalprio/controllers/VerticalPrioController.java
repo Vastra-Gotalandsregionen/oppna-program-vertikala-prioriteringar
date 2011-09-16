@@ -312,11 +312,11 @@ public class VerticalPrioController extends EditPrioriteringController {
 		}
 		for (SektorRaad raad : raads) {
 			List<SektorRaad> markedChildren = getMarkedLeafs(raad.getChildren());
-			if (raad.isSelected() && markedChildren.size() == 0) {
+
+			if (raad.isSelected()) {
 				result.add(raad);
-			} else {
-				result.addAll(markedChildren);
 			}
+			result.addAll(markedChildren);
 		}
 		return result;
 	}

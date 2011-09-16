@@ -25,15 +25,11 @@ AUI().ready(
 			columnShowTrigger = A.one('.column-control-show');
 			logoWrap = A.one('.logo-wrap');
 			
-			
 			// If there is no columnFilterNaw - don't proceed
 			if(!columnFilterNav) { return; }
 			
             columnHideTrigger.on('click', onColumnHideClick);
             columnShowTrigger.on('click', onColumnShowClick);
-            
-//            columnHideTrigger.on('click', floatButtons);
-//            columnShowTrigger.on('click', floatButtons);
 			
 			// Hide show trigger
 			columnShowTrigger.hide();
@@ -74,11 +70,13 @@ AUI().ready(
 			
 			// Stop default event
 			e.halt();
-			
-			//columnFilterNav.setStyle('width', '100px');
+
 			columnHideAnim.run();
 			
-			floatButtons();
+            YUI().use('node', 'gallery-timer', function (Y) {
+                var t = new Y.Timer({length:1000, repeatCount:2 , callback:floatButtons});
+                t.start();
+            });
 		}
 		
 		// END - Handling of column hide event
@@ -88,18 +86,20 @@ AUI().ready(
 		function onColumnShowClick(e) {
 			
 			e.halt();
-			
-			//columnFilterNav.setStyle('width', '300px');
+
 			columnShowAnim.run();
 			
-			floatButtons();
+            YUI().use('node', 'gallery-timer', function (Y) {
+                var t = new Y.Timer({length:1000, repeatCount:2 , callback:floatButtons});
+                t.start();
+            });
 		}
 		
 		// END - Handling of column showa event
 
 		// START - Handling of column hide anim end event
 		function onColumnHideAnimEnd(e) {
-			
+
 			// Toggle triggers
 			columnShowTrigger.show();
 			columnHideTrigger.hide();
@@ -107,7 +107,10 @@ AUI().ready(
 			columnFilterSidebarContent.hide();
 			layout.addClass('collapsed-filter-nav');
 			
-			floatButtons();
+            YUI().use('node', 'gallery-timer', function (Y) {
+                var t = new Y.Timer({length:1000, repeatCount:2 , callback:floatButtons});
+                t.start();
+            });
 		}
 		// END - Handling of column hide anim start event
 		
@@ -123,7 +126,10 @@ AUI().ready(
 			// Hide tooltip if shown
 			columnTriggerTooltip.hide();
 			
-			floatButtons();
+            YUI().use('node', 'gallery-timer', function (Y) {
+                var t = new Y.Timer({length:1000, repeatCount:2 , callback:floatButtons});
+                t.start();
+            });
 		}
 		// END - Handling of column hide anim start event
 		
@@ -155,7 +161,10 @@ AUI().ready(
 			
 			columnFilterSidebarContent.show();
 			
-			floatButtons();
+            YUI().use('node', 'gallery-timer', function (Y) {
+                var t = new Y.Timer({length:1000, repeatCount:2 , callback:floatButtons});
+                t.start();
+            });
 		}
 		// END - Handling of column show anim start event
 		
@@ -199,7 +208,6 @@ function alignDivsInTwoColumns(firstSelector, secondSelector) {
     function process() {
         try {
             for (var i = 0; i < 3; i++) {
-                var date = new Date();
                 var item1 = window.justifyCols.first.shift();
                 var item2 = window.justifyCols.second.shift();
                 if (!item1 || !item2) continue;
@@ -232,8 +240,6 @@ function alignDivsInTwoColumns(firstSelector, secondSelector) {
             return;
         }
 
-        var date = new Date();
-        
         for (var i = 0; i < texts.length; i++) {
             if(yuiCollectionToArray(texts[i].all('div')).length < 3 ||
                     yuiCollectionToArray(codes[i].all('div')).length < 3) {
@@ -258,10 +264,6 @@ function alignDivsInTwoColumns(firstSelector, secondSelector) {
 }
 
 try{
-//    alignDivsInTwoColumns(
-//            '.main-content td.diagnosTexts,.main-content td.aatgaerdskoderTexts,.main-content td.atcText', 
-//            '.main-content td.diagnosKodTexts,.main-content td.aatgaerdskoder,.main-content td.atcKoder'
-//    );
     
     alignDivsInTwoColumns(
             '.main-content td.diagnosTexts div.padded', 
@@ -281,24 +283,4 @@ try{
 } catch(ee) {
     alert(ee.message);
 }
-
-//YUI().use('event', 'node', function(Y){
-//    Y.on('scroll',function () {
-//        var xy = Y.one('#pos').getXY();
-//        if(!xy) return;
-//        var buttonRow = Y.one('div.button-row');
-//        var floatTable =  Y.one('#tmpFloatTitleTableId0TitleTable'); 
-//        //buttonRow.setStyle('position', 'absolute');
-//        buttonRow.setStyle('left', xy[0] + 'px');
-//        xy = floatTable.getXY();
-//        buttonRow.setStyle('top', xy[1] + 'px');
-//        //buttonRow.setStyle('position', 'fixed');
-//        //console.log(xy);
-//        //console.log(buttonRow);
-//    });
-//});
-
-
-    
-    
     

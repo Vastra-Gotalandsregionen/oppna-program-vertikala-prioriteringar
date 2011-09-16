@@ -1,7 +1,13 @@
 package se.vgregion.verticalprio;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -26,6 +32,7 @@ import se.vgregion.verticalprio.entity.AbstractKod;
 import se.vgregion.verticalprio.entity.AtcKod;
 import se.vgregion.verticalprio.entity.DiagnosKod;
 import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
+import se.vgregion.verticalprio.entity.SektorRaad;
 import se.vgregion.verticalprio.entity.TillstaandetsSvaarighetsgradKod;
 import se.vgregion.verticalprio.entity.VaardformsKod;
 import se.vgregion.verticalprio.repository.GenerisktHierarkisktKodRepository;
@@ -67,11 +74,67 @@ public class ImportTest {
 		Assert.assertTrue(true);
 	}
 
+	@Test
+	public void foo() throws Exception {
+		Date date = new Date();
+		long time = date.getTime();
+		// List<String> obj = new ArrayList<String>(); // new String(bytes, "8859_1");
+		Prioriteringsobjekt obj = new Prioriteringsobjekt();
+
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		ObjectOutputStream oos = new ObjectOutputStream(baos);
+		oos.writeObject(obj);
+		oos.flush();
+		byte[] bytes = baos.toByteArray();
+
+		String utf8 = toByteText(bytes);
+
+		System.out.println(new String(bytes, "UTF-8"));
+
+		ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(toBytes(utf8)));
+
+		Prioriteringsobjekt p = (Prioriteringsobjekt) ois.readObject();
+		System.out.println("time " + (new Date().getTime() - time));
+	}
+
+	private String toByteText(byte[] bytes) {
+		StringBuilder sb = new StringBuilder();
+
+		for (byte b : bytes) {
+			sb.append(b + "b");
+		}
+		return sb.toString();
+	}
+
+	private byte[] toBytes(String byteText) {
+		String[] frags = byteText.split(Pattern.quote("b"));
+		byte[] result = new byte[frags.length];
+		int i = 0;
+		for (String frag : frags) {
+			result[i] = Byte.parseByte(frag);
+			i++;
+		}
+		return result;
+	}
+
+	// @Test
+	// @Transactional()
+	// @Rollback(false)
+	// public void delte() {
+	// long[] ids = { 259, 260, 261, 262, 263, 264, 265, 266, 267, 268, 284 };
+	//
+	// for (long id : ids) {
+	// prioRepository.remove(id);
+	// }
+	// prioRepository.flush();
+	// }
+
 	// @Test
 	@Transactional()
 	@Rollback(false)
 	public void main() throws Exception {
-		File file = new File("C:\\temp\\vp-import\\onkologi.txt");
+		// File file = new File("C:\\temp\\vp-import\\onkologi.txt");
+		File file = new File("C:\\temp\\vp-import\\bup.txt");
 		FileReader fr = new FileReader(file);
 		int c = fr.read();
 		StringBuffer sb = new StringBuffer();
@@ -79,6 +142,7 @@ public class ImportTest {
 			sb.append((char) c);
 			c = fr.read();
 		} while (c != -1);
+
 		String[] rows = sb.toString().split("\\n");
 		System.out.println("Antal rader " + rows.length);
 
@@ -87,9 +151,27 @@ public class ImportTest {
 			handleRow(row);
 		}
 
+		System.out.println("getFlattenedSektorRaads: " + getFlattenedSektorRaads());
+
 	}
 
 	int hits;
+
+	private List<SektorRaad> getFlattenedSektorRaads() {
+		List<SektorRaad> result = new ArrayList<SektorRaad>();
+		flatten(applicationData.getSektorRaadList(), result);
+		return result;
+	}
+
+	private void flatten(List<SektorRaad> source, List<SektorRaad> result) {
+		if (source == null) {
+			return;
+		}
+		for (SektorRaad sr : source) {
+			result.add(sr);
+			flatten(sr.getChildren(), result);
+		}
+	}
 
 	@Transactional
 	private void handleRow(String row) {
@@ -105,36 +187,41 @@ public class ImportTest {
 
 			prio.setIndikationGaf(values[3]);
 
-			prio.setAatgaerdskoder(getItemsByKoder(applicationData.getAatgaerdsKodList(), values[4]));
+			prio.setVaentetidBehandlingVeckor(getByKod(applicationData.getVaentetidBehandlingVeckorList(),
+			        values[4]));
 
-			prio.setAatgaerdsRiskKod(getByKod(applicationData.getAatgaerdsRiskKodList(), values[6]));
+			prio.setAatgaerdskoder(getItemsByKoder(applicationData.getAatgaerdsKodList(), values[5]));
+
+			prio.setAatgaerdsRiskKod(getByKod(applicationData.getAatgaerdsRiskKodList(), values[7]));
 
 			prio.setPatientnyttaEffektAatgaerdsKod(getByKod(
-			        applicationData.getPatientnyttaEffektAatgaerdsKodList(), values[7]));
+			        applicationData.getPatientnyttaEffektAatgaerdsKodList(), values[8]));
 
-			prio.setPatientnyttoEvidensKod(getByKod(applicationData.getPatientnyttoEvidensKodList(), values[8]));
+			prio.setPatientnyttoEvidensKod(getByKod(applicationData.getPatientnyttoEvidensKodList(), values[9]));
 
 			// prio.setQualy(toInt(values[9]));
 
 			prio.setHaelsonekonomiskEvidensKod(getByKod(applicationData.getHaelsonekonomiskEvidensKodList(),
-			        values[10]));
+			        values[11]));
 
-			prio.setVaentetidBesookVeckor(getByKod(applicationData.getVaentetidBesookVeckorList(), values[11]));
+			// prio.setVaentetidBesookVeckor(getByKod(applicationData.getVaentetidBesookVeckorList(), values[11]));
 
-			prio.setVaentetidBehandlingVeckor(getByKod(applicationData.getVaentetidBehandlingVeckorList(),
-			        values[12]));
+			prio.setRangordningsKod(getByKod(applicationData.getRangordningsKodList(), values[12]));
 
 			prio.setVaardnivaaKod(getByKod(applicationData.getVaardnivaaKodList(), values[13]));
 
-			prio.setVaardform(getByKod(applicationData.getVaardformsKodList(), values[14]));
+			// prio.setVaardform(getByKod(applicationData.getVaardformsKodList(), values[14]));
+			prio.setKommentar(values[15]);
+
+			List<SektorRaad> raads = getFlattenedSektorRaads();
+
+			prio.setSektorRaad(getById(raads, values[16]));
 
 			// 15 rang enligt formel... ska inte hårdkodas in.
 
-			prio.setRangordningsKod(getByKod(applicationData.getRangordningsKodList(), values[16]));
-
-			if (values.length > 17) {
-				prio.setKommentar(values[17]);
-			}
+			// if (values.length > 17) {
+			// prio.setKommentar(values[17]);
+			// }
 
 			// mkPrioInsert(prio);
 
@@ -150,6 +237,25 @@ public class ImportTest {
 			System.out.println(row);
 		}
 
+	}
+
+	private <T extends AbstractKod> T getById(List<T> codes, String sid) {
+		Long id = toLong(sid);
+		if (id == null) {
+			System.out.println("Hej " + sid.trim());
+			return null;
+		}
+
+		if (codes.isEmpty()) {
+			throw new RuntimeException();
+		}
+		for (T ak : codes) {
+			if (id.equals(ak.getId())) {
+				return ak;
+			}
+		}
+		System.out.println("Id " + id + " fanns ej.");
+		return null;
 	}
 
 	private <T extends AbstractKod> T getByKod(List<T> codes, String kod) {
@@ -219,6 +325,20 @@ public class ImportTest {
 			return null;
 		}
 		return Integer.parseInt(s);
+	}
+
+	private Long toLong(String s) {
+		if (s == null) {
+			return null;
+		}
+		s = s.replaceAll("[^0-9]", "");
+		while (s.startsWith("0")) {
+			s = s.substring(1);
+		}
+		if ("".equals(s)) {
+			return null;
+		}
+		return Long.parseLong(s);
 	}
 
 }
