@@ -202,7 +202,7 @@ public class VerticalPrioController extends EditPrioriteringController {
 
 		clf.setNotYetChoosenLabel("Dolda kolumner");
 		clf.setChoosenLabel("Synliga kolumner");
-		clf.setOkLabel("Välj kolumner");
+		clf.setOkLabel("Ok");
 
 		clf.setDisplayKey("label");
 		clf.setIdKey("id");
@@ -254,7 +254,7 @@ public class VerticalPrioController extends EditPrioriteringController {
 	 * @return
 	 * @throws IOException
 	 */
-	@RequestMapping(value = "/check")
+	@RequestMapping(value = "/check", params = { "sectorId" })
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public String check(final HttpSession session, @RequestParam Integer sectorId, HttpServletResponse response)
 	        throws IOException {
@@ -266,13 +266,39 @@ public class VerticalPrioController extends EditPrioriteringController {
 
 			for (SektorRaad sr : form.getSectors()) {
 				sr.setSelectedDeeply(false);
+				// sr.setOpenDeeply(false);
 			}
 
 		} else {
 			form.getAllSektorsRaad().setSelected(false);
 			SektorRaad sector = getSectorById(sectorId, form.getSectors());
 			sector.setSelected(!sector.isSelected());
+			sector.setOpenDeeply(true);
 		}
+
+		response.sendRedirect("main");
+		return "main";
+	}
+
+	@RequestMapping(value = "/check", params = { "openId" })
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public String open(final HttpSession session, @RequestParam Integer openId, HttpServletResponse response)
+	        throws IOException {
+		MainForm form = getMainForm(session);
+
+		// if (openId.longValue() == -1l) {
+		// boolean b = form.getAllSektorsRaad().isSelected();
+		// form.getAllSektorsRaad().setSelected(!b);
+		//
+		// for (SektorRaad sr : form.getSectors()) {
+		// sr.setSelectedDeeply(false);
+		// }
+		//
+		// } else {
+		form.getAllSektorsRaad().setSelected(false);
+		SektorRaad sector = getSectorById(openId, form.getSectors());
+		sector.setOpen(!sector.isOpen());
+		// }
 
 		response.sendRedirect("main");
 		return "main";
@@ -320,6 +346,13 @@ public class VerticalPrioController extends EditPrioriteringController {
 		}
 		return result;
 	}
+
+	// private boolean containsMarkedChildren(List<SektorRaad> raads) {
+	// for (SektorRaad raad : raads) {
+	// if (raad.isSelectedDeeply())
+	// }
+	// return false;
+	// }
 
 	/**
 	 * Takes a list of root nodes and returns a list of all the roots and of their children (and children's

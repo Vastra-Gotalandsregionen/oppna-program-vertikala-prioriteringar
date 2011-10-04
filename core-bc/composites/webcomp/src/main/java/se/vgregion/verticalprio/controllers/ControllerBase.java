@@ -7,6 +7,7 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.beanutils.BeanMap;
 import org.springframework.transaction.annotation.Transactional;
 
 import se.vgregion.verticalprio.MainForm;
@@ -90,7 +91,19 @@ public class ControllerBase {
 	 */
 	public List<Column> getColumns() {
 
-		return columns;
+		List<Column> clones = new ArrayList<Column>();
+
+		for (Column column : columns) {
+			BeanMap bm = new BeanMap(column);
+			Column newColumn = new Column();
+			BeanMap nBm = new BeanMap(newColumn);
+			nBm.putAllWriteable(bm);
+			clones.add(newColumn);
+		}
+
+		return clones;
+
+		// return columns;
 
 		// if (columns == null) {
 		// Map<String, String> ppt = getPrioPropertyTexts();

@@ -6,7 +6,14 @@
     <h2>Så här använder du vertikala prioriteringar</h2>
     <ol>
       <li>
-          Välj ett eller flera sektorsråd i vänstra listan för att visa listan med prioriteringsobjekt
+          Välj ett eller flera sektorsråd i vänstra listan för att visa listan med prioriteringsobjekt. 
+          <ol>
+            <li class="no-list-style"><img src="img/node-open.png" /> Expanderar sektorsrådets nod och visar dess underråd </li>
+            <li class="no-list-style"><img src="img/node-closed.png" /> Stänger sektorsrådets lista över underråd </li>
+            <li class="no-list-style"><img src="img/node-open-disabled.png" /> Ett sektorsråd som ej innehåller underråd </li>
+            <li class="no-list-style"><img src="img/unchecked.gif" /> Sektorsrådet är ej valt - dess tillhörande prioriteringsobjekt syns ej i träfflistan </li>
+            <li class="no-list-style"><img src="img/checked.gif" /> Markerat sektorsråd - prioriteringsobjekt tillhörande detta visas till höger i träfflistan </li>
+          </ol>          
       </li>
       <li>
           Utnyttja filtrering för att hitta ett specifikt prioriteringsobjekt eller för att analysera en grupp av prioriteringsobjekt
