@@ -73,10 +73,7 @@ AUI().ready(
 
 			columnHideAnim.run();
 			
-            YUI().use('node', 'gallery-timer', function (Y) {
-                var t = new Y.Timer({length:1000, repeatCount:2 , callback:floatButtons});
-                t.start();
-            });
+			runFloatButtons();
 		}
 		
 		// END - Handling of column hide event
@@ -89,10 +86,7 @@ AUI().ready(
 
 			columnShowAnim.run();
 			
-            YUI().use('node', 'gallery-timer', function (Y) {
-                var t = new Y.Timer({length:1000, repeatCount:2 , callback:floatButtons});
-                t.start();
-            });
+			runFloatButtons();
 		}
 		
 		// END - Handling of column showa event
@@ -107,10 +101,7 @@ AUI().ready(
 			columnFilterSidebarContent.hide();
 			layout.addClass('collapsed-filter-nav');
 			
-            YUI().use('node', 'gallery-timer', function (Y) {
-                var t = new Y.Timer({length:1000, repeatCount:2 , callback:floatButtons});
-                t.start();
-            });
+			runFloatButtons();
 		}
 		// END - Handling of column hide anim start event
 		
@@ -126,10 +117,7 @@ AUI().ready(
 			// Hide tooltip if shown
 			columnTriggerTooltip.hide();
 			
-            YUI().use('node', 'gallery-timer', function (Y) {
-                var t = new Y.Timer({length:1000, repeatCount:2 , callback:floatButtons});
-                t.start();
-            });
+			runFloatButtons();
 		}
 		// END - Handling of column hide anim start event
 		
@@ -147,10 +135,7 @@ AUI().ready(
 			
 			// Hide tooltip if shown
 			columnTriggerTooltip.hide();
-			YUI().use('node', 'gallery-timer', function (Y) {
-		        var t = new Y.Timer({length:1000, repeatCount:2 , callback:floatButtons});
-		        t.start();
-			});
+			runFloatButtons();
 		}
 		// END - Handling of column show anim end event
 		
@@ -161,15 +146,20 @@ AUI().ready(
 			
 			columnFilterSidebarContent.show();
 			
-            YUI().use('node', 'gallery-timer', function (Y) {
-                var t = new Y.Timer({length:1000, repeatCount:2 , callback:floatButtons});
-                t.start();
-            });
+			runFloatButtons();
 		}
 		// END - Handling of column show anim start event
 		
 	}
 );
+
+function runFloatButtons() {
+    if(typeof((floatButtons)) !== 'undefined')
+        YUI().use('node', 'gallery-timer', function (Y) {
+            var t = new Y.Timer({length:1000, repeatCount:2 , callback:floatButtons});
+            t.start();
+        });
+}
 
 function yuiCollectionToArray(yc) {
     var r = [];

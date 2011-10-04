@@ -3,7 +3,8 @@ package se.vgregion.verticalprio;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
@@ -100,6 +101,8 @@ public class ImportTest {
 	private String toByteText(byte[] bytes) {
 		StringBuilder sb = new StringBuilder();
 
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
 		for (byte b : bytes) {
 			sb.append(b + "b");
 		}
@@ -134,12 +137,17 @@ public class ImportTest {
 	@Rollback(false)
 	public void main() throws Exception {
 		// File file = new File("C:\\temp\\vp-import\\onkologi.txt");
-		File file = new File("C:\\temp\\vp-import\\bup.txt");
-		FileReader fr = new FileReader(file);
+		File file = new File("C:\\temp\\vp-import\\infektion.txt");
+
+		InputStreamReader fr = new InputStreamReader(new FileInputStream(file), "UTF-8");
+
+		// FileReader fr = new FileReader(file);
+
 		int c = fr.read();
 		StringBuffer sb = new StringBuffer();
 		do {
-			sb.append((char) c);
+
+			sb.append(new Character((char) c));
 			c = fr.read();
 		} while (c != -1);
 
@@ -152,7 +160,7 @@ public class ImportTest {
 		}
 
 		System.out.println("getFlattenedSektorRaads: " + getFlattenedSektorRaads());
-
+		fr.close();
 	}
 
 	int hits;
@@ -187,35 +195,37 @@ public class ImportTest {
 
 			prio.setIndikationGaf(values[3]);
 
-			prio.setVaentetidBehandlingVeckor(getByKod(applicationData.getVaentetidBehandlingVeckorList(),
-			        values[4]));
+			prio.setAatgaerdskoder(getItemsByKoder(applicationData.getAatgaerdsKodList(), values[4]));
 
-			prio.setAatgaerdskoder(getItemsByKoder(applicationData.getAatgaerdsKodList(), values[5]));
-
-			prio.setAatgaerdsRiskKod(getByKod(applicationData.getAatgaerdsRiskKodList(), values[7]));
+			prio.setAatgaerdsRiskKod(getByKod(applicationData.getAatgaerdsRiskKodList(), values[6]));
 
 			prio.setPatientnyttaEffektAatgaerdsKod(getByKod(
-			        applicationData.getPatientnyttaEffektAatgaerdsKodList(), values[8]));
+			        applicationData.getPatientnyttaEffektAatgaerdsKodList(), values[7]));
 
-			prio.setPatientnyttoEvidensKod(getByKod(applicationData.getPatientnyttoEvidensKodList(), values[9]));
+			prio.setPatientnyttoEvidensKod(getByKod(applicationData.getPatientnyttoEvidensKodList(), values[8]));
 
 			// prio.setQualy(toInt(values[9]));
+			prio.setKostnadLevnadsaarKod(getByKod(applicationData.getKostnadLevnadsaarKodList(), values[9]));
 
 			prio.setHaelsonekonomiskEvidensKod(getByKod(applicationData.getHaelsonekonomiskEvidensKodList(),
+			        values[10]));
+
+			prio.setVaentetidBehandlingVeckor(getByKod(applicationData.getVaentetidBehandlingVeckorList(),
 			        values[11]));
 
 			// prio.setVaentetidBesookVeckor(getByKod(applicationData.getVaentetidBesookVeckorList(), values[11]));
 
-			prio.setRangordningsKod(getByKod(applicationData.getRangordningsKodList(), values[12]));
+			prio.setVaardnivaaKod(getByKod(applicationData.getVaardnivaaKodList(), values[12]));
 
-			prio.setVaardnivaaKod(getByKod(applicationData.getVaardnivaaKodList(), values[13]));
+			prio.setVaardform(getByKod(applicationData.getVaardformsKodList(), values[13]));
 
-			// prio.setVaardform(getByKod(applicationData.getVaardformsKodList(), values[14]));
+			prio.setRangordningsKod(getByKod(applicationData.getRangordningsKodList(), values[14]));
+
 			prio.setKommentar(values[15]);
 
 			List<SektorRaad> raads = getFlattenedSektorRaads();
 
-			prio.setSektorRaad(getById(raads, values[16]));
+			prio.setSektorRaad(getById(raads, "10"));
 
 			// 15 rang enligt formel... ska inte hårdkodas in.
 

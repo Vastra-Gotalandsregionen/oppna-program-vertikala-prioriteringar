@@ -1,5 +1,6 @@
 package se.vgregion.verticalprio.entity;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -27,6 +28,9 @@ public class SektorRaad extends AbstractHirarkiskKod<SektorRaad> implements Clon
 
 	@Transient
 	private boolean able = true;
+
+	@Transient
+	private boolean open;
 
 	@ManyToMany(mappedBy = "sektorRaad")
 	private Set<User> users;
@@ -97,6 +101,43 @@ public class SektorRaad extends AbstractHirarkiskKod<SektorRaad> implements Clon
 
 	public Set<Prioriteringsobjekt> getPrioriteringsobjekt() {
 		return prioriteringsobjekt;
+	}
+
+	public List<SektorRaad> getDeepestSelected() {
+		List<SektorRaad> result = getDeepestSelected(getChildren());
+		if (result.isEmpty() && isSelected()) {
+			result.add(this);
+		}
+		return result;
+	}
+
+	private List<SektorRaad> getDeepestSelected(List<SektorRaad> children) {
+		List<SektorRaad> result = new ArrayList<SektorRaad>();
+		for (SektorRaad raad : children) {
+			if (raad.isAnyDescendantSelected()) {
+				result.addAll(raad.getDeepestSelected());
+			} else if (raad.isSelected()) {
+				result.add(raad);
+			}
+		}
+		return result;
+	}
+
+	public boolean isOpen() {
+		return open;
+	}
+
+	public void setOpen(boolean open) {
+		this.open = open;
+	}
+
+	public void setOpenDeeply(boolean b) {
+		open = b;
+		if (getChildren() != null) {
+			for (SektorRaad child : getChildren()) {
+				child.setOpenDeeply(b);
+			}
+		}
 	}
 
 }

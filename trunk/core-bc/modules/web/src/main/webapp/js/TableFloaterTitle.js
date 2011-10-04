@@ -92,10 +92,10 @@
   
   function floatButtons() {
       YUI().use('event', 'node', 'gallery-timer', function(Y){
-          console.log('Start floatButtons');
+          //console.log('Start floatButtons');
           var buttonRow = Y.one('div.button-row');
           if (!buttonRow) {
-              console.log('!buttonRow');
+              //console.log('!buttonRow');
               return;
           }
           var pos = Y.one('#pos');
@@ -104,12 +104,12 @@
           var buttonRowHold = Y.one('#buttonRowHold');
           var floatTable =  Y.one('#tmpFloatTitleTableId0TitleTable');
           if (!floatTable) {
-              console.log('!floatTable');
+              //console.log('!floatTable');
               //return;
               floatTable = Y.one('#tmpFloatTitleTableId0');
               if (!floatTable) return;
           }
-          console.log(floatTable);
+          //console.log(floatTable);
           
           var buttonsCode = buttonRow._node.innerHTML;
           var y = floatTable.getXY()[1] - 30;
@@ -119,7 +119,7 @@
           var styleCode = 'style="position:absolute; z-index:300; left:' + x + 'px; top:'+ y +'px;"';
           buttonsCode = '<div class="button-row" ' + styleCode + '>' + buttonsCode + '</div>';
           buttonRowHold._node.innerHTML = buttonsCode;
-          console.log('End floatButtons');
+          //console.log('End floatButtons');
       });
   }
 

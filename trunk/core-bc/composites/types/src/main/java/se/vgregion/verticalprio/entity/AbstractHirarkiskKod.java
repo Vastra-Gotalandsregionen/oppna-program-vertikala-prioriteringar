@@ -50,11 +50,11 @@ public abstract class AbstractHirarkiskKod<T extends AbstractHirarkiskKod<?>> ex
 
 	public void setSelected(boolean selected) {
 		this.selected = selected;
-		// if (getChildren() != null) {
-		// for (AbstractHirarkiskKod ahk : getChildren()) {
-		// ahk.setSelected(selected);
-		// }
-		// }
+		if (getChildren() != null) {
+			for (AbstractHirarkiskKod ahk : getChildren()) {
+				ahk.setSelected(selected);
+			}
+		}
 	}
 
 	public boolean isSelected() {
@@ -98,6 +98,20 @@ public abstract class AbstractHirarkiskKod<T extends AbstractHirarkiskKod<?>> ex
 				child.setSelectedDeeply(b);
 			}
 		}
+	}
+
+	public boolean isAnyDescendantSelected() {
+		if (children != null) {
+			for (T child : children) {
+				if (child.isSelected()) {
+					return true;
+				}
+				if (child.isAnyDescendantSelected()) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	public boolean isSelectedDeeply() {
