@@ -9,13 +9,12 @@ I Västra Götalandsregionen har de medicinska sektorsråden utarbetat prioriter
 Riksdagens fyra prioriteringsgrunder och den etiska plattformen ligger till grund för arbetet. Utöver detta ingår följande uppgifter och principer i de medicinska prioriteringarna.
 
 == Symtom/diagnos ==
-* Angelägenhetsgrad utifrån patientens tillstånd
-* Typ av åtgärd, till exempel operation eller medicinsk behandling
-* Åtgärdens effekt, nytta och eventuell risk för patienten
-* Evidens; vetenskapliga belägg för effekt
-* Åtgärdens nytta i relation till kostnaden; hälsoekonomisk värdering
-* Medicinsk acceptabel väntetid (antal veckor) till besök eller behandling
-* Vårdnivå - egenvård, primärvård, länssjukvård, högspecialsiserad vård
+  * Angelägenhetsgrad utifrån patientens tillstånd
+  * Typ av åtgärd, till exempel operation eller medicinsk behandling
+  * Åtgärdens effekt, nytta och eventuell risk för patienten
+  * Evidens; vetenskapliga belägg för effekt
+  * Åtgärdens nytta i relation till kostnaden; hälsoekonomisk värdering
+  * Medicinsk acceptabel väntetid (antal veckor) till besök eller behandling
+  * Vårdnivå - egenvård, primärvård, länssjukvård, högspecialsiserad vård
 
 Resultatet av denna process är förteckningar där respektive medicinsk specialitet har dokumenterat sina prioriteringar. Klicka i det grå fältet till vänster för prioriteringarna inom varje medicinsk specialitet.
-
