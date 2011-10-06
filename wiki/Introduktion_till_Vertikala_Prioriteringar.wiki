@@ -1,9 +1,11 @@
 #summary Introduktion till projektet Vertikala Prioriteringar.
 
 = Introduktion =
-Vertikala Prioriteringar är en webbapplikation som ska stödja Medicinska prioriteringar. Sektorsråden, sakkunniga inom avgränsade vårdområden (exempelvis infektion eller Barn- ungdompsykiatri), som utför prioriteringarna kan logga in på portalen och lägga till/ändra/publicera prioriteringsunderlagen. Ett simpelt arbetsflöde gör det möjligt att dela upp ansvaret i expertgrupperna på att ändra materialet och att godkänna det för publicering. 'Publicering' innebär att dokumentationen märks som godkänd, att uppgifterna bedömts som fullständiga. Efter det kan även användare utan specifika rättigheter till systemet gå in och läsa materialet.
+Vertikala Prioriteringar är en webbapplikation som ska stödja Medicinska prioriteringar. Sektorsråden, sakkunniga inom avgränsade vårdområden (exempelvis infektion eller Barn- ungdompsykiatri), som utför prioriteringarna kan logga in på portalen och lägga till/ändra/publicera prioriteringsunderlagen. 
 
-Användarnas rättigheter och deras medlemskap till vissa prioriteringsråd styr vilken data de kan se och ändra i systemet. Administrationen av användare sköts av administratörer genom gui:t i applikationen. 
+Ett simpelt arbetsflöde gör det möjligt att dela upp ansvaret i expertgrupperna på att ändra materialet och att godkänna det för publicering. 'Publicering' innebär att dokumentationen märks som godkänd, att uppgifterna bedömts som fullständiga. Efter det kan även användare utan specifika rättigheter till systemet gå in och läsa materialet.
+
+Användarnas rättigheter och deras medlemskap till vissa prioriteringsråd styr vilken data de kan se och ändra i systemet. Administrationen av användare sköts av administratörer genom gui:t i applikationen.
 
 = Medicinska prioriteringar =
 Prioriteringar inom en viss medicinsk specialitet, till exempel val av behandling för en enskild patient eller att behandla en patient före en annan kallas vertikala medicinska prioriteringar. Dessa prioriteringar görs av personalen i hälso- och sjukvården.
