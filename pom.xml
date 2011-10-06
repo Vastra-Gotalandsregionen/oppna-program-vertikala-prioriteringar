@@ -26,8 +26,8 @@
   <!--NB! SCM config below assumes system name equals VGR subversion/googlecode project name! -->
   <!-- Open Source repo -->
   <scm>
-    <developerConnection>scm:svn:https://vertikala-prioriteringar.googlecode.com/svn/trunk</developerConnection>
-    <url>http://vertikala-prioriteringar.googlecode.com/svn/trunk</url>
+    <developerConnection>scm:svn:https://oppna-program-vertikala-prioriteringar.googlecode.com/svn/trunk</developerConnection>
+    <url>http://oppna-program-vertikala-prioriteringar.googlecode.com/svn/trunk</url>
   </scm>
 
 </project>
