@@ -1,14 +1,9 @@
 package se.vgregion.verticalprio;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -75,69 +70,12 @@ public class ImportTest {
 		Assert.assertTrue(true);
 	}
 
-	@Test
-	public void foo() throws Exception {
-		Date date = new Date();
-		long time = date.getTime();
-		// List<String> obj = new ArrayList<String>(); // new String(bytes, "8859_1");
-		Prioriteringsobjekt obj = new Prioriteringsobjekt();
-
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		ObjectOutputStream oos = new ObjectOutputStream(baos);
-		oos.writeObject(obj);
-		oos.flush();
-		byte[] bytes = baos.toByteArray();
-
-		String utf8 = toByteText(bytes);
-
-		System.out.println(new String(bytes, "UTF-8"));
-
-		ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(toBytes(utf8)));
-
-		Prioriteringsobjekt p = (Prioriteringsobjekt) ois.readObject();
-		System.out.println("time " + (new Date().getTime() - time));
-	}
-
-	private String toByteText(byte[] bytes) {
-		StringBuilder sb = new StringBuilder();
-
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-		for (byte b : bytes) {
-			sb.append(b + "b");
-		}
-		return sb.toString();
-	}
-
-	private byte[] toBytes(String byteText) {
-		String[] frags = byteText.split(Pattern.quote("b"));
-		byte[] result = new byte[frags.length];
-		int i = 0;
-		for (String frag : frags) {
-			result[i] = Byte.parseByte(frag);
-			i++;
-		}
-		return result;
-	}
-
-	// @Test
-	// @Transactional()
-	// @Rollback(false)
-	// public void delte() {
-	// long[] ids = { 259, 260, 261, 262, 263, 264, 265, 266, 267, 268, 284 };
-	//
-	// for (long id : ids) {
-	// prioRepository.remove(id);
-	// }
-	// prioRepository.flush();
-	// }
-
 	// @Test
 	@Transactional()
 	@Rollback(false)
 	public void main() throws Exception {
 		// File file = new File("C:\\temp\\vp-import\\onkologi.txt");
-		File file = new File("C:\\temp\\vp-import\\infektion.txt");
+		File file = new File("C:\\temp\\vp-import\\kirurgi.txt");
 
 		InputStreamReader fr = new InputStreamReader(new FileInputStream(file), "UTF-8");
 
@@ -210,22 +148,22 @@ public class ImportTest {
 			prio.setHaelsonekonomiskEvidensKod(getByKod(applicationData.getHaelsonekonomiskEvidensKodList(),
 			        values[10]));
 
+			prio.setVaentetidBesookVeckor(getByKod(applicationData.getVaentetidBesookVeckorList(), values[11]));
+
 			prio.setVaentetidBehandlingVeckor(getByKod(applicationData.getVaentetidBehandlingVeckorList(),
-			        values[11]));
+			        values[12]));
 
-			// prio.setVaentetidBesookVeckor(getByKod(applicationData.getVaentetidBesookVeckorList(), values[11]));
+			prio.setVaardnivaaKod(getByKod(applicationData.getVaardnivaaKodList(), values[13]));
 
-			prio.setVaardnivaaKod(getByKod(applicationData.getVaardnivaaKodList(), values[12]));
+			prio.setVaardform(getByKod(applicationData.getVaardformsKodList(), values[14]));
 
-			prio.setVaardform(getByKod(applicationData.getVaardformsKodList(), values[13]));
-
-			prio.setRangordningsKod(getByKod(applicationData.getRangordningsKodList(), values[14]));
+			prio.setRangordningsKod(getByKod(applicationData.getRangordningsKodList(), values[15]));
 
 			prio.setKommentar(values[15]);
 
 			List<SektorRaad> raads = getFlattenedSektorRaads();
 
-			prio.setSektorRaad(getById(raads, "10"));
+			prio.setSektorRaad(getById(raads, "12"));
 
 			// 15 rang enligt formel... ska inte hårdkodas in.
 

@@ -8,10 +8,10 @@
     <c:when test="${not empty sector.children}">
       <c:choose>
       <c:when test="${sector.open}">
-        <input style="border:none; background-repeat:no-repeat; background-image:url('img/node-closed.png'); background-repeat:none; width:15px; height:15px;" id="Sektor${sector.id}"  type="submit" src="img/node-closed.png" name="openId" value="            ${sector.id}" />
+        <input style="border:none; background-repeat:no-repeat; background-image:url('img/node-open.png'); background-repeat:none; width:15px; height:15px;" id="Sektor${sector.id}"  type="submit" src="img/node-closed.png" name="openId" value="            ${sector.id}" />
       </c:when>
       <c:otherwise>
-        <input style="border:none; background-repeat:no-repeat; background-image:url('img/node-open.png'); width:15px; height:15px;" id="Sektor${sector.id}" type="submit" src="img/unchecked.png" name="openId" value="            ${sector.id}" />
+        <input style="border:none; background-repeat:no-repeat; background-image:url('img/node-closed.png'); width:15px; height:15px;" id="Sektor${sector.id}" type="submit" src="img/unchecked.png" name="openId" value="            ${sector.id}" />
       </c:otherwise>
       </c:choose></label>
     </c:when>
