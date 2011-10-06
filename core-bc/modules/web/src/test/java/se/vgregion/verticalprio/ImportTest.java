@@ -16,11 +16,7 @@ import junit.framework.Assert;
 
 import org.apache.commons.beanutils.BeanMap;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import se.vgregion.verticalprio.entity.AatgaerdsKod;
@@ -42,9 +38,9 @@ import se.vgregion.verticalprio.repository.PrioRepository;
  * @author Claes Lundahl, vgrid=clalu4
  * 
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:testApplicationContext.xml")
-@TransactionConfiguration(defaultRollback = false)
+// @RunWith(SpringJUnit4ClassRunner.class)
+// @ContextConfiguration("classpath:testApplicationContext.xml")
+// @TransactionConfiguration(defaultRollback = false)
 public class ImportTest {
 
 	@Resource(name = "applicationData")
