@@ -1,6 +1,9 @@
 #summary Introduktion till projektet Vertikala Prioriteringar.
 
 = Introduktion =
+
+https://oppna-program-vertikala-prioriteringar.googlecode.com/svn/wiki/images/start-screen.png
+
 Vertikala Prioriteringar är en webbapplikation som ska stödja Medicinska prioriteringar inom vården. Sektorsråden, sakkunniga inom avgränsade vårdområden (exempelvis infektion eller Barn- ungdompsykiatri), som utför prioriteringarna kan logga in på portalen och lägga till/ändra/publicera prioriteringsunderlagen. 
 
 Ett arbetsflöde gör det möjligt att dela upp ansvaret, en mindre grupp kan lägga in förslag på ändring i systemet som sedan godkänns för publicering gemensamt i sektorsrådet. Publicering innebär att dokumentationen märks som godkänd, att uppgifterna bedömts som fullständiga. Efter det kan även användare utan specifika rättigheter till systemet gå in och läsa materialet.
