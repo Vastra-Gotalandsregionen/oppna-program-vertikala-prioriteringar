@@ -27,3 +27,17 @@ Riksdagens fyra prioriteringsgrunder och den etiska plattformen ligger till grun
   * Vårdnivå - egenvård, primärvård, länssjukvård, högspecialsiserad vård
 
 Resultatet av denna process är förteckningar där respektive medicinsk specialitet har dokumenterat sina prioriteringar. Klicka i det grå fältet till vänster för prioriteringarna inom varje medicinsk specialitet.
+
+
+== Teknisk översikt ==
+Vertikala prioriteringar är implementerad som en webbapplikation med hjälp av Spring MVC. Användargränssnittet är utvecklat för att fungera i de senare versionerna av Chrome, Firefox och Internet Explorer samt i Internet Explorer 7 (som för närvarande är standard i målorganisationen). 
+
+I enlighet med övriga webb-baserade system inom VGR är inte VP beroende av att användaren har JavaScript påslaget. Gränssnittet tillförs extra funktionalitet om man har det på men det är inte nödvändigt för att kunna söka och se den inlagda informationen. Skriptkod som finns baseras på Javascript-ramverket YUI3, vilket borgar för att koden ska kunna köras i flera olika webbläsarimplementationer. 
+
+Applikationen körs i en Apache Tomcat webbserver. Inga specifika beroenden finns till denna driftmiljö. Applikationen kan förmodligen köras i vilken annan Java/Webb-miljö som helst.
+
+Inmatad data lagras i en relationsdatabas. I nuläget drivs både utvecklingsmaskiner och skarp miljö av PostgreSQL installationer. Anslutning till databasen görs med Hibernate och JPA som programmeringsinterface. Alla frågor som skickas ifrån applikationen har gjorts i JPQL. De här ramverken och standarderna gör det lätt att byta databassystem i framtiden.
+
+== Starta en egen VP-server ==
+
+== Databasen, grunddata ==
