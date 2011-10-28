@@ -37,3 +37,40 @@ I enlighet med övriga webb-baserade system inom VGR är inte VP beroende av att
 Applikationen körs i en Apache Tomcat webbserver. Inga specifika beroenden finns till denna driftmiljö. Applikationen kan förmodligen köras i vilken annan Java/Webb-miljö som helst.
 
 Inmatad data lagras i en relationsdatabas. I nuläget drivs både utvecklingsmaskiner och skarp miljö av PostgreSQL installationer. Anslutning till databasen görs med Hibernate och JPA som programmeringsinterface. Alla frågor som skickas ifrån applikationen har gjorts i JPQL. De här ramverken och standarderna gör det lätt att byta databassystem i framtiden.
+
+== Starta en egen VP-server ==
+För att starta en egen instans av Vertikala Prioriteringar genomför fem steg.
+
+  0, Ladda hem källkod.
+Använd en subversionklient för att ladda ned källkoden lokalt. Se 'Source'-fliken på projektets sida.
+  1, Konfigurera databaskoppling.
+Skapa/ändra properties-filerna security.properties och datasource.properties under biblioteket
+/oppna-program-vertikala-prioriteringar\trunk\core-bc\modules\web\src\main\resources\
+'security.properties' innehåller lösenord och användare för anslutningen till databasen. 
+<code>
+database.user=scott
+database.password=tiger
+</code>
+Exempelvis.
+'datasource.properties' håller andra uppgifter om databaskopplingen och konfiguration av Hibernate och JPA. 
+
+<code>
+database.driver=org.postgresql.Driver
+database.url=jdbc:postgresql:vertikala_prioriteringar
+hibernate.database.showsql=false
+hibernate.vendor.generateDdl=true
+hibernate.vendor.databasePlatform=org.hibernate.dialect.PostgreSQLDialect
+hibernate.vendor.database=POSTGRESQL
+</code>
+(Exemplet är för en databas som körs med PostgreSQL RDBMS)
+
+Första gången som applikationen körs mot databasen är det viktigt att nyckel/värde hibernate.vendor.generateDdl=true är med. Inställningen får Hibernate att automatiskt skapa upp databasens tabeller och relationer.
+
+  2, Bygg projektet.
+Använd Maven-kommando <code> mvn clean install -Pprod </code>.
+
+  3, Tillför JDBC-implementation till driftmiljön.
+Kopiera in JAR-fil som håller databasens JDBC-klasser under webbserverns miljöbibliotek. I Apache Tomcat är detta [APACHE_HOME]/lib (detta för att inte binda applikationsbygget i sig självt hårt mot en specifik drivrutin). 
+ 
+  4, Driftsättning.
+Driftsätt war-filen som byggdes i steg 2. I Apache Tomcat kopieras filen in under webbapps-katalogen.
