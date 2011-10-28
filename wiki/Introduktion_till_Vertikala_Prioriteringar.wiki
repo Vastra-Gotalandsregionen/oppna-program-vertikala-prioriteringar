@@ -39,8 +39,7 @@ Applikationen körs i en Apache Tomcat webbserver. Inga specifika beroenden finn
 Inmatad data lagras i en relationsdatabas. I nuläget drivs både utvecklingsmaskiner och skarp miljö av PostgreSQL installationer. Anslutning till databasen görs med Hibernate och JPA som programmeringsinterface. Alla frågor som skickas ifrån applikationen har gjorts i JPQL. De här ramverken och standarderna gör det lätt att byta databassystem i framtiden.
 
 == Starta en egen VP-server ==
-För att starta en egen instans av Vertikala Prioriteringar genomför fem steg.
-
+För att starta en egen instans av Vertikala Prioriteringar genomför steg 0-4 nedan:
   0, Ladda hem källkod.
 Använd en subversionklient för att ladda ned källkoden lokalt. Se 'Source'-fliken på projektets sida.
   1, Konfigurera databaskoppling.
