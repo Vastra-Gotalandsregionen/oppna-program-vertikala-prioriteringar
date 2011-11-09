@@ -73,3 +73,6 @@ Kopiera in JAR-fil som håller databasens JDBC-klasser under webbserverns miljö
  
   4, Driftsättning.
 Driftsätt war-filen som byggdes i steg 2. I Apache Tomcat kopieras filen in under webbapps-katalogen.
+
+== Databas-schema ==
+https://oppna-program-vertikala-prioriteringar.googlecode.com/svn/wiki/images/schema.png
