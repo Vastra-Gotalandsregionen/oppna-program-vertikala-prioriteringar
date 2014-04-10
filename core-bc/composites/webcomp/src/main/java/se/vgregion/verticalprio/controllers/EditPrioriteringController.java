@@ -44,7 +44,7 @@ import se.vgregion.verticalprio.repository.finding.JpqlMatchBuilder;
  * @author Claes Lundahl, vgrid=clalu4
  * 
  */
-public class EditPrioriteringController extends ControllerBase {
+public class EditPrioriteringController extends WebControllerBase {
 
 	@Resource(name = "applicationData")
 	protected ApplicationData applicationData;

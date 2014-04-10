@@ -17,8 +17,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import se.vgregion.verticalprio.controllers.ChooseFromListController.ChooseListForm;
-
 /**
  * Controls a dialog where the user might select from a number of items, search them by text search, and commit the
  * changes.
@@ -30,7 +28,7 @@ import se.vgregion.verticalprio.controllers.ChooseFromListController.ChooseListF
  */
 @Controller
 @SuppressWarnings(value = { "rawtypes", "unchecked" })
-public class ChooseFromListController extends ControllerBase {
+public class ChooseFromListController extends WebControllerBase {
 
 	/**
 	 * When hitting the ok button on the dialog, the values are copied to the target collection and the page is

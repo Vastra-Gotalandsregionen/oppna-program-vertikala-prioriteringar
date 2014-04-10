@@ -1,0 +1,5 @@
+#====================================================
+# Use for SQL database - QA
+#====================================================
+#database.user=your-user
+#database.password=your-passw

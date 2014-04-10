@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <!-- This is the Web-app Maven POM. Template version: 1.5-SNAPSHOT Generation time : 2010-11-08 10:07:26 CET -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>se.vgregion.vertikala-prioriteringar</groupId>
@@ -23,6 +24,12 @@
         <configuration>
           <contextPath>/vp</contextPath>
           <scanIntervalSeconds>1</scanIntervalSeconds>
+          <connectors>
+            <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+              <port>7080</port>
+              <maxIdleTime>60000</maxIdleTime>
+            </connector>
+          </connectors>
         </configuration>
       </plugin>
     </plugins>
@@ -89,11 +96,17 @@
       <version>8.4-701.jdbc4</version>
       <scope>test</scope>
     </dependency>
-    
+
     <dependency>
-      <groupId>org.hibernate</groupId> 
-      <artifactId>hibernate-ehcache</artifactId> 
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-ehcache</artifactId>
       <version>3.6.0.Final</version>
+    </dependency>
+
+    <dependency>
+      <groupId>postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>9.1-901-1.jdbc4</version>
     </dependency>
 
     <dependency>
