@@ -8,8 +8,6 @@
 
 <div class="main-content">
 	<form action="main" method="post">
-        loginResult: ${loginResult}
-        user.editor: ${user.editor}
    		<c:if test="${not empty rows}">
             <!--[if IE]>
             <span style="background-color: white; position: fixed; top: 0px; right: 0px; width: 100%; height: 5px; display: block; z-index: 500">&nbsp;</span>
@@ -18,8 +16,8 @@
             <span id="buttonRowHold">
       		<div class="button-row">
           		<input type="submit" id="select-prio" name="select-prio" value="Visa prioriteringsobjekt" class="button"/>
-        
-        		<c:if test="${loginResult && user != null and user.editor}">
+
+                <c:if test="${loginResult && user != null and user.editor}">
             		<span class="rPadding2em">
 						<tags:editSubmit name="edit-prio" value="Ändra" cssClass="button"/>
 						<tags:editSubmit name="prio-create" value="Lägg till nytt" cssClass="button" />

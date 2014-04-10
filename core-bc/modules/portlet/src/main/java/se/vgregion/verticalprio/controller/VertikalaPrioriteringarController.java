@@ -19,6 +19,7 @@ import se.vgregion.verticalprio.ApplicationData;
 import se.vgregion.verticalprio.ConfColumnsForm;
 import se.vgregion.verticalprio.MainForm;
 import se.vgregion.verticalprio.PrioriteringsobjektFindCondition;
+import se.vgregion.verticalprio.controllers.EditDirective;
 import se.vgregion.verticalprio.entity.SektorRaad;
 import se.vgregion.verticalprio.entity.User;
 import se.vgregion.verticalprio.repository.GenerisktHierarkisktKodRepository;
@@ -73,9 +74,13 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
 
     @RenderMapping
     public String main(PortletRequest request, Model model) {
-        result(request.getPortletSession());
+        PortletSession session = request.getPortletSession();
 
-        Map<String, Object> attributeMap = request.getPortletSession().getAttributeMap();
+        session.setAttribute("editDir", new EditDirective(true, null));
+
+        result(session);
+
+        Map<String, Object> attributeMap = session.getAttributeMap();
 
         model.addAllAttributes(attributeMap);
 
