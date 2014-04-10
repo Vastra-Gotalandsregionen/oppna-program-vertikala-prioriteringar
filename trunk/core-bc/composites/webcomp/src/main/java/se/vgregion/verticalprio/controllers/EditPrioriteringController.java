@@ -286,27 +286,7 @@ public class EditPrioriteringController extends WebControllerBase {
 		return "prio-view";
 	}
 
-	private void initPrio(Prioriteringsobjekt form) {
-		form.getDiagnoser().toArray(); // Are not eager so we have to make sure they are
-		form.getAatgaerdskoder().toArray(); // loaded before sending them to the jsp-layer.
-		form.getAtcKoder().toArray();
-		if (form.getChildren() != null && !form.getChildren().isEmpty()) {
-			for (Prioriteringsobjekt child : form.getChildren()) {
-				initPrio(child);
-			}
-		}
-	}
-
-	@Transactional
-	private void init(Collection<SektorRaad> raads) {
-		if (raads != null) {
-			for (SektorRaad raad : raads) {
-				init(raad.getChildren());
-			}
-		}
-	}
-
-	@RequestMapping(value = "/delete-prio", params = { "cancel" })
+    @RequestMapping(value = "/delete-prio", params = { "cancel" })
 	public String cancelDelete(HttpServletResponse response) throws IOException {
 		response.sendRedirect("main");
 		return "main";
@@ -546,11 +526,11 @@ public class EditPrioriteringController extends WebControllerBase {
 		return prio;
 	}
 
-	private void initKodLists(PrioriteringsobjektForm pf) {
-		applicationData.initKodLists(pf);
-		for (Column column : getColumns()) {
-			pf.getColumns().put(column.getName(), column);
-		}
-	}
+    private void initKodLists(PrioriteringsobjektForm pf) {
+        applicationData.initKodLists(pf);
+        for (Column column : getColumns()) {
+            pf.getColumns().put(column.getName(), column);
+        }
+    }
 
 }

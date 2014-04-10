@@ -7,6 +7,7 @@ import se.vgregion.verticalprio.MainForm;
 import se.vgregion.verticalprio.PrioriteringsobjektFindCondition;
 import se.vgregion.verticalprio.controllers.BaseController;
 import se.vgregion.verticalprio.controllers.PrioriteringsobjektForm;
+import se.vgregion.verticalprio.entity.Column;
 import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
 import se.vgregion.verticalprio.entity.SektorRaad;
 import se.vgregion.verticalprio.repository.GenerisktHierarkisktKodRepository;
@@ -15,7 +16,6 @@ import se.vgregion.verticalprio.repository.finding.HaveNestedEntities;
 import se.vgregion.verticalprio.repository.finding.NestedSektorRaad;
 
 import javax.portlet.PortletSession;
-import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -139,6 +139,13 @@ public abstract class PortletBaseController extends BaseController {
             }
         }
         return new ArrayList<SektorRaad>(sectorCache);
+    }
+
+    protected void initKodLists(PrioriteringsobjektForm pf) {
+        getApplicationData().initKodLists(pf);
+        for (Column column : getColumns()) {
+            pf.getColumns().put(column.getName(), column);
+        }
     }
 
     protected abstract GenerisktHierarkisktKodRepository getSektorRaadRepository();
