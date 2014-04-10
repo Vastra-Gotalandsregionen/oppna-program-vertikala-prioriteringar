@@ -20,7 +20,7 @@
   //////////////////////////////////////////////////////////////////////////////
   
   function startFloatTitle() {
-
+/*
     var cnt=0;
     var allTableIDs = new Array();
     var allTables = document.getElementsByTagName("table");
@@ -41,6 +41,7 @@
         cnt++;
       }
     }
+
 
     YUI().use('event',function(Y){
         for (i=0;i<allTableIDs.length; i++) {
@@ -87,10 +88,12 @@
             });
         }
     });
+*/
   }
 
   
   function floatButtons() {
+  /*
       YUI().use('event', 'node', 'gallery-timer', function(Y){
           //console.log('Start floatButtons');
           var buttonRow = Y.one('div.button-row');
@@ -121,6 +124,7 @@
           buttonRowHold._node.innerHTML = buttonsCode;
           //console.log('End floatButtons');
       });
+      */
   }
 
   //////////////////////////////////////////////////////////////////////////////
@@ -329,10 +333,10 @@
   // Start floating titles after window finishes loading
   ////////////////////////////////////////////////////////////////////////////// 
   
-  window.onload = startFloatTitle;
+  //window.onload = startFloatTitle;
 
   //////////////////////////////////////////////////////////////////////////////
   // Start floating titles when window is resized
   ////////////////////////////////////////////////////////////////////////////// 
   
-  window.onresize = startFloatTitle;
+  //window.onresize = startFloatTitle;
