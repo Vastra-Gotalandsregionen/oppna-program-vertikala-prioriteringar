@@ -17,11 +17,18 @@ Table of Contents
 
 /* -- = Main Structure  -------------------------------------------------------*/
 
-body {
+/*body {
     font-family: arial, Helvetica,sans-serif;
     font-size: 12px;
     margin: 5px;
-}
+}*/
+/*.vertikala-prioriteringar-portlet {
+    box-sizing: border-box;
+    left: 0;
+    padding: 0 35px 0 35px;
+    position: absolute;
+    width: 100%;
+}*/
 
 #layout {
   #white-space: nowrap;
