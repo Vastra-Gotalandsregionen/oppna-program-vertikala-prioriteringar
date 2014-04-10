@@ -7,7 +7,10 @@
 <%@ taglib prefix='fn' uri='http://java.sun.com/jsp/jstl/functions' %>
 
 <div class="main-content">
-	<form action="main" method="post">
+    <portlet:actionURL var="doRowAction">
+        <portlet:param name="action" value="doRowAction"/>
+    </portlet:actionURL>
+	<form action="${doRowAction}" method="post">
    		<c:if test="${not empty rows}">
             <!--[if IE]>
             <span style="background-color: white; position: fixed; top: 0px; right: 0px; width: 100%; height: 5px; display: block; z-index: 500">&nbsp;</span>
