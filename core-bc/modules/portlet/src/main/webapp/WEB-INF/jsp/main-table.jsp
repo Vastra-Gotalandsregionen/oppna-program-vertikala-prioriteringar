@@ -65,6 +65,6 @@
       </tbody>
     </table>
     
-    <script type="text/javascript" src="${pageContext.request.contextPath}/js/TableFloaterTitle.js">
+    <script type="text/javascript" src="${pageContext.request.contextPath}/js/TableFloaterTitle.js?v=1">
     </script>
     

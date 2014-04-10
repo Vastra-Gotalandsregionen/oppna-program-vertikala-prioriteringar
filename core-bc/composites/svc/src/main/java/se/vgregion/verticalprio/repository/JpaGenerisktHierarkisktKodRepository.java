@@ -6,14 +6,15 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import se.vgregion.dao.domain.patterns.entity.AbstractEntity;
 import se.vgregion.verticalprio.entity.AbstractHirarkiskKod;
 
 @Repository
-public class JpaGenerisktHierarkisktKodRepository<T extends AbstractHirarkiskKod> extends
+public class JpaGenerisktHierarkisktKodRepository<T extends AbstractEntity<Long>> extends
         JpaGenerisktKodRepository<T> implements GenerisktHierarkisktKodRepository<T> {
 
 	public JpaGenerisktHierarkisktKodRepository() {
-		super((Class<T>) AbstractHirarkiskKod.class);
+		super((Class) AbstractHirarkiskKod.class);
 	}
 
 	public JpaGenerisktHierarkisktKodRepository(Class<T> klass) {
@@ -31,7 +32,7 @@ public class JpaGenerisktHierarkisktKodRepository<T extends AbstractHirarkiskKod
 	@SuppressWarnings("unchecked")
 	private void initChildren(List<T> items) {
 		for (T item : items) {
-			initChildren(item.getChildren());
+			initChildren(((AbstractHirarkiskKod)item).getChildren());
 		}
 	}
 

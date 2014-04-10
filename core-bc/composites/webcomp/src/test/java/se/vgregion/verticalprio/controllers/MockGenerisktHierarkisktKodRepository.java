@@ -2,6 +2,7 @@ package se.vgregion.verticalprio.controllers;
 
 import java.util.List;
 
+import se.vgregion.dao.domain.patterns.entity.AbstractEntity;
 import se.vgregion.verticalprio.entity.AbstractHirarkiskKod;
 import se.vgregion.verticalprio.repository.GenerisktHierarkisktKodRepository;
 
@@ -10,7 +11,7 @@ import se.vgregion.verticalprio.repository.GenerisktHierarkisktKodRepository;
  * 
  */
 public class MockGenerisktHierarkisktKodRepository<T extends AbstractHirarkiskKod> extends
-        MockGenerisktKodRepository<T> implements GenerisktHierarkisktKodRepository<T> {
+        MockGenerisktKodRepository<AbstractEntity<Long>> implements GenerisktHierarkisktKodRepository<AbstractEntity<Long>> {
 
     private Class<?> clazz;
 
@@ -22,7 +23,7 @@ public class MockGenerisktHierarkisktKodRepository<T extends AbstractHirarkiskKo
      * @inheritDoc
      */
     @Override
-    public List<T> getTreeRoots() {
+    public List<AbstractEntity<Long>> getTreeRoots() {
         return someItems();
     }
 
