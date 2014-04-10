@@ -1,0 +1,167 @@
+package se.vgregion.verticalprio.controller;
+
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import se.vgregion.verticalprio.ApplicationData;
+import se.vgregion.verticalprio.MainForm;
+import se.vgregion.verticalprio.PrioriteringsobjektFindCondition;
+import se.vgregion.verticalprio.controllers.BaseController;
+import se.vgregion.verticalprio.controllers.PrioriteringsobjektForm;
+import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
+import se.vgregion.verticalprio.entity.SektorRaad;
+import se.vgregion.verticalprio.repository.GenerisktHierarkisktKodRepository;
+import se.vgregion.verticalprio.repository.PrioRepository;
+import se.vgregion.verticalprio.repository.finding.HaveNestedEntities;
+import se.vgregion.verticalprio.repository.finding.NestedSektorRaad;
+
+import javax.portlet.PortletSession;
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+/**
+ * @author Patrik Bergström
+ */
+public abstract class PortletBaseController extends BaseController {
+
+    public PortletBaseController() {
+    }
+
+    protected boolean isBlank(String s) {
+        if (s == null) {
+            return true;
+        }
+        if ("".equals(s.trim())) {
+            return true;
+        }
+        return false;
+    }
+
+    protected <T> T getOrCreateSessionObj(PortletSession session, String name, Class<T> clazz) {
+        try {
+            T result = (T) session.getAttribute(name);
+
+            if (result == null) {
+                result = clazz.newInstance();
+                session.setAttribute(name, result);
+            }
+
+            return result;
+        } catch (InstantiationException ie) {
+            throw new RuntimeException(ie);
+        } catch (IllegalAccessException iae) {
+            throw new RuntimeException(iae);
+        }
+    }
+
+    /**
+     * Produces the result list in the main view of the application. It uses a
+     * {@link se.vgregion.verticalprio.PrioriteringsobjektFindCondition} as search condition - this object is stored in the session.
+     *
+     * @param session
+     * @return
+     */
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public List<Prioriteringsobjekt> result(PortletSession session) {
+        PrioriteringsobjektFindCondition condition = getOrCreateSessionObj(session, "prioCondition",
+                PrioriteringsobjektFindCondition.class);
+        MainForm mf = getMainForm(session);
+
+        if (mf.getAllSektorsRaad().isSelected()) {
+            if (condition.getSektorRaad() != null) {
+                // user selected to show all Prios regardless of SR.
+                // Remove all conditions that specifies specific SRs, except those that should indicate order by
+                // directive.
+                HaveNestedEntities<SektorRaad> hne = condition.getSektorRaad();
+                // clearNonSortingLogic(hne);
+                hne.content().clear();
+            }
+        } else {
+            List<SektorRaad> raad = getMarkedLeafs(mf.getSectors());
+            raad = flatten(raad);
+
+            NestedSektorRaad sektorNest = condition.getSektorRaad();
+
+            // Find out if there are selected sectors, taking regards to that there might be HaveSortOrder-objects
+            // inside.
+            sektorNest.content().clear();
+            if (sektorNest != null && sektorNest.content() != null) {
+                sektorNest.content().addAll(raad);
+            }
+
+            if (raad.isEmpty()) {
+                List<Prioriteringsobjekt> zeroResult = new ArrayList<Prioriteringsobjekt>();
+                session.setAttribute("rows", zeroResult);
+                return zeroResult;
+            }
+        }
+
+        List<Prioriteringsobjekt> result = new ArrayList<Prioriteringsobjekt>();
+        result.addAll(getPrioRepository().findLargeResult(condition));
+        List<SektorRaad> sectors = getApplicationData().getSektorRaadList();
+
+        for (Prioriteringsobjekt prio : result) {
+            prio.setSektorRaad(findRoot(sectors, prio.getSektorRaad()));
+        }
+
+        session.setAttribute("rows", result);
+        return result;
+    }
+
+    protected MainForm getMainForm(PortletSession session) {
+        MainForm form = getOrCreateSessionObj(session, "form", MainForm.class);
+        initMainForm(form, session);
+        return form;
+    }
+
+    protected void initMainForm(MainForm form, PortletSession session) {
+        if (form.getSectors().isEmpty()) {
+            form.getSectors().addAll(getSectors(session));
+        }
+
+        if (form.getColumns().isEmpty()) {
+            form.getColumns().addAll(Prioriteringsobjekt.getDefaultColumns());
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    @Transactional
+    private List<SektorRaad> getSectors(PortletSession session) {
+        final String sectorsKey = "sectors";
+        Collection<SektorRaad> sectorCache = (Collection<SektorRaad>) session.getAttribute(sectorsKey);
+        if (sectorCache == null) {
+            List<SektorRaad> raads = getSektorRaadRepository().getTreeRoots();
+            sectorCache = new ArrayList<SektorRaad>();
+            session.setAttribute(sectorsKey, sectorCache);
+            for (SektorRaad sr : raads) {
+                sectorCache.add(sr.clone());
+            }
+        }
+        return new ArrayList<SektorRaad>(sectorCache);
+    }
+
+    protected abstract GenerisktHierarkisktKodRepository getSektorRaadRepository();
+
+    protected abstract ApplicationData getApplicationData();
+
+    protected abstract PrioRepository getPrioRepository();
+
+    /*@SuppressWarnings("unchecked")
+    @Transactional
+    protected List<SektorRaad> getSectors(HttpSession session) {
+        final String sectorsKey = "sectors";
+        Collection<SektorRaad> sectorCache = (Collection<SektorRaad>) session.getAttribute(sectorsKey);
+        if (sectorCache == null) {
+            List<SektorRaad> raads = sektorRaadRepository.getTreeRoots();
+            sectorCache = new ArrayList<SektorRaad>();
+            session.setAttribute(sectorsKey, sectorCache);
+            for (SektorRaad sr : raads) {
+                sectorCache.add(sr.clone());
+            }
+        }
+        return new ArrayList<SektorRaad>(sectorCache);
+    }
+*/
+
+}

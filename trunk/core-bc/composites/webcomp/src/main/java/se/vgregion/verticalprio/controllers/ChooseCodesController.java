@@ -28,7 +28,7 @@ import se.vgregion.verticalprio.repository.finding.HaveNestedEntities;
  * 
  */
 @Controller
-public class ChooseCodesController extends ControllerBase {
+public class ChooseCodesController extends WebControllerBase {
 
 	Map<String, ChooseListFormWithDomainProperty> formPrototypes = new HashMap<String, ChooseListFormWithDomainProperty>();
 
