@@ -9,17 +9,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
-import se.vgregion.verticalprio.ApplicationData;
-import se.vgregion.verticalprio.ConfColumnsForm;
-import se.vgregion.verticalprio.MainForm;
-import se.vgregion.verticalprio.PrioriteringsobjektFindCondition;
+import se.vgregion.verticalprio.*;
 import se.vgregion.verticalprio.controllers.EditDirective;
+import se.vgregion.verticalprio.controllers.PrioriteringsobjektForm;
+import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
 import se.vgregion.verticalprio.entity.SektorRaad;
 import se.vgregion.verticalprio.entity.User;
 import se.vgregion.verticalprio.repository.GenerisktHierarkisktKodRepository;
@@ -27,11 +27,15 @@ import se.vgregion.verticalprio.repository.GenerisktKodRepository;
 import se.vgregion.verticalprio.repository.PrioRepository;
 import se.vgregion.verticalprio.repository.finding.DateNullLogic;
 
+import javax.portlet.ActionResponse;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.portlet.PortletSession;
 import java.io.IOException;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Patrik Bergström
@@ -167,6 +171,69 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
         }
 
     }
+
+    @ActionMapping(params = {"action=doRowAction", "select-prio"})
+    public void selectPrio(ActionResponse response, @RequestParam("id") Long id) {
+        response.setRenderParameter("view", "prio-view");
+        response.setRenderParameter("id", id + "");
+    }
+
+    @RenderMapping(params = "view=prio-view")
+    @Transactional
+    public String showPrioView(ModelMap model, PortletSession session, @RequestParam("id") Long id) {
+/*
+        if (!validateIdIsSelected(session, id)) {
+            return "main";
+        }
+*/
+
+        Map<String, Object> attributeMap = session.getAttributeMap();
+
+        model.addAllAttributes(attributeMap);
+
+        PrioriteringsobjektForm form = (PrioriteringsobjektForm) model.get("prio");
+        if (form == null) {
+            form = new PrioriteringsobjektForm();
+        }
+        model.addAttribute("prio", form);
+        session.setAttribute("prio", form);
+        model.addAttribute("editDir", new EditDirective(false, false));
+        initKodLists(form);
+
+        BeanMap formMap = new BeanMap(form);
+        Prioriteringsobjekt prio = null;
+        if (id != null) {
+            prio = new Prioriteringsobjekt();
+            prio.setId(id);
+            prio = prioRepository.findByExample(prio, 1).get(0);
+            prio.getDiagnoser().toArray();
+            prio.getAatgaerdskoder().toArray();
+            prio.getAtcKoder().toArray();
+            prio.getChildren().toArray();
+        } else {
+
+            prio = new Prioriteringsobjekt();
+        }
+        BeanMap entityMap = new BeanMap(prio);
+        formMap.putAllWriteable(entityMap);
+        form.putAllIdsFromCodesIfAnyIntoAttributeOnThisObject();
+        initPrio(form);
+
+        if (form.getId() == null) {
+            form.setId(id); // Strange... yes?
+            // putAllWriteable seems not to work for this class on Long:s at least (and in the antonio-env).
+            // TODO: own implementation of BeanMap
+        }
+
+        init(form.getSektorRaadList());
+
+        PrioriteringsobjektForm unalteredVersion = new PrioriteringsobjektForm();
+        Util.copyValuesAndSetsFromBeanToBean(form, unalteredVersion);
+        form.setUnalteredVersion(unalteredVersion);
+
+        return "prio-view";
+    }
+
 
     @Override
     protected GenerisktHierarkisktKodRepository getSektorRaadRepository() {

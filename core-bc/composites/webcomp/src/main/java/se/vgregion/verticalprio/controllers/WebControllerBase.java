@@ -1,21 +1,16 @@
 package se.vgregion.verticalprio.controllers;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
-
-import org.apache.commons.beanutils.BeanMap;
 import org.springframework.transaction.annotation.Transactional;
-
 import se.vgregion.verticalprio.MainForm;
-import se.vgregion.verticalprio.entity.Column;
-import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
 import se.vgregion.verticalprio.entity.SektorRaad;
 import se.vgregion.verticalprio.repository.GenerisktHierarkisktKodRepository;
 import se.vgregion.verticalprio.repository.PrioRepository;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class WebControllerBase extends BaseController {
 
@@ -24,33 +19,12 @@ public class WebControllerBase extends BaseController {
 
 	// private SortedMap<String, String> prioPropertyTexts;
 
-	private List<Column> columns = getDefaultColumns();
-
-	// protected String columnTextsPropertiesFileName = "/column-texts.properties";
+    // protected String columnTextsPropertiesFileName = "/column-texts.properties";
 
 	@Resource(name = "sektorRaadRepository")
 	GenerisktHierarkisktKodRepository<SektorRaad> sektorRaadRepository;
 
-	private List<Column> getDefaultColumns() {
-		List<Column> columns = Prioriteringsobjekt.getDefaultColumns();
-
-		// Map<String, Column> map = new HashMap<String, Column>();
-		// for (Column column : columns) {
-		// map.put(column.getName(), column);
-		// }
-		//
-		// addHtmlLinkToColumnLabel(map, "diagnosTexts", "choose-codes-init?codeRefName=diagnosRef");
-		// addHtmlLinkToColumnLabel(map, "aatgaerdskoder", "choose-codes-init?codeRefName=aatgaerdRef");
-		// addHtmlLinkToColumnLabel(map, "atcKoder", "choose-codes-init?codeRefName=atcKoderRef");
-		// addHtmlLinkToColumnLabel(map, "vaardformskoder", "choose-codes-init?codeRefName=vaardformskoderRef");
-		// addHtmlLinkToColumnLabel(map, "rangordningsKod", "choose-codes-init?codeRefName=rangordningsRef");
-		// addHtmlLinkToColumnLabel(map, "tillstaandetsSvaarighetsgradKod",
-		// "choose-codes-init?codeRefName=tillstaandetsSvaarighetsgradRef");
-
-		return columns;
-	}
-
-	// private void addHtmlLinkToColumnLabel(Map<String, Column> map, String key, String linkText) {
+    // private void addHtmlLinkToColumnLabel(Map<String, Column> map, String key, String linkText) {
 	// Column column = map.get(key);
 	// String template = "<a href='${link}'>${text}</a>";
 	// template = template.replace("${link}", linkText);
@@ -84,44 +58,7 @@ public class WebControllerBase extends BaseController {
 	// return prioPropertyTexts;
 	// }
 
-	/**
-	 * Getter för columns attribute. Initializes the list if not already ready.
-	 * 
-	 * @return List of columns described in the property file /column-texts.properties.
-	 */
-	public List<Column> getColumns() {
-
-		List<Column> clones = new ArrayList<Column>();
-
-		for (Column column : columns) {
-			BeanMap bm = new BeanMap(column);
-			Column newColumn = new Column();
-			BeanMap nBm = new BeanMap(newColumn);
-			nBm.putAllWriteable(bm);
-			clones.add(newColumn);
-		}
-
-		return clones;
-
-		// return columns;
-
-		// if (columns == null) {
-		// Map<String, String> ppt = getPrioPropertyTexts();
-		// int count = 0;
-		// List<Column> result = new ArrayList<Column>(ppt.size());
-		// for (String key : new TreeSet<String>(ppt.keySet())) {
-		// Column column = new Column();
-		// column.setName(key.substring(4));
-		// column.setLabel(ppt.get(key));
-		// column.setId(count++);
-		// result.add(column);
-		// }
-		// columns = result;
-		// }
-		// return columns;
-	}
-
-	protected <T> T getOrCreateSessionObj(HttpSession session, String name, Class<T> clazz) {
+    protected <T> T getOrCreateSessionObj(HttpSession session, String name, Class<T> clazz) {
 		try {
 			T result = (T) session.getAttribute(name);
 

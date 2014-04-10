@@ -1,14 +1,21 @@
 package se.vgregion.verticalprio.controllers;
 
+import org.apache.commons.beanutils.BeanMap;
+import org.springframework.transaction.annotation.Transactional;
+import se.vgregion.verticalprio.entity.Column;
+import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
 import se.vgregion.verticalprio.entity.SektorRaad;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
  * @author Patrik Bergström
  */
-public class BaseController {
+public abstract class BaseController {
+    protected List<Column> columns = getDefaultColumns();
+
     /**
      * Loops through a collection and returns the sector with the corresponding id value provided.
      *
@@ -120,4 +127,84 @@ public class BaseController {
         }
         return null;
     }
+
+    /**
+     * Getter för columns attribute. Initializes the list if not already ready.
+     *
+     * @return List of columns described in the property file /column-texts.properties.
+     */
+    public List<Column> getColumns() {
+
+        List<Column> clones = new ArrayList<Column>();
+
+        for (Column column : columns) {
+            BeanMap bm = new BeanMap(column);
+            Column newColumn = new Column();
+            BeanMap nBm = new BeanMap(newColumn);
+            nBm.putAllWriteable(bm);
+            clones.add(newColumn);
+        }
+
+        return clones;
+
+        // return columns;
+
+        // if (columns == null) {
+        // Map<String, String> ppt = getPrioPropertyTexts();
+        // int count = 0;
+        // List<Column> result = new ArrayList<Column>(ppt.size());
+        // for (String key : new TreeSet<String>(ppt.keySet())) {
+        // Column column = new Column();
+        // column.setName(key.substring(4));
+        // column.setLabel(ppt.get(key));
+        // column.setId(count++);
+        // result.add(column);
+        // }
+        // columns = result;
+        // }
+        // return columns;
+    }
+
+    private List<Column> getDefaultColumns() {
+        List<Column> columns = Prioriteringsobjekt.getDefaultColumns();
+
+        // Map<String, Column> map = new HashMap<String, Column>();
+        // for (Column column : columns) {
+        // map.put(column.getName(), column);
+        // }
+        //
+        // addHtmlLinkToColumnLabel(map, "diagnosTexts", "choose-codes-init?codeRefName=diagnosRef");
+        // addHtmlLinkToColumnLabel(map, "aatgaerdskoder", "choose-codes-init?codeRefName=aatgaerdRef");
+        // addHtmlLinkToColumnLabel(map, "atcKoder", "choose-codes-init?codeRefName=atcKoderRef");
+        // addHtmlLinkToColumnLabel(map, "vaardformskoder", "choose-codes-init?codeRefName=vaardformskoderRef");
+        // addHtmlLinkToColumnLabel(map, "rangordningsKod", "choose-codes-init?codeRefName=rangordningsRef");
+        // addHtmlLinkToColumnLabel(map, "tillstaandetsSvaarighetsgradKod",
+        // "choose-codes-init?codeRefName=tillstaandetsSvaarighetsgradRef");
+
+        return columns;
+    }
+
+
+
+    protected void initPrio(Prioriteringsobjekt form) {
+        form.getDiagnoser().toArray(); // Are not eager so we have to make sure they are
+        form.getAatgaerdskoder().toArray(); // loaded before sending them to the jsp-layer.
+        form.getAtcKoder().toArray();
+        if (form.getChildren() != null && !form.getChildren().isEmpty()) {
+            for (Prioriteringsobjekt child : form.getChildren()) {
+                initPrio(child);
+            }
+        }
+    }
+
+    @Transactional
+    protected void init(Collection<SektorRaad> raads) {
+		if (raads != null) {
+			for (SektorRaad raad : raads) {
+				init(raad.getChildren());
+			}
+		}
+	}
+
+
 }
