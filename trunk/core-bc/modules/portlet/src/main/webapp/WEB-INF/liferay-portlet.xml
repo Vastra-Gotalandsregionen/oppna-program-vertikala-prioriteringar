@@ -6,7 +6,7 @@
   <portlet>
     <portlet-name>vertikala-prioriteringar</portlet-name>
     <instanceable>false</instanceable>
-    <!--<css-class-wrapper></css-class-wrapper>-->
+    <css-class-wrapper>vertikala-prioriteringar-portlet</css-class-wrapper>
   </portlet>
   <role-mapper>
     <role-name>administrator</role-name>
