@@ -6,11 +6,15 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 <%@ taglib uri="/WEB-INF/tld/vgr-util.tld" prefix="su"%>
+<%@ taglib uri="http://java.sun.com/portlet" prefix="portlet" %>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<portlet:actionURL var="actionUrl">
+    <portlet:param name="action" value="doSectorAction"/>
+</portlet:actionURL>
+
+<div>
 <%@ include file="head.jsp" %>
-<body style="height:100%; ">
+<div style="height:100%; ">
 
 <div class="main-content edit-sectors">
 
@@ -19,7 +23,7 @@
 
   <tags:message-out />
 
-  <form action="sektorer" method="post" accept-charset="UTF-8" enctype="application/x-www-form-urlencoded" class="yui3-g otherUser">
+  <form action="${actionUrl}" method="post" accept-charset="UTF-8" enctype="application/x-www-form-urlencoded" class="yui3-g otherUser">
 
   <div class="yui3-u-1">
     <h2>Administrera sektorsråd</h2>
@@ -29,7 +33,7 @@
   
   <div class="yui3-u-1-2 otherUser">
     <c:if test="${user.userEditor}">
-      Skapa ny <input type="submit" name="insert" value="       -1" class="sectorAdd" />
+      Skapa ny <input type="submit" name="insert-sector" value="       -1" class="sectorAdd" />
     </c:if>
     <tags:sectors-edit-row items="${sectors}" />
   </div>
@@ -81,5 +85,5 @@
   
   </div>
 
-</body>
-</html>
+</div>
+</div>

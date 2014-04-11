@@ -40,7 +40,7 @@
       
       <c:choose>
         <c:when test="${not item.locked and not item.markedAsDeleted}">
-          <span><input name="insert" type="submit" value="       ${item.id}" class="sectorAdd"/></span>
+          <span><input name="insert-sector" type="submit" value="       ${item.id}" class="sectorAdd"/></span>
         </c:when>
         <c:when test="${item.locked and not item.markedAsDeleted}">
           <img src="img/icon_padlock.gif" alt="Låst för din användare" />

@@ -7,6 +7,7 @@ import se.vgregion.verticalprio.MainForm;
 import se.vgregion.verticalprio.PrioriteringsobjektFindCondition;
 import se.vgregion.verticalprio.controllers.BaseController;
 import se.vgregion.verticalprio.controllers.PrioriteringsobjektForm;
+import se.vgregion.verticalprio.controllers.SektorRaadBean;
 import se.vgregion.verticalprio.entity.Column;
 import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
 import se.vgregion.verticalprio.entity.SektorRaad;
@@ -24,6 +25,8 @@ import java.util.List;
  * @author Patrik Bergström
  */
 public abstract class PortletBaseController extends BaseController {
+
+    long idForUnsavedNewPosts = -1;
 
     public PortletBaseController() {
     }
@@ -154,6 +157,8 @@ public abstract class PortletBaseController extends BaseController {
 
     protected abstract PrioRepository getPrioRepository();
 
+
+
     /*@SuppressWarnings("unchecked")
     @Transactional
     protected List<SektorRaad> getSectors(HttpSession session) {
@@ -170,5 +175,25 @@ public abstract class PortletBaseController extends BaseController {
         return new ArrayList<SektorRaad>(sectorCache);
     }
 */
+
+    protected void insertNewSektorIntoTree(List<SektorRaadBean> sectors, Long id) {
+        if (sectors == null) {
+            return;
+        }
+        for (SektorRaadBean sr : sectors) {
+            if (equals(id, sr.getId())) {
+                if (sr.getBeanChildren() == null) {
+                    sr.setBeanChildren(new ArrayList<SektorRaadBean>());
+                }
+                SektorRaadBean newRaad = new SektorRaadBean();
+                newRaad.setParent(sr);
+                newRaad.setParentId(id);
+                newRaad.setId(idForUnsavedNewPosts--);
+                sr.getBeanChildren().add(newRaad);
+                return;
+            }
+            insertNewSektorIntoTree(sr.getBeanChildren(), id);
+        }
+    }
 
 }

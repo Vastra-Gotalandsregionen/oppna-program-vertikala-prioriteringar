@@ -19,6 +19,7 @@ import org.springframework.web.portlet.bind.annotation.RenderMapping;
 import se.vgregion.verticalprio.*;
 import se.vgregion.verticalprio.controllers.EditDirective;
 import se.vgregion.verticalprio.controllers.PrioriteringsobjektForm;
+import se.vgregion.verticalprio.controllers.SektorRaadBean;
 import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
 import se.vgregion.verticalprio.entity.SektorRaad;
 import se.vgregion.verticalprio.entity.User;
@@ -31,11 +32,10 @@ import javax.portlet.ActionResponse;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.portlet.PortletSession;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Patrik Bergström
@@ -236,21 +236,79 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
 
     @ActionMapping(params = { "action=doRowAction", "edit-sectors" })
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public void handleSectors(PortletSession session, ActionResponse response) throws IOException {
+    public void handleSectors(PortletSession session, ActionResponse response, final Model model) throws IOException {
         User user = (User) session.getAttribute("user");
         if (user.getUserEditor() || user.isApprover()) {
-            //return "sectors";
+            List<SektorRaadBean> sectors = SektorRaadBean.toSektorRaadBeans(sektorRaadRepository.getTreeRoots());
+            for (SektorRaadBean bean : sectors) {
+                SektorRaadBean.initLockedValue(bean, user);
+            }
+            //model.addAttribute("sectors", sectors);
+            session.setAttribute("sectors", sectors);
             response.setRenderParameter("view", "edit-sectors");
         }
-        //return null;
     }
 
     @RenderMapping(params = { "view=edit-sectors" })
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public String viewSectors() {
+    public String viewSectors(final PortletSession session, final Model model) {
+        List<SektorRaadBean> sectors = (List<SektorRaadBean>) session.getAttribute("sectors");
+        model.addAttribute("sectors", sectors);
         return "sectors";
     }
 
+    @ActionMapping(params = { "action=doSectorAction", "insert-sector" })
+    @Transactional()
+    public void insert(@RequestParam("id") List<String> id,
+                         @RequestParam("parentId") List<String> parentId,
+                         @RequestParam("kod") List<String> kod,
+                         @RequestParam("markedAsDeleted") List<String> markedAsDeleted,
+                         @RequestParam("insert-sector") Long insert,
+                         @RequestParam("prioCount") List<String> prioCount,
+                         @RequestParam("prioCount") List<String> locked,
+                         Model modelMap,
+                         PortletSession session,
+                         ActionResponse response) {
+
+        List<SektorRaadBean> sectors = toRaads(id, parentId, kod, markedAsDeleted, prioCount, locked);
+
+        modelMap.addAttribute("sectors", sectors);
+        session.setAttribute("sectors", sectors);
+
+        if (insert.equals(-1l)) {
+            SektorRaadBean newSektorRaad = new SektorRaadBean(idForUnsavedNewPosts--);
+            sectors.add(newSektorRaad);
+        } else {
+            insertNewSektorIntoTree(sectors, insert);
+        }
+
+        session.setAttribute("sectors", sectors);
+        response.setRenderParameter("view", "edit-sectors");
+    }
+
+    @ActionMapping(params = { "action=doSectorAction", "save" })
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void save(ActionResponse response, @RequestParam List<String> kod,
+                       @RequestParam("id") List<String> id,
+                       @RequestParam("parentId") List<String> parentId,
+                       @RequestParam("markedAsDeleted") List<String> markedAsDeleted,
+                       @RequestParam("prioCount") List<String> prioCount,
+                       @RequestParam("locked") List<String> locked,
+                       Model modelMap, PortletSession session) throws IOException {
+
+        List<SektorRaadBean> sectors = toRaads(id, parentId, kod, markedAsDeleted, prioCount, locked);
+
+        User user = (User) session.getAttribute("user");
+
+        removeFromList(sectors);
+        store(sektorRaadRepository, userRepository, sectors, user);
+
+        modelMap.addAttribute("sectors", null);
+        session.setAttribute("sectors", null);
+        session.setAttribute("form", null);
+
+        response.setRenderParameter("view", "");
+    }
 
     @Override
     protected GenerisktHierarkisktKodRepository getSektorRaadRepository() {

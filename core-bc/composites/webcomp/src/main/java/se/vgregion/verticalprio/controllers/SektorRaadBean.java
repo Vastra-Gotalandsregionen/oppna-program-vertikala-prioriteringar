@@ -1,12 +1,14 @@
 package se.vgregion.verticalprio.controllers;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.beanutils.BeanMap;
 import org.springframework.transaction.annotation.Transactional;
 
 import se.vgregion.verticalprio.entity.SektorRaad;
+import se.vgregion.verticalprio.entity.User;
 
 public class SektorRaadBean extends SektorRaad {
 
@@ -26,6 +28,24 @@ public class SektorRaadBean extends SektorRaad {
 	private boolean locked;
 
 	private int prioCount;
+
+    @Transactional()
+    public static void initLockedValue(SektorRaadBean bean, User user) {
+        if (user.getUserEditor()) {
+            // A user editor, or superuser, should be able to edit all data.
+            // Quit immediately then because default the SectorRaadBean locked property is false.
+            return;
+        }
+        Collection<SektorRaad> userSektors = user.getSektorRaad();
+
+        boolean result = !userSektors.contains(SektorRaadBean.toSektorRaad(bean));
+        bean.setLocked(result);
+        // if (!result) {
+        for (SektorRaadBean child : bean.getBeanChildren()) {
+            initLockedValue(child, user);
+        }
+        // }
+    }
 
 	@Transactional
 	public static SektorRaadBean toSektorRaadBean(SektorRaad sr) {
