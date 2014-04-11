@@ -8,6 +8,9 @@ import se.vgregion.verticalprio.entity.SektorRaad;
 import se.vgregion.verticalprio.entity.User;
 import se.vgregion.verticalprio.repository.GenerisktHierarkisktKodRepository;
 import se.vgregion.verticalprio.repository.GenerisktKodRepository;
+import se.vgregion.verticalprio.repository.finding.HaveExplicitTypeToFind;
+import se.vgregion.verticalprio.repository.finding.HaveOrderByPaths;
+import se.vgregion.verticalprio.repository.finding.OrderByPath;
 
 import javax.servlet.http.HttpSession;
 import java.util.*;
@@ -368,5 +371,37 @@ public abstract class BaseController {
         target.setKod(source.getKod());
         applyChange(sektorRaadRepository, userRepository, source.getChildren(), target.getChildren(), user);
     }
+
+    protected void markToDeleteWhenSave(Long id, List<SektorRaadBean> sectors) {
+        int c = 0;
+        for (SektorRaadBean sr : new ArrayList<SektorRaadBean>(sectors)) {
+            if (sr.getBeanChildren() != null) {
+                markToDeleteWhenSave(id, sr.getBeanChildren());
+            }
+            if (equals(id, sr.getId())) {
+                if (id < 0) {
+                    sectors.remove(c);
+                } else {
+                    sr.setMarkedAsDeleted(!sr.isMarkedAsDeleted());
+                }
+                return;
+            }
+            c++;
+        }
+    }
+
+    /**
+     * Method to validate that the user really have the right to use this controllers functionality.
+     *
+     * @param session
+     */
+    protected void checkSecurity(HttpSession session) {
+        User activeUser = (User) session.getAttribute("user");
+        if (!activeUser.getUserEditor()) {
+            throw new RuntimeException();
+        }
+    }
+
+
 
 }

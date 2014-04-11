@@ -84,24 +84,6 @@ public class EditSektorRaadController extends BaseController {
 		return "sectors";
 	}
 
-	private void markToDeleteWhenSave(Long id, List<SektorRaadBean> sectors) {
-		int c = 0;
-		for (SektorRaadBean sr : new ArrayList<SektorRaadBean>(sectors)) {
-			if (sr.getBeanChildren() != null) {
-				markToDeleteWhenSave(id, sr.getBeanChildren());
-			}
-			if (equals(id, sr.getId())) {
-				if (id < 0) {
-					sectors.remove(c);
-				} else {
-					sr.setMarkedAsDeleted(!sr.isMarkedAsDeleted());
-				}
-				return;
-			}
-			c++;
-		}
-	}
-
 	@RequestMapping(value = "sektorer", params = { "insert" })
 	@Transactional()
 	public String insert(@RequestParam List<String> id, @RequestParam List<String> parentId,

@@ -36,7 +36,7 @@ import se.vgregion.verticalprio.repository.finding.OrderByPath;
  */
 
 @Controller
-public class EditUsersController {
+public class EditUsersController extends BaseController {
 
 	@Resource(name = "userRepository")
 	GenerisktKodRepository<User> usersRepository;
@@ -175,18 +175,6 @@ public class EditUsersController {
 	}
 
 	/**
-	 * Method to validate that the user really have the right to use this controllers functionality.
-	 * 
-	 * @param session
-	 */
-	private void checkSecurity(HttpSession session) {
-		User activeUser = (User) session.getAttribute("user");
-		if (!activeUser.getUserEditor()) {
-			throw new RuntimeException();
-		}
-	}
-
-	/**
 	 * Saves the user. Combines data from the request with data inside the session (where 'deeper' data is stored -
 	 * the SektorRaad memberships).
 	 * 
@@ -310,34 +298,6 @@ public class EditUsersController {
 			postedUser.setUserEditor(false);
 		}
 		session.setAttribute(sessionKey, postedUser);
-	}
-
-	/**
-	 * An class to use as search criteria. Is used to provide sorting to the resulting listing.
-	 * 
-	 * @author Claes Lundahl, vgrid=clalu4.VGREGION
-	 * 
-	 */
-	static class ExampleUser extends User implements HaveOrderByPaths, HaveExplicitTypeToFind {
-
-		private List<OrderByPath> paths = new ArrayList<OrderByPath>();
-
-		public ExampleUser() {
-			super();
-			paths.add(new OrderByPath("firstName"));
-			paths.add(new OrderByPath("lastName"));
-		}
-
-		@Override
-		public List<OrderByPath> paths() {
-			return paths;
-		}
-
-		@Override
-		public Class<?> type() {
-			return User.class;
-		}
-
 	}
 
 	/**
