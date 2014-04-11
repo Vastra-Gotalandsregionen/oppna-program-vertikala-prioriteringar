@@ -8,16 +8,10 @@ import se.vgregion.verticalprio.entity.SektorRaad;
 import se.vgregion.verticalprio.entity.User;
 import se.vgregion.verticalprio.repository.GenerisktHierarkisktKodRepository;
 import se.vgregion.verticalprio.repository.GenerisktKodRepository;
-import se.vgregion.verticalprio.repository.finding.HaveExplicitTypeToFind;
-import se.vgregion.verticalprio.repository.finding.HaveOrderByPaths;
-import se.vgregion.verticalprio.repository.finding.OrderByPath;
 
 import javax.servlet.http.HttpSession;
 import java.util.*;
 
-/**
- * @author Patrik Bergström
- */
 public abstract class BaseController {
     protected List<Column> columns = getDefaultColumns();
 
@@ -402,6 +396,30 @@ public abstract class BaseController {
         }
     }
 
+    protected void copyKodCollectionsAndMetaDates(Prioriteringsobjekt source, Prioriteringsobjekt target) {
+        clearAndFillCollection(source.getAatgaerdskoder(), target.getAatgaerdskoder());
+        clearAndFillCollection(source.getDiagnoser(), target.getDiagnoser());
+        clearAndFillCollection(source.getAtcKoder(), target.getAtcKoder());
+        clearAndFillCollection(source.getChildren(), target.getChildren());
 
+        target.setGodkaend(source.getGodkaend());
+        target.setSenastUppdaterad(source.getSenastUppdaterad());
+    }
 
+    protected  <T extends Object> void clearAndFillCollection(Collection<T> source, Collection<T> target) {
+        if (source == null || target == null) {
+            return;
+        }
+        target.clear();
+        target.addAll(source);
+    }
+
+    protected ChooseFromListController.ChooseListForm initChooseListForm() {
+        ChooseFromListController.ChooseListForm clf = new ChooseFromListController.ChooseListForm();
+        clf.setFilterLabel("Sök diagnoser med nyckelord");
+        clf.setNotYetChoosenLabel("Ej valda diagnoser");
+        clf.setChoosenLabel("Valda diagnoser");
+        clf.setFilterLabelToolTip("Här kan du söka både på kod och på beskrivning");
+        return clf;
+    }
 }

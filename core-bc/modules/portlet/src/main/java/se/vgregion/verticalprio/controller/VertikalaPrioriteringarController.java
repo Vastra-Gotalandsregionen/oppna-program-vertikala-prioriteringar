@@ -17,10 +17,8 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 import se.vgregion.verticalprio.*;
-import se.vgregion.verticalprio.controllers.EditDirective;
-import se.vgregion.verticalprio.controllers.ExampleUser;
-import se.vgregion.verticalprio.controllers.PrioriteringsobjektForm;
-import se.vgregion.verticalprio.controllers.SektorRaadBean;
+import se.vgregion.verticalprio.controllers.*;
+import se.vgregion.verticalprio.entity.AbstractKod;
 import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
 import se.vgregion.verticalprio.entity.SektorRaad;
 import se.vgregion.verticalprio.entity.User;
@@ -29,19 +27,13 @@ import se.vgregion.verticalprio.repository.GenerisktKodRepository;
 import se.vgregion.verticalprio.repository.PrioRepository;
 import se.vgregion.verticalprio.repository.finding.DateNullLogic;
 
-import javax.annotation.Resource;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.portlet.PortletSession;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.*;
 
-/**
- * @author Patrik Bergström
- */
 @Controller
 @RequestMapping(value = "VIEW")
 @SessionAttributes(value = { "confCols", "form" })
@@ -184,6 +176,16 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
         }
     }
 
+    @ActionMapping(params = {"action=doRowAction", "edit-prio"})
+    public void editPrio(ActionResponse response, @RequestParam(value = "id", required = false) Long id) {
+        if (id != null) {
+            response.setRenderParameter("view", "edit-prio-view");
+            response.setRenderParameter("id", id + "");
+        } else {
+            response.setRenderParameter("view", "main");
+        }
+    }
+
     @RenderMapping(params = "view=prio-view")
     @Transactional
     public String showPrioView(ModelMap model,
@@ -194,10 +196,32 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
             return "main";
         }
 */
+        prioViewCommon(model, session, id);
 
-        Map<String, Object> attributeMap = session.getAttributeMap();
+        model.addAttribute("editDir", new EditDirective(false, false));
 
-        model.addAllAttributes(attributeMap);
+        return "prio-view";
+    }
+
+    @RenderMapping(params = "view=edit-prio-view")
+    @Transactional
+    public String showEditPrioView(ModelMap model,
+                               PortletSession session,
+                               @RequestParam(value = "id", required = false) Long id) {
+/*
+        if (!validateIdIsSelected(session, id)) {
+            return "main";
+        }
+*/
+        model.addAttribute("editDir", new EditDirective(true, false));
+
+        prioViewCommon(model, session, id);
+
+        return "prio-view";
+    }
+
+    private void prioViewCommon(ModelMap model, PortletSession session, Long id) {
+        addSessionAttributesToModel(session, model);
 
         PrioriteringsobjektForm form = (PrioriteringsobjektForm) model.get("prio");
         if (form == null) {
@@ -205,7 +229,6 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
         }
         model.addAttribute("prio", form);
         session.setAttribute("prio", form);
-        model.addAttribute("editDir", new EditDirective(false, false));
         initKodLists(form);
 
         BeanMap formMap = new BeanMap(form);
@@ -238,8 +261,12 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
         PrioriteringsobjektForm unalteredVersion = new PrioriteringsobjektForm();
         Util.copyValuesAndSetsFromBeanToBean(form, unalteredVersion);
         form.setUnalteredVersion(unalteredVersion);
+    }
 
-        return "prio-view";
+    private void addSessionAttributesToModel(PortletSession session, ModelMap model) {
+        Map<String, Object> attributeMap = session.getAttributeMap();
+
+        model.addAllAttributes(attributeMap);
     }
 
     @ActionMapping(params = { "action=doRowAction", "edit-sectors" })
@@ -371,9 +398,87 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
     }
 
     @ActionMapping(params = {"action=prioViewForm", "cancel"})
-    public void cancel(ActionResponse response) {
+    public void cancelPrioForm(ActionResponse response) {
         response.setRenderParameter("view", "main");
     }
+
+    @ActionMapping(params = {"action=prioViewForm", "save"})
+    @Transactional
+    public void savePrioForm(PortletRequest request,
+                     ActionResponse response,
+                     PortletSession session,
+                     @ModelAttribute("prio") PrioriteringsobjektForm pf)
+            throws IOException {
+
+        PrioriteringsobjektForm sessionPrio = (PrioriteringsobjektForm) session.getAttribute("prio");
+        Prioriteringsobjekt prio = toPrioriteringsobjekt(request, pf, session);
+        copyKodCollectionsAndMetaDates(sessionPrio, prio);
+        prio.getChildren().addAll(sessionPrio.getChildren());
+
+        prio.setSenastUppdaterad(new Date());
+
+        String error = prio.getMessagesWhyNotSaveAble();
+        if (error != null) {
+            MessageHome mh = getOrCreateSessionObj(session, "messageHome", MessageHome.class);
+            mh.setMessage(error);
+            response.setRenderParameter("view", "prio-view");
+        } else {
+            prioRepository.store(prio);
+        }
+        response.setRenderParameter("view", "main");
+    }
+
+    @ActionMapping(params = {"action=prioViewForm", "choose-diagnoser"})
+    public void chooseDiagnoser(ActionResponse response) {
+        response.setRenderParameter("view", "choose-from-list");
+    }
+
+    @RenderMapping(params = "view=choose-from-list")
+    public String viewChooseFromList(PortletRequest request, PortletResponse response, PortletSession session,
+                                     ModelMap model, @ModelAttribute("prio") PrioriteringsobjektForm pf)
+            throws IOException {
+        ChooseFromListController.ChooseListForm clf = initChooseListForm();
+        session.setAttribute(ChooseFromListController.ChooseListForm.class.getSimpleName(), clf);
+
+        chooseKod(session, response, request, model, pf, "diagnoser");
+
+        addSessionAttributesToModel(session, model);
+        return "choose-from-list";
+    }
+
+    private void chooseKod(PortletSession session, PortletResponse response, PortletRequest request,
+                             ModelMap model, PrioriteringsobjektForm pf, String kodWithField) throws IOException {
+        initKodLists(pf);
+        pf.asignCodesFromTheListsByCorrespondingIdAttributes();
+
+        PrioriteringsobjektForm sessionPrio = (PrioriteringsobjektForm) session.getAttribute("prio");
+        copyKodCollectionsAndMetaDates(sessionPrio, pf);
+        session.setAttribute("prio", pf);
+        model.addAttribute("prio", pf);
+        pf.setUnalteredVersion(sessionPrio.getUnalteredVersion());
+
+        BeanMap bm = new BeanMap(pf);
+
+        ChooseFromListController.ChooseListForm clf = getOrCreateSessionObj(session, ChooseFromListController.ChooseListForm.class.getSimpleName(),
+                ChooseFromListController.ChooseListForm.class);
+        clf.setOkLabel("Bekräfta val");
+        clf.setDisplayKey("kodPlusBeskrivning");
+        clf.setIdKey("id");
+        clf.setOkUrl("prio?goBack=10");
+        clf.setCancelUrl("prio?goBack=10");
+
+        Collection<AbstractKod> target = (Collection<AbstractKod>) bm.get(kodWithField);
+        clf.setTarget(target);
+        clf.getChoosen().addAll(target);
+
+        BeanMap applicationDataMap = new BeanMap(applicationData);
+
+        List<AbstractKod> allItems = (List<AbstractKod>) applicationDataMap.get(kodWithField + "List");
+        clf.setAllItems(allItems);
+
+        clf.setAllToChoose(new ArrayList<AbstractKod>(allItems));
+    }
+
 
     @Override
     protected GenerisktHierarkisktKodRepository getSektorRaadRepository() {

@@ -367,16 +367,12 @@ public class EditPrioriteringController extends WebControllerBase {
 	public String chooseDiagnoserKod(HttpSession session, HttpServletResponse response,
 	        HttpServletRequest request, ModelMap model, @ModelAttribute("prio") PrioriteringsobjektForm pf)
 	        throws IOException {
-		ChooseListForm clf = new ChooseListForm();
-		session.setAttribute(ChooseListForm.class.getSimpleName(), clf);
-		clf.setFilterLabel("Sök diagnoser med nyckelord");
-		clf.setNotYetChoosenLabel("Ej valda diagnoser");
-		clf.setChoosenLabel("Valda diagnoser");
-		clf.setFilterLabelToolTip("Här kan du söka både på kod och på beskrivning");
-		return chooseKod(session, response, request, model, pf, "diagnoser");
+        ChooseListForm clf = initChooseListForm();
+        session.setAttribute(ChooseListForm.class.getSimpleName(), clf);
+        return chooseKod(session, response, request, model, pf, "diagnoser");
 	}
 
-	@RequestMapping(value = "prio", params = { "choose-aatgaerdskoder" })
+    @RequestMapping(value = "prio", params = { "choose-aatgaerdskoder" })
 	@Transactional
 	public String chooseAatgardskoder(HttpSession session, HttpServletResponse response,
 	        HttpServletRequest request, ModelMap model, @ModelAttribute("prio") PrioriteringsobjektForm pf)
@@ -483,25 +479,7 @@ public class EditPrioriteringController extends WebControllerBase {
 		return "prio-view";
 	}
 
-	private void copyKodCollectionsAndMetaDates(Prioriteringsobjekt source, Prioriteringsobjekt target) {
-		clearAndFillCollection(source.getAatgaerdskoder(), target.getAatgaerdskoder());
-		clearAndFillCollection(source.getDiagnoser(), target.getDiagnoser());
-		clearAndFillCollection(source.getAtcKoder(), target.getAtcKoder());
-		clearAndFillCollection(source.getChildren(), target.getChildren());
-
-		target.setGodkaend(source.getGodkaend());
-		target.setSenastUppdaterad(source.getSenastUppdaterad());
-	}
-
-	private <T extends Object> void clearAndFillCollection(Collection<T> source, Collection<T> target) {
-		if (source == null || target == null) {
-			return;
-		}
-		target.clear();
-		target.addAll(source);
-	}
-
-	private Prioriteringsobjekt toPrioriteringsobjekt(HttpServletRequest request, PrioriteringsobjektForm pf,
+    private Prioriteringsobjekt toPrioriteringsobjekt(HttpServletRequest request, PrioriteringsobjektForm pf,
 	        HttpSession session) {
 		initKodLists(pf);
 		pf.asignCodesFromTheListsByCorrespondingIdAttributes();

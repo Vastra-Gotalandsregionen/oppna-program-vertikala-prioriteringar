@@ -1,5 +1,6 @@
 package se.vgregion.verticalprio.controller;
 
+import org.apache.commons.beanutils.BeanMap;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import se.vgregion.verticalprio.ApplicationData;
@@ -16,14 +17,12 @@ import se.vgregion.verticalprio.repository.PrioRepository;
 import se.vgregion.verticalprio.repository.finding.HaveNestedEntities;
 import se.vgregion.verticalprio.repository.finding.NestedSektorRaad;
 
+import javax.portlet.PortletRequest;
 import javax.portlet.PortletSession;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-/**
- * @author Patrik Bergström
- */
 public abstract class PortletBaseController extends BaseController {
 
     long idForUnsavedNewPosts = -1;
@@ -196,4 +195,28 @@ public abstract class PortletBaseController extends BaseController {
         }
     }
 
+    protected Prioriteringsobjekt toPrioriteringsobjekt(PortletRequest request, PrioriteringsobjektForm pf,
+                                                      PortletSession session) {
+        initKodLists(pf);
+        pf.asignCodesFromTheListsByCorrespondingIdAttributes();
+        Prioriteringsobjekt prio;
+        if (pf.getId() == null) {
+            prio = new Prioriteringsobjekt();
+        } else {
+            prio = getPrioRepository().find(pf.getId());
+        }
+
+        PrioriteringsobjektForm sessionPrio = (PrioriteringsobjektForm) session.getAttribute("prio");
+        copyKodCollectionsAndMetaDates(sessionPrio, prio);
+        session.setAttribute("prio", pf);
+        pf.setUnalteredVersion(sessionPrio.getUnalteredVersion());
+
+        BeanMap prioMap = new BeanMap(prio);
+        BeanMap formMap = new BeanMap(pf);
+        prioMap.putAllWriteable(formMap);
+
+        initKodLists(pf);
+
+        return prio;
+    }
 }
