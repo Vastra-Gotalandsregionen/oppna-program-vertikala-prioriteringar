@@ -18,6 +18,7 @@ import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 import se.vgregion.verticalprio.*;
 import se.vgregion.verticalprio.controllers.EditDirective;
+import se.vgregion.verticalprio.controllers.ExampleUser;
 import se.vgregion.verticalprio.controllers.PrioriteringsobjektForm;
 import se.vgregion.verticalprio.controllers.SektorRaadBean;
 import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
@@ -28,6 +29,7 @@ import se.vgregion.verticalprio.repository.GenerisktKodRepository;
 import se.vgregion.verticalprio.repository.PrioRepository;
 import se.vgregion.verticalprio.repository.finding.DateNullLogic;
 
+import javax.annotation.Resource;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
@@ -308,6 +310,58 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
         session.setAttribute("form", null);
 
         response.setRenderParameter("view", "");
+    }
+
+    @ActionMapping(params = { "action=doSectorAction", "delete" })
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void delete(@RequestParam("id") List<String> id,
+                         @RequestParam("parentId") List<String> parentId,
+                         @RequestParam("kod") List<String> kod,
+                         @RequestParam("markedAsDeleted") List<String> markedAsDeleted,
+                         @RequestParam("delete") Long delete,
+                         @RequestParam("prioCount") List<String> prioCount,
+                         @RequestParam("locked") List<String> locked,
+                         Model modelMap,
+                         PortletSession session,
+                         ActionResponse response) {
+
+        List<SektorRaadBean> sectors = toRaads(id, parentId, kod, markedAsDeleted, prioCount, locked);
+        modelMap.addAttribute("sectors", sectors);
+        session.setAttribute("sectors", sectors);
+        markToDeleteWhenSave(delete, sectors);
+        response.setRenderParameter("view", "edit-sectors");
+    }
+
+
+
+    @ActionMapping(params = { "action=doRowAction", "edit-users" })
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public void editUsers(PortletSession session, ActionResponse response, final Model model) throws IOException {
+
+            response.setRenderParameter("view", "edit-users");
+
+    }
+
+    @RenderMapping(params = { "view=edit-users" })
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public String viewUsers(final PortletSession session, final Model model) {
+        checkSecurity(session);
+        List<User> users = userRepository.findByExample(new ExampleUser(), null);
+        model.addAttribute("users", users);
+        return "users";
+    }
+
+
+    /**
+     * Method to validate that the user really have the right to use this controllers functionality.
+     *
+     * @param session
+     */
+    protected void checkSecurity(PortletSession session) {
+        User activeUser = (User) session.getAttribute("user");
+        if (!activeUser.getUserEditor()) {
+            throw new RuntimeException();
+        }
     }
 
     @Override
