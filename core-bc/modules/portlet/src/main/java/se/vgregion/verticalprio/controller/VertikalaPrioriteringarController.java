@@ -234,6 +234,23 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
         return "prio-view";
     }
 
+    @ActionMapping(params = { "action=doRowAction", "edit-sectors" })
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public void handleSectors(PortletSession session, ActionResponse response) throws IOException {
+        User user = (User) session.getAttribute("user");
+        if (user.getUserEditor() || user.isApprover()) {
+            //return "sectors";
+            response.setRenderParameter("view", "edit-sectors");
+        }
+        //return null;
+    }
+
+    @RenderMapping(params = { "view=edit-sectors" })
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public String viewSectors() {
+        return "sectors";
+    }
+
 
     @Override
     protected GenerisktHierarkisktKodRepository getSektorRaadRepository() {
