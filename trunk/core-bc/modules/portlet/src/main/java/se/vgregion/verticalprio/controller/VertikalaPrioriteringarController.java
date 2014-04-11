@@ -175,14 +175,20 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
     }
 
     @ActionMapping(params = {"action=doRowAction", "select-prio"})
-    public void selectPrio(ActionResponse response, @RequestParam("id") Long id) {
-        response.setRenderParameter("view", "prio-view");
-        response.setRenderParameter("id", id + "");
+    public void selectPrio(ActionResponse response, @RequestParam(value = "id", required = false) Long id) {
+        if (id != null) {
+            response.setRenderParameter("view", "prio-view");
+            response.setRenderParameter("id", id + "");
+        } else {
+            response.setRenderParameter("view", "main");
+        }
     }
 
     @RenderMapping(params = "view=prio-view")
     @Transactional
-    public String showPrioView(ModelMap model, PortletSession session, @RequestParam("id") Long id) {
+    public String showPrioView(ModelMap model,
+                               PortletSession session,
+                               @RequestParam(value = "id", required = false) Long id) {
 /*
         if (!validateIdIsSelected(session, id)) {
             return "main";
@@ -362,6 +368,11 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
         if (!activeUser.getUserEditor()) {
             throw new RuntimeException();
         }
+    }
+
+    @ActionMapping(params = {"action=prioViewForm", "cancel"})
+    public void cancel(ActionResponse response) {
+        response.setRenderParameter("view", "main");
     }
 
     @Override
