@@ -31,13 +31,15 @@ import javax.portlet.ActionResponse;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.portlet.PortletSession;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.swing.*;
 import java.io.IOException;
 import java.util.*;
 
 @Controller
 @RequestMapping(value = "VIEW")
-@SessionAttributes(value = { "confCols", "form" })
+@SessionAttributes(value = {"confCols", "form"})
 public class VertikalaPrioriteringarController extends PortletBaseController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(VertikalaPrioriteringarController.class);
@@ -87,14 +89,14 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
         return "main";
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({"unchecked", "rawtypes"})
     @ActionMapping(params = "action=login")
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public void login(PortletRequest request, PortletSession session, @RequestParam(required = false) String userName,
-                        @RequestParam(required = false) String password) {
+                      @RequestParam(required = false) String password) {
 
         if (isBlank(userName) || isBlank(password)) {
-            return ;
+            return;
         }
 
         User example = new User();
@@ -134,7 +136,7 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
      * The action for selecting a specific node of in the three of {@link SektorRaad}. It gets the three out of the
      * session and then finds the node denoted by the Id-argument sent from the client. When found it toggles
      * (selected = !selected) the value of the 'select' property on this node.
-     *
+     * <p/>
      * Special case in this is when the user have clicked the allSektorsRaad property (hosted on the
      * {@link MainForm} form object). Then it clears away all other selections in favor of this one. If any other
      * node is selected then it reversely un-selects this property.
@@ -145,7 +147,7 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
      * @return
      * @throws java.io.IOException
      */
-    @ActionMapping(params = { "action=check" })
+    @ActionMapping(params = {"action=check"})
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public void check(final PortletSession session, @RequestParam(required = false) Integer sectorId,
                       PortletResponse response, @ModelAttribute("form") MainForm form)
@@ -208,8 +210,8 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
     @RenderMapping(params = "view=edit-prio-view")
     @Transactional
     public String showEditPrioView(ModelMap model,
-                               PortletSession session,
-                               @RequestParam(value = "id", required = false) Long id) {
+                                   PortletSession session,
+                                   @RequestParam(value = "id", required = false) Long id) {
 /*
         if (!validateIdIsSelected(session, id)) {
             return "main";
@@ -271,7 +273,7 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
         model.addAllAttributes(attributeMap);
     }
 
-    @ActionMapping(params = { "action=doRowAction", "edit-sectors" })
+    @ActionMapping(params = {"action=doRowAction", "edit-sectors"})
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public void handleSectors(PortletSession session, ActionResponse response, final Model model) throws IOException {
         User user = (User) session.getAttribute("user");
@@ -286,7 +288,7 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
         }
     }
 
-    @RenderMapping(params = { "view=edit-sectors" })
+    @RenderMapping(params = {"view=edit-sectors"})
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public String viewSectors(final PortletSession session, final Model model) {
         List<SektorRaadBean> sectors = (List<SektorRaadBean>) session.getAttribute("sectors");
@@ -294,18 +296,18 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
         return "sectors";
     }
 
-    @ActionMapping(params = { "action=doSectorAction", "insert-sector" })
+    @ActionMapping(params = {"action=doSectorAction", "insert-sector"})
     @Transactional()
     public void insert(@RequestParam("id") List<String> id,
-                         @RequestParam("parentId") List<String> parentId,
-                         @RequestParam("kod") List<String> kod,
-                         @RequestParam("markedAsDeleted") List<String> markedAsDeleted,
-                         @RequestParam("insert-sector") Long insert,
-                         @RequestParam("prioCount") List<String> prioCount,
-                         @RequestParam("prioCount") List<String> locked,
-                         Model modelMap,
-                         PortletSession session,
-                         ActionResponse response) {
+                       @RequestParam("parentId") List<String> parentId,
+                       @RequestParam("kod") List<String> kod,
+                       @RequestParam("markedAsDeleted") List<String> markedAsDeleted,
+                       @RequestParam("insert-sector") Long insert,
+                       @RequestParam("prioCount") List<String> prioCount,
+                       @RequestParam("prioCount") List<String> locked,
+                       Model modelMap,
+                       PortletSession session,
+                       ActionResponse response) {
 
         List<SektorRaadBean> sectors = toRaads(id, parentId, kod, markedAsDeleted, prioCount, locked);
 
@@ -323,15 +325,15 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
         response.setRenderParameter("view", "edit-sectors");
     }
 
-    @ActionMapping(params = { "action=doSectorAction", "save" })
+    @ActionMapping(params = {"action=doSectorAction", "save"})
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void save(ActionResponse response, @RequestParam List<String> kod,
-                       @RequestParam("id") List<String> id,
-                       @RequestParam("parentId") List<String> parentId,
-                       @RequestParam("markedAsDeleted") List<String> markedAsDeleted,
-                       @RequestParam("prioCount") List<String> prioCount,
-                       @RequestParam("locked") List<String> locked,
-                       Model modelMap, PortletSession session) throws IOException {
+                     @RequestParam("id") List<String> id,
+                     @RequestParam("parentId") List<String> parentId,
+                     @RequestParam("markedAsDeleted") List<String> markedAsDeleted,
+                     @RequestParam("prioCount") List<String> prioCount,
+                     @RequestParam("locked") List<String> locked,
+                     Model modelMap, PortletSession session) throws IOException {
 
         List<SektorRaadBean> sectors = toRaads(id, parentId, kod, markedAsDeleted, prioCount, locked);
 
@@ -347,18 +349,18 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
         response.setRenderParameter("view", "");
     }
 
-    @ActionMapping(params = { "action=doSectorAction", "delete" })
+    @ActionMapping(params = {"action=doSectorAction", "delete"})
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void delete(@RequestParam("id") List<String> id,
-                         @RequestParam("parentId") List<String> parentId,
-                         @RequestParam("kod") List<String> kod,
-                         @RequestParam("markedAsDeleted") List<String> markedAsDeleted,
-                         @RequestParam("delete") Long delete,
-                         @RequestParam("prioCount") List<String> prioCount,
-                         @RequestParam("locked") List<String> locked,
-                         Model modelMap,
-                         PortletSession session,
-                         ActionResponse response) {
+                       @RequestParam("parentId") List<String> parentId,
+                       @RequestParam("kod") List<String> kod,
+                       @RequestParam("markedAsDeleted") List<String> markedAsDeleted,
+                       @RequestParam("delete") Long delete,
+                       @RequestParam("prioCount") List<String> prioCount,
+                       @RequestParam("locked") List<String> locked,
+                       Model modelMap,
+                       PortletSession session,
+                       ActionResponse response) {
 
         List<SektorRaadBean> sectors = toRaads(id, parentId, kod, markedAsDeleted, prioCount, locked);
         modelMap.addAttribute("sectors", sectors);
@@ -368,14 +370,13 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
     }
 
 
-
-    @ActionMapping(params = { "action=doRowAction", "edit-users" })
+    @ActionMapping(params = {"action=doRowAction", "edit-users"})
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public void editUsers(PortletSession session, ActionResponse response, final Model model) throws IOException {
         response.setRenderParameter("view", "edit-users");
     }
 
-    @RenderMapping(params = { "view=edit-users" })
+    @RenderMapping(params = {"view=edit-users"})
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public String viewUsers(final PortletSession session, final Model model) {
         checkSecurity(session);
@@ -384,7 +385,7 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
         return "users";
     }
 
-    @ActionMapping(params = { "action=doUserAction", "edit" })
+    @ActionMapping(params = {"action=doUserAction", "edit"})
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public void editUser(PortletSession session, ActionResponse response, final Model modelMap, @RequestParam("id") Long id) throws IOException {
         if (!checkUserIsSelected(session, id)) {
@@ -400,31 +401,31 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
         response.setRenderParameter("view", "edit-user");
     }
 
-    @RenderMapping(params = { "view=edit-user" })
+    @RenderMapping(params = {"view=edit-user"})
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public String viewUser(final PortletSession session, final Model model) {
         checkSecurity(session);
         return "user-form";
     }
 
-    @ActionMapping(params = { "action=doUserAction", "sectorId" })
+    @ActionMapping(params = {"action=doUserAction", "sectorId"})
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public void selectUserSectors(Model modelMap, @ModelAttribute User otherUser, @RequestParam Long sectorId,
-                              PortletSession session, ActionResponse response) {
+                                  PortletSession session, ActionResponse response) {
         mirrorUserInSession(otherUser, new HttpSessionBox(session));
         check(sectorId, otherUser.getSektorRaad());
         modelMap.addAttribute("otherUser", otherUser);
         response.setRenderParameter("view", "edit-user-sectors");
     }
 
-    @RenderMapping(params = { "view=edit-user-sectors" })
+    @RenderMapping(params = {"view=edit-user-sectors"})
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public String viewUserSectors(final PortletSession session, final Model model) {
         checkSecurity(session);
         return "user-form";
     }
 
-    @ActionMapping(params = { "action=doUserAction", "save" })
+    @ActionMapping(params = {"action=doUserAction", "save"})
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public void saveUser(ModelMap modelMap, @ModelAttribute User user, PortletSession session, ActionResponse response) {
         checkSecurity(session);
@@ -441,7 +442,7 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
         response.setRenderParameter("view", "edit-users");
     }
 
-    @ActionMapping(params = { "action=doUserAction", "cancel" })
+    @ActionMapping(params = {"action=doUserAction", "cancel"})
     public void cancelUser(ActionResponse response) {
         response.setRenderParameter("view", "edit-users");
     }
@@ -487,9 +488,9 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
     @ActionMapping(params = {"action=prioViewForm", "save"})
     @Transactional
     public void savePrioForm(PortletRequest request,
-                     ActionResponse response,
-                     PortletSession session,
-                     @ModelAttribute("prio") PrioriteringsobjektForm pf)
+                             ActionResponse response,
+                             PortletSession session,
+                             @ModelAttribute("prio") PrioriteringsobjektForm pf)
             throws IOException {
 
         PrioriteringsobjektForm sessionPrio = (PrioriteringsobjektForm) session.getAttribute("prio");
@@ -529,7 +530,7 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
     }
 
     private void chooseKod(PortletSession session, PortletResponse response, PortletRequest request,
-                             ModelMap model, PrioriteringsobjektForm pf, String kodWithField) throws IOException {
+                           ModelMap model, PrioriteringsobjektForm pf, String kodWithField) throws IOException {
         initKodLists(pf);
         pf.asignCodesFromTheListsByCorrespondingIdAttributes();
 
@@ -561,6 +562,47 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
         clf.setAllToChoose(new ArrayList<AbstractKod>(allItems));
     }
 
+    /**
+     * Instantiates a new User and puts it into the session and model - making it available for the ui to edit
+     * before saving.
+     *
+     * @param modelMap
+     * @param session
+     * @return
+     */
+    @ActionMapping(params = {"action=doUserAction", "create"})
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void createUser(Model modelMap, PortletSession session, ActionResponse response) {
+        User user = new User();
+        modelMap.addAttribute("otherUser", user);
+        session.setAttribute("otherUser", user);
+        initSectors(user, sektorRaadRepository);
+
+        response.setRenderParameter("view", "edit-user");
+    }
+
+    /**
+     * Removes a user.
+     *
+     * @param modelMap
+     * @param id
+     * @param session
+     * @return
+     * @throws IOException
+     */
+    @ActionMapping(params = {"action=doUserAction", "delete"})
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void delete(ModelMap modelMap, @RequestParam("id") Long id,
+                       PortletSession session,
+                       ActionResponse response) throws IOException {
+
+        if (checkUserIsSelected(session, id)) {
+            userRepository.remove(id);
+            userRepository.flush();
+        }
+
+        response.setRenderParameter("view", "edit-users");
+    }
 
     @Override
     protected GenerisktHierarkisktKodRepository getSektorRaadRepository() {
