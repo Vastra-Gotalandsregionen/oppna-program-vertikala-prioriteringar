@@ -8,6 +8,9 @@
 <%@ taglib uri="/WEB-INF/tld/vgr-util.tld" prefix="su"%>
 <%@ taglib uri="http://java.sun.com/portlet" prefix="portlet" %>
 
+<portlet:renderURL var="renderUrl">
+</portlet:renderURL>
+
 <portlet:actionURL var="actionUrl">
     <portlet:param name="action" value="doSectorAction"/>
 </portlet:actionURL>
@@ -45,7 +48,7 @@
       Efter du har sparat återvänder systemet till huvudsidan.
     </li>
     <li>
-     För att ångra och hoppa tillbaka till huvudsidan tryck på <input type="submit" name="toMain" value="Tillbaka/Avbryt" />
+     För att ångra och hoppa tillbaka till huvudsidan tryck på <input type="submit" name="toMain" value="Tillbaka/Avbryt" onclick="window.open('${renderUrl}','_self'); return false;" />
     </li>
     <li> 
       <input type="button" class="sectorAdd"/> Lägg till en sektor under en specifik 'föräldrasektor', eller 'högst upp' i trädstrukturen.
@@ -75,7 +78,7 @@
 
 <div class="yui3-u-1-2 center"><input type="submit" name="save" value="Spara ändringar" onclick="return confirm('Ändringarna kommer att sparas, är du säker?')" /></div>
 
-<div class="yui3-u-1-2 center"><input type="submit" name="toMain" value="Tillbaka/Avbryt" />  </div>
+<div class="yui3-u-1-2 center"><input type="submit" name="toMain" value="Tillbaka/Avbryt" onclick="window.open('${renderUrl}','_self'); return false;" />  </div>
     
   
   </form>

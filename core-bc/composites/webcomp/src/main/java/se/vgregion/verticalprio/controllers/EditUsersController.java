@@ -76,7 +76,7 @@ public class EditUsersController extends BaseController {
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public String delete(ModelMap modelMap, @RequestParam Long id, HttpSession session,
 	        HttpServletResponse response) throws IOException {
-		if (checkUserIsSelected(session, response, id)) {
+		if (checkUserIsSelected(session, id)) {
 			usersRepository.remove(id);
 			usersRepository.flush();
 		}
@@ -97,13 +97,13 @@ public class EditUsersController extends BaseController {
 	public String edit(ModelMap modelMap, @RequestParam Long id, HttpSession session, HttpServletResponse response)
 	        throws IOException {
 		this.checkSecurity(session);
-		if (!checkUserIsSelected(session, response, id)) {
+		if (!checkUserIsSelected(session, id)) {
 			return listUsers(modelMap, session);
 		}
 		User user = usersRepository.findByExample(new User(id), 1).get(0);
 		modelMap.addAttribute("otherUser", user);
 		session.setAttribute("otherUser", user);
-		initSectors(user);
+		initSectors(user, sektorRaadRepository);
 		usersRepository.clear();
 		return "user-form";
 	}
@@ -122,43 +122,11 @@ public class EditUsersController extends BaseController {
 		User user = new User();
 		modelMap.addAttribute("otherUser", user);
 		session.setAttribute("otherUser", user);
-		initSectors(user);
+		initSectors(user, sektorRaadRepository);
 		return "user-form";
 	}
 
-	/**
-	 * Utility method to alter the SektorRaad objects in the User ready to be desplayed. It places all of the items
-	 * that are available in the User (regardsless if the user have them) and marks the ones that the user have
-	 * access to by setting the selected property in each SektorRaad.
-	 * 
-	 * @param user
-	 */
-	@Transactional(propagation = Propagation.REQUIRED)
-	private void initSectors(User user) {
-		List<SektorRaad> allRaads = sektorRaadRepository.getTreeRoots();
-		markAllAsSelected(allRaads, user.getSektorRaad());
-		user.setSektorRaad(allRaads);
-	}
 
-	/**
-	 * Sets the property 'selected' to true in the first parameter list if the item is inside the second parameter
-	 * list.
-	 * 
-	 * @param targets
-	 * @param flat
-	 */
-	private void markAllAsSelected(List<SektorRaad> targets, List<SektorRaad> flat) {
-		if (targets != null) {
-			for (SektorRaad target : targets) {
-				if (flat.contains(target)) {
-					target.setSelected(true);
-				} else {
-					target.setSelected(false);
-				}
-				markAllAsSelected(target.getChildren(), flat);
-			}
-		}
-	}
 
 	/**
 	 * Web action redirecting to the main page of the application.
@@ -222,28 +190,6 @@ public class EditUsersController extends BaseController {
 	}
 
 	/**
-	 * Checks the 'selected' property of the provided list and puts all with the value true in the return. Is used
-	 * to 'flatten' the tree-structured data of the provided SektorRaad List.
-	 * 
-	 * @param source
-	 * @return
-	 */
-	private List<SektorRaad> flattenSelected(List<SektorRaad> source) {
-		List<SektorRaad> result = new ArrayList<SektorRaad>();
-		flattenSelected(source, result);
-		return result;
-	}
-
-	private void flattenSelected(List<SektorRaad> source, List<SektorRaad> target) {
-		for (SektorRaad item : source) {
-			if (item.isSelected()) {
-				target.add(item);
-			}
-			flattenSelected(item.getChildren(), target);
-		}
-	}
-
-	/**
 	 * Togles the 'selected' property of items in the users tree of SektorRaad:s.
 	 * 
 	 * @param modelMap
@@ -262,54 +208,15 @@ public class EditUsersController extends BaseController {
 		return "user-form";
 	}
 
-	private void check(Long sectorId, Collection<SektorRaad> raads) {
-		for (SektorRaad raad : raads) {
-			if (raad.getId().equals(sectorId)) {
-				raad.setSelected(!raad.isSelected());
-				return;
-			}
-			check(sectorId, raad.getChildren());
-		}
-	}
-
-	/**
-	 * Merges the 'deeper data' (ie the SektorRaad:s) into a user that have been received from the client. It also
-	 * puts the data into the session to be used the nedt time this operation have to be made.
-	 * 
-	 * @param postedUser
-	 * @param session
-	 */
-	private void mirrorUserInSession(User postedUser, HttpSession session) {
-		final String sessionKey = "otherUser";
-		User userInSession = (User) session.getAttribute(sessionKey);
-		if (userInSession == null) {
-			session.setAttribute(sessionKey, postedUser);
-			return;
-		}
-		postedUser.setSektorRaad(userInSession.getSektorRaad());
-
-		if (postedUser.getApprover() == null) {
-			postedUser.setApprover(false);
-		}
-		if (postedUser.getEditor() == null) {
-			postedUser.setEditor(false);
-		}
-		if (postedUser.getUserEditor() == null) {
-			postedUser.setUserEditor(false);
-		}
-		session.setAttribute(sessionKey, postedUser);
-	}
-
 	/**
 	 * Checks to see if the default id of User is selected - that means no selection is made. Then it adds a
 	 * message to the session and redirects to the main users.jsp page.
 	 * 
 	 * @param session
-	 * @param response
 	 * @param id
 	 * @throws IOException
 	 */
-	private boolean checkUserIsSelected(HttpSession session, HttpServletResponse response, Long id)
+	private boolean checkUserIsSelected(HttpSession session, Long id)
 	        throws IOException {
 		if (id == null || id.longValue() == noUserSelectedId) {
 			MessageHome messageHome = new MessageHome();

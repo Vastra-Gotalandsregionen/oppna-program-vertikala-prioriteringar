@@ -4,14 +4,18 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 <%@ taglib uri="/WEB-INF/tld/vgr-util.tld" prefix="su"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-  <jsp:include page="jsp/head.jsp"/>
-  <body style="height: 100%;">
+
+<portlet:actionURL var="doUserAction">
+    <portlet:param name="action" value="doUserAction"/>
+</portlet:actionURL>
+
+<div>
+  <jsp:include page="head.jsp"/>
+  <div style="height: 100%;">
   
   	<div class="window prio-view view_details_color yui3-g">
       <div class="values">
-      	<form:form action="user" method="post" modelAttribute="otherUser">
+      	<form:form action="${doUserAction}" method="post" modelAttribute="otherUser">
           <c:choose>
             <c:when test="${otherUser.id != null}">
               <h2 class="yui3-u-1">Ändra användare</h2>
@@ -33,7 +37,7 @@
               </div>
               <br/>
               <input name="save" type="submit" value="Spara" />
-              <input name="cancel" type="submit" value="Avbryt" onclick="window.location='users'" />
+              <input name="cancel" type="submit" value="Avbryt" />
            </div>
            
           <div class="yui3-u-1-2 otherUser">
@@ -46,5 +50,5 @@
       </div>
   	</div>
   
-  </body>
-</html>
+  </div>
+</div>

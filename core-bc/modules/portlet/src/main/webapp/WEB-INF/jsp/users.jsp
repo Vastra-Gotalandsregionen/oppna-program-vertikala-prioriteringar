@@ -3,19 +3,24 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<%@ taglib uri="http://java.sun.com/portlet" prefix="portlet" %>
+
+<portlet:actionURL var="doUserAction">
+    <portlet:param name="action" value="doUserAction"/>
+</portlet:actionURL>
+
+<div>
 <%@ include file="head.jsp" %>
-<body style="height:100%; ">
+<div style="height:100%; ">
 
 <div class="main-content">
 
-  <form action="user">
+  <form action="${doUserAction}" method="post">
 
   <input type="submit" name="edit" value="Ändra" />
   <input type="submit" name="delete" onclick="return confirm('Är du säker på att du du vill radera posten?')" value="Radera" />
   <input type="submit" name="create" value="Ny" />
-  <input type="submit" name="toMain" value="Tillbaka" />
+  <input type="submit" name="toMain" value="Tillbaka" onclick="window.open('${doRowAction}','_self'); return false;" />
 
   <tags:message-out />
 
@@ -51,5 +56,5 @@
   </form>
   </div>
 
-</body>
-</html>
+</div>
+</div>
