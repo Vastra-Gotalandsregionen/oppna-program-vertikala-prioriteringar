@@ -31,6 +31,7 @@ import javax.portlet.ActionResponse;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.portlet.PortletSession;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.*;
 
@@ -53,6 +54,7 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
 
     @Autowired
     protected ApplicationData applicationData;
+    private long noUserSelectedId = -1;
 
     public VertikalaPrioriteringarController() {
     }
@@ -370,9 +372,7 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
     @ActionMapping(params = { "action=doRowAction", "edit-users" })
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public void editUsers(PortletSession session, ActionResponse response, final Model model) throws IOException {
-
-            response.setRenderParameter("view", "edit-users");
-
+        response.setRenderParameter("view", "edit-users");
     }
 
     @RenderMapping(params = { "view=edit-users" })
@@ -384,6 +384,88 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
         return "users";
     }
 
+    @ActionMapping(params = { "action=doUserAction", "edit" })
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public void editUser(PortletSession session, ActionResponse response, final Model modelMap, @RequestParam("id") Long id) throws IOException {
+        if (!checkUserIsSelected(session, id)) {
+            response.setRenderParameter("view", "edit-users");
+            return;
+        }
+        User user = userRepository.findByExample(new User(id), 1).get(0);
+        modelMap.addAttribute("otherUser", user);
+        session.setAttribute("otherUser", user);
+        initSectors(user, sektorRaadRepository);
+        userRepository.clear();
+
+        response.setRenderParameter("view", "edit-user");
+    }
+
+    @RenderMapping(params = { "view=edit-user" })
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public String viewUser(final PortletSession session, final Model model) {
+        checkSecurity(session);
+        return "user-form";
+    }
+
+    @ActionMapping(params = { "action=doUserAction", "sectorId" })
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public void selectUserSectors(Model modelMap, @ModelAttribute User otherUser, @RequestParam Long sectorId,
+                              PortletSession session, ActionResponse response) {
+        mirrorUserInSession(otherUser, new HttpSessionBox(session));
+        check(sectorId, otherUser.getSektorRaad());
+        modelMap.addAttribute("otherUser", otherUser);
+        response.setRenderParameter("view", "edit-user-sectors");
+    }
+
+    @RenderMapping(params = { "view=edit-user-sectors" })
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public String viewUserSectors(final PortletSession session, final Model model) {
+        checkSecurity(session);
+        return "user-form";
+    }
+
+    @ActionMapping(params = { "action=doUserAction", "save" })
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public void saveUser(ModelMap modelMap, @ModelAttribute User user, PortletSession session, ActionResponse response) {
+        checkSecurity(session);
+
+        mirrorUserInSession(user, new HttpSessionBox(session));
+        session.setAttribute("otherUser", null);
+        modelMap.addAttribute("otherUser", null);
+
+        List<SektorRaad> raads = flattenSelected(user.getSektorRaad());
+        user.setSektorRaad(raads);
+
+        userRepository.store(user);
+        userRepository.flush();
+        response.setRenderParameter("view", "edit-users");
+    }
+
+    @ActionMapping(params = { "action=doUserAction", "cancel" })
+    public void cancelUser(ActionResponse response) {
+        response.setRenderParameter("view", "edit-users");
+    }
+
+    /**
+     * Checks to see if the default id of User is selected - that means no selection is made. Then it adds a
+     * message to the session and redirects to the main users.jsp page.
+     *
+     * @param session
+     * @param id
+     * @throws IOException
+     */
+    private boolean checkUserIsSelected(PortletSession session, Long id)
+            throws IOException {
+        if (id == null || id.longValue() == noUserSelectedId) {
+            MessageHome messageHome = new MessageHome();
+            messageHome
+                    .setMessage("Välj en post före den här opperationen (radioknappen längst till vänster i tabellen).");
+            session.setAttribute("messageHome", messageHome);
+            return false;
+        } else {
+            return true;
+        }
+    }
 
     /**
      * Method to validate that the user really have the right to use this controllers functionality.

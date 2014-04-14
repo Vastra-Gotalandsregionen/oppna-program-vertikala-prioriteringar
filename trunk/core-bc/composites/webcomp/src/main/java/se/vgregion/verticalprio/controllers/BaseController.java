@@ -1,6 +1,7 @@
 package se.vgregion.verticalprio.controllers;
 
 import org.apache.commons.beanutils.BeanMap;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import se.vgregion.verticalprio.entity.Column;
 import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
@@ -421,5 +422,99 @@ public abstract class BaseController {
         clf.setChoosenLabel("Valda diagnoser");
         clf.setFilterLabelToolTip("Här kan du söka både på kod och på beskrivning");
         return clf;
+    }
+
+    /**
+     * Utility method to alter the SektorRaad objects in the User ready to be desplayed. It places all of the items
+     * that are available in the User (regardsless if the user have them) and marks the ones that the user have
+     * access to by setting the selected property in each SektorRaad.
+     *
+     * @param user
+     */
+    @Transactional(propagation = Propagation.REQUIRED)
+    protected void initSectors(User user, GenerisktHierarkisktKodRepository<SektorRaad> sektorRaadRepository) {
+        List<SektorRaad> allRaads = sektorRaadRepository.getTreeRoots();
+        markAllAsSelected(allRaads, user.getSektorRaad());
+        user.setSektorRaad(allRaads);
+    }
+
+    /**
+     * Sets the property 'selected' to true in the first parameter list if the item is inside the second parameter
+     * list.
+     *
+     * @param targets
+     * @param flat
+     */
+    protected void markAllAsSelected(List<SektorRaad> targets, List<SektorRaad> flat) {
+        if (targets != null) {
+            for (SektorRaad target : targets) {
+                if (flat.contains(target)) {
+                    target.setSelected(true);
+                } else {
+                    target.setSelected(false);
+                }
+                markAllAsSelected(target.getChildren(), flat);
+            }
+        }
+    }
+
+    /**
+     * Merges the 'deeper data' (ie the SektorRaad:s) into a user that have been received from the client. It also
+     * puts the data into the session to be used the nedt time this operation have to be made.
+     *
+     * @param postedUser
+     * @param session
+     */
+    protected void mirrorUserInSession(User postedUser, HttpSession session) {
+        final String sessionKey = "otherUser";
+        User userInSession = (User) session.getAttribute(sessionKey);
+        if (userInSession == null) {
+            session.setAttribute(sessionKey, postedUser);
+            return;
+        }
+        postedUser.setSektorRaad(userInSession.getSektorRaad());
+
+        if (postedUser.getApprover() == null) {
+            postedUser.setApprover(false);
+        }
+        if (postedUser.getEditor() == null) {
+            postedUser.setEditor(false);
+        }
+        if (postedUser.getUserEditor() == null) {
+            postedUser.setUserEditor(false);
+        }
+        session.setAttribute(sessionKey, postedUser);
+    }
+
+    protected void check(Long sectorId, Collection<SektorRaad> raads) {
+        for (SektorRaad raad : raads) {
+            if (raad.getId().equals(sectorId)) {
+                raad.setSelected(!raad.isSelected());
+                return;
+            }
+            check(sectorId, raad.getChildren());
+        }
+    }
+
+    /**
+     * Checks the 'selected' property of the provided list and puts all with the value true in the return. Is used
+     * to 'flatten' the tree-structured data of the provided SektorRaad List.
+     *
+     * @param source
+     * @return
+     */
+    protected List<SektorRaad> flattenSelected(List<SektorRaad> source) {
+        List<SektorRaad> result = new ArrayList<SektorRaad>();
+        flattenSelected(source, result);
+        return result;
+    }
+
+    protected void flattenSelected(List<SektorRaad> source, List<SektorRaad> target) {
+        for (SektorRaad item : source) {
+            if (item.isSelected()) {
+                target.add(item);
+            }
+            flattenSelected(item.getChildren(), target);
+        }
     }
 }
