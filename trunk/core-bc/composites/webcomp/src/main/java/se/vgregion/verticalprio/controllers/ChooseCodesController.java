@@ -43,8 +43,8 @@ public class ChooseCodesController extends WebControllerBase {
 		symptomDiagnosTextForm.setIdKey("id");
 		symptomDiagnosTextForm.setFilterLabel("Sök diagnos med nyckelord");
 		symptomDiagnosTextForm.setFilterLabelToolTip("Här kan du söka både på kod och på beskrivning");
-		symptomDiagnosTextForm.setNotYetChoosenLabel("Diagnoskoder");
-		symptomDiagnosTextForm.setChoosenLabel("Valda diagnoser");
+		symptomDiagnosTextForm.setNotYetChosenLabel("Diagnoskoder");
+		symptomDiagnosTextForm.setChosenLabel("Valda diagnoser");
 		symptomDiagnosTextForm.setOkLabel("Välj diagnoser");
 		symptomDiagnosTextForm.setOkUrl("main");
 		symptomDiagnosTextForm.setCancelUrl("main");
@@ -58,8 +58,8 @@ public class ChooseCodesController extends WebControllerBase {
 		ChooseListFormWithDomainProperty aatgardsTextForm = symptomDiagnosTextForm.clone();
 		aatgardsTextForm.setAllItemsPropertyName("aatgaerdskoder");
 		aatgardsTextForm.setFilterLabel("Sök åtgärder med nyckelord");
-		aatgardsTextForm.setNotYetChoosenLabel("Åtgärdskoder");
-		aatgardsTextForm.setChoosenLabel("Valda åtgärder");
+		aatgardsTextForm.setNotYetChosenLabel("Åtgärdskoder");
+		aatgardsTextForm.setChosenLabel("Valda åtgärder");
 		aatgardsTextForm.setOkLabel("Välj åtgärder");
 		aatgardsTextForm.setOkUrl("main");
 		aatgardsTextForm.setCancelUrl("main");
@@ -73,8 +73,8 @@ public class ChooseCodesController extends WebControllerBase {
 		ChooseListFormWithDomainProperty rangordningsKod = symptomDiagnosTextForm.clone();
 		rangordningsKod.setAllItemsPropertyName("rangordningsKod");
 		rangordningsKod.setFilterLabel("Sök rangordning med nyckelord");
-		rangordningsKod.setNotYetChoosenLabel("Rangordningskoder");
-		rangordningsKod.setChoosenLabel("Valda rangordningar");
+		rangordningsKod.setNotYetChosenLabel("Rangordningskoder");
+		rangordningsKod.setChosenLabel("Valda rangordningar");
 		rangordningsKod.setOkLabel("Välj rangordningskoder");
 		rangordningsKod.setOkUrl("main");
 		rangordningsKod.setCancelUrl("main");
@@ -83,8 +83,8 @@ public class ChooseCodesController extends WebControllerBase {
 
 		ChooseListFormWithDomainProperty atcTextForm = symptomDiagnosTextForm.clone();
 		atcTextForm.setFilterLabel("Sök ATC-koder med nyckelord");
-		atcTextForm.setNotYetChoosenLabel("ATC-koder");
-		atcTextForm.setChoosenLabel("Valda ATC-koder");
+		atcTextForm.setNotYetChosenLabel("ATC-koder");
+		atcTextForm.setChosenLabel("Valda ATC-koder");
 		atcTextForm.setOkLabel("Välj ATC-texter");
 		atcTextForm.setOkUrl("main");
 		atcTextForm.setCancelUrl("main");
@@ -97,8 +97,8 @@ public class ChooseCodesController extends WebControllerBase {
 
 		ChooseListFormWithDomainProperty vaardnivaa = symptomDiagnosTextForm.clone();
 		vaardnivaa.setFilterLabel("Sök vårdnivå med nyckelord");
-		vaardnivaa.setNotYetChoosenLabel("Vårdnivåer");
-		vaardnivaa.setChoosenLabel("Valda nivåer");
+		vaardnivaa.setNotYetChosenLabel("Vårdnivåer");
+		vaardnivaa.setChosenLabel("Valda nivåer");
 		vaardnivaa.setOkLabel("Välj nivåer");
 		vaardnivaa.setOkUrl("main");
 		vaardnivaa.setCancelUrl("main");
@@ -107,8 +107,8 @@ public class ChooseCodesController extends WebControllerBase {
 
 		ChooseListFormWithDomainProperty vaardform = symptomDiagnosTextForm.clone();
 		vaardform.setFilterLabel("Sök vårdformer med nyckelord");
-		vaardform.setNotYetChoosenLabel("Vårdformer");
-		vaardform.setChoosenLabel("Valda vårdformer");
+		vaardform.setNotYetChosenLabel("Vårdformer");
+		vaardform.setChosenLabel("Valda vårdformer");
 		vaardform.setOkLabel("Välj vårdformer");
 		vaardform.setOkUrl("main");
 		vaardform.setCancelUrl("main");
@@ -117,8 +117,8 @@ public class ChooseCodesController extends WebControllerBase {
 
 		ChooseListFormWithDomainProperty tillstaandetsSvaarighetsgrad = new ChooseListFormWithDomainProperty();
 		tillstaandetsSvaarighetsgrad.setFilterLabel("Sök tillståndets svårighetsgrad med nyckelord");
-		tillstaandetsSvaarighetsgrad.setNotYetChoosenLabel("Svårighetsgrader");
-		tillstaandetsSvaarighetsgrad.setChoosenLabel("Valda svårighetsgrader");
+		tillstaandetsSvaarighetsgrad.setNotYetChosenLabel("Svårighetsgrader");
+		tillstaandetsSvaarighetsgrad.setChosenLabel("Valda svårighetsgrader");
 		tillstaandetsSvaarighetsgrad.setOkLabel("Välj svårighetsgrader");
 		tillstaandetsSvaarighetsgrad.setOkUrl("main");
 		tillstaandetsSvaarighetsgrad.setIdKey("id");
@@ -190,7 +190,7 @@ public class ChooseCodesController extends WebControllerBase {
 		clf.setAllItems(allItems);
 		Collection target = extractTargetCollection(condition, clf.getAllItemsPropertyName());
 		clf.setTarget(target);
-		clf.setChoosen(new ArrayList(target));
+		clf.setChosen(new ArrayList(target));
 
 		String path = "choose-from-list";
 		response.sendRedirect(path);

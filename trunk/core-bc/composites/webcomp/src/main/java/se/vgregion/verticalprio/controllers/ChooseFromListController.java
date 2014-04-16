@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import se.vgregion.verticalprio.entity.AbstractKod;
 
 /**
  * Controls a dialog where the user might select from a number of items, search them by text search, and commit the
@@ -43,14 +44,14 @@ public class ChooseFromListController extends WebControllerBase {
 	@RequestMapping(value = "/choose-from-list", params = { "ok" })
 	public String ok(HttpServletResponse response, HttpSession session, ModelMap model) throws IOException {
 		final ChooseListForm form = getChooseListForm(model, session);
-		if (form.maxSelection != null && form.maxSelection < form.choosen.size()) {
+		if (form.maxSelection != null && form.maxSelection < form.chosen.size()) {
 			MessageHome messageHome = getOrCreateSessionObj(session, "messageHome", MessageHome.class);
 			String message = "Du kan maximalt välja " + form.maxSelection + " samtidigt.";
 			messageHome.setMessage(message);
 			return "choose-from-list";
 		}
 		form.target.clear();
-		form.target.addAll(form.getChoosen());
+		form.target.addAll(form.getChosen());
 		response.sendRedirect(form.getOkUrl());
 		return null;
 	}
@@ -77,13 +78,13 @@ public class ChooseFromListController extends WebControllerBase {
 	 * to the 'main' method.
 	 * 
 	 * @param session
-	 * @param notYetChoosenKeys
+	 * @param notYetChosenKeys
 	 * @param filterText
 	 * @param model
 	 * @return
 	 */
 	@RequestMapping(value = "/choose-from-list", params = { "filter" })
-	public String filter(HttpSession session, @RequestParam(required = false) List<String> notYetChoosenKeys,
+	public String filter(HttpSession session, @RequestParam(required = false) List<String> notYetChosenKeys,
 	        @RequestParam(required = false) String filterText, ModelMap model) {
 		return main(session, filterText, null, null, model);
 	}
@@ -92,21 +93,21 @@ public class ChooseFromListController extends WebControllerBase {
 	 * Adds items from the unselected part of the dialog to the selected.
 	 * 
 	 * @param session
-	 * @param notYetChoosenKeys
+	 * @param notYetChosenKeys
 	 * @param model
 	 * @param filterText
 	 * @return
 	 */
 	@RequestMapping(value = "/choose-from-list", params = { "add" })
-	public String add(HttpSession session, @RequestParam(required = false) List<String> notYetChoosenKeys,
+	public String add(HttpSession session, @RequestParam(required = false) List<String> notYetChosenKeys,
 	        ModelMap model, @RequestParam(required = false) String filterText) {
 		final ChooseListForm form = getChooseListForm(model, session);
-		if (notYetChoosenKeys != null) {
+		if (notYetChosenKeys != null) {
 			for (Object item : form.getAllItems()) {
 				BeanMap bm = new BeanMap(item);
 				Object keyValue = bm.get(form.getIdKey());
-				if (keyValue != null && notYetChoosenKeys.contains(keyValue.toString())) {
-					form.getChoosen().add(item);
+				if (keyValue != null && notYetChosenKeys.contains(keyValue.toString())) {
+					form.getChosen().add(item);
 				}
 			}
 		}
@@ -127,22 +128,22 @@ public class ChooseFromListController extends WebControllerBase {
 	public String addAll(HttpSession session, ModelMap model, @RequestParam(required = false) String filterText) {
 		final ChooseListForm form = getChooseListForm(model, session);
 		String result = main(session, filterText, null, null, model);
-		form.getChoosen().clear();
-		form.getChoosen().addAll(form.getAllToChoose());
-		form.setChoosen(sort(form.getChoosen(), form.getDisplayKey()));
+		form.getChosen().clear();
+		form.getChosen().addAll(form.getAllToChoose());
+		form.setChosen(sort(form.getChosen(), form.getDisplayKey()));
 		return result;
 	}
 
 	@RequestMapping(value = "/choose-from-list", params = { "remove" })
-	public String remove(HttpSession session, @RequestParam(required = false) List<String> choosenKeys,
+	public String remove(HttpSession session, @RequestParam(required = false) List<String> chosenKeys,
 	        ModelMap model, @RequestParam(required = false) String filterText) {
 		final ChooseListForm form = getChooseListForm(model, session);
-		if (choosenKeys != null) {
-			for (Object item : new ArrayList(form.getChoosen())) {
+		if (chosenKeys != null) {
+			for (Object item : new ArrayList(form.getChosen())) {
 				BeanMap bm = new BeanMap(item);
 				Object keyValue = bm.get(form.getIdKey());
-				if (keyValue != null && choosenKeys.contains(keyValue.toString())) {
-					form.getChoosen().remove(item);
+				if (keyValue != null && chosenKeys.contains(keyValue.toString())) {
+					form.getChosen().remove(item);
 				}
 			}
 		}
@@ -153,7 +154,7 @@ public class ChooseFromListController extends WebControllerBase {
 	@RequestMapping(value = "/choose-from-list", params = { "removeAll" })
 	public String removeAll(HttpSession session, ModelMap model, @RequestParam(required = false) String filterText) {
 		final ChooseListForm form = getChooseListForm(model, session);
-		form.getChoosen().clear();
+		form.getChosen().clear();
 		return main(session, filterText, null, null, model);
 	}
 
@@ -168,8 +169,8 @@ public class ChooseFromListController extends WebControllerBase {
 
 	@RequestMapping(value = "/choose-from-list")
 	public String main(HttpSession session, @RequestParam(required = false) String filterText,
-	        @RequestParam(required = false) List<String> notYetChoosenKeys,
-	        @RequestParam(required = false) List<String> choosenKeys, ModelMap model) {
+	        @RequestParam(required = false) List<String> notYetChosenKeys,
+	        @RequestParam(required = false) List<String> chosenKeys, ModelMap model) {
 
 		final ChooseListForm form = getChooseListForm(model, session);
 
@@ -181,7 +182,7 @@ public class ChooseFromListController extends WebControllerBase {
 		}
 
 		form.setAllItems(sort(form.getAllItems(), form.getDisplayKey()));
-		form.setChoosen(sort(form.getChoosen(), form.getDisplayKey()));
+		form.setChosen(sort(form.getChosen(), form.getDisplayKey()));
 
 		return "choose-from-list";
 	}
@@ -213,17 +214,18 @@ public class ChooseFromListController extends WebControllerBase {
 
 		private static final long serialVersionUID = 1L;
 
-		private String displayKey, idKey, choosenLabel, notYetChoosenLabel, filterLabel, filterLabelToolTip,
+		private String displayKey, idKey, chosenLabel, notYetChosenLabel, filterLabel, filterLabelToolTip,
 		        filterText, cancelUrl, okUrl, okLabel;
 
 		private List allToChoose = new ArrayList();
-		private List choosen = new ArrayList();
+		private List chosen = new ArrayList();
 		private List allItems = new ArrayList();
 		private Collection target = new ArrayList();
 		private Integer maxSelection = 40; // This indicates the max number of items a user can select
 		private Integer minNumberOfItemsForShowingFindButton = 25;
+        private Class<? extends AbstractKod> type;
 
-		/**
+        /**
 		 * If true the show the Find button
 		 * 
 		 * @return
@@ -249,20 +251,20 @@ public class ChooseFromListController extends WebControllerBase {
 			this.idKey = idKey;
 		}
 
-		public String getChoosenLabel() {
-			return choosenLabel;
+		public String getChosenLabel() {
+			return chosenLabel;
 		}
 
-		public void setChoosenLabel(String choosenLabel) {
-			this.choosenLabel = choosenLabel;
+		public void setChosenLabel(String chosenLabel) {
+			this.chosenLabel = chosenLabel;
 		}
 
-		public String getNotYetChoosenLabel() {
-			return notYetChoosenLabel;
+		public String getNotYetChosenLabel() {
+			return notYetChosenLabel;
 		}
 
-		public void setNotYetChoosenLabel(String notYetChoosenLabel) {
-			this.notYetChoosenLabel = notYetChoosenLabel;
+		public void setNotYetChosenLabel(String notYetChosenLabel) {
+			this.notYetChosenLabel = notYetChosenLabel;
 		}
 
 		public String getFilterLabel() {
@@ -274,8 +276,8 @@ public class ChooseFromListController extends WebControllerBase {
 		}
 
 		public List getAllToChoose() {
-			if (!allToChoose.isEmpty() && !choosen.isEmpty()) {
-				allToChoose.removeAll(getChoosen());
+			if (!allToChoose.isEmpty() && !chosen.isEmpty()) {
+				allToChoose.removeAll(getChosen());
 			}
 			return allToChoose;
 		}
@@ -288,16 +290,16 @@ public class ChooseFromListController extends WebControllerBase {
 			this.allToChoose = allToChoose;
 		}
 
-		public List getChoosen() {
-			return choosen;
+		public List getChosen() {
+			return chosen;
 		}
 
-		public int getSizeOfChoosen() {
-			return choosen.size();
+		public int getSizeOfChosen() {
+			return chosen.size();
 		}
 
-		public void setChoosen(List choosen) {
-			this.choosen = choosen;
+		public void setChosen(List chosen) {
+			this.chosen = chosen;
 		}
 
 		public List getAllItems() {
@@ -390,6 +392,14 @@ public class ChooseFromListController extends WebControllerBase {
 		public String getFilterLabelToolTip() {
 			return filterLabelToolTip;
 		}
-	}
+
+        public void setType(Class<? extends AbstractKod> type) {
+            this.type = type;
+        }
+
+        public Class<? extends AbstractKod> getType() {
+            return type;
+        }
+    }
 
 }

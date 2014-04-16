@@ -380,8 +380,8 @@ public class EditPrioriteringController extends WebControllerBase {
 		ChooseListForm clf = new ChooseListForm();
 		session.setAttribute(ChooseListForm.class.getSimpleName(), clf);
 		clf.setFilterLabel("Sök åtgärdskoder med nyckelord");
-		clf.setNotYetChoosenLabel("Ej valda åtgärdskoder");
-		clf.setChoosenLabel("Valda åtgärdskoder");
+		clf.setNotYetChosenLabel("Ej valda åtgärdskoder");
+		clf.setChosenLabel("Valda åtgärdskoder");
 
 		return chooseKod(session, response, request, model, pf, "aatgaerdskoder");
 	}
@@ -393,8 +393,8 @@ public class EditPrioriteringController extends WebControllerBase {
 		ChooseListForm clf = new ChooseListForm();
 		session.setAttribute(ChooseListForm.class.getSimpleName(), clf);
 		clf.setFilterLabel("Sök ATC-koder med nyckelord");
-		clf.setNotYetChoosenLabel("Ej valda ATC-koder");
-		clf.setChoosenLabel("Valda ATC-koder");
+		clf.setNotYetChosenLabel("Ej valda ATC-koder");
+		clf.setChosenLabel("Valda ATC-koder");
 
 		return chooseKod(session, response, request, model, pf, "atcKoder");
 	}
@@ -422,7 +422,7 @@ public class EditPrioriteringController extends WebControllerBase {
 
 		Collection<AbstractKod> target = (Collection<AbstractKod>) bm.get(kodWithField);
 		clf.setTarget(target);
-		clf.getChoosen().addAll(target);
+		clf.getChosen().addAll(target);
 
 		BeanMap applicationDataMap = new BeanMap(applicationData);
 

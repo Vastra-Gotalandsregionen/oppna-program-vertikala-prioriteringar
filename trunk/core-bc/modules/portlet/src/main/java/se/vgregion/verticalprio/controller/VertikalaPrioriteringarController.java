@@ -18,10 +18,7 @@ import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 import se.vgregion.verticalprio.*;
 import se.vgregion.verticalprio.controllers.*;
-import se.vgregion.verticalprio.entity.AbstractKod;
-import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
-import se.vgregion.verticalprio.entity.SektorRaad;
-import se.vgregion.verticalprio.entity.User;
+import se.vgregion.verticalprio.entity.*;
 import se.vgregion.verticalprio.repository.GenerisktHierarkisktKodRepository;
 import se.vgregion.verticalprio.repository.GenerisktKodRepository;
 import se.vgregion.verticalprio.repository.PrioRepository;
@@ -31,9 +28,6 @@ import javax.portlet.ActionResponse;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.portlet.PortletSession;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import javax.swing.*;
 import java.io.IOException;
 import java.util.*;
 
@@ -369,7 +363,6 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
         response.setRenderParameter("view", "edit-sectors");
     }
 
-
     @ActionMapping(params = {"action=doRowAction", "edit-users"})
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public void editUsers(PortletSession session, ActionResponse response, final Model model) throws IOException {
@@ -512,21 +505,340 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
     }
 
     @ActionMapping(params = {"action=prioViewForm", "choose-diagnoser"})
-    public void chooseDiagnoser(ActionResponse response) {
+    public void chooseDiagnoser(PortletRequest request, ActionResponse response, PortletSession session,
+                                ModelMap model, @ModelAttribute("prio") PrioriteringsobjektForm pf,
+                                @RequestParam("id") String prioId) throws IOException {
+
+        ChooseFromListController.ChooseListForm clf = new ChooseFromListController.ChooseListForm();
+        session.setAttribute(ChooseFromListController.ChooseListForm.class.getSimpleName(), clf);
+
+        clf.setFilterLabel("Sök diagnoser med nyckelord");
+        clf.setNotYetChosenLabel("Ej valda diagnoser");
+        clf.setChosenLabel("Valda diagnoser");
+        clf.setFilterLabelToolTip("Här kan du söka både på kod och på beskrivning");
+        clf.setType(DiagnosKod.class);
+
+        chooseKod(session, response, request, model, pf, "diagnoser");
+
         response.setRenderParameter("view", "choose-from-list");
+        response.setRenderParameter("prioId", prioId);
+    }
+
+    @ActionMapping(params = {"action=prioViewForm", "choose-aatgaerdskoder"})
+    public void chooseAatgaerdskoder(PortletRequest request, ActionResponse response, PortletSession session,
+                                     ModelMap model, @ModelAttribute("prio") PrioriteringsobjektForm pf,
+                                     @RequestParam("id") String prioId) throws IOException {
+
+        ChooseFromListController.ChooseListForm clf = new ChooseFromListController.ChooseListForm();
+        session.setAttribute(ChooseFromListController.ChooseListForm.class.getSimpleName(), clf);
+
+        clf.setFilterLabel("Sök åtgärdskoder med nyckelord");
+        clf.setNotYetChosenLabel("Ej valda åtgärdskoder");
+        clf.setChosenLabel("Valda åtgärdskoder");
+        clf.setType(AatgaerdsKod.class);
+
+        chooseKod(session, response, request, model, pf, "aatgaerdskoder");
+
+        response.setRenderParameter("view", "choose-from-list");
+//        response.setRenderParameter("view", "choose-from-list-aatgaerdskoder");
+        response.setRenderParameter("prioId", prioId);
+    }
+
+    @ActionMapping(params = {"action=prioViewForm", "choose-atcKoder"})
+    public void chooseAtcKoder(PortletRequest request, PortletSession session, ActionResponse response, ModelMap model,
+                               @RequestParam("id") String prioId, @ModelAttribute("prio") PrioriteringsobjektForm pf)
+            throws IOException {
+
+        ChooseFromListController.ChooseListForm clf = new ChooseFromListController.ChooseListForm();
+        session.setAttribute(ChooseFromListController.ChooseListForm.class.getSimpleName(), clf);
+
+        clf.setFilterLabel("Sök ATC-koder med nyckelord");
+        clf.setNotYetChosenLabel("Ej valda ATC-koder");
+        clf.setChosenLabel("Valda ATC-koder");
+        clf.setType(AtcKod.class);
+
+        chooseKod(session, response, request, model, pf, "atcKoder");
+
+        response.setRenderParameter("view", "choose-from-list");
+        response.setRenderParameter("prioId", prioId);
+    }
+
+    @Transactional
+    @ActionMapping(params = {"action=prioViewForm", "removeCodes"})
+    public void removeKoder(PortletRequest request, PortletSession session, ActionResponse response,
+                                @RequestParam("id") String id, @RequestParam("removeCode") List<String> codesToRemove,
+                                @ModelAttribute("prio") PrioriteringsobjektForm pf) {
+
+        response.setRenderParameter("view", "edit-prio-view");
+        response.setRenderParameter("id", id);
+
+        Prioriteringsobjekt prioriteringsobjekt = prioRepository.find(pf.getId());
+
+        Set<? extends AbstractKod> koder;
+
+        Class<? extends AbstractKod> type;
+        // Determine the type
+        String removeCodes = request.getParameter("removeCodes");
+        if (removeCodes.contains("åtgärder")) {
+            type = AatgaerdsKod.class;
+        } else if (removeCodes.contains("diagnoser")) {
+            type = DiagnosKod.class;
+        } else if (removeCodes.contains("Ta bort valda koder")) { // Decided to be more specific here since the value is less specific in itself
+            type = AtcKod.class;
+        } else {
+            throw new IllegalArgumentException("Cannot determine the type of entity to remove");
+        }
+
+        if (type == null) {
+            throw new IllegalStateException("Type of ChooseListForm must not be null.");
+        }
+
+        String keyWord;
+        if (type.equals(DiagnosKod.class)) {
+            koder = prioriteringsobjekt.getDiagnoser();
+            keyWord = "diagnoser:";
+        } else if (type.equals(AatgaerdsKod.class)) {
+            koder = prioriteringsobjekt.getAatgaerdskoder();
+            keyWord = "aatgaerdskoder:";
+        } else if (type.equals(AtcKod.class)) {
+            koder = prioriteringsobjekt.getAtcKoder();
+            keyWord = "atcKoder:";
+        } else {
+            throw new IllegalStateException("Unexpected type [" + type.toString() + "] for ChooseListForm instance.");
+        }
+
+        Iterator<? extends AbstractKod> iterator = koder.iterator();
+        while (iterator.hasNext()) {
+            AbstractKod next = iterator.next();
+            if (codesToRemove.contains(keyWord + next.getId())) {
+                iterator.remove();
+            }
+        }
+
+        prioRepository.store(prioriteringsobjekt);
     }
 
     @RenderMapping(params = "view=choose-from-list")
     public String viewChooseFromList(PortletRequest request, PortletResponse response, PortletSession session,
-                                     ModelMap model, @ModelAttribute("prio") PrioriteringsobjektForm pf)
+                                     ModelMap model, @ModelAttribute("prio") PrioriteringsobjektForm pf,
+                                     @RequestParam(value = "filterText", required = false) String filterText,
+                                     @RequestParam(value = "prioId", required = true) String prioId)
             throws IOException {
-        ChooseFromListController.ChooseListForm clf = initChooseListForm();
-        session.setAttribute(ChooseFromListController.ChooseListForm.class.getSimpleName(), clf);
 
-        chooseKod(session, response, request, model, pf, "diagnoser");
+        String simpleName = ChooseFromListController.ChooseListForm.class.getSimpleName();
+        ChooseFromListController.ChooseListForm clf =
+                (ChooseFromListController.ChooseListForm) session.getAttribute(simpleName);
+
+        addNotYetChosenKoder(session, clf);
+        removeToRemoveKoder(session, clf);
+
+        if (filterText != null && !"".equals(filterText)) {
+            clf.setFilterText(filterText);
+
+            filterText = filterText.toLowerCase(Locale.getDefault());
+            List allToChoose = clf.getAllToChoose();
+
+            filterList(filterText, allToChoose);
+
+            allToChoose.removeAll(clf.getChosen());
+        } else {
+            clf.getAllToChoose().clear();
+            clf.getAllToChoose().addAll(clf.getAllItems());
+            clf.getAllToChoose().removeAll(clf.getChosen());
+            clf.setFilterText(null);
+        }
 
         addSessionAttributesToModel(session, model);
+
+        model.addAttribute("prioId", prioId);
+
         return "choose-from-list";
+    }
+
+    protected void filterList(String filterText, List allToChoose) {
+        Iterator iterator = allToChoose.iterator();
+        while (iterator.hasNext()) {
+            AbstractKod next = (AbstractKod) iterator.next();
+            if (next.getBeskrivning() == null || !next.getBeskrivning().toLowerCase(Locale.getDefault())
+                    .contains(filterText)) {
+                iterator.remove();
+            }
+        }
+    }
+
+    protected void removeToRemoveKoder(PortletSession session, ChooseFromListController.ChooseListForm clf) {
+        List<AbstractKod> toRemoveKoder = (List<AbstractKod>) session.getAttribute("toRemoveKoder");
+        if (toRemoveKoder != null) {
+            clf.getChosen().removeAll(toRemoveKoder);
+            clf.getAllToChoose().removeAll(toRemoveKoder); // Avoid duplicates. Like a set operation.
+            clf.getAllToChoose().addAll(toRemoveKoder);
+            session.removeAttribute("toRemoveKoder");
+        }
+    }
+
+    protected void addNotYetChosenKoder(PortletSession session, ChooseFromListController.ChooseListForm clf) {
+        List<AbstractKod> notYetChosenKoder = (List<AbstractKod>) session.getAttribute("notYetChosenKoder");
+        if (notYetChosenKoder != null) {
+            clf.getChosen().addAll(notYetChosenKoder);
+            clf.getAllToChoose().removeAll(notYetChosenKoder);
+            session.removeAttribute("notYetChosenKoder");
+        }
+    }
+
+    @ActionMapping(params = {"action=chooseFromList", "filter"})
+    public void filterChooseFromList(ActionResponse response,
+                                     @RequestParam("filterText") String filterText,
+                                     @RequestParam("prioId") String prioId) {
+        response.setRenderParameter("view", "choose-from-list");
+        response.setRenderParameter("filterText", filterText);
+        response.setRenderParameter("prioId", prioId);
+    }
+
+    @ActionMapping(params = {"action=chooseFromList", "cancel"})
+    public void cancelChooseFromList(PortletRequest request, PortletSession session, ActionResponse response,
+                                     ModelMap model, @RequestParam("prioId") String prioId) {
+        session.removeAttribute(ChooseFromListController.ChooseListForm.class.getSimpleName());
+        response.setRenderParameter("view", "edit-prio-view");
+        response.setRenderParameter("id", prioId);
+    }
+
+    @Transactional
+    @ActionMapping(params = {"action=chooseFromList", "ok"})
+    public void confirmChooseFromList(PortletRequest request, PortletSession session, ActionResponse response,
+                                     ModelMap model, @RequestParam("prioId") String prioId) {
+        ChooseFromListController.ChooseListForm chooseListForm = (ChooseFromListController.ChooseListForm)
+                session.getAttribute(ChooseFromListController.ChooseListForm.class.getSimpleName());
+
+        List<? extends AbstractKod> theChosen = chooseListForm.getChosen();
+
+        Prioriteringsobjekt prioriteringsobjekt = prioRepository.find(Long.parseLong(prioId));
+
+        Class<? extends AbstractKod> type = chooseListForm.getType();
+        if (type == null) {
+            throw new IllegalStateException("Type of ChooseListForm must not be null.");
+        }
+
+        if (type.equals(DiagnosKod.class)) {
+            prioriteringsobjekt.setDiagnoser(new HashSet<DiagnosKod>((List<? extends DiagnosKod>) theChosen));
+            prioRepository.store(prioriteringsobjekt);
+        } else if (type.equals(AatgaerdsKod.class)) {
+            prioriteringsobjekt.setAatgaerdskoder(new HashSet<AatgaerdsKod>((List<? extends AatgaerdsKod>) theChosen));
+            prioRepository.store(prioriteringsobjekt);
+        } else if (type.equals(AtcKod.class)) {
+            prioriteringsobjekt.setAtcKoder(new HashSet<AtcKod>((List<? extends AtcKod>) theChosen));
+            prioRepository.store(prioriteringsobjekt);
+        } else {
+            throw new IllegalStateException("Unexpected type [" + type.toString() + "] for ChooseListForm instance.");
+        }
+
+        session.removeAttribute(ChooseFromListController.ChooseListForm.class.getSimpleName());
+        response.setRenderParameter("view", "edit-prio-view");
+        response.setRenderParameter("id", prioId);
+    }
+
+    @ActionMapping(params = {"action=chooseFromList", "add"})
+    public void addChooseFromList(PortletSession session, ActionResponse response,
+                                  @RequestParam(value = "filterText", required = false) String filterText,
+                                  @RequestParam(value = "notYetChosenKeys", required = false) List<String> notYetChosenKeys,
+                                  @RequestParam(value = "prioId", required = false) String prioId) {
+        if (filterText != null) {
+            response.setRenderParameter("filterText", filterText);
+        }
+
+        ChooseFromListController.ChooseListForm clf = (ChooseFromListController.ChooseListForm)
+                session.getAttribute("ChooseListForm");
+
+        List<AbstractKod> notYetChosen = new ArrayList<AbstractKod>();
+
+        if (notYetChosenKeys.size() > 0) {
+
+            List<AbstractKod> allToChoose = clf.getAllToChoose();
+            Iterator<AbstractKod> iterator = allToChoose.iterator();
+            while (iterator.hasNext()) {
+                AbstractKod kod = iterator.next();
+                if (notYetChosenKeys.contains(String.valueOf(kod.getId()))) {
+                    notYetChosen.add(kod);
+                }
+            }
+        }
+
+        session.setAttribute("notYetChosenKoder", notYetChosen);
+
+        response.setRenderParameter("view", "choose-from-list");
+        response.setRenderParameter("prioId", prioId);
+    }
+
+    @ActionMapping(params = {"action=chooseFromList", "addAll"})
+    public void addAllChooseFromList(PortletSession session, ActionResponse response,
+                                  @RequestParam(value = "filterText", required = false) String filterText,
+                                  @RequestParam(value = "prioId", required = false) String prioId) {
+        if (filterText != null) {
+            response.setRenderParameter("filterText", filterText);
+        }
+
+        ChooseFromListController.ChooseListForm clf = (ChooseFromListController.ChooseListForm)
+                session.getAttribute("ChooseListForm");
+
+        List allItemsToAdd = new ArrayList(clf.getAllItems());
+        if (filterText != null && !"".equals(filterText)) {
+            filterList(filterText, allItemsToAdd);
+        }
+
+        allItemsToAdd.removeAll(clf.getChosen()); // Already added
+
+        session.setAttribute("notYetChosenKoder", allItemsToAdd);
+
+        response.setRenderParameter("view", "choose-from-list");
+        response.setRenderParameter("prioId", prioId);
+    }
+
+    @ActionMapping(params = {"action=chooseFromList", "remove"})
+    public void removeChooseFromList(PortletSession session, ActionResponse response,
+                                  @RequestParam(value = "filterText", required = false) String filterText,
+                                  @RequestParam(value = "chosenKeys", required = false) List<String> chosenKeysToRemove,
+                                  @RequestParam(value = "prioId", required = false) String prioId) {
+        if (filterText != null) {
+            response.setRenderParameter("filterText", filterText);
+        }
+
+        ChooseFromListController.ChooseListForm clf = (ChooseFromListController.ChooseListForm)
+                session.getAttribute("ChooseListForm");
+
+        List<AbstractKod> toRemove = new ArrayList<AbstractKod>();
+
+        if (chosenKeysToRemove.size() > 0) {
+
+            List<AbstractKod> chosen = clf.getChosen();
+
+            Iterator<AbstractKod> iterator = chosen.iterator();
+            while (iterator.hasNext()) {
+                AbstractKod next = iterator.next();
+                if (chosenKeysToRemove.contains(String.valueOf(next.getId()))) {
+                    toRemove.add(next);
+                }
+            }
+            session.setAttribute("toRemoveKoder", toRemove);
+        }
+
+        response.setRenderParameter("view", "choose-from-list");
+        response.setRenderParameter("prioId", prioId);
+    }
+
+    @ActionMapping(params = {"action=chooseFromList", "removeAll"})
+    public void removeAllChooseFromList(PortletSession session, ActionResponse response,
+                                  @RequestParam(value = "filterText", required = false) String filterText,
+                                  @RequestParam(value = "prioId", required = false) String prioId) {
+        if (filterText != null) {
+            response.setRenderParameter("filterText", filterText);
+        }
+
+        ChooseFromListController.ChooseListForm clf = (ChooseFromListController.ChooseListForm)
+                session.getAttribute("ChooseListForm");
+
+        session.setAttribute("toRemoveKoder", clf.getChosen());
+
+        response.setRenderParameter("view", "choose-from-list");
+        response.setRenderParameter("prioId", prioId);
     }
 
     private void chooseKod(PortletSession session, PortletResponse response, PortletRequest request,
@@ -542,8 +854,11 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
 
         BeanMap bm = new BeanMap(pf);
 
-        ChooseFromListController.ChooseListForm clf = getOrCreateSessionObj(session, ChooseFromListController.ChooseListForm.class.getSimpleName(),
+        ChooseFromListController.ChooseListForm clf = getOrCreateSessionObj(
+                session,
+                ChooseFromListController.ChooseListForm.class.getSimpleName(),
                 ChooseFromListController.ChooseListForm.class);
+
         clf.setOkLabel("Bekräfta val");
         clf.setDisplayKey("kodPlusBeskrivning");
         clf.setIdKey("id");
@@ -552,7 +867,9 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
 
         Collection<AbstractKod> target = (Collection<AbstractKod>) bm.get(kodWithField);
         clf.setTarget(target);
-        clf.getChoosen().addAll(target);
+        List chosen = clf.getChosen();
+        chosen.removeAll(target); // Avoid duplicates
+        chosen.addAll(target);
 
         BeanMap applicationDataMap = new BeanMap(applicationData);
 

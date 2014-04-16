@@ -33,7 +33,6 @@ import se.vgregion.verticalprio.repository.GenerisktFinderRepository;
 import se.vgregion.verticalprio.repository.GenerisktKodRepository;
 import se.vgregion.verticalprio.repository.finding.DateNullLogic;
 import se.vgregion.verticalprio.repository.finding.HaveNestedEntities;
-import se.vgregion.verticalprio.repository.finding.JpqlMatchBuilder;
 import se.vgregion.verticalprio.repository.finding.NestedSektorRaad;
 
 @Controller
@@ -201,8 +200,8 @@ public class VerticalPrioController extends EditPrioriteringController {
 		ChooseListForm clf = getOrCreateSessionObj(session, ChooseListForm.class.getSimpleName(),
 		        ChooseListForm.class);
 
-		clf.setNotYetChoosenLabel("Dolda kolumner");
-		clf.setChoosenLabel("Synliga kolumner");
+		clf.setNotYetChosenLabel("Dolda kolumner");
+		clf.setChosenLabel("Synliga kolumner");
 		clf.setOkLabel("Ok");
 
 		clf.setDisplayKey("label");
@@ -234,7 +233,7 @@ public class VerticalPrioController extends EditPrioriteringController {
 
 		clf.setAllItems(allColumns);
 		clf.setAllToChoose(new ArrayList<Column>());
-		clf.setChoosen(selected);
+		clf.setChosen(selected);
 
 		response.sendRedirect("choose-from-list");
 		return null;
