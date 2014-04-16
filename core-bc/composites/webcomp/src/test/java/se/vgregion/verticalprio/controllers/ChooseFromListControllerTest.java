@@ -87,7 +87,7 @@ public class ChooseFromListControllerTest {
 
         Assert.assertEquals(3, clf.getAllItems().size());
 
-        Assert.assertEquals(1, clf.getChoosen().size());
+        Assert.assertEquals(1, clf.getChosen().size());
 
         Assert.assertEquals("choose-from-list", result);
     }

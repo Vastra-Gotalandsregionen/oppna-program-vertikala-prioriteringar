@@ -3,10 +3,7 @@ package se.vgregion.verticalprio.controllers;
 import org.apache.commons.beanutils.BeanMap;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import se.vgregion.verticalprio.entity.Column;
-import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
-import se.vgregion.verticalprio.entity.SektorRaad;
-import se.vgregion.verticalprio.entity.User;
+import se.vgregion.verticalprio.entity.*;
 import se.vgregion.verticalprio.repository.GenerisktHierarkisktKodRepository;
 import se.vgregion.verticalprio.repository.GenerisktKodRepository;
 
@@ -418,9 +415,10 @@ public abstract class BaseController {
     protected ChooseFromListController.ChooseListForm initChooseListForm() {
         ChooseFromListController.ChooseListForm clf = new ChooseFromListController.ChooseListForm();
         clf.setFilterLabel("Sök diagnoser med nyckelord");
-        clf.setNotYetChoosenLabel("Ej valda diagnoser");
-        clf.setChoosenLabel("Valda diagnoser");
+        clf.setNotYetChosenLabel("Ej valda diagnoser");
+        clf.setChosenLabel("Valda diagnoser");
         clf.setFilterLabelToolTip("Här kan du söka både på kod och på beskrivning");
+        clf.setType(DiagnosKod.class);
         return clf;
     }
 

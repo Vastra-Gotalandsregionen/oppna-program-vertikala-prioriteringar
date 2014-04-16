@@ -49,7 +49,7 @@
   <div class="yui3-g">
   
   <div class="yui3-u-5-12 choosepage_leftsection">
-  <div><h3>${ChooseListForm.notYetChoosenLabel}</h3> (${ChooseListForm.sizeOfAllToChoose} stycken)</div>
+  <div><h3>${ChooseListForm.notYetChosenLabel}</h3> (${ChooseListForm.sizeOfAllToChoose} stycken)</div>
   </div>
 
   <div class="yui3-u-1-6">
@@ -57,7 +57,7 @@
   </div>
   
   <div class="yui3-u-5-12 choosepage_rightsection">
-  	<h3>${ChooseListForm.choosenLabel}</h3> (${ChooseListForm.sizeOfChoosen} stycken)
+  	<h3>${ChooseListForm.chosenLabel}</h3> (${ChooseListForm.sizeOfChosen} stycken)
   </div>
   
   </div>
@@ -66,7 +66,7 @@
   
   <div class="yui3-u-5-12 choosepage_leftsection">
 	  <div>
-		  <select name="notYetChoosenKeys" multiple="multiple">
+		  <select name="notYetChosenKeys" multiple="multiple">
 		    <c:forEach items="${ChooseListForm.allToChoose}" var="column">
 
 		        <option value="${column[ChooseListForm.idKey]}">${column[ChooseListForm.displayKey]}</option>
@@ -85,8 +85,8 @@
   
   <div class="yui3-u-5-12 choosepage_rightsection">
   	<div>
-  	    <select name="choosenKeys" multiple="multiple">
-      	<c:forEach items="${ChooseListForm.choosen}" var="column">
+  	    <select name="chosenKeys" multiple="multiple">
+      	<c:forEach items="${ChooseListForm.chosen}" var="column">
         	<option value="${column[ChooseListForm.idKey]}">${column[ChooseListForm.displayKey]}</option>
       	</c:forEach>
     	</select>  	
@@ -109,14 +109,14 @@
     <div class="yui3-u-1-3"></div>
   </c:if>
   
-  <div class="yui3-u-1-3"><h3>${ChooseListForm.notYetChoosenLabel}</h3> (${ChooseListForm.sizeOfAllToChoose-ChooseListForm.sizeOfChoosen} stycken)</div>
+  <div class="yui3-u-1-3"><h3>${ChooseListForm.notYetChosenLabel}</h3> (${ChooseListForm.sizeOfAllToChoose-ChooseListForm.sizeOfChosen} stycken)</div>
   <div class="yui3-u-1-3"></div>
-  <div class="yui3-u-1-3"><h3>${ChooseListForm.choosenLabel}</h3> (${ChooseListForm.sizeOfChoosen} stycken)</div>
+  <div class="yui3-u-1-3"><h3>${ChooseListForm.chosenLabel}</h3> (${ChooseListForm.sizeOfChosen} stycken)</div>
     
   <div class="yui3-u-1-3">
-  <select name="notYetChoosenKeys" multiple="multiple">
+  <select name="notYetChosenKeys" multiple="multiple">
     <c:forEach items="${ChooseListForm.allToChoose}" var="column">
-      <c:if test="${not su:contains(ChooseListForm.choosen, column)}">
+      <c:if test="${not su:contains(ChooseListForm.chosen, column)}">
         <option value="${column[ChooseListForm.idKey]}">${column[ChooseListForm.displayKey]}</option>
       </c:if>
     </c:forEach>
@@ -132,8 +132,8 @@
   </div>
     
   <div class="yui3-u-1-3">
-    <select name="choosenKeys" multiple="multiple">
-      <c:forEach items="${ChooseListForm.choosen}" var="column">
+    <select name="chosenKeys" multiple="multiple">
+      <c:forEach items="${ChooseListForm.chosen}" var="column">
         <option value="${column[ChooseListForm.idKey]}">${column[ChooseListForm.displayKey]}</option>
       </c:forEach>
     </select>
