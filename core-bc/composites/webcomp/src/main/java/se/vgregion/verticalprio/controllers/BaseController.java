@@ -395,10 +395,50 @@ public abstract class BaseController {
     }
 
     protected void copyKodCollectionsAndMetaDates(Prioriteringsobjekt source, Prioriteringsobjekt target) {
+        if (source == target) {
+            return;
+        }
         clearAndFillCollection(source.getAatgaerdskoder(), target.getAatgaerdskoder());
         clearAndFillCollection(source.getDiagnoser(), target.getDiagnoser());
         clearAndFillCollection(source.getAtcKoder(), target.getAtcKoder());
         clearAndFillCollection(source.getChildren(), target.getChildren());
+
+        target.setAatgaerdskoder(source.getAatgaerdskoder());
+        target.setDiagnoser(source.getDiagnoser());
+        target.setAtcKoder(source.getAtcKoder());
+        target.setChildren(source.getChildren());
+
+        if (source instanceof PrioriteringsobjektForm && target instanceof PrioriteringsobjektForm) {
+            PrioriteringsobjektForm sourceForm = (PrioriteringsobjektForm) source;
+            PrioriteringsobjektForm targetForm = (PrioriteringsobjektForm) target;
+
+            targetForm.setColumns(sourceForm.getColumns());
+
+            targetForm.setKostnadLevnadsaarKodList(new ArrayList<KostnadLevnadsaarKod>());
+            targetForm.setAatgaerdsRiskKodList(new ArrayList<AatgaerdsRiskKod>());
+            targetForm.setHaelsonekonomiskEvidensKodList(new ArrayList<HaelsonekonomiskEvidensKod>());
+            targetForm.setPatientnyttaEffektAatgaerdsKodList(new ArrayList<PatientnyttaEffektAatgaerdsKod>());
+            targetForm.setRangordningsKodList(new ArrayList<RangordningsKod>());
+            targetForm.setVaardnivaaKodList(new ArrayList<VaardnivaaKod>());
+            targetForm.setTillstaandetsSvaarighetsgradKodList(new ArrayList<TillstaandetsSvaarighetsgradKod>());
+
+            targetForm.setVaardformList(sourceForm.getVaardformList());
+            targetForm.setSektorRaadList(sourceForm.getSektorRaadList());
+            targetForm.setVaentetidBehandlingVeckorList(sourceForm.getVaentetidBehandlingVeckorList());
+            targetForm.setVaentetidBesookVeckorList(sourceForm.getVaentetidBesookVeckorList());
+            targetForm.setDiagnoserList(sourceForm.getDiagnoserList());
+
+            targetForm.setPatientnyttoEvidensKodList(sourceForm.getPatientnyttoEvidensKodList());
+
+            clearAndFillCollection(sourceForm.getKostnadLevnadsaarKodList(), targetForm.getKostnadLevnadsaarKodList());
+            clearAndFillCollection(sourceForm.getAatgaerdsRiskKodList(), targetForm.getAatgaerdsRiskKodList());
+            clearAndFillCollection(sourceForm.getHaelsonekonomiskEvidensKodList(), targetForm.getHaelsonekonomiskEvidensKodList());
+            clearAndFillCollection(sourceForm.getPatientnyttaEffektAatgaerdsKodList(), targetForm.getPatientnyttaEffektAatgaerdsKodList());
+            clearAndFillCollection(sourceForm.getRangordningsKodList(), targetForm.getRangordningsKodList());
+            clearAndFillCollection(sourceForm.getVaardnivaaKodList(), targetForm.getVaardnivaaKodList());
+            clearAndFillCollection(sourceForm.getTillstaandetsSvaarighetsgradKodList(), targetForm.getTillstaandetsSvaarighetsgradKodList());
+
+        }
 
         target.setGodkaend(source.getGodkaend());
         target.setSenastUppdaterad(source.getSenastUppdaterad());
@@ -406,6 +446,9 @@ public abstract class BaseController {
 
     protected  <T extends Object> void clearAndFillCollection(Collection<T> source, Collection<T> target) {
         if (source == null || target == null) {
+            return;
+        }
+        if (source == target) {
             return;
         }
         target.clear();

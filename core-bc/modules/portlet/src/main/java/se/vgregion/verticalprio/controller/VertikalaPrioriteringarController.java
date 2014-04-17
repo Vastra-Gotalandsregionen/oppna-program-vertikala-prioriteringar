@@ -211,15 +211,19 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
             return "main";
         }
 */
-        model.addAttribute("editDir", new EditDirective(true, false));
+        model.addAttribute("editDir", new EditDirective(true, null));
 
-        prioViewCommon(model, session, id);
+        if (model.get("prio") == null) {
+            prioViewCommon(model, session, id);
+        }
+
+        addSessionAttributesToModel(session, model);
 
         return "prio-view";
     }
 
     private void prioViewCommon(ModelMap model, PortletSession session, Long id) {
-        addSessionAttributesToModel(session, model);
+//        addSessionAttributesToModel(session, model);
 
         PrioriteringsobjektForm form = (PrioriteringsobjektForm) model.get("prio");
         if (form == null) {
@@ -380,7 +384,8 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
 
     @ActionMapping(params = {"action=doUserAction", "edit"})
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public void editUser(PortletSession session, ActionResponse response, final Model modelMap, @RequestParam("id") Long id) throws IOException {
+    public void editUser(PortletSession session, ActionResponse response, final Model modelMap,
+                         @RequestParam("id") Long id) throws IOException {
         if (!checkUserIsSelected(session, id)) {
             response.setRenderParameter("view", "edit-users");
             return;
@@ -420,7 +425,8 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
 
     @ActionMapping(params = {"action=doUserAction", "save"})
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public void saveUser(ModelMap modelMap, @ModelAttribute User user, PortletSession session, ActionResponse response) {
+    public void saveUser(ModelMap modelMap, @ModelAttribute User user, PortletSession session,
+                         ActionResponse response) {
         checkSecurity(session);
 
         mirrorUserInSession(user, new HttpSessionBox(session));
@@ -504,10 +510,19 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
         response.setRenderParameter("view", "main");
     }
 
+    @ActionMapping(params = {"action=doRowAction", "prio-create"})
+    public void createPrio(PortletRequest request, ActionResponse response, ModelMap modelMap) {
+        response.setRenderParameter("view", "edit-prio-view");
+    }
+
     @ActionMapping(params = {"action=prioViewForm", "choose-diagnoser"})
     public void chooseDiagnoser(PortletRequest request, ActionResponse response, PortletSession session,
                                 ModelMap model, @ModelAttribute("prio") PrioriteringsobjektForm pf,
                                 @RequestParam("id") String prioId) throws IOException {
+
+        PrioriteringsobjektForm sessionPrio = (PrioriteringsobjektForm) session.getAttribute("prio");
+        copyKodCollectionsAndMetaDates(sessionPrio, pf);
+        session.setAttribute("prio", pf);
 
         ChooseFromListController.ChooseListForm clf = new ChooseFromListController.ChooseListForm();
         session.setAttribute(ChooseFromListController.ChooseListForm.class.getSimpleName(), clf);
@@ -529,6 +544,10 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
                                      ModelMap model, @ModelAttribute("prio") PrioriteringsobjektForm pf,
                                      @RequestParam("id") String prioId) throws IOException {
 
+        PrioriteringsobjektForm sessionPrio = (PrioriteringsobjektForm) session.getAttribute("prio");
+        copyKodCollectionsAndMetaDates(sessionPrio, pf);
+        session.setAttribute("prio", pf);
+
         ChooseFromListController.ChooseListForm clf = new ChooseFromListController.ChooseListForm();
         session.setAttribute(ChooseFromListController.ChooseListForm.class.getSimpleName(), clf);
 
@@ -540,14 +559,17 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
         chooseKod(session, response, request, model, pf, "aatgaerdskoder");
 
         response.setRenderParameter("view", "choose-from-list");
-//        response.setRenderParameter("view", "choose-from-list-aatgaerdskoder");
         response.setRenderParameter("prioId", prioId);
     }
 
     @ActionMapping(params = {"action=prioViewForm", "choose-atcKoder"})
     public void chooseAtcKoder(PortletRequest request, PortletSession session, ActionResponse response, ModelMap model,
-                               @RequestParam("id") String prioId, @ModelAttribute("prio") PrioriteringsobjektForm pf)
+                               @RequestParam("id") String prioId ,@ModelAttribute("prio") PrioriteringsobjektForm pf)
             throws IOException {
+
+        PrioriteringsobjektForm sessionPrio = (PrioriteringsobjektForm) session.getAttribute("prio");
+        copyKodCollectionsAndMetaDates(sessionPrio, pf);
+        session.setAttribute("prio", pf);
 
         ChooseFromListController.ChooseListForm clf = new ChooseFromListController.ChooseListForm();
         session.setAttribute(ChooseFromListController.ChooseListForm.class.getSimpleName(), clf);
@@ -567,12 +589,14 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
     @ActionMapping(params = {"action=prioViewForm", "removeCodes"})
     public void removeKoder(PortletRequest request, PortletSession session, ActionResponse response,
                                 @RequestParam("id") String id, @RequestParam("removeCode") List<String> codesToRemove,
-                                @ModelAttribute("prio") PrioriteringsobjektForm pf) {
+                                @ModelAttribute("prio") PrioriteringsobjektForm pf, ModelMap model) {
 
         response.setRenderParameter("view", "edit-prio-view");
         response.setRenderParameter("id", id);
 
-        Prioriteringsobjekt prioriteringsobjekt = prioRepository.find(pf.getId());
+        PrioriteringsobjektForm sessionPrio = (PrioriteringsobjektForm) session.getAttribute("prio");
+        copyKodCollectionsAndMetaDates(sessionPrio, pf);
+        session.setAttribute("prio", pf);
 
         Set<? extends AbstractKod> koder;
 
@@ -595,13 +619,13 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
 
         String keyWord;
         if (type.equals(DiagnosKod.class)) {
-            koder = prioriteringsobjekt.getDiagnoser();
+            koder = pf.getDiagnoser();
             keyWord = "diagnoser:";
         } else if (type.equals(AatgaerdsKod.class)) {
-            koder = prioriteringsobjekt.getAatgaerdskoder();
+            koder = pf.getAatgaerdskoder();
             keyWord = "aatgaerdskoder:";
         } else if (type.equals(AtcKod.class)) {
-            koder = prioriteringsobjekt.getAtcKoder();
+            koder = pf.getAtcKoder();
             keyWord = "atcKoder:";
         } else {
             throw new IllegalStateException("Unexpected type [" + type.toString() + "] for ChooseListForm instance.");
@@ -615,12 +639,12 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
             }
         }
 
-        prioRepository.store(prioriteringsobjekt);
+        model.addAttribute("prio", pf);
     }
 
     @RenderMapping(params = "view=choose-from-list")
     public String viewChooseFromList(PortletRequest request, PortletResponse response, PortletSession session,
-                                     ModelMap model, @ModelAttribute("prio") PrioriteringsobjektForm pf,
+                                     ModelMap model, /*@ModelAttribute("prio") PrioriteringsobjektForm pf,*/
                                      @RequestParam(value = "filterText", required = false) String filterText,
                                      @RequestParam(value = "prioId", required = true) String prioId)
             throws IOException {
@@ -711,7 +735,7 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
 
         List<? extends AbstractKod> theChosen = chooseListForm.getChosen();
 
-        Prioriteringsobjekt prioriteringsobjekt = prioRepository.find(Long.parseLong(prioId));
+        PrioriteringsobjektForm pf = (PrioriteringsobjektForm) session.getAttribute("prio");
 
         Class<? extends AbstractKod> type = chooseListForm.getType();
         if (type == null) {
@@ -719,18 +743,16 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
         }
 
         if (type.equals(DiagnosKod.class)) {
-            prioriteringsobjekt.setDiagnoser(new HashSet<DiagnosKod>((List<? extends DiagnosKod>) theChosen));
-            prioRepository.store(prioriteringsobjekt);
+            pf.setDiagnoser(new HashSet<DiagnosKod>((List<? extends DiagnosKod>) theChosen));
         } else if (type.equals(AatgaerdsKod.class)) {
-            prioriteringsobjekt.setAatgaerdskoder(new HashSet<AatgaerdsKod>((List<? extends AatgaerdsKod>) theChosen));
-            prioRepository.store(prioriteringsobjekt);
+            pf.setAatgaerdskoder(new HashSet<AatgaerdsKod>((List<? extends AatgaerdsKod>) theChosen));
         } else if (type.equals(AtcKod.class)) {
-            prioriteringsobjekt.setAtcKoder(new HashSet<AtcKod>((List<? extends AtcKod>) theChosen));
-            prioRepository.store(prioriteringsobjekt);
+            pf.setAtcKoder(new HashSet<AtcKod>((List<? extends AtcKod>) theChosen));
         } else {
             throw new IllegalStateException("Unexpected type [" + type.toString() + "] for ChooseListForm instance.");
         }
 
+        model.addAttribute("prio", pf);
         session.removeAttribute(ChooseFromListController.ChooseListForm.class.getSimpleName());
         response.setRenderParameter("view", "edit-prio-view");
         response.setRenderParameter("id", prioId);
