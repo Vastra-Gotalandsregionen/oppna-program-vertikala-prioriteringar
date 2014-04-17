@@ -86,7 +86,7 @@ public class PrioriteringsobjektForm extends Prioriteringsobjekt {
     @Transient
     private List<RangordningsKod> rangordningsKodList;
     @Transient
-    private final Map<String, Column> columns = new HashMap<String, Column>();
+    private Map<String, Column> columns = new HashMap<String, Column>();
     private List<DiagnosKod> diagnoserList;
 
     private Prioriteringsobjekt skarpVersion;
@@ -433,6 +433,10 @@ public class PrioriteringsobjektForm extends Prioriteringsobjekt {
 
     public Map<String, Column> getColumns() {
         return columns;
+    }
+
+    public void setColumns(Map<String, Column> columns) {
+        this.columns = columns;
     }
 
     public void setVaentetidBesookVeckorId(Long vaentetidBesookVeckorId) {
