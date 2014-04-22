@@ -9,6 +9,9 @@
     <portlet:param name="action" value="doUserAction"/>
 </portlet:actionURL>
 
+<portlet:renderURL var="mainViewUrl">
+</portlet:renderURL>
+
 <div>
 <%@ include file="head.jsp" %>
 <div style="height:100%; ">
@@ -20,7 +23,7 @@
   <input type="submit" name="edit" value="Ändra" />
   <input type="submit" name="delete" onclick="return confirm('Är du säker på att du du vill radera posten?')" value="Radera" />
   <input type="submit" name="create" value="Ny" />
-  <input type="submit" name="toMain" value="Tillbaka" onclick="window.open('${doRowAction}','_self'); return false;" />
+  <input type="submit" name="toMain" value="Tillbaka" onclick="window.open('${mainViewUrl}','_self'); return false;" />
 
   <tags:message-out />
 
