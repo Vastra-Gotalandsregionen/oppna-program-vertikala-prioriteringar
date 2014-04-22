@@ -1,5 +1,8 @@
 package se.vgregion.verticalprio.controller;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.util.PortalUtil;
 import org.apache.commons.beanutils.BeanMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,18 +72,41 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
     }
 
     @RenderMapping
-    public String main(PortletRequest request, Model model) {
+    public String main(PortletRequest request, Model model) throws SystemException, PortalException {
         PortletSession session = request.getPortletSession();
 
+        if (session.getAttribute("user") == null) {
+            com.liferay.portal.model.User liferayUser = fetchLiferayUser(request);
+            if (liferayUser != null) {
+                User example = new User();
+                example.setVgrId(liferayUser.getScreenName());
+                List<User> users = userRepository.findByExample(example, 1);
+                if (users.size() == 1) {
+                    User user = users.get(0);
+                    initSearch(user, session);
+                } else {
+                    User user = new User();
+                    user.setVgrId(liferayUser.getScreenName());
+                    user.setFirstName(liferayUser.getFirstName());
+                    user.setLastName(liferayUser.getLastName());
+                    user.setApprover(false);
+                    user.setEditor(false);
+                    user.setPassword(liferayUser.getPassword());
+                    user.setUserEditor(false);
+                    userRepository.persist(user);
+                    initSearch(user, session);
+                }
+            }
+        }
         session.setAttribute("editDir", new EditDirective(true, null));
-
         result(session);
-
         Map<String, Object> attributeMap = session.getAttributeMap();
-
         model.addAllAttributes(attributeMap);
-
         return "main";
+    }
+
+    protected com.liferay.portal.model.User fetchLiferayUser(PortletRequest request) throws PortalException, SystemException {
+        return PortalUtil.getUser(request);
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -88,7 +114,6 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public void login(PortletRequest request, PortletSession session, @RequestParam(required = false) String userName,
                       @RequestParam(required = false) String password) {
-
         if (isBlank(userName) || isBlank(password)) {
             return;
         }
@@ -103,26 +128,34 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
             session.setAttribute("loginResult", false);
         } else {
             User user = users.get(0);
-            PrioriteringsobjektFindCondition condition = getOrCreateSessionObj(session, "prioCondition",
-                    PrioriteringsobjektFindCondition.class);
-            if (user.isEditor() || user.isApprover()) {
-                condition.setGodkaend(new DateNullLogic(false));
-            } else {
-                condition.setGodkaend(new DateNullLogic(true));
-            }
+            initSearch(user, session);
+        }
+    }
 
-            Map userValues = new HashMap(new BeanMap(user)); // Insane... makes all lazy properties initialized.
-            for (Object o : userValues.values()) {
-                if (o instanceof Collection) {
-                    Collection c = (Collection) o;
-                    for (Object i : c) {
-                        new HashMap(new BeanMap(i));
-                    }
+    private void initSearch(User user, PortletSession session) {
+        PrioriteringsobjektFindCondition condition = getOrCreateSessionObj(session, "prioCondition",
+                PrioriteringsobjektFindCondition.class);
+        if (user.isEditor() || user.isApprover()) {
+            condition.setGodkaend(new DateNullLogic(false));
+        } else {
+            condition.setGodkaend(new DateNullLogic(true));
+        }
+
+        initFields(user);
+
+        session.setAttribute("user", user);
+        session.setAttribute("loginResult", true);
+    }
+
+    private void initFields(Object obj) {
+        Map userValues = new HashMap(new BeanMap(obj)); // Insane... makes all lazy properties initialized.
+        for (Object o : userValues.values()) {
+            if (o instanceof Collection) {
+                Collection c = (Collection) o;
+                for (Object i : c) {
+                    new HashMap(new BeanMap(i));
                 }
             }
-
-            session.setAttribute("user", user);
-            session.setAttribute("loginResult", true);
         }
     }
 
