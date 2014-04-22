@@ -80,6 +80,11 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
     public String main(PortletRequest request, Model model) throws SystemException, PortalException {
         PortletSession session = request.getPortletSession();
 
+        if (session.getAttribute("loggedOut") != null) {
+            session.setAttribute("loggedOut", null);
+            return "main";
+        }
+
         if (session.getAttribute("user") == null) {
             com.liferay.portal.model.User liferayUser = fetchLiferayUser(request);
             if (liferayUser != null) {
@@ -113,13 +118,26 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
         user.setPassword(liferayUser.getPassword());
         user.setUserEditor(false);
         userRepository.persist(user);
+        userRepository.flush();
         initSearch(user, session);
         return user;
     }
 
-
     protected com.liferay.portal.model.User fetchLiferayUser(PortletRequest request) throws PortalException, SystemException {
         return PortalUtil.getUser(request);
+    }
+
+    @ActionMapping(params = {"view=logout"})
+    public void logOut(PortletSession session, ActionResponse response) {
+        session.setAttribute("user", null);
+        session.setAttribute("loginResult", false);
+        session.setAttribute("loggedOut", true);
+        response.setRenderParameter("view", "logout");
+    }
+
+    @RenderMapping("view=logout")
+    public String main() {
+        return "main";
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -990,16 +1008,21 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
     }
 
     @ActionMapping(params = { "action=doUserAction", "openId" })
-    @Transactional(propagation = Propagation.MANDATORY, readOnly = true)
-    public void toggleOpenSectorNodeForUser(final PortletSession session, @RequestParam Integer openId, ActionResponse response)
+    @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = true)
+    public void toggleOpenSectorNodeForUser(final PortletSession session, @RequestParam Integer openId, ActionResponse response, PortletRequest request)
             throws IOException {
         MainForm form = getMainForm(session);
+
+        for (Object k : session.getAttributeMap().keySet()) {
+            System.out.print(k + ", ");
+        }
 
         form.getAllSektorsRaad().setSelected(false);
         SektorRaad sector = getSectorById(openId, form.getSectors());
         sector.setOpen(!sector.isOpen());
 
-        response.setRenderParameter("view", "edit-users");
+        request.setAttribute("otherUser", session.getAttribute("otherUser"));
+        response.setRenderParameter("view", "edit-user");
     }
 
 
