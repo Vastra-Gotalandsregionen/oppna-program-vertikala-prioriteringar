@@ -7,6 +7,11 @@
 <%@ taglib uri="/WEB-INF/tld/vgr-util.tld" prefix="su"%>
 
 <div class="filter-sidebar">
+
+    <portlet:actionURL var="logOutUrl">
+        <portlet:param name="view" value="logout"/>
+    </portlet:actionURL>
+
 	<div class="column-controls">
 	    <ul class="clearfix">
 	        <li class="column-control column-control-hide"><a href="" title="G&ouml;m kolumnen med sektorsr&aring;d."><span>G&ouml;m</span></a></li>
@@ -17,7 +22,7 @@
 	<div class="filter-sidebar-content">
 	    <c:choose>
 	        <c:when test="${user != null and loginResult}">
-	            <a href="main?logout=true">Logga ut ${user.firstName} ${user.lastName}</a>
+	            <a href="${logOutUrl}">Logga ut ${user.firstName} ${user.lastName}</a>
 	        </c:when>
 	        <c:otherwise>
                 <portlet:actionURL var="loginUrl">
