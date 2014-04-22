@@ -2,6 +2,7 @@ package se.vgregion.verticalprio.controller;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.model.*;
 import com.liferay.portal.util.PortalUtil;
 import org.apache.commons.beanutils.BeanMap;
 import org.slf4j.Logger;
@@ -22,6 +23,7 @@ import org.springframework.web.portlet.bind.annotation.RenderMapping;
 import se.vgregion.verticalprio.*;
 import se.vgregion.verticalprio.controllers.*;
 import se.vgregion.verticalprio.entity.*;
+import se.vgregion.verticalprio.entity.User;
 import se.vgregion.verticalprio.repository.GenerisktHierarkisktKodRepository;
 import se.vgregion.verticalprio.repository.GenerisktKodRepository;
 import se.vgregion.verticalprio.repository.PrioRepository;
@@ -31,6 +33,8 @@ import javax.portlet.ActionResponse;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.portlet.PortletSession;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.*;
 
@@ -72,6 +76,7 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
     }
 
     @RenderMapping
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public String main(PortletRequest request, Model model) throws SystemException, PortalException {
         PortletSession session = request.getPortletSession();
 
@@ -85,25 +90,33 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
                     User user = users.get(0);
                     initSearch(user, session);
                 } else {
-                    User user = new User();
-                    user.setVgrId(liferayUser.getScreenName());
-                    user.setFirstName(liferayUser.getFirstName());
-                    user.setLastName(liferayUser.getLastName());
-                    user.setApprover(false);
-                    user.setEditor(false);
-                    user.setPassword(liferayUser.getPassword());
-                    user.setUserEditor(false);
-                    userRepository.persist(user);
-                    initSearch(user, session);
+                    makeNewUserForLoggedInLiferay(liferayUser, session);
                 }
             }
         }
+
         session.setAttribute("editDir", new EditDirective(true, null));
         result(session);
         Map<String, Object> attributeMap = session.getAttributeMap();
         model.addAllAttributes(attributeMap);
         return "main";
     }
+
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    private User makeNewUserForLoggedInLiferay(com.liferay.portal.model.User liferayUser, PortletSession session) {
+        User user = new User();
+        user.setVgrId(liferayUser.getScreenName());
+        user.setFirstName(liferayUser.getFirstName());
+        user.setLastName(liferayUser.getLastName());
+        user.setApprover(false);
+        user.setEditor(false);
+        user.setPassword(liferayUser.getPassword());
+        user.setUserEditor(false);
+        userRepository.persist(user);
+        initSearch(user, session);
+        return user;
+    }
+
 
     protected com.liferay.portal.model.User fetchLiferayUser(PortletRequest request) throws PortalException, SystemException {
         return PortalUtil.getUser(request);
@@ -975,6 +988,20 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
 
         response.setRenderParameter("view", "edit-users");
     }
+
+    @ActionMapping(params = { "action=doUserAction", "openId" })
+    @Transactional(propagation = Propagation.MANDATORY, readOnly = true)
+    public void toggleOpenSectorNodeForUser(final PortletSession session, @RequestParam Integer openId, ActionResponse response)
+            throws IOException {
+        MainForm form = getMainForm(session);
+
+        form.getAllSektorsRaad().setSelected(false);
+        SektorRaad sector = getSectorById(openId, form.getSectors());
+        sector.setOpen(!sector.isOpen());
+
+        response.setRenderParameter("view", "edit-users");
+    }
+
 
     @Override
     protected GenerisktHierarkisktKodRepository getSektorRaadRepository() {
