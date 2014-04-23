@@ -581,7 +581,7 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
     public void approvePrio(PortletRequest request, ActionResponse response, PortletSession session,
                             ModelMap modelMap, @RequestParam(value = "id", required = false) Long id) {
         if (!validateIdIsSelected(session, id)) {
-            return ;
+            return;
         }
 
         User user = (User) session.getAttribute("user");
@@ -618,6 +618,53 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
                 prioRepository.merge(prio);
             }
         }
+    }
+
+    @ActionMapping(params = {"action=doRowAction", "init-conf-columns"})
+    public void chooseColumns(ActionResponse response, PortletSession session) {
+        MainForm form = getMainForm(session);
+
+        ChooseFromListController.ChooseListForm clf = getOrCreateSessionObj(session, ChooseFromListController.ChooseListForm.class.getSimpleName(),
+                ChooseFromListController.ChooseListForm.class);
+
+        clf.setNotYetChosenLabel("Dolda kolumner");
+        clf.setChosenLabel("Synliga kolumner");
+        clf.setOkLabel("Ok");
+
+        clf.setDisplayKey("label");
+        clf.setIdKey("id");
+        clf.setFilterLabel(null);
+        clf.setOkUrl("commit-conf-columns");
+        clf.setCancelUrl("main");
+
+        clf.setType(Column.class);
+
+        List<Column> allColumns = new ArrayList<Column>();
+        List<Column> selected = new ArrayList<Column>();
+        List<Column> notYetSelected = new ArrayList<Column>();
+
+        SortedSet<Column> target = new TreeSet<Column>();
+        session.setAttribute("selectedColumns", target);
+        clf.setTarget(target);
+
+        User user = (User) session.getAttribute("user");
+
+        for (Column column : form.getColumns()) {
+            if (column.isHideAble() && (!column.isDemandsEditRights() || user != null && user.isEditor())) {
+                allColumns.add(column);
+                if (column.isVisible()) {
+                    selected.add(column);
+                } else {
+                    notYetSelected.add(column);
+                }
+            }
+        }
+
+        clf.setAllItems(allColumns);
+        clf.setAllToChoose(new ArrayList<Column>());
+        clf.setChosen(selected);
+
+        response.setRenderParameter("view", "choose-from-list");
     }
 
     @ActionMapping(params = {"action=prioViewForm", "choose-diagnoser"})
@@ -669,7 +716,7 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
 
     @ActionMapping(params = {"action=prioViewForm", "choose-atcKoder"})
     public void chooseAtcKoder(PortletRequest request, PortletSession session, ActionResponse response, ModelMap model,
-                               @RequestParam("id") String prioId ,@ModelAttribute("prio") PrioriteringsobjektForm pf)
+                               @RequestParam("id") String prioId, @ModelAttribute("prio") PrioriteringsobjektForm pf)
             throws IOException {
 
         PrioriteringsobjektForm sessionPrio = (PrioriteringsobjektForm) session.getAttribute("prio");
@@ -693,8 +740,8 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
     @Transactional
     @ActionMapping(params = {"action=prioViewForm", "removeCodes"})
     public void removeKoder(PortletRequest request, PortletSession session, ActionResponse response,
-                                @RequestParam("id") String id, @RequestParam("removeCode") List<String> codesToRemove,
-                                @ModelAttribute("prio") PrioriteringsobjektForm pf, ModelMap model) {
+                            @RequestParam("id") String id, @RequestParam("removeCode") List<String> codesToRemove,
+                            @ModelAttribute("prio") PrioriteringsobjektForm pf, ModelMap model) {
 
         response.setRenderParameter("view", "edit-prio-view");
         response.setRenderParameter("id", id);
@@ -748,10 +795,10 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
     }
 
     @RenderMapping(params = "view=choose-from-list")
-    public String viewChooseFromList(PortletRequest request, PortletResponse response, PortletSession session,
-                                     ModelMap model, /*@ModelAttribute("prio") PrioriteringsobjektForm pf,*/
+    public String viewChooseFromList(PortletSession session,
+                                     ModelMap model,
                                      @RequestParam(value = "filterText", required = false) String filterText,
-                                     @RequestParam(value = "prioId", required = true) String prioId)
+                                     @RequestParam(value = "prioId", required = false) String prioId)
             throws IOException {
 
         String simpleName = ChooseFromListController.ChooseListForm.class.getSimpleName();
@@ -779,7 +826,9 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
 
         addSessionAttributesToModel(session, model);
 
-        model.addAttribute("prioId", prioId);
+        if (prioId != null) {
+            model.addAttribute("prioId", prioId);
+        }
 
         return "choose-from-list";
     }
@@ -834,15 +883,15 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
     @Transactional
     @ActionMapping(params = {"action=chooseFromList", "ok"})
     public void confirmChooseFromList(PortletRequest request, PortletSession session, ActionResponse response,
-                                     ModelMap model, @RequestParam("prioId") String prioId) {
+                                      ModelMap model, @RequestParam("prioId") String prioId) {
         ChooseFromListController.ChooseListForm chooseListForm = (ChooseFromListController.ChooseListForm)
                 session.getAttribute(ChooseFromListController.ChooseListForm.class.getSimpleName());
 
-        List<? extends AbstractKod> theChosen = chooseListForm.getChosen();
+        List<? extends Object> theChosen = chooseListForm.getChosen();
 
         PrioriteringsobjektForm pf = (PrioriteringsobjektForm) session.getAttribute("prio");
 
-        Class<? extends AbstractKod> type = chooseListForm.getType();
+        Class<? extends Object> type = chooseListForm.getType();
         if (type == null) {
             throw new IllegalStateException("Type of ChooseListForm must not be null.");
         }
@@ -853,6 +902,14 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
             pf.setAatgaerdskoder(new HashSet<AatgaerdsKod>((List<? extends AatgaerdsKod>) theChosen));
         } else if (type.equals(AtcKod.class)) {
             pf.setAtcKoder(new HashSet<AtcKod>((List<? extends AtcKod>) theChosen));
+        } else if (type.equals(Column.class)) {
+            // Special case, don't set render parameters to get to main view.
+            session.removeAttribute(ChooseFromListController.ChooseListForm.class.getSimpleName());
+            MainForm form = (MainForm) session.getAttribute("form");
+            for (Column column : form.getColumns()) {
+                column.setVisible(chooseListForm.getChosen().contains(column));
+            }
+            return;
         } else {
             throw new IllegalStateException("Unexpected type [" + type.toString() + "] for ChooseListForm instance.");
         }
@@ -875,16 +932,16 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
         ChooseFromListController.ChooseListForm clf = (ChooseFromListController.ChooseListForm)
                 session.getAttribute("ChooseListForm");
 
-        List<AbstractKod> notYetChosen = new ArrayList<AbstractKod>();
+        List<Object> notYetChosen = new ArrayList<Object>();
 
         if (notYetChosenKeys.size() > 0) {
 
-            List<AbstractKod> allToChoose = clf.getAllToChoose();
-            Iterator<AbstractKod> iterator = allToChoose.iterator();
+            List<Object> allToChoose = clf.getAllToChoose();
+            Iterator<Object> iterator = allToChoose.iterator();
             while (iterator.hasNext()) {
-                AbstractKod kod = iterator.next();
-                if (notYetChosenKeys.contains(String.valueOf(kod.getId()))) {
-                    notYetChosen.add(kod);
+                Object kodOrColumn = iterator.next();
+                if (notYetChosenKeys.contains(String.valueOf(getId(kodOrColumn)))) {
+                    notYetChosen.add(kodOrColumn);
                 }
             }
         }
@@ -897,8 +954,8 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
 
     @ActionMapping(params = {"action=chooseFromList", "addAll"})
     public void addAllChooseFromList(PortletSession session, ActionResponse response,
-                                  @RequestParam(value = "filterText", required = false) String filterText,
-                                  @RequestParam(value = "prioId", required = false) String prioId) {
+                                     @RequestParam(value = "filterText", required = false) String filterText,
+                                     @RequestParam(value = "prioId", required = false) String prioId) {
         if (filterText != null) {
             response.setRenderParameter("filterText", filterText);
         }
@@ -921,9 +978,9 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
 
     @ActionMapping(params = {"action=chooseFromList", "remove"})
     public void removeChooseFromList(PortletSession session, ActionResponse response,
-                                  @RequestParam(value = "filterText", required = false) String filterText,
-                                  @RequestParam(value = "chosenKeys", required = false) List<String> chosenKeysToRemove,
-                                  @RequestParam(value = "prioId", required = false) String prioId) {
+                                     @RequestParam(value = "filterText", required = false) String filterText,
+                                     @RequestParam(value = "chosenKeys", required = false) List<String> chosenKeysToRemove,
+                                     @RequestParam(value = "prioId", required = false) String prioId) {
         if (filterText != null) {
             response.setRenderParameter("filterText", filterText);
         }
@@ -931,30 +988,41 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
         ChooseFromListController.ChooseListForm clf = (ChooseFromListController.ChooseListForm)
                 session.getAttribute("ChooseListForm");
 
-        List<AbstractKod> toRemove = new ArrayList<AbstractKod>();
+        List<Object> toRemove = new ArrayList<Object>();
 
         if (chosenKeysToRemove.size() > 0) {
 
-            List<AbstractKod> chosen = clf.getChosen();
+            List<Object> chosen = clf.getChosen();
 
-            Iterator<AbstractKod> iterator = chosen.iterator();
+            Iterator<Object> iterator = chosen.iterator();
             while (iterator.hasNext()) {
-                AbstractKod next = iterator.next();
-                if (chosenKeysToRemove.contains(String.valueOf(next.getId()))) {
+                Object next = iterator.next();
+                if (chosenKeysToRemove.contains(String.valueOf(getId(next)))) {
                     toRemove.add(next);
                 }
             }
-            session.setAttribute("toRemoveKoder", toRemove);
+                session.setAttribute("toRemoveKoder", toRemove);
         }
 
         response.setRenderParameter("view", "choose-from-list");
         response.setRenderParameter("prioId", prioId);
     }
 
+    private Long getId(Object object) {
+        if (object instanceof AbstractKod) {
+            AbstractKod kod = (AbstractKod) object;
+            return kod.getId();
+        } else if (object instanceof Column) {
+            return Long.valueOf(((Column) object).getId());
+        } else {
+            throw new IllegalArgumentException("Unexpected type [" + object.getClass() + "].");
+        }
+    }
+
     @ActionMapping(params = {"action=chooseFromList", "removeAll"})
     public void removeAllChooseFromList(PortletSession session, ActionResponse response,
-                                  @RequestParam(value = "filterText", required = false) String filterText,
-                                  @RequestParam(value = "prioId", required = false) String prioId) {
+                                        @RequestParam(value = "filterText", required = false) String filterText,
+                                        @RequestParam(value = "prioId", required = false) String prioId) {
         if (filterText != null) {
             response.setRenderParameter("filterText", filterText);
         }
@@ -1048,7 +1116,7 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
         response.setRenderParameter("view", "edit-users");
     }
 
-    @ActionMapping(params = { "action=doUserAction", "openId" })
+    @ActionMapping(params = {"action=doUserAction", "openId"})
     @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = true)
     public void toggleOpenSectorNodeForUser(final PortletSession session, @RequestParam Integer openId, ActionResponse response, PortletRequest request)
             throws IOException {

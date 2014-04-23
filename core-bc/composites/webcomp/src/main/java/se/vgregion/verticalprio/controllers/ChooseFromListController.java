@@ -223,7 +223,7 @@ public class ChooseFromListController extends WebControllerBase {
 		private Collection target = new ArrayList();
 		private Integer maxSelection = 40; // This indicates the max number of items a user can select
 		private Integer minNumberOfItemsForShowingFindButton = 25;
-        private Class<? extends AbstractKod> type;
+        private Class<? extends Object> type;
 
         /**
 		 * If true the show the Find button
@@ -393,11 +393,11 @@ public class ChooseFromListController extends WebControllerBase {
 			return filterLabelToolTip;
 		}
 
-        public void setType(Class<? extends AbstractKod> type) {
+        public void setType(Class<? extends Object> type) {
             this.type = type;
         }
 
-        public Class<? extends AbstractKod> getType() {
+        public Class<? extends Object> getType() {
             return type;
         }
     }
