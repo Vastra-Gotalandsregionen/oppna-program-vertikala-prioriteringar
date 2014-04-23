@@ -1011,14 +1011,8 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
     @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = true)
     public void toggleOpenSectorNodeForUser(final PortletSession session, @RequestParam Integer openId, ActionResponse response, PortletRequest request)
             throws IOException {
-        MainForm form = getMainForm(session);
-
-        for (Object k : session.getAttributeMap().keySet()) {
-            System.out.print(k + ", ");
-        }
-
-        form.getAllSektorsRaad().setSelected(false);
-        SektorRaad sector = getSectorById(openId, form.getSectors());
+        User otherUser = (User) session.getAttribute("otherUser");
+        SektorRaad sector = getSectorById(openId, otherUser.getSektorRaad());
         sector.setOpen(!sector.isOpen());
 
         request.setAttribute("otherUser", session.getAttribute("otherUser"));
