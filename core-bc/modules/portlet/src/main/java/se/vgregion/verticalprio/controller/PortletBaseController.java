@@ -7,21 +7,23 @@ import se.vgregion.verticalprio.ApplicationData;
 import se.vgregion.verticalprio.MainForm;
 import se.vgregion.verticalprio.PrioriteringsobjektFindCondition;
 import se.vgregion.verticalprio.controllers.BaseController;
+import se.vgregion.verticalprio.controllers.MessageHome;
 import se.vgregion.verticalprio.controllers.PrioriteringsobjektForm;
 import se.vgregion.verticalprio.controllers.SektorRaadBean;
 import se.vgregion.verticalprio.entity.Column;
 import se.vgregion.verticalprio.entity.Prioriteringsobjekt;
 import se.vgregion.verticalprio.entity.SektorRaad;
+import se.vgregion.verticalprio.entity.User;
 import se.vgregion.verticalprio.repository.GenerisktHierarkisktKodRepository;
 import se.vgregion.verticalprio.repository.PrioRepository;
 import se.vgregion.verticalprio.repository.finding.HaveNestedEntities;
+import se.vgregion.verticalprio.repository.finding.JpqlMatchBuilder;
 import se.vgregion.verticalprio.repository.finding.NestedSektorRaad;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletSession;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import javax.servlet.http.HttpSession;
+import java.util.*;
 
 public abstract class PortletBaseController extends BaseController {
 
@@ -219,4 +221,79 @@ public abstract class PortletBaseController extends BaseController {
 
         return prio;
     }
+
+    protected boolean isUserInSektorsRaadIfNotWarnWithMessage(User user, Prioriteringsobjekt prio,
+                                                            PortletSession session) {
+
+        if (user.getSektorRaad().contains(prio.getSektorRaad())) {
+            return true;
+        } else {
+            String message = "Du saknar behörighet att utföra denna åtgärd på prioriteringsobjektet som tillhör Sektorsråd: ";
+            SektorRaad sr = prio.getSektorRaad();
+            if (sr == null) {
+                return true;
+            }
+            if (sr.getParent() != null) {
+                message += sr.getParent().getLabel() + " (" + sr.getLabel() + ") <br/>";
+            } else {
+                message += prio.getSektorRaad().getLabel() + ". <br/>";
+            }
+
+            if (!user.getSektorRaad().isEmpty()) {
+                message += "<br>" + "Du är idag definierad inom följande Sektorsråd: ";
+                StringBuilder buf = new StringBuilder();
+                SortedSet<String> codeTexts = new TreeSet<String>();
+
+                for (SektorRaad sektorsRaad : user.getSektorRaad()) {
+                    if (sektorsRaad.getParent() == null) {
+                        StringBuilder sb = new StringBuilder();
+                        sb.append(sektorsRaad.getKod());
+                        if (!sektorsRaad.getChildren().isEmpty()) {
+                            List<String> childNames = new ArrayList<String>();
+                            for (SektorRaad child : sektorsRaad.getChildren()) {
+                                if (user.getSektorRaad().contains(child)) {
+                                    childNames.add(child.getKod());
+                                }
+                            }
+                            if (!childNames.isEmpty()) {
+                                sb.append(" (");
+                                sb.append(JpqlMatchBuilder.toString(childNames, ", "));
+                                sb.append(")");
+                            }
+                        }
+                        codeTexts.add(sb.toString());
+                    }
+                }
+
+                for (String code : codeTexts) {
+                    buf.append("<br/>-&nbsp;").append(code);
+                }
+                message += buf;
+            } else {
+                message += "Din användare är för närvarande inte medlem i något sektorsråd själv.";
+            }
+
+            MessageHome messageHome = getOrCreateSessionObj(session, "messageHome", MessageHome.class);
+            messageHome.setMessage(message);
+            return false;
+        }
+    }
+
+    /**
+     * @param session
+     * @param id
+     * @return
+     */
+    protected boolean validateIdIsSelected(PortletSession session, Long id) {
+        if (id == null) {
+            // No id has been selected
+            String message = "Var vänlig och markera det prioriteringsobjekt du vill arbeta med innan du trycker på knappen.";
+            MessageHome messageHome = getOrCreateSessionObj(session, "messageHome", MessageHome.class);
+            messageHome.setMessage(message);
+            return false;
+        } else {
+            return true;
+        }
+    }
+
 }

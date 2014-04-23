@@ -403,11 +403,6 @@ public abstract class BaseController {
         clearAndFillCollection(source.getAtcKoder(), target.getAtcKoder());
         clearAndFillCollection(source.getChildren(), target.getChildren());
 
-        target.setAatgaerdskoder(source.getAatgaerdskoder());
-        target.setDiagnoser(source.getDiagnoser());
-        target.setAtcKoder(source.getAtcKoder());
-        target.setChildren(source.getChildren());
-
         if (source instanceof PrioriteringsobjektForm && target instanceof PrioriteringsobjektForm) {
             PrioriteringsobjektForm sourceForm = (PrioriteringsobjektForm) source;
             PrioriteringsobjektForm targetForm = (PrioriteringsobjektForm) target;

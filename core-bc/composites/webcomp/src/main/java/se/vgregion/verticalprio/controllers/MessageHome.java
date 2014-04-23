@@ -1,6 +1,8 @@
 package se.vgregion.verticalprio.controllers;
 
-public class MessageHome {
+import java.io.Serializable;
+
+public class MessageHome implements Serializable {
     private String message = "";
 
     /**

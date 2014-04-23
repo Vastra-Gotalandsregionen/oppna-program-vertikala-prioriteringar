@@ -1,15 +1,10 @@
 package se.vgregion.verticalprio.entity;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
-
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import java.util.*;
 
 @SuppressWarnings("serial")
 @Entity
