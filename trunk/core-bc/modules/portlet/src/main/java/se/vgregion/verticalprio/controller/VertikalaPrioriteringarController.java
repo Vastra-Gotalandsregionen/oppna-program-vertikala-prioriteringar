@@ -2,7 +2,6 @@ package se.vgregion.verticalprio.controller;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.model.*;
 import com.liferay.portal.util.PortalUtil;
 import org.apache.commons.beanutils.BeanMap;
 import org.slf4j.Logger;
@@ -23,7 +22,6 @@ import org.springframework.web.portlet.bind.annotation.RenderMapping;
 import se.vgregion.verticalprio.*;
 import se.vgregion.verticalprio.controllers.*;
 import se.vgregion.verticalprio.entity.*;
-import se.vgregion.verticalprio.entity.User;
 import se.vgregion.verticalprio.repository.GenerisktHierarkisktKodRepository;
 import se.vgregion.verticalprio.repository.GenerisktKodRepository;
 import se.vgregion.verticalprio.repository.PrioRepository;
@@ -33,8 +31,6 @@ import javax.portlet.ActionResponse;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.portlet.PortletSession;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.*;
 
@@ -558,6 +554,7 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
 
         PrioriteringsobjektForm sessionPrio = (PrioriteringsobjektForm) session.getAttribute("prio");
         Prioriteringsobjekt prio = toPrioriteringsobjekt(request, pf, session);
+
         copyKodCollectionsAndMetaDates(sessionPrio, prio);
         prio.getChildren().addAll(sessionPrio.getChildren());
 
@@ -577,6 +574,50 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
     @ActionMapping(params = {"action=doRowAction", "prio-create"})
     public void createPrio(PortletRequest request, ActionResponse response, ModelMap modelMap) {
         response.setRenderParameter("view", "edit-prio-view");
+    }
+
+    @Transactional
+    @ActionMapping(params = {"action=doRowAction", "approve-prio"})
+    public void approvePrio(PortletRequest request, ActionResponse response, PortletSession session,
+                            ModelMap modelMap, @RequestParam(value = "id", required = false) Long id) {
+        if (!validateIdIsSelected(session, id)) {
+            return ;
+        }
+
+        User user = (User) session.getAttribute("user");
+        if (user != null && user.isApprover()) {
+            Prioriteringsobjekt prio = prioRepository.find(id);
+            if (isUserInSektorsRaadIfNotWarnWithMessage(user, prio, session)) {
+
+                try {
+                    prio.godkaen();
+                    Prioriteringsobjekt approvedVersion = null;
+                    if (prio.getChildren().isEmpty()) {
+                        // this prio has no previously approved children
+                        // Lets create a child that is approved.
+                        approvedVersion = new Prioriteringsobjekt();
+                    } else {
+                        // we only allow (for now) to have one approved version of a prio object
+                        // TODO if need to save old versions of approved prio objects this code needs to be changed
+                        approvedVersion = prio.getChildren().iterator().next();
+                    }
+                    Long nullOrApprovedId = approvedVersion.getId();
+                    prio.setGodkaend(null); // TODO should not be needed
+                    Util.copyValuesAndSetsFromBeanToBean(prio, approvedVersion);
+                    approvedVersion.getChildren().clear();
+                    approvedVersion.setId(nullOrApprovedId);
+                    approvedVersion.setGodkaend(new Date());
+                    prio.getChildren().add(approvedVersion);
+                    prioRepository.store(approvedVersion);
+                    prioRepository.store(prio);
+                } catch (IllegalAccessError e) {
+                    MessageHome messageHome = getOrCreateSessionObj(session, "messageHome", MessageHome.class);
+                    messageHome.setMessage(e.getMessage());
+                }
+
+                prioRepository.merge(prio);
+            }
+        }
     }
 
     @ActionMapping(params = {"action=prioViewForm", "choose-diagnoser"})

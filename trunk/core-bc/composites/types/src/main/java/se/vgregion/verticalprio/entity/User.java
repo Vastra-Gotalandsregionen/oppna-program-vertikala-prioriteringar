@@ -1,5 +1,6 @@
 package se.vgregion.verticalprio.entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,9 +25,11 @@ import se.vgregion.dao.domain.patterns.entity.AbstractEntity;
  */
 @Entity
 @Table(name = "vgr_user")
-public class User extends AbstractEntity<Long> {
+public class User extends AbstractEntity<Long> implements Serializable {
 
-	public User() {
+    private static final long serialVersionUID = -3059687590923121191L;
+
+    public User() {
 	}
 
 	public User(Long id) {

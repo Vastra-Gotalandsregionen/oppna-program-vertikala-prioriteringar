@@ -1,12 +1,15 @@
 package se.vgregion.verticalprio;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import se.vgregion.verticalprio.entity.Column;
 import se.vgregion.verticalprio.entity.SektorRaad;
 
-public class MainForm {
+public class MainForm implements Serializable {
+
+    private static final long serialVersionUID = 3428105711985037172L;
 
     /**
      *  

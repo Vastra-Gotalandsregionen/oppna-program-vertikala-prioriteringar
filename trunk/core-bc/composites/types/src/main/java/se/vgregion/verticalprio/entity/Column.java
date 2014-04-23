@@ -12,6 +12,8 @@ import java.util.Comparator;
  */
 public class Column implements Serializable, Comparable<Column> {
 
+    private static final long serialVersionUID = -7572355055565388683L;
+
     private int id;
 
     private int displayOrder;
