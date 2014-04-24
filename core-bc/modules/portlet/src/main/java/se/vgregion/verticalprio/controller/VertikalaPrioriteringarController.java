@@ -620,6 +620,13 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
         }
     }
 
+    @Transactional
+    @ActionMapping(params = {"action=doRowAction", "delete-prio"})
+    public void deletePrio(PortletSession session, @RequestParam(value = "id", required = false) Long id) {
+        prioRepository.remove(id);
+        session.removeAttribute("prio");
+    }
+
     @ActionMapping(params = {"action=doRowAction", "init-conf-columns"})
     public void chooseColumns(ActionResponse response, PortletSession session) {
         MainForm form = getMainForm(session);
@@ -876,8 +883,11 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
     public void cancelChooseFromList(PortletRequest request, PortletSession session, ActionResponse response,
                                      ModelMap model, @RequestParam("prioId") String prioId) {
         session.removeAttribute(ChooseFromListController.ChooseListForm.class.getSimpleName());
-        response.setRenderParameter("view", "edit-prio-view");
-        response.setRenderParameter("id", prioId);
+
+        if (prioId != null && !"".equals(prioId)) {
+            response.setRenderParameter("view", "edit-prio-view");
+            response.setRenderParameter("id", prioId);
+        }
     }
 
     @Transactional
