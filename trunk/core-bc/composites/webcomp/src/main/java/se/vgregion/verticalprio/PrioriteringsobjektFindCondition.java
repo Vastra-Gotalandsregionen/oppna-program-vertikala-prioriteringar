@@ -88,6 +88,13 @@ public class PrioriteringsobjektFindCondition extends PrioriteringsobjektForm im
         throw new UnsupportedOperationException("Dont use this setter");
     }
 
+    public void sortById() {
+        paths().clear();
+        addSortBySektorRaad();
+        OrderByPath diagnosOrder = new OrderByPath("id");
+        paths().add(diagnosOrder);
+    }
+
     public void sortBySektorsRaad() {
         paths().clear();
         addSortBySektorRaad();

@@ -168,19 +168,15 @@ public class VerticalPrioController extends EditPrioriteringController {
 			condition.sortByDiagnoser();
 		} else if ("sektorRaad".equals(sortField)) {
 			condition.sortBySektorsRaad();
-		}
+		} else if ("id".equals(sortField)) {
+            condition.sortById();
+        }
 
 		result(session);
 		return "main";
 	}
 
-	private void markColumnAsSorting(String fieldName, MainForm mf) {
-		for (Column column : mf.getColumns()) {
-			column.setSorting(fieldName.equals(column.getName()));
-		}
-	}
-
-	@RequestMapping(value = "/commit-conf-columns")
+    @RequestMapping(value = "/commit-conf-columns")
 	public String commColumnsCommit(final HttpSession session, HttpServletResponse response) throws IOException {
 		MainForm form = getMainForm(session);
 		SortedSet<Column> target = (SortedSet<Column>) session.getAttribute("selectedColumns");

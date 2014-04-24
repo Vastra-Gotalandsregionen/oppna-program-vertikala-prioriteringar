@@ -3,6 +3,7 @@
 	type="se.vgregion.verticalprio.entity.Column"%>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="portlet" uri="http://java.sun.com/portlet" %>
 
 <c:if test="${column.sortable}">
 	<span> 
@@ -12,7 +13,10 @@
 					title="Sortering är gjord med denna kolumn" />
 			</c:when>
 			<c:otherwise>
-				<a title="Sortera" href="main?sortField=${column.name}"
+                <portlet:renderURL var="sortUrl">
+                    <portlet:param name="sortField" value="${column.name}"/>
+                </portlet:renderURL>
+				<a title="Sortera" href="${sortUrl}"
 					style="text-decoration: none;"><img src="${pageContext.request.contextPath}/img/arrow-down.png" /></a>
 			</c:otherwise>
 		</c:choose> 

@@ -31,6 +31,7 @@ import javax.portlet.ActionResponse;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.portlet.PortletSession;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.*;
 
@@ -73,7 +74,9 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
 
     @RenderMapping
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public String main(PortletRequest request, Model model) throws SystemException, PortalException {
+    public String main(PortletRequest request, Model model,
+                       @RequestParam(value = "sortField", required = false) String sortField)
+            throws SystemException, PortalException {
         PortletSession session = request.getPortletSession();
 
         if (session.getAttribute("loggedOut") != null) {
@@ -96,6 +99,10 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
             }
         }
 
+        if (sortField != null && !"".equals(sortField)) {
+            alterSortOrder(session, sortField);
+        }
+
         session.setAttribute("editDir", new EditDirective(true, null));
         result(session);
         Map<String, Object> attributeMap = session.getAttributeMap();
@@ -103,7 +110,27 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
         return "main";
     }
 
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    private void alterSortOrder(PortletSession session, String sortField) {
+        MainForm form = getMainForm(session);
+        PrioriteringsobjektFindCondition condition = getOrCreateSessionObj(session, "prioCondition",
+                PrioriteringsobjektFindCondition.class);
+
+        markColumnAsSorting(sortField, form);
+
+        if ("rangordningsKod".equals(sortField)) {
+            condition.sortByRangordningsKod();
+        } else if ("tillstaandetsSvaarighetsgradKod".equals(sortField)) {
+            condition.sortByTillstaandetsSvaarighetsgradKod();
+        } else if ("diagnosKodTexts".equals(sortField)) {
+            condition.sortByDiagnoser();
+        } else if ("sektorRaad".equals(sortField)) {
+            condition.sortBySektorsRaad();
+        } else if ("id".equals(sortField)) {
+            condition.sortById();
+        }
+    }
+
+//    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     private User makeNewUserForLoggedInLiferay(com.liferay.portal.model.User liferayUser, PortletSession session) {
         User user = new User();
         user.setVgrId(liferayUser.getScreenName());
