@@ -350,6 +350,16 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
 		int i = 0;
 
 		column = new se.vgregion.verticalprio.entity.Column();
+		column.setName("id");
+		column.setLabel("Id");
+		column.setDisplayOrder(i++);
+		result.add(column);
+		column.setId(i);
+		column.setHideAble(true);
+		column.setSortable(true);
+		column.setSorting(true);
+
+		column = new se.vgregion.verticalprio.entity.Column();
 		column.setName("sektorRaad");
 		column.setLabel("Sektorsråd");
 		column.setDisplayOrder(i++);
