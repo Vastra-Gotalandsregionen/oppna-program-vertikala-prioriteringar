@@ -357,7 +357,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
 		column.setId(i);
 		column.setHideAble(true);
 		column.setSortable(true);
-		column.setSorting(true);
+		column.setSorting(false);
 
 		column = new se.vgregion.verticalprio.entity.Column();
 		column.setName("sektorRaad");
@@ -367,7 +367,7 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
 		column.setId(i);
 		column.setHideAble(false);
 		column.setSortable(true);
-		column.setSorting(true);
+		column.setSorting(false);
 
 		column = new se.vgregion.verticalprio.entity.Column();
 		column.setName("diagnosTexts");

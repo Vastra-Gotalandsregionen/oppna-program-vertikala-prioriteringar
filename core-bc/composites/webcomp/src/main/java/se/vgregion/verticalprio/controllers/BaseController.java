@@ -3,6 +3,7 @@ package se.vgregion.verticalprio.controllers;
 import org.apache.commons.beanutils.BeanMap;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import se.vgregion.verticalprio.MainForm;
 import se.vgregion.verticalprio.entity.*;
 import se.vgregion.verticalprio.repository.GenerisktHierarkisktKodRepository;
 import se.vgregion.verticalprio.repository.GenerisktKodRepository;
@@ -551,6 +552,12 @@ public abstract class BaseController {
                 target.add(item);
             }
             flattenSelected(item.getChildren(), target);
+        }
+    }
+
+    protected void markColumnAsSorting(String fieldName, MainForm mf) {
+        for (Column column : mf.getColumns()) {
+            column.setSorting(fieldName.equals(column.getName()));
         }
     }
 }
