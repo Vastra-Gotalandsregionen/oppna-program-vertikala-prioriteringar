@@ -19,20 +19,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
+import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 import se.vgregion.verticalprio.*;
+import se.vgregion.verticalprio.Util;
 import se.vgregion.verticalprio.controllers.*;
+import se.vgregion.verticalprio.el.*;
 import se.vgregion.verticalprio.entity.*;
 import se.vgregion.verticalprio.repository.GenerisktHierarkisktKodRepository;
 import se.vgregion.verticalprio.repository.GenerisktKodRepository;
 import se.vgregion.verticalprio.repository.PrioRepository;
 import se.vgregion.verticalprio.repository.finding.DateNullLogic;
 
-import javax.portlet.ActionResponse;
-import javax.portlet.PortletRequest;
-import javax.portlet.PortletResponse;
-import javax.portlet.PortletSession;
+import javax.portlet.*;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.*;
 
 @Controller
@@ -1179,6 +1180,22 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
     @Override
     protected PrioRepository getPrioRepository() {
         return prioRepository;
+    }
+
+    @ResourceMapping("toExcel")
+    public void excelTableInMainWindow(ResourceResponse response, PortletSession session) throws IOException {
+        final OutputStream out = response.getPortletOutputStream();
+        response.setContentType("text/csv");
+        MainForm form = initState(session);
+
+        out.write(
+                se.vgregion.verticalprio.el.Util.toCsvTable(
+                        form.getColumns(),
+                        (List<Prioriteringsobjekt>) session.getAttribute("rows"),
+                        (User) session.getAttribute("user")).getBytes()
+        );
+        out.flush();
+        out.close();
     }
 
 }

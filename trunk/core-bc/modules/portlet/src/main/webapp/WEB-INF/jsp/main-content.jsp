@@ -32,8 +32,10 @@
             		<tags:editSubmit name="approve-prio" value="Godkänn" cssClass="button"/>
        			</c:if>
           		<input name="init-conf-columns" class="conf-columns button" type="submit" value="Dölj/Visa kolumner" />
-                <input type="submit" name="excel" class="excel button" onclick="window.open('table.csv', '_blank'); return false;" value="Excel"/>
-                
+
+          		<portlet:resourceURL id="toExcel" var="toExcel" />
+          		<a href="${toExcel}" id="toExcel" target="_blank" style="display:none">Excel</a>
+                <input type="submit" name="toExcel" class="excel button" onclick="document.getElementById('toExcel').click(); return false;" value="Csv-format"/>
                 <c:if test="${user != null and user.userEditor}">
                     <tags:editSubmit name="edit-users" value="Hantera användare" cssClass="button"/>
                 </c:if>
