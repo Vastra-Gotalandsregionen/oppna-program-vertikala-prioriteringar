@@ -1167,6 +1167,20 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
     }
 
 
+    @ActionMapping(params = {"action=check", "openId"})
+    @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = true)
+    public void toggleOpenSectorNodeForUser2(final PortletSession session, @RequestParam Integer openId, ActionResponse response, PortletRequest request)
+            throws IOException {
+        MainForm form = getMainForm(session);
+
+        SektorRaad sector = getSectorById(openId, form.getSectors());
+        sector.setOpen(!sector.isOpen());
+
+        //request.setAttribute("otherUser", session.getAttribute("otherUser"));
+        response.setRenderParameter("view", "main");
+    }
+
+
     @Override
     protected GenerisktHierarkisktKodRepository getSektorRaadRepository() {
         return sektorRaadRepository;
