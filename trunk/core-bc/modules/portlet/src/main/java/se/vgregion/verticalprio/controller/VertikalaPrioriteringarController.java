@@ -998,7 +998,7 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
                 session.removeAttribute(ChooseFromListController.ChooseListForm.class.getSimpleName());
                 MainForm form = (MainForm) session.getAttribute("form");
                 for (Column column : form.getColumns()) {
-                    column.setVisible(chooseListForm.getChosen().contains(column));
+                    column.setVisible(chooseListForm.getChosen().contains(column) || !column.isHideAble());
                 }
                 return;
             } else if (type.equals("Filter")) {
