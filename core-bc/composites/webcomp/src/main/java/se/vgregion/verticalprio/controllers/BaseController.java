@@ -4,15 +4,115 @@ import org.apache.commons.beanutils.BeanMap;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import se.vgregion.verticalprio.MainForm;
+import se.vgregion.verticalprio.PrioriteringsobjektFindCondition;
 import se.vgregion.verticalprio.entity.*;
 import se.vgregion.verticalprio.repository.GenerisktHierarkisktKodRepository;
 import se.vgregion.verticalprio.repository.GenerisktKodRepository;
+import se.vgregion.verticalprio.repository.finding.HaveNestedEntities;
 
 import javax.servlet.http.HttpSession;
 import java.util.*;
 
 public abstract class BaseController {
     protected List<Column> columns = getDefaultColumns();
+    protected Map<String, ChooseCodesController.ChooseListFormWithDomainProperty> formPrototypes = new HashMap<String, ChooseCodesController.ChooseListFormWithDomainProperty>();
+
+    /**
+     * Constructor for the class. Initialize the formPrototypes member with objects. These objects,
+     * {@link se.vgregion.verticalprio.controllers.ChooseCodesController.ChooseListFormWithDomainProperty}, are later used to provide text to the gui and to point to the
+     * collections that should receive the result of the dialog.
+     */
+    protected BaseController() {
+        ChooseCodesController.ChooseListFormWithDomainProperty symptomDiagnosTextForm = new ChooseCodesController.ChooseListFormWithDomainProperty();
+        symptomDiagnosTextForm.setDisplayKey("kodPlusBeskrivning");
+        symptomDiagnosTextForm.setIdKey("id");
+        symptomDiagnosTextForm.setFilterLabel("Sök diagnos med nyckelord");
+        symptomDiagnosTextForm.setFilterLabelToolTip("Här kan du söka både på kod och på beskrivning");
+        symptomDiagnosTextForm.setNotYetChosenLabel("Diagnoskoder");
+        symptomDiagnosTextForm.setChosenLabel("Valda diagnoser");
+        symptomDiagnosTextForm.setOkLabel("Välj diagnoser");
+        symptomDiagnosTextForm.setOkUrl("main");
+        symptomDiagnosTextForm.setCancelUrl("main");
+        symptomDiagnosTextForm.setAllItemsPropertyName("diagnoser");
+        formPrototypes.put("diagnosTexts", symptomDiagnosTextForm);
+
+        ChooseCodesController.ChooseListFormWithDomainProperty symptomDiagnosKodForm = symptomDiagnosTextForm.clone();
+        symptomDiagnosKodForm.setDisplayKey("kod");
+        formPrototypes.put("diagnosKodTexts", symptomDiagnosKodForm);
+
+        ChooseCodesController.ChooseListFormWithDomainProperty aatgardsTextForm = symptomDiagnosTextForm.clone();
+        aatgardsTextForm.setAllItemsPropertyName("aatgaerdskoder");
+        aatgardsTextForm.setFilterLabel("Sök åtgärder med nyckelord");
+        aatgardsTextForm.setNotYetChosenLabel("Åtgärdskoder");
+        aatgardsTextForm.setChosenLabel("Valda åtgärder");
+        aatgardsTextForm.setOkLabel("Välj åtgärder");
+        aatgardsTextForm.setOkUrl("main");
+        aatgardsTextForm.setCancelUrl("main");
+        aatgardsTextForm.setAllItemsPropertyName("aatgaerdskoder");
+        formPrototypes.put("aatgaerdskoderTexts", aatgardsTextForm);
+
+        ChooseCodesController.ChooseListFormWithDomainProperty aatgardsKodTextForm = aatgardsTextForm.clone();
+        aatgardsKodTextForm.setDisplayKey("kod");
+        formPrototypes.put("aatgaerdskoder", aatgardsKodTextForm);
+
+        ChooseCodesController.ChooseListFormWithDomainProperty rangordningsKod = symptomDiagnosTextForm.clone();
+        rangordningsKod.setAllItemsPropertyName("rangordningsKod");
+        rangordningsKod.setFilterLabel("Sök rangordning med nyckelord");
+        rangordningsKod.setNotYetChosenLabel("Rangordningskoder");
+        rangordningsKod.setChosenLabel("Valda rangordningar");
+        rangordningsKod.setOkLabel("Välj rangordningskoder");
+        rangordningsKod.setOkUrl("main");
+        rangordningsKod.setCancelUrl("main");
+        rangordningsKod.setAllItemsPropertyName("rangordningsKod");
+        formPrototypes.put("rangordningsKod", rangordningsKod);
+
+        ChooseCodesController.ChooseListFormWithDomainProperty atcTextForm = symptomDiagnosTextForm.clone();
+        atcTextForm.setFilterLabel("Sök ATC-koder med nyckelord");
+        atcTextForm.setNotYetChosenLabel("ATC-koder");
+        atcTextForm.setChosenLabel("Valda ATC-koder");
+        atcTextForm.setOkLabel("Välj ATC-texter");
+        atcTextForm.setOkUrl("main");
+        atcTextForm.setCancelUrl("main");
+        atcTextForm.setAllItemsPropertyName("atcKoder");
+        formPrototypes.put("atcText", atcTextForm);
+
+        ChooseCodesController.ChooseListFormWithDomainProperty atcKodForm = atcTextForm.clone();
+        atcKodForm.setDisplayKey("kod");
+        formPrototypes.put("atcKoder", atcKodForm);
+
+        ChooseCodesController.ChooseListFormWithDomainProperty vaardnivaa = symptomDiagnosTextForm.clone();
+        vaardnivaa.setFilterLabel("Sök vårdnivå med nyckelord");
+        vaardnivaa.setNotYetChosenLabel("Vårdnivåer");
+        vaardnivaa.setChosenLabel("Valda nivåer");
+        vaardnivaa.setOkLabel("Välj nivåer");
+        vaardnivaa.setOkUrl("main");
+        vaardnivaa.setCancelUrl("main");
+        vaardnivaa.setAllItemsPropertyName("vaardnivaaKod");
+        formPrototypes.put("vaardnivaaKod", vaardnivaa);
+
+        ChooseCodesController.ChooseListFormWithDomainProperty vaardform = symptomDiagnosTextForm.clone();
+        vaardform.setFilterLabel("Sök vårdformer med nyckelord");
+        vaardform.setNotYetChosenLabel("Vårdformer");
+        vaardform.setChosenLabel("Valda vårdformer");
+        vaardform.setOkLabel("Välj vårdformer");
+        vaardform.setOkUrl("main");
+        vaardform.setCancelUrl("main");
+        vaardform.setAllItemsPropertyName("vaardform");
+        formPrototypes.put("vaardform", vaardform);
+
+        ChooseCodesController.ChooseListFormWithDomainProperty tillstaandetsSvaarighetsgrad = new ChooseCodesController.ChooseListFormWithDomainProperty();
+        tillstaandetsSvaarighetsgrad.setFilterLabel("Sök tillståndets svårighetsgrad med nyckelord");
+        tillstaandetsSvaarighetsgrad.setNotYetChosenLabel("Svårighetsgrader");
+        tillstaandetsSvaarighetsgrad.setChosenLabel("Valda svårighetsgrader");
+        tillstaandetsSvaarighetsgrad.setOkLabel("Välj svårighetsgrader");
+        tillstaandetsSvaarighetsgrad.setOkUrl("main");
+        tillstaandetsSvaarighetsgrad.setIdKey("id");
+        tillstaandetsSvaarighetsgrad.setCancelUrl("main");
+        tillstaandetsSvaarighetsgrad.setDisplayKey("kortBeskrivning");
+        tillstaandetsSvaarighetsgrad.setAllItemsPropertyName("tillstaandetsSvaarighetsgradKod");
+        formPrototypes.put("tillstaandetsSvaarighetsgradKod", tillstaandetsSvaarighetsgrad);
+
+    }
 
     /**
      * Loops through a collection and returns the sector with the corresponding id value provided.
@@ -559,5 +659,60 @@ public abstract class BaseController {
         for (Column column : mf.getColumns()) {
             column.setSorting(fieldName.equals(column.getName()));
         }
+    }
+
+    /**
+     * Looks through the result list in the session for all existing codes of a certain type (residing in a
+     * collection or in a reference variable).
+     *
+     * This would be the total set of items to choose for the user. Since the search always should narrow down in
+     * findings.
+     *
+     * @param pfcs
+     * @param allItemsPropertyName
+     * @param sortProperty
+     * @return
+     */
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    protected List<?> extractChildObjects(List<Prioriteringsobjekt> pfcs, String allItemsPropertyName,
+                                          String sortProperty) {
+//        SortedMap<Object, Object> tm = new TreeMap<Object, Object>();
+        List<Object> values = new ArrayList<Object>();
+        for (Prioriteringsobjekt prio : pfcs) {
+            BeanMap prioMap = new BeanMap(prio);
+            Object value = prioMap.get(allItemsPropertyName);
+            if (value == null) {
+                continue;
+            }
+            if (value instanceof Collection) {
+                Collection<Object> col = (Collection<Object>) value;
+                values.removeAll(col); // To avoid duplicates
+                values.addAll(col);
+            } else {
+                if (!values.contains(value)) {
+                    values.add(value);
+                }
+            }
+        }
+        return values;
+    }
+
+    /**
+     * The condition should have a HaveNestedEntities object inside the PFC objects property with the name
+     * propertyName. Or a collection with that interface or a single item wit that interface... The method returns
+     * the result of its content().
+     *
+     * @param condition
+     * @param propertyName
+     * @return
+     */
+    protected Collection extractTargetCollection(PrioriteringsobjektFindCondition condition, String propertyName) {
+        BeanMap bm = new BeanMap(condition);
+        Object uncastHne = bm.get(propertyName);
+        if (uncastHne != null && !(uncastHne instanceof HaveNestedEntities)) {
+            System.out.println("Den här har ju inte rätt klass\n " + uncastHne.getClass());
+        }
+        HaveNestedEntities hne = (HaveNestedEntities) uncastHne;
+        return hne.content();
     }
 }

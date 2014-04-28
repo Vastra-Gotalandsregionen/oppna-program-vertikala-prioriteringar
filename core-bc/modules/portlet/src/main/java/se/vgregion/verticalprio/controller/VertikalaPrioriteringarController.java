@@ -23,15 +23,15 @@ import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 import se.vgregion.verticalprio.*;
 import se.vgregion.verticalprio.Util;
 import se.vgregion.verticalprio.controllers.*;
-import se.vgregion.verticalprio.el.*;
 import se.vgregion.verticalprio.entity.*;
 import se.vgregion.verticalprio.repository.GenerisktHierarkisktKodRepository;
 import se.vgregion.verticalprio.repository.GenerisktKodRepository;
 import se.vgregion.verticalprio.repository.PrioRepository;
 import se.vgregion.verticalprio.repository.finding.DateNullLogic;
+import se.vgregion.verticalprio.repository.finding.NestedRangordningsKod;
+import se.vgregion.verticalprio.repository.finding.NestedVaardformsKod;
 
 import javax.portlet.*;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.*;
@@ -167,8 +167,9 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
     @SuppressWarnings({"unchecked", "rawtypes"})
     @ActionMapping(params = "action=login")
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public void login(PortletRequest request, PortletSession session, @RequestParam(required = false) String userName,
-                      @RequestParam(required = false) String password) {
+    public void login(PortletRequest request, PortletSession session,
+                      @RequestParam(value = "userName", required = false) String userName,
+                      @RequestParam(value = "password", required = false) String password) {
         if (isBlank(userName) || isBlank(password)) {
             return;
         }
@@ -231,7 +232,8 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
      */
     @ActionMapping(params = {"action=check"})
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public void check(final PortletSession session, @RequestParam(required = false) Integer sectorId,
+    public void check(final PortletSession session,
+                      @RequestParam(value = "sectorId", required = false) Integer sectorId,
                       PortletResponse response, @ModelAttribute("form") MainForm form)
             throws IOException {
 
@@ -390,7 +392,7 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
                        @RequestParam("markedAsDeleted") List<String> markedAsDeleted,
                        @RequestParam("insert-sector") Long insert,
                        @RequestParam("prioCount") List<String> prioCount,
-                       @RequestParam("prioCount") List<String> locked,
+                       @RequestParam("prioCount") List<String> locked, // todo Really???
                        Model modelMap,
                        PortletSession session,
                        ActionResponse response) {
@@ -496,7 +498,8 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
 
     @ActionMapping(params = {"action=doUserAction", "sectorId"})
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public void selectUserSectors(Model modelMap, @ModelAttribute User otherUser, @RequestParam Long sectorId,
+    public void selectUserSectors(Model modelMap, @ModelAttribute User otherUser,
+                                  @RequestParam("sectorId") Long sectorId,
                                   PortletSession session, ActionResponse response) {
         mirrorUserInSession(otherUser, new HttpSessionBox(session));
         check(sectorId, otherUser.getSektorRaad());
@@ -918,7 +921,6 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
         }
     }
 
-    @Transactional
     @ActionMapping(params = {"action=chooseFromList", "ok"})
     public void confirmChooseFromList(PortletRequest request, PortletSession session, ActionResponse response,
                                       ModelMap model, @RequestParam("prioId") String prioId) {
@@ -934,28 +936,139 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
             throw new IllegalStateException("Type of ChooseListForm must not be null.");
         }
 
-        if (type.equals(DiagnosKod.class)) {
-            pf.setDiagnoser(new HashSet<DiagnosKod>((List<? extends DiagnosKod>) theChosen));
-        } else if (type.equals(AatgaerdsKod.class)) {
-            pf.setAatgaerdskoder(new HashSet<AatgaerdsKod>((List<? extends AatgaerdsKod>) theChosen));
-        } else if (type.equals(AtcKod.class)) {
-            pf.setAtcKoder(new HashSet<AtcKod>((List<? extends AtcKod>) theChosen));
-        } else if (type.equals(Column.class)) {
-            // Special case, don't set render parameters to get to main view.
-            session.removeAttribute(ChooseFromListController.ChooseListForm.class.getSimpleName());
-            MainForm form = (MainForm) session.getAttribute("form");
-            for (Column column : form.getColumns()) {
-                column.setVisible(chooseListForm.getChosen().contains(column));
+        if (chooseListForm instanceof ChooseCodesController.ChooseListFormWithDomainProperty) {
+            PrioriteringsobjektFindCondition prioCondition =
+                    (PrioriteringsobjektFindCondition) session.getAttribute("prioCondition");
+
+            if (type.equals(DiagnosKod.class)) {
+                prioCondition.getDiagnoser().clear();
+                prioCondition.getDiagnoser().addAll(chooseListForm.getChosen());
+            } else if (type.equals(AatgaerdsKod.class)) {
+                prioCondition.getAatgaerdskoder().clear();
+                prioCondition.getAatgaerdskoder().addAll(chooseListForm.getChosen());
+            } else if (type.equals(TillstaandetsSvaarighetsgradKod.class)) {
+                List chosen = chooseListForm.getChosen();
+                Set<TillstaandetsSvaarighetsgradKod> nestedContent = prioCondition.getTillstaandetsSvaarighetsgradKod().getNestedContent();
+                nestedContent.clear();
+                nestedContent.addAll(chosen);
+            } else if (type.equals(RangordningsKod.class)) {
+                List chosen = chooseListForm.getChosen();
+                Set<RangordningsKod> nestedContent = ((NestedRangordningsKod) prioCondition.getRangordningsKod()).getNestedContent();
+                nestedContent.clear();
+                nestedContent.addAll(chosen);
+            } else if (type.equals(AtcKod.class)) {
+                List chosen = chooseListForm.getChosen();
+                Set<AtcKod> atcKoder = prioCondition.getAtcKoder();
+                atcKoder.clear();
+                atcKoder.addAll(chosen);
+            } else if (type.equals(VaardnivaaKod.class)) {
+                List chosen = chooseListForm.getChosen();
+                Set<VaardnivaaKod> nestedContent = prioCondition.getVaardnivaaKod().getNestedContent();
+                nestedContent.clear();
+                nestedContent.addAll(chosen);
+            } else if (type.equals(VaardformsKod.class)) {
+                List chosen = chooseListForm.getChosen();
+                Set<VaardformsKod> nestedContent = ((NestedVaardformsKod) prioCondition.getVaardform()).getNestedContent();
+                nestedContent.clear();
+                nestedContent.addAll(chosen);
+            } else {
+                throw new IllegalStateException("Unexpected type [" + type.toString() + "] for ChooseListForm instance.");
             }
-            return;
         } else {
-            throw new IllegalStateException("Unexpected type [" + type.toString() + "] for ChooseListForm instance.");
+
+            if (type.equals(DiagnosKod.class)) {
+                pf.setDiagnoser(new HashSet<DiagnosKod>((List<? extends DiagnosKod>) theChosen));
+            } else if (type.equals(AatgaerdsKod.class)) {
+                pf.setAatgaerdskoder(new HashSet<AatgaerdsKod>((List<? extends AatgaerdsKod>) theChosen));
+            } else if (type.equals(AtcKod.class)) {
+                pf.setAtcKoder(new HashSet<AtcKod>((List<? extends AtcKod>) theChosen));
+            } else if (type.equals(Column.class)) {
+                // Special case, don't set render parameters to get to main view.
+                session.removeAttribute(ChooseFromListController.ChooseListForm.class.getSimpleName());
+                MainForm form = (MainForm) session.getAttribute("form");
+                for (Column column : form.getColumns()) {
+                    column.setVisible(chooseListForm.getChosen().contains(column));
+                }
+                return;
+            } else if (type.equals("Filter")) {
+                // Special case for filtering. Do nothing.
+                return;
+            } else {
+                throw new IllegalStateException("Unexpected type [" + type.toString() + "] for ChooseListForm instance.");
+            }
+
+            model.addAttribute("prio", pf);
+            session.removeAttribute(ChooseFromListController.ChooseListForm.class.getSimpleName());
+            response.setRenderParameter("view", "edit-prio-view");
+            response.setRenderParameter("id", prioId);
         }
 
-        model.addAttribute("prio", pf);
-        session.removeAttribute(ChooseFromListController.ChooseListForm.class.getSimpleName());
-        response.setRenderParameter("view", "edit-prio-view");
-        response.setRenderParameter("id", prioId);
+    }
+
+    @RenderMapping(params = {"view=choose-column-filter", "fieldName" })
+    public String toFilterView(PortletSession session, PortletResponse response,
+                               @RequestParam("fieldName") String fieldName,
+                               ModelMap model)
+            throws IOException {
+        PrioriteringsobjektFindCondition condition = getOrCreateSessionObj(session, "prioCondition",
+                PrioriteringsobjektFindCondition.class);
+
+        ChooseCodesController.ChooseListFormWithDomainProperty clf = formPrototypes.get(fieldName);
+        clf = clf.clone();
+        String name = ChooseFromListController.ChooseListForm.class.getSimpleName();
+        session.setAttribute(name, clf);
+
+        List<Prioriteringsobjekt> rows = (List<Prioriteringsobjekt>) session.getAttribute("rows");
+        List allItems = extractChildObjects(rows, clf.getAllItemsPropertyName(), clf.getDisplayKey());
+        clf.setAllItems(allItems);
+        Collection target = extractTargetCollection(condition, clf.getAllItemsPropertyName());
+        clf.setTarget(target);
+        clf.setChosen(new ArrayList(target));
+
+        if ("diagnosTexts".equals(fieldName) || "diagnosKodTexts".equals(fieldName)) {
+            clf.setType(DiagnosKod.class);
+        } else if ("aatgaerdskoderTexts".equals(fieldName) || "aatgaerdskoder".equals(fieldName)) {
+            clf.setType(AatgaerdsKod.class);
+        } else if ("tillstaandetsSvaarighetsgradKod".equals(fieldName)) {
+            clf.setType(TillstaandetsSvaarighetsgradKod.class);
+        } else if ("rangordningsKod".equals(fieldName)) {
+            clf.setType(RangordningsKod.class);
+        } else if ("atcText".equals(fieldName) || "atcKoder".equals(fieldName)) {
+            clf.setType(AtcKod.class);
+        } else if ("vaardnivaaKod".equals(fieldName)) {
+            clf.setType(VaardnivaaKod.class);
+        } else if ("vaardform".equals(fieldName)) {
+            clf.setType(VaardformsKod.class);
+        }
+
+        return viewChooseFromList(session, model, null, null);
+    }
+
+    @ActionMapping(params = {"action=deselect-column-filter", "fieldName" })
+    public void deselectFilter(PortletSession session, PortletResponse response,
+                               @RequestParam("fieldName") String fieldName,
+                               ModelMap model) {
+
+        PrioriteringsobjektFindCondition condition = getOrCreateSessionObj(session, "prioCondition",
+                PrioriteringsobjektFindCondition.class);
+
+        if ("diagnosTexts".equals(fieldName) || "diagnosKodTexts".equals(fieldName)) {
+            condition.getDiagnoser().clear();
+        } else if ("aatgaerdskoderTexts".equals(fieldName) || "aatgaerdskoder".equals(fieldName)) {
+            condition.getAatgaerdskoder().clear();
+        } else if ("tillstaandetsSvaarighetsgradKod".equals(fieldName)) {
+            condition.getTillstaandetsSvaarighetsgradKod().getNestedContent().clear();
+        } else if ("rangordningsKod".equals(fieldName)) {
+            ((NestedRangordningsKod) condition.getRangordningsKod()).getNestedContent().clear();
+        } else if ("rangordningsKod".equals(fieldName)) {
+            ((NestedRangordningsKod) condition.getRangordningsKod()).getNestedContent().clear();
+        } else if ("atcText".equals(fieldName) || "atcKoder".equals(fieldName)) {
+            condition.getAtcKoder().clear();
+        } else if ("vaardnivaaKod".equals(fieldName)) {
+            condition.getVaardnivaaKod().getNestedContent().clear();
+        } else if ("vaardform".equals(fieldName)) {
+            ((NestedVaardformsKod) condition.getVaardform()).getNestedContent().clear();
+        }
     }
 
     @ActionMapping(params = {"action=chooseFromList", "add"})
@@ -1156,7 +1269,10 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
 
     @ActionMapping(params = {"action=doUserAction", "openId"})
     @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = true)
-    public void toggleOpenSectorNodeForUser(final PortletSession session, @RequestParam Integer openId, ActionResponse response, PortletRequest request)
+    public void toggleOpenSectorNodeForUser(final PortletSession session,
+                                            @RequestParam("openId") Integer openId,
+                                            ActionResponse response,
+                                            PortletRequest request)
             throws IOException {
         User otherUser = (User) session.getAttribute("otherUser");
         SektorRaad sector = getSectorById(openId, otherUser.getSektorRaad());
@@ -1169,7 +1285,10 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
 
     @ActionMapping(params = {"action=check", "openId"})
     @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = true)
-    public void toggleOpenSectorNodeForUser2(final PortletSession session, @RequestParam Integer openId, ActionResponse response, PortletRequest request)
+    public void toggleOpenSectorNodeForUser2(final PortletSession session,
+                                             @RequestParam("openId") Integer openId,
+                                             ActionResponse response,
+                                             PortletRequest request)
             throws IOException {
         MainForm form = getMainForm(session);
 
