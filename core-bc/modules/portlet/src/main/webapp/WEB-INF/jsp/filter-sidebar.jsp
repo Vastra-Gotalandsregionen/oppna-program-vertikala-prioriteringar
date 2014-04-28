@@ -54,7 +54,3 @@
 	</div>
 
 </div>
-
-<div class="logo-wrap">
-	<img class="logo" src="${pageContext.request.contextPath}/img/vgr_logo_vit.gif" alt="VGR Logo" />
-</div>
