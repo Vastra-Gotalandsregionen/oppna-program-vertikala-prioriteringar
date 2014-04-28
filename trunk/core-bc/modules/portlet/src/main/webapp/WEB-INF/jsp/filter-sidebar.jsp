@@ -20,15 +20,13 @@
 	</div>
 	
 	<div class="filter-sidebar-content">
+	<%--
 	    <c:choose>
 	        <c:when test="${user != null and loginResult}">
-	            <a href="${logOutUrl}">Logga ut ${user.firstName} ${user.lastName}</a>
+	            <a href="main?logout=true">Logga ut ${user.firstName} ${user.lastName}</a>
 	        </c:when>
 	        <c:otherwise>
-                <portlet:actionURL var="loginUrl">
-                    <portlet:param name="action" value="login"/>
-                </portlet:actionURL>
-	            <form method="post" action="${loginUrl}">Användare<br />
+	            <form method="post" action="main">Användare<br />
 	                <input type="text" name="userName" /> <br />
 	                Lösen<br />
 	                <input type="password" name="password" /> <br />
@@ -36,6 +34,7 @@
 	            </form>
 	        </c:otherwise>
 	    </c:choose>
+    --%>
         <portlet:actionURL var="checkUrl">
             <portlet:param name="action" value="check"/>
         </portlet:actionURL>

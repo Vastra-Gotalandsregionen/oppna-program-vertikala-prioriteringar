@@ -27,6 +27,10 @@
 	            </form>
 	        </c:otherwise>
 	    </c:choose>
+    <portlet:actionURL var="doRowAction">
+        <portlet:param name="action" value="doRowAction"/>
+    </portlet:actionURL>
+
 	    <form:form commandName="form" action="check" method="POST">
 	        <br />
 	        <tags:sector sector="${form.allSektorsRaad}" />

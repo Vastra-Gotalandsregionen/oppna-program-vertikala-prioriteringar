@@ -1208,6 +1208,10 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
                         (List<Prioriteringsobjekt>) session.getAttribute("rows"),
                         (User) session.getAttribute("user")).getBytes()
         );
+
+        response.setContentType("application/excel");
+        response.setProperty("Content-Disposition", "inline; filename=prioriteringar.csv");
+
         out.flush();
         out.close();
     }
