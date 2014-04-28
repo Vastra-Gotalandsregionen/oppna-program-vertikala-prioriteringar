@@ -14,4 +14,10 @@
 <!--[if IE]>
   <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/ie-only.css" />
 <![endif]-->
+
+<!--[if IE 7]>
+  <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/ie7-only.css" />
+<![endif]-->
+
+
 </head>
