@@ -32,10 +32,14 @@
                   </span>
                 </c:if>
                 <c:if test="${column.filterAble}">
-                  <a href='start-choosing-codes?fieldName=${column.name}'>
+                  <portlet:renderURL var="startFilterUrl">
+                      <portlet:param name="view" value="choose-column-filter"/>
+                      <portlet:param name="fieldName" value="${column.name}"/>
+                  </portlet:renderURL>
+                  <a href='${startFilterUrl}'>
                   <c:choose>
                     <c:when test="${not su:isEmpty(prioCondition[column.name])}">
-                      <img src='${pageContext.request.contextPath}/img/tratt_selected.png' width="15px" height="13px" title="Filtrering �r gjord p� denna kolumn"/>
+                      <img src='${pageContext.request.contextPath}/img/tratt_selected.png' width="15px" height="13px" title="Filtrering är gjord på denna kolumn"/>
                     </c:when>
                     <c:otherwise>
                       <img src='${pageContext.request.contextPath}/img/tratt_unselected.png' title="Filtrera"/>
@@ -45,7 +49,11 @@
                 </c:if>
                 
                 <c:if test="${column.filterAble and not su:isEmpty(prioCondition[column.name])}">
-                  <a href='deselect-codes?fieldName=${column.name}' title="Ta bort filtervillkor: <tags:cell value="${su:toString(prioCondition[column.name])}"/>" style="text-decoration: none;">
+                  <portlet:actionURL var="deselectFilterUrl">
+                      <portlet:param name="action" value="deselect-column-filter"/>
+                      <portlet:param name="fieldName" value="${column.name}"/>
+                  </portlet:actionURL>
+                  <a href='${deselectFilterUrl}' title="Ta bort filtervillkor: <tags:cell value="${su:toString(prioCondition[column.name])}"/>" style="text-decoration: none;">
                     <img src='${pageContext.request.contextPath}/img/x.png'/>
                   </a>
                 </c:if>
