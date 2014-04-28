@@ -342,9 +342,6 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
 	private static List<se.vgregion.verticalprio.entity.Column> columns;
 
 	public static List<se.vgregion.verticalprio.entity.Column> getDefaultColumns() {
-		if (columns != null) {
-			return columns;
-		}
 		se.vgregion.verticalprio.entity.Column column = null;
 		List<se.vgregion.verticalprio.entity.Column> result = new ArrayList<se.vgregion.verticalprio.entity.Column>();
 		int i = 0;
@@ -624,10 +621,8 @@ public class Prioriteringsobjekt extends AbstractEntity<Long> implements Seriali
 		column.setHideAble(true);
 		column.setDemandsEditRights(true);
 
-		columns = result;
-
-		return result;
-	}
+        return result;
+    }
 
 	public void setKostnad(Integer kostnad) {
 		this.kostnad = kostnad;
