@@ -85,6 +85,11 @@ h4 {
     padding: 10px;
 }
 
+.filter-sidebar-content input[type='submit'] {
+    color: transparent;
+    font-size: 0;
+}
+
 .filter-sidebar-collapsed {
 	background: none;
 	border: none;
@@ -486,6 +491,11 @@ input.text-input {
 
 .sector-node {
   margin-left: 10px;
+}
+
+.sector-node label span {
+    position: relative;
+    top: 3px
 }
 
 .edit-sectors .sector-node {

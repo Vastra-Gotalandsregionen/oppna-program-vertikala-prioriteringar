@@ -28,6 +28,6 @@
   <c:otherwise>
     <input style="border:none; background-repeat:no-repeat; background-image:url('${pageContext.request.contextPath}/img/unchecked.gif'); width:15px; height:15px;" id="Sektor${sector.id}" type="submit" src="${pageContext.request.contextPath}/img/unchecked.png" name="sectorId" value="            ${sector.id}" />
   </c:otherwise>
-</c:choose> ${sector.kod} </label> <c:if test="${sector.open}">
+</c:choose> <span class="sector-kod">${sector.kod}</span> </label> <c:if test="${sector.open}">
   <tags:sectors items="${sector.children}" />
 </c:if></div>
