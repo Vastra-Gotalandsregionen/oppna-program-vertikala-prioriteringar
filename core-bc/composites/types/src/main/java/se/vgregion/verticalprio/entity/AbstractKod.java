@@ -95,15 +95,23 @@ public abstract class AbstractKod extends AbstractEntity<Long> implements Serial
 	 */
 	@Override
 	public int compareTo(AbstractKod o) {
-		int other = 0, self = 0;
-		if (kod != null) {
-			self = hashCode();
-		}
-		if (o != null && o.kod != null) {
-			other = o.kod.hashCode();
-		}
-		return self - other;
-	}
+        if (o == null) {
+            return -1;
+        }
+
+        String thisKod = kod;
+        String thatKod = o.kod;
+
+        if (thisKod == null && thatKod == null) {
+            return this.hashCode() - thatKod.hashCode();
+        } else if (thatKod == null) {
+            return -1;
+        } else if (thisKod == null) {
+            return 1;
+        } else {
+            return thisKod.compareTo(thatKod);
+        }
+    }
 
 	public String getKodPlusBeskrivning() {
 		return (format(getKod()) + " " + format(getBeskrivning())).trim();
