@@ -862,6 +862,9 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
             clf.setFilterText(null);
         }
 
+        sortList(clf.getAllToChoose());
+        sortList(clf.getChosen());
+
         addSessionAttributesToModel(session, model);
 
         if (prioId != null) {
@@ -869,6 +872,14 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
         }
 
         return "choose-from-list";
+    }
+
+    private void sortList(List list) {
+        if (list == null || list.size() == 0) {
+            return;
+        }
+
+        Collections.sort(list);
     }
 
     protected void filterList(String filterText, List allToChoose) {
@@ -1325,10 +1336,10 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
                 se.vgregion.verticalprio.el.Util.toCsvTable(
                         form.getColumns(),
                         (List<Prioriteringsobjekt>) session.getAttribute("rows"),
-                        (User) session.getAttribute("user")).getBytes()
+                        (User) session.getAttribute("user")).getBytes("ISO-8859-1")
         );
 
-        response.setContentType("application/excel");
+        response.setContentType("application/excel;charset=ISO-8859-1");
         response.setProperty("Content-Disposition", "inline; filename=prioriteringar.csv");
 
         out.flush();
