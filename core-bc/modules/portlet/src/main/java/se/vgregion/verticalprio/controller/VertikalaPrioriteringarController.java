@@ -434,6 +434,10 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
         session.setAttribute("sectors", null);
         session.setAttribute("form", null);
 
+        MainForm form = getMainForm(session);
+        form.getSectors().clear();
+        form.getSectors().addAll(sectors);
+
         response.setRenderParameter("view", "");
     }
 
