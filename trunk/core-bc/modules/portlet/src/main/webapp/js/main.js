@@ -12,7 +12,7 @@ AUI().ready(
 		var layout;
 		var logoWrap;
 
-//		setupColumnToggle();
+		setupColumnToggle();
 		
 		// START - Column toggle
 		function setupColumnToggle() {
@@ -253,24 +253,27 @@ function alignDivsInTwoColumns(firstSelector, secondSelector) {
     });
 }
 
-try{
-    
-    /*alignDivsInTwoColumns(
-            '.main-content td.diagnosTexts div.padded', 
-            '.main-content td.diagnosKodTexts div.padded'
-    );
-    
-    alignDivsInTwoColumns(
-            '.main-content td.aatgaerdskoderTexts div.padded', 
-            '.main-content td.aatgaerdskoder div.padded'
-    );
-    
-    alignDivsInTwoColumns(
-            '.main-content td.atcText div.padded', 
-            '.main-content td.atcKoder div.padded'
-    );*/
-    
-} catch(ee) {
-    alert(ee.message);
+var ua = window.navigator.userAgent;
+var msie = ua.indexOf("MSIE ");
+
+if (msie == -1) {
+    try{
+        alignDivsInTwoColumns(
+                '.main-content td.diagnosTexts div.padded',
+                '.main-content td.diagnosKodTexts div.padded'
+        );
+
+        alignDivsInTwoColumns(
+                '.main-content td.aatgaerdskoderTexts div.padded',
+                '.main-content td.aatgaerdskoder div.padded'
+        );
+
+        alignDivsInTwoColumns(
+                '.main-content td.atcText div.padded',
+                '.main-content td.atcKoder div.padded'
+        );
+    } catch(ee) {
+        alert(ee.message);
+    }
 }
     
