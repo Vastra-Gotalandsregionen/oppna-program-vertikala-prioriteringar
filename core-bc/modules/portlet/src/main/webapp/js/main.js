@@ -10,21 +10,23 @@ AUI().ready(
 		var columnHideTrigger, columnShowTrigger, columnFilterNav, columnFilterNavInner, columnFilterSidebarContent;
 		var columnShowAnim, columnHideAnim;
 		var layout;
-		var logoWrap;
 
 		setupColumnToggle();
-		
+
+		function initVariables(){
+            layout = A.one('#layout');
+            columnFilterNav = A.one('#filterNav'); // detect via id
+            columnFilterNavInner = A.one('.filter-sidebar');
+            columnFilterSidebarContent = A.one('.filter-sidebar-content');
+            columnHideTrigger = A.one('.column-control-hide');  // detect via class
+            columnShowTrigger = A.one('.column-control-show');
+		}
+
 		// START - Column toggle
 		function setupColumnToggle() {
 			
-			layout = A.one('#layout');
-			columnFilterNav = A.one('#filterNav'); // detect via id
-			columnFilterNavInner = A.one('.filter-sidebar');
-			columnFilterSidebarContent = A.one('.filter-sidebar-content');
-			columnHideTrigger = A.one('.column-control-hide');  // detect via class
-			columnShowTrigger = A.one('.column-control-show');
-			logoWrap = A.one('.logo-wrap');
-			
+            initVariables();
+
 			// If there is no columnFilterNaw - don't proceed
 			if(!columnFilterNav) { return; }
 			
@@ -93,7 +95,7 @@ AUI().ready(
 
 		// START - Handling of column hide anim end event
 		function onColumnHideAnimEnd(e) {
-
+            initVariables();
 			// Toggle triggers
 			columnShowTrigger.show();
 			columnHideTrigger.hide();
@@ -108,11 +110,8 @@ AUI().ready(
 		
 		// START - Handling of column hide anim start event
 		function onColumnHideAnimStart(e) {
-			
+			initVariables();
 			columnFilterNavInner.addClass('filter-sidebar-collapsed');
-			
-			// Hide logo
-			logoWrap.hide();
 			
 			// Hide tooltip if shown
 			columnTriggerTooltip.hide();
@@ -123,11 +122,8 @@ AUI().ready(
 		
 		// START - Handling of column show anim end event
 		function onColumnShowAnimEnd(e) {
-			
+			initVariables();
 			columnFilterNavInner.removeClass('filter-sidebar-collapsed');
-			
-			// Show logo
-			logoWrap.show();
 			
 			// Toggle triggers
 			columnShowTrigger.hide();
@@ -141,7 +137,7 @@ AUI().ready(
 		
 		// START - Handling of column show anim start event
 		function onColumnShowAnimStart(e) {
-			
+			initVariables();
 			layout.removeClass('collapsed-filter-nav');
 			
 			columnFilterSidebarContent.show();
