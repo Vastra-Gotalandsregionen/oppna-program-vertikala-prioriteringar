@@ -111,6 +111,11 @@ public class VertikalaPrioriteringarController extends PortletBaseController {
         return "main";
     }
 
+    @ActionMapping
+    public void defaultFallbackAction() {
+        return;
+    }
+
     private void alterSortOrder(PortletSession session, String sortField) {
         MainForm form = getMainForm(session);
         PrioriteringsobjektFindCondition condition = getOrCreateSessionObj(session, "prioCondition",
