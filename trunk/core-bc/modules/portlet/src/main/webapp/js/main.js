@@ -11,15 +11,24 @@ AUI().ready(
 		var columnShowAnim, columnHideAnim;
 		var layout;
 
-		setupColumnToggle();
+        try {
+        	setupColumnToggle();
+        } catch (fail) {
+            if (window['console']) console.log('setupColumnToggle failed.', fail);
+            else alert(fail.message);
+        }
 
 		function initVariables(){
+		    try {
             layout = A.one('#layout');
             columnFilterNav = A.one('#filterNav'); // detect via id
             columnFilterNavInner = A.one('.filter-sidebar');
             columnFilterSidebarContent = A.one('.filter-sidebar-content');
             columnHideTrigger = A.one('.column-control-hide');  // detect via class
             columnShowTrigger = A.one('.column-control-show');
+            }catch (initVariablesException) {
+                alert('failed in initVariables: ' + initVariablesException.message);
+            }
 		}
 
 		// START - Column toggle
@@ -34,7 +43,7 @@ AUI().ready(
             columnShowTrigger.on('click', onColumnShowClick);
 			
 			// Hide show trigger
-			columnShowTrigger.hide();
+			//columnShowTrigger.hide();
 			
 			// Define animations to be used when showing or hiding columns
 			
@@ -54,13 +63,16 @@ AUI().ready(
 		    columnShowAnim.on('start', onColumnShowAnimStart);
 
 		    // Setup tooltips for column show/hide triggers
-			columnTriggerTooltip = new A.Tooltip({
-				trigger: '.column-control a',
-				align: { points: [ 'tl', 'br' ] },
-				width: '200px',
-				title: true
-			}).render();
-		    
+		    try {
+                columnTriggerTooltip = new A.Tooltip({
+                    trigger: '.column-control a',
+                    align: { points: [ 'tl', 'br' ] },
+                    width: '200px',
+                    title: true
+                }).render();
+		    } catch(e2) {
+		        alert('on init columnTriggerTooltip: ' + e2.message);
+		    }
 		    
 		}
 		// END - Column toggle
@@ -157,119 +169,135 @@ function runFloatButtons() {
         });
 }
 
-function yuiCollectionToArray(yc) {
-    var r = [];
-    yc.each(function (node){
-        r.push(node);
-    });
-    return r;
-};
+function initCodeAndTextAlignment() {
 
-function alignDivsInTwoColumns(firstSelector, secondSelector) {
-        
-    function entwine(a,b) {
-        return a.concat(b);
-        var result = [];
-        if (a.length > b.length) {
-            var long = a, short = b;
-        } else {
-            var long = b, short = a;
-        }
-            
-        for (var j = 0; j < long.length; j++) {
-            result.push(long[j]);
-            if (short.length < j && short[j]) result.push(short[j]);
-        }
-        
-        var tmp = result;
-        result = [];
-        
-        for (var j = 0; j < tmp.length; j++) {
-            if (tmp[j] && tmp[j] != null) result.push(tmp[j]); 
-        }
-        
-        return result;
-    };
-    
-    function process() {
-        try {
-            for (var i = 0; i < 3; i++) {
-                var item1 = window.justifyCols.first.shift();
-                var item2 = window.justifyCols.second.shift();
-                if (!item1 || !item2) continue;
-                var textsDivs = yuiCollectionToArray(item1.all('div'));
-                if (textsDivs.length < 2) continue;
-                var codesDivs = yuiCollectionToArray(item2.all('div'));
-                var codeDiv = [];
-                for (var j = 0; j < textsDivs.length; j++) {
-                    if (!textsDivs[j] || !codesDivs[j]) return;
-                    var t = textsDivs[j].getComputedStyle('height').replace('px','');
-                    codeDiv.push('<div style="height:');
-                    codeDiv.push(t);
-                    codeDiv.push('px">');
-                    codeDiv.push(codesDivs[j]._node.innerHTML);
-                    codeDiv.push('</div>');
-                }
-                
-                item2.setContent(codeDiv.join(''));
-            }
-        }catch(ee) {
-            alert(ee.message);
-        }
-    };
-    
-    YUI().use('node', 'gallery-timer', function (Y) {
-        var texts = yuiCollectionToArray(Y.all(firstSelector));
-        var codes = yuiCollectionToArray(Y.all(secondSelector));
-        
-        if (!texts || !codes || texts.length != codes.length) {
-            return;
-        }
+  function isElementInViewport (el) {
+      if (isElementBeforeViewport(el) && isElementAfterViewport(el))
+        return true;
 
-        for (var i = 0; i < texts.length; i++) {
-            if(yuiCollectionToArray(texts[i].all('div')).length < 3 ||
-                    yuiCollectionToArray(codes[i].all('div')).length < 3) {
-                texts.splice(i,1);
-                codes.splice(i,1);
-                i--;
-            }
+      var rect = el.getBoundingClientRect();
+
+      return rect.top >= 0 && rect.top <= (window.innerHeight || document.documentElement.clientHeight)
+        || rect.bottom >= 0 && rect.bottom <= (window.innerHeight || document.documentElement.clientHeight);
+  }
+
+  function isElementBeforeViewport (el) {
+      var rect = el.getBoundingClientRect();
+      return rect.top <= 0;
+  }
+
+
+  function isElementAfterViewport (el) {
+      var rect = el.getBoundingClientRect();
+      return rect.bottom >= (window.innerHeight || document.documentElement.clientHeight);
+  }
+
+  function proecess(table) {
+    var rows = table.rows;
+    var c = 0;
+    for (var i = 0; i < rows.length; i++) {
+      var cells = rows[i].cells;
+      if (isElementInViewport(rows[i])) {
+        c++;
+        var row = rows[i];
+        if (!row['codeColumnsAligned']) {
+          processRow(row);
+          row['codeColumnsAligned'] = true;
         }
-
-        if (texts.length != codes.length || texts.length == 0) {
-            return;
-        }
-        
-        if (!window.justifyCols) window.justifyCols = {first: [], second: []};
-        
-        window.justifyCols.first = entwine(window.justifyCols.first, texts);
-        window.justifyCols.second = entwine(window.justifyCols.second, codes);
-        
-        var t = new Y.Timer({length:300, repeatCount:(texts.length)/3 + 1, callback:process});
-        t.start();
-    });
-}
-
-var ua = window.navigator.userAgent;
-var msie = ua.indexOf("MSIE ");
-
-if (msie == -1) {
-    try{
-        alignDivsInTwoColumns(
-                '.main-content td.diagnosTexts div.padded',
-                '.main-content td.diagnosKodTexts div.padded'
-        );
-
-        alignDivsInTwoColumns(
-                '.main-content td.aatgaerdskoderTexts div.padded',
-                '.main-content td.aatgaerdskoder div.padded'
-        );
-
-        alignDivsInTwoColumns(
-                '.main-content td.atcText div.padded',
-                '.main-content td.atcKoder div.padded'
-        );
-    } catch(ee) {
-        alert(ee.message);
+      }
     }
+  }
+
+  function processRow(row) {
+    if (row == null || row == undefined) return;
+    for(var i = 0; i < columns.length; i++) {
+        processTd(columns[i], row);
+    }
+  }
+
+  function processTd(meta, row) {
+    if (meta.kodCol == -1 || meta.textCol == -1 || row.cells[0].tagName == 'TH'){
+      return;
+    }
+    var textCell = row.cells[meta.textCol];
+    if (textCell.children.length == 0) return;
+    var textsDivs = textCell.children[0].children;
+    if (textsDivs.length < 2) return;
+
+    var codeCell = row.cells[meta.kodCol];
+
+    var codesDivs = codeCell.children[0].children;
+
+    var codeDiv = [];
+    codeDiv.push('<div style="padding: 5px">');
+    for (var j = 0; j < textsDivs.length; j++) {
+        if (!textsDivs[j] || !codesDivs[j]) return;
+        var t = textsDivs[j].clientHeight;
+        if (t == 0) t = textsDivs[j].offsetHeight;
+        codeDiv.push('<div style="height:');
+        codeDiv.push(t);
+        codeDiv.push('px;">');
+        codeDiv.push(codesDivs[j].innerHTML);
+        codeDiv.push('</div>');
+    }
+    codeDiv.push('</div>');
+    codeCell.innerHTML = codeDiv.join('');
+  }
+
+  function indexOfCssClassTd(table, cssText) {
+    var rows = table['rows'];
+    if (!rows) return -1;
+    if (rows.length < 3) return -1;
+    var cells = rows[2].cells;
+    for (var i = 0; i < cells.length; i++) {
+      var cell = cells[i];
+      if (cell['className'] == cssText) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
+  var mainTable = document.getElementById('resultTable');
+
+  function handler() {
+    initColumns();
+    proecess(mainTable);
+  }
+
+  var columns = [
+    {text: 'diagnosTexts', kod: 'diagnosKodTexts'},
+    {text: 'aatgaerdskoderTexts', kod: 'aatgaerdskoder'},
+    {text: 'atcText', kod: 'atcKoder'}
+  ];
+
+function initColumns() {
+  var mainTable = document.getElementById('resultTable');
+  for(var i = 0; i < columns.length; i++) {
+    var column = columns[i];
+    column.textCol = indexOfCssClassTd(mainTable, column.text);
+    column.kodCol = indexOfCssClassTd(mainTable, column.kod);
+  }
 }
-    
+
+
+
+  if (window.addEventListener) {
+      addEventListener('DOMContentLoaded', handler, false);
+      addEventListener('load', handler, false);
+      addEventListener('scroll', handler, false);
+      addEventListener('resize', handler, false);
+  } else if (window.attachEvent)  {
+      attachEvent('onDOMContentLoaded', handler); // IE9+ :(
+      attachEvent('onload', handler);
+      attachEvent('onscroll', handler);
+      attachEvent('onresize', handler);
+  }
+
+}
+
+if (window.addEventListener) {
+  addEventListener('load', initCodeAndTextAlignment, false);
+} else if (window.attachEvent)  {
+  attachEvent('onload', initCodeAndTextAlignment);
+}

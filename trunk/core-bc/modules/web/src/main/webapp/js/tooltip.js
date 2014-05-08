@@ -32,14 +32,17 @@ AUI().ready(
 				// Set new title attribute
 				this.set('title', currentTitle);
 			});
-			
-			tableHeaderTooltips = new A.Tooltip({
-				//trigger: '.main-content table th span.tooltip',
-				trigger: '.enhancedToolTip span.tooltip',
-				align: { points: [ 'tc', 'bc' ] },
-				width: '300px',
-				title: true
-			}).render();
+			try {
+                tableHeaderTooltips = new A.Tooltip({
+                    //trigger: '.main-content table th span.tooltip',
+                    trigger: '.enhancedToolTip span.tooltip',
+                    align: { points: [ 'tc', 'bc' ] },
+                    width: '300px',
+                    title: true
+                }).render();
+			} catch (eee) {
+			    if (window['console']) console.log('Initiating tool tips failed.', eee);
+			}
 		}
 		// END - handling of tool tips
 	}
