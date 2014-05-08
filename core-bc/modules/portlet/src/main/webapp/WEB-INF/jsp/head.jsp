@@ -8,8 +8,8 @@
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/master.css">
 
 <%--<script src="${pageContext.request.contextPath}/js/alloy-ui/aui/aui.js" type="text/javascript"></script>--%>
-<script src="${pageContext.request.contextPath}/js/main.js" type="text/javascript"></script>
-<script src="${pageContext.request.contextPath}/js/tooltip.js" type="text/javascript"></script>
+<script src="${pageContext.request.contextPath}/js/main.js?f=36" type="text/javascript"></script>
+<script src="${pageContext.request.contextPath}/js/tooltip.js?f=4" type="text/javascript"></script>
 
 <!--[if IE]>
   <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/ie-only.css" />

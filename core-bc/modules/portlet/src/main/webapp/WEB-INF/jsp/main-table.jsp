@@ -5,7 +5,7 @@
 <%@ taglib uri="/WEB-INF/tld/vgr-util.tld" prefix="su"%>
 <%@ taglib prefix='fn' uri='http://java.sun.com/jsp/jstl/functions' %>
 
-    <table cellpadding="0" class="FloatTitle">
+    <table name="resultTable" id="resultTable" cellpadding="0" class="FloatTitle">
       <thead class="headerRow">
         <tr id="scroll_me">
         <th class="first_header">#</th>
