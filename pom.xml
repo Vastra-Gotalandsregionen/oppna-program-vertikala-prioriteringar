@@ -15,7 +15,7 @@
   <groupId>se.vgregion.vertikala-prioriteringar</groupId>
   <artifactId>vertikala-prioriteringar-system</artifactId>
   <packaging>pom</packaging>
-  <version>1.1-SNAPSHOT</version>
+  <version>1.1</version>
   <name>${project.artifactId}</name>
 
     <build>
@@ -68,8 +68,8 @@
   <!--NB! SCM config below assumes system name equals VGR subversion/googlecode project name! -->
   <!-- Open Source repo -->
   <scm>
-    <developerConnection>scm:svn:https://oppna-program-vertikala-prioriteringar.googlecode.com/svn/trunk</developerConnection>
-    <url>http://oppna-program-vertikala-prioriteringar.googlecode.com/svn/trunk</url>
+    <developerConnection>scm:svn:https://oppna-program-vertikala-prioriteringar.googlecode.com/svn/tags/vertikala-prioriteringar-system-1.1</developerConnection>
+    <url>http://oppna-program-vertikala-prioriteringar.googlecode.com/svn/tags/vertikala-prioriteringar-system-1.1</url>
   </scm>
 
 </project>
