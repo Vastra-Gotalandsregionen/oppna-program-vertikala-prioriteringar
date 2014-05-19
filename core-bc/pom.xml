@@ -11,12 +11,12 @@ Generation time : 2010-11-08 10:07:26 CET
   <parent>
     <groupId>se.vgregion.vertikala-prioriteringar</groupId>
     <artifactId>vertikala-prioriteringar-system</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.1</version>
   </parent>
   <groupId>se.vgregion.vertikala-prioriteringar</groupId>
   <artifactId>vertikala-prioriteringar-core-bc</artifactId>
   <packaging>pom</packaging>
-  <version>1.1-SNAPSHOT</version>
+  <version>1.1</version>
   <name>${project.artifactId}</name>
 
   <modules>
