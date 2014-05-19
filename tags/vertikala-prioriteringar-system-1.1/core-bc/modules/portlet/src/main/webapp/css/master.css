@@ -1,0 +1,705 @@
+@CHARSET "UTF-8";
+
+/*********************************************************************************************
+
+Table of Contents
+
+= Main Structure
+= Common Classes
+= Forms
+= Filter Sidebar
+= Main Content
+= Choose page
+= Sandbox
+= Leftovers
+
+*********************************************************************************************/
+
+/* -- = Main Structure  -------------------------------------------------------*/
+
+/*body {
+    font-family: arial, Helvetica,sans-serif;
+    font-size: 12px;
+    margin: 5px;
+}*/
+/*.vertikala-prioriteringar-portlet {
+    box-sizing: border-box;
+    left: 0;
+    padding: 0 35px 0 35px;
+    position: absolute;
+    width: 100%;
+}*/
+
+#layout {
+  #white-space: nowrap;
+}
+
+#tmpFloatTitleTableId0Title {
+  background-color: white;
+}
+
+h4 {
+  font-weight: bold;  
+}
+
+.filter-sidebar {
+	min-height: 635px;
+}
+
+.filter-sidebar-content {
+	overflow: hidden;
+}
+
+.help-block {
+	height: 635px;
+}
+
+ /*--- Grid skeleton ----------------------*/
+
+#layout {
+    padding-left:250px; /* "left col" width */ 
+}
+ 
+#layout.collapsed-filter-nav {
+    padding-left:40px; /* "left col" width */ 
+}
+
+#filterNav {
+    margin-left:-250px; /* "left col" width */
+    width:250px;
+}
+
+.collapsed-filter-nav #filterNav {
+	margin-left: -40px;
+}
+
+#main {
+    width:100%;
+}
+
+/*--- Filter sidebar ----------------------*/
+
+.filter-sidebar {
+	background: url("../img/state_default_bg.png") repeat-x scroll 0 0 #D4D4D4;	
+    border: 1px solid #cccccc;
+    padding: 10px;
+}
+
+.filter-sidebar-content input[type='submit'] {
+    color: transparent;
+    font-size: 0;
+}
+
+.filter-sidebar-collapsed {
+	background: none;
+	border: none;
+}
+
+/*--- Main content ----------------------*/
+
+.main-content {
+    padding: 0 10px 10px 10px;
+}
+
+/* -- = Common Classes  -------------------------------------------------------*/
+
+.button-row {
+  padding-bottom: 4px;
+  width: 100%;
+  white-space: nowrap;
+  height: 20px;
+}
+
+.standardInput {
+  font-family: arial;
+  font-size: 12px;
+}
+
+.left {
+  float: left;
+}
+
+.center {
+  text-align: center;  
+}
+
+.rPadding2em {
+  padding-right: 2em; 
+}
+
+/* Clearfix style clearing */
+.clearfix:after{clear:both;content:'.';display:block;visibility:hidden;height:0}
+.clearfix{display:inline-block}
+* html .clearfix{height:1%}
+.clearfix{display:block}
+
+/* -- = Forms  -------------------------------------------------------*/
+
+.button {
+    background-color: #EEE8AA;
+    border-style: groove;
+    color: black;
+    height: 24px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+button {
+  height: 24px;   
+}
+
+.button-row form {
+  display: inline;
+}
+
+.conf-columns {
+  left: 2em;
+}
+
+.button-row .export-data-buttons {
+  padding-left: 2em;
+  padding-right: 2em;
+}
+
+.unsavedChange, .changedFlag, #ChangeFlag img, #EditedFlag img, .infoFlag img {
+  vertical-align: text-top;
+}
+
+/* -- = Filter Sidebar  -------------------------------------------------------*/
+
+.column-controls {}
+
+.column-controls ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0; 
+}
+
+.column-controls ul li {
+    float: right;
+    margin: 5px;
+    padding: 0;  
+}
+
+.column-controls ul li a {
+    display: block;
+    height: 14px;
+    width: 10px;
+}
+
+.column-controls ul li.column-control-hide a {
+    background: transparent url(../img/arrow_left.png) no-repeat 0 0;
+}
+
+.column-controls ul li.column-control-show a {
+    background: transparent url(../img/arrow_right.png) no-repeat 0 0;
+}
+
+.column-controls ul li a span {
+    font-size: 0;
+    text-indent: -9999em;
+}
+
+#filterNav .logo-wrap {
+    margin: 20px auto 10px auto;
+    text-align: center;
+}
+
+#filterNav img.logo {
+	border: 1px solid #000;
+	border-width: 0;
+}
+
+/* -- = Main Content  -------------------------------------------------------*/
+
+.main-content table {
+  border-collapse:collapse;
+  border: 1px solid #333333;
+  margin-top: 30px;
+  
+}
+
+.main-content thead.headerRow {
+  background-color: #cbd9e7;
+}
+
+.main-content tbody {
+  border: 0;
+}
+
+.main-content tbody.boxed {
+    height: 800px;
+    overflow-y:auto;
+    overflow-x: hidden;
+}
+/*
+.main-content .headerRow th {
+  border: 0 solid #333333;
+  border-right-width: 1px;
+  color: #333333;
+  font-size: 12px;
+  font-weight: bold; 
+  max-width: 20em;
+  overflow: hidden;
+  vertical-align: top;
+}
+
+*/
+.padded {
+    padding: 5px;
+}
+
+
+.main-content td {
+  border: 1px solid #cccccc;
+  border-left-width: 0;
+  text-align: left;
+  vertical-align: top;
+}
+
+.main-content .headerRow th {
+  border: 0 solid #333333;
+  border-right-width: 1px;
+  color: #333333;
+  font-size: 12px;
+  font-weight: bold; 
+  /*max-width: 20em;*/
+  overflow: hidden;
+  vertical-align: top;
+  vertical-align: top;
+}
+
+/*
+.main-content tbody.boxed tr {
+    height: auto;
+}
+
+.main-content tbody.boxed td {
+    height: auto;
+}
+*/
+
+.main-content .conditionRow td {
+  background-color: #dce5ec;
+  border: 1px solid #333333;
+  border-right-width: 0;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.main-content .conditionRow td img {
+  vertical-align: middle;
+}
+
+.main-content table .diagnosTexts {
+  min-width: 20em;
+  max-width: 25em;
+}
+
+.main-content table .even {
+    background-color: #FFFFFF;
+}
+
+.main-content table .odd {
+    background-color: #EDF2F4;
+}
+
+/* -- = Help Block  -------------*/
+
+.help-block {
+	display: block;
+    font-size: 14px;
+    margin: 0;
+    min-width: 440px;
+    padding: 10px;     
+}
+
+.help-block-color {
+    background-color: #EDF2F4;
+    background: #e9e9e9;
+    border: 1px solid #cccccc;
+}
+
+.help-block h1 {
+    color: #0066BB;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.help-block h2 {
+  color: #444;
+  font-size: 16px;
+  font-weight: bold;
+  padding-bottom: 14px;
+  text-transform: uppercase;
+}
+
+.help-block ol {
+    margin: 0 0 0 15px;
+}
+
+.help-block ol li {
+    list-style-type: decimal;
+    margin: 10px 5px;
+}
+
+.help-block ol li.no-list-style {
+    list-style-type: none;
+}
+
+.help-block ol li img {
+    vertical-align: middle;
+}
+
+ .help_block div {
+  font-size: 14px;
+  margin-bottom: 6px;
+  vertical-align: top;
+ }
+ 
+.help_block div img {
+  vertical-align: middle;
+}
+ 
+.help_indent {
+    margin-left: 2em;
+}
+  
+  
+.help_header_blue {
+  color: #0066BB;
+  font-size: 20px;
+  font-weight: bold;
+  padding-bottom: 14px;
+} 
+
+
+
+.help_block {
+  display: block;
+  margin-top: 2em;
+  max-width: 10000px;
+  min-width: 540px;
+  white-space: nowrap;
+}
+
+ .help_block div {
+  font-size: 14px;
+  margin-bottom: 6px;
+  vertical-align: top;
+ }
+ 
+.help_block div img {
+  vertical-align: middle;
+}
+ 
+.help_indent {
+    margin-left: 2em;
+}
+  
+  
+.help_header_blue {
+  color: #0066BB;
+  font-size: 20px;
+  font-weight: bold;
+  padding-bottom: 14px;
+} 
+
+/* -- = Choose page  -------------------------------------------------------*/
+
+.main-wrap {
+	background: #e9e9e9;
+    border-bottom: thin solid #C0C0C0;
+    border-right: thin solid #C0C0C0;
+    border-spacing: 1em;
+    border-style: solid;
+    border-width: thin;
+    margin: 0 auto;
+    margin-top: 20px;
+    padding: 15px 15px;
+    width: 1200px;
+}
+
+.choosepage_leftsection {
+	text-align: left;
+}
+
+.choosepage_margin {
+}
+
+.choosepage_middlesection {
+	text-align: center;
+}
+
+.choosepage_rightsection {
+	text-align: left;
+}
+
+.choosepage_boldtext {
+	text-align: left;
+}
+
+.choose-right-btn-toolbar {
+	text-align: right;
+}
+
+input.text-input {
+	border: 1px solid #ccc;
+	height: 20px;
+}
+
+.choose-code h3 {
+	margin: 25px 0 5px 0;
+}
+
+/* -- = Sandbox  -------------------------------------------------------*/
+
+
+/* -- = Leftovers  -------------------------------------------------------*/
+
+.aatgaerdskoderTexts, .diagnosTexts {
+  min-width: 250px;
+ }
+ 
+.godkaend {
+  min-width: 66px;
+  white-space: nowrap;
+ }
+ 
+.padding_normal {
+    padding: 10px;    
+}
+
+.padding_small {
+    padding: 7px;    
+}
+
+.main {
+  width: 100%;
+}
+
+.sectors {
+  padding: 10px;
+  border: thin solid gray;
+}
+
+.sectors {
+  min-width: 100px;
+  float: left;
+  height: 100%;
+}
+
+.sector-node {
+  margin-left: 10px;
+}
+
+.sector-node label span {
+    position: relative;
+    top: 3px
+}
+
+.edit-sectors .sector-node {
+  margin-left: 2em;
+}
+
+.edit-sectors li {
+  padding-bottom: 1em;
+}
+
+.footer {
+  background-color: yellow;
+  clear: both
+}
+
+.popup-overlay {
+  background-color: #000000;
+  height: 100%;
+  left: 0px;
+  position: absolute;
+  text-align: center;
+  top: 0px; 
+  width: 100%; 
+  filter:alpha(opacity=40);
+  opacity:0.4;
+}
+
+.window {
+  position: relative;
+  z-index: 100;
+  display: inline;
+}
+
+.popup-overlay .window {
+  background-color: lime; /* FLAG - byt mot hexkod */
+  background-repeat: repeat;
+  position: relative; 
+  top:10%;
+  filter:alpha(opacity=1); /* FLAG - denna regel kommer aldrig att appliceras (parent .popup-overlay har redan opacity satt. Fråga Hans.) */
+  opacity:1.0; 
+}
+
+.popup-overlay .window form {
+  background-color: white;
+  display: inline;
+  height: 100%;
+  width: 100%;
+  filter:alpha(opacity=1); /* FLAG - denna regel kommer aldrig att appliceras (parent .popup-overlay har redan opacity satt. Fråga Hans.) */
+  opacity:1.0;  
+}
+
+.select-diagnoses table td {
+  vertical-align: top;
+  text-align: left;
+}
+
+.kod-label {
+  display: block;
+  font-style: normal;
+  font-weight: bold;
+}
+
+.user-label {
+  font-style: normal;
+  font-weight: bold;
+}
+
+.prio-view {
+  max-width: 600px;
+  min-width: 300px;
+  text-align: center;
+}
+
+.prio-view form {
+  text-align: center;
+}
+
+.prio-view div.otherUser {
+  text-align: left;
+  margin: auto;
+}
+
+input.sectorAdd {
+  background-image: url('../img/page_new.gif'); 
+  background-repeat: no-repeat;
+  height: 18px; 
+  width:18px; 
+} 
+
+input.sectorDelete {
+  background-image: url('../img/page_delete.gif'); 
+  background-repeat: no-repeat;
+  height: 18px; 
+  width:18px; 
+} 
+
+.prio-view .values {
+  background-color: #E9E9E9;
+  border-bottom-color: #C0C0C0;
+  border-right: #C0C0C0;
+  border-spacing: 1em;
+  border-style: solid;
+  border-width: thin;
+  margin: auto;
+  padding: 1em;
+  text-align: left;
+  width: 80em;
+}
+
+.prio-view .values select {
+  max-width: 172px;
+}
+
+.find-select-code {
+  clear:both;
+  display: block;
+}
+
+/* FLAG - verkar inte finnas någon klass findings i projektet. Behövs dessa regler? */
+.find-select-code .findings {
+  max-height: 3em;
+  overflow: auto; 
+}
+
+/* FLAG - verkar inte finnas någon klass findings i projektet. Behövs dessa regler? */
+.findings label {
+  letter-spacing: 0;
+  word-spacing: 0;
+}
+
+/* FLAG - verkar inte finnas någon klass findings i projektet. Behövs dessa regler? */
+.find-select-code .selected, .find-select-code .findings {
+  min-height: 1em;
+  float: left;
+  width: 50%;
+}
+
+/* FLAG - verkar inte finnas någon klass findings i projektet. Behövs dessa regler? */
+.find-select-code .label, .find-select-code .findings {
+  float: right;
+  clear: right;
+}
+
+.find-select-code .label {
+    width: 50%;
+}
+
+.prio-form-grid .cell select {
+  float: left;
+  width: 90%;
+}
+
+.prio-form-grid .cell {
+  float: left;
+  width: 20%;
+}
+
+.prio-form-grid .end {
+    clear: right;
+}
+
+.prio-form-grid {
+    clear:both;
+}
+
+.choose-code .values {
+    height: 37em;
+}
+
+/* FLAG - verkar inte finnas någon klass findings i projektet. Behövs dessa regler? */
+.choose-code .find-select-code .findings {
+    max-height: 100%;
+}
+
+.view_details_color .white{
+    background-color: #FFFFFF;
+}	
+
+
+.view_details_color div, .view_details_color span, .view_details_color textarea{
+    background-color: #E9E9E9;
+}	
+
+.aatgaerdskoder {
+  text-align: center;
+  white-space: nowrap;
+}
+
+.choose-from-list select {
+    height: 30em;
+    width: 100%;
+}
+
+.indikationGaf textarea {
+    width: 100%;
+}
+
+.prio-view textarea {
+  min-height: 100px;
+  overflow: visible; 
+}
+
+.prio-view select, .prio-view textarea {
+  margin: 5px 0;
+  overflow: visible;
+}
+

@@ -1,0 +1,187 @@
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd" version="2.0">
+
+  <tlib-version>1.0</tlib-version>
+
+  <short-name>vgr-util</short-name>
+
+  <uri>http://se.vgregion.verticalprio.el/1.0</uri>
+
+  <function>
+
+    <description>Concatenates two strings.</description>
+
+    <display-name>Concat</display-name>
+
+    <name>concat</name>
+
+    <function-class>se.vgregion.verticalprio.el.Util</function-class>
+
+    <function-signature>String concat(java.lang.String, java.lang.String)</function-signature>
+
+  </function>
+  
+    <function>
+
+    <description>Is a certain value inside a collection?</description>
+
+    <display-name>Contains</display-name>
+
+    <name>contains</name>
+
+    <function-class>se.vgregion.verticalprio.el.Util</function-class>
+
+    <function-signature>boolean contains(java.util.Collection, java.lang.Object)</function-signature>
+
+  </function>
+  
+   <function>
+
+    <description>Is a certain value a collection?</description>
+
+    <display-name>isCollection</display-name>
+
+    <name>isCollection</name>
+
+    <function-class>se.vgregion.verticalprio.el.Util</function-class>
+
+    <function-signature>boolean isCollection(java.lang.Object)</function-signature>
+
+  </function>
+  
+  
+  <function>
+
+    <description>Format a cell value </description>
+
+    <display-name>cellToString</display-name>
+
+    <name>cellToString</name>
+
+    <function-class>se.vgregion.verticalprio.el.Util</function-class>
+
+    <function-signature>String cellToString(java.lang.Object)</function-signature>
+
+  </function>
+
+
+  <function>
+
+    <description>Casts a object to a collection.</description>
+
+    <display-name>toCollection</display-name>
+
+    <name>toCollection</name>
+
+    <function-class>se.vgregion.verticalprio.el.Util</function-class>
+
+    <function-signature>java.util.Collection toCollection(java.lang.Object)</function-signature>
+
+  </function>
+  
+  
+  <function>
+    <description>Prints the label of the AbstractKod that matches the id provided in the call.</description>
+    <display-name>labelFor</display-name>
+    <name>labelFor</name>
+    <function-class>se.vgregion.verticalprio.el.Util</function-class>
+    <function-signature>java.lang.String labelFor(java.lang.Integer, java.util.Collection)</function-signature>
+  </function>
+  
+  <function>
+    <description>Combines a User object and a simple boolean to see if a page should display edit capabilities.</description>
+    <display-name>canEdit</display-name>
+    <name>canEdit</name>
+    <function-class>se.vgregion.verticalprio.el.Util</function-class>
+    <function-signature>java.lang.Boolean canEdit(se.vgregion.verticalprio.entity.User, se.vgregion.verticalprio.controllers.EditDirective)</function-signature>
+  </function>
+  
+  <function>
+    <description>Produces options html from a list of objects extending AbstractKod</description>
+    <display-name>toOptions</display-name>
+    <name>toOptions</name>
+    <function-class>se.vgregion.verticalprio.el.Util</function-class>
+    <function-signature>java.lang.String toOptions(java.lang.Long, java.util.List)</function-signature>
+  </function>
+  
+  <function>
+    <description>Produces options html from a list of SektorRaads</description>
+    <display-name>toRaadOptions</display-name>
+    <name>toRaadOptions</name>
+    <function-class>se.vgregion.verticalprio.el.Util</function-class>
+    <function-signature>java.lang.String toRaadOptions(java.lang.Long, java.util.List, java.util.List)</function-signature>
+  </function>
+  
+  <function>
+    <description>Makes a string with the toString of that object or a composition of the objects sent into it is a Collection.</description>
+    <display-name>toString</display-name>
+    <name>toString</name>
+    <function-class>se.vgregion.verticalprio.el.Util</function-class>
+    <function-signature>java.lang.String toString(java.lang.Object)</function-signature>
+  </function>
+  
+  <function>
+    <description>Formats a date.</description>
+    <display-name>toStringDate</display-name>
+    <name>toStringDate</name>
+    <function-class>se.vgregion.verticalprio.el.Util</function-class>
+    <function-signature>java.lang.String toStringDate(java.util.Date)</function-signature>
+  </function>
+
+  <function>
+    <description>To upper case</description>
+    <display-name>toUpperCase</display-name>
+    <name>toUpperCase</name>
+    <function-class>se.vgregion.verticalprio.el.Util</function-class>
+    <function-signature>java.lang.String toUpperCase(java.lang.String)</function-signature>
+  </function>
+  
+  <function>
+    <description>Provides formatting for printing in the result table.</description>
+    <display-name>toCellText</display-name>
+    <name>toCellText</name>
+    <function-class>se.vgregion.verticalprio.el.Util</function-class>
+    <function-signature>java.lang.String toCellText(java.lang.Object)</function-signature>
+  </function>
+  
+  <function>
+    <description>Compares two prioritetsobjekt for inequality. Ingores differences for the properties id, children/child and godkaend.</description>
+    <display-name>isPriosDifferent</display-name>
+    <name>isPriosDifferent</name>
+    <function-class>se.vgregion.verticalprio.el.Util</function-class>
+    <function-signature>java.lang.Boolean isPriosDifferent(se.vgregion.verticalprio.entity.Prioriteringsobjekt, se.vgregion.verticalprio.entity.Prioriteringsobjekt)</function-signature>
+  </function>
+  
+  <function>
+    <description>Generetas a tool tip text that tells the user a value have changed since the approved version. </description>
+    <display-name>mkChangedToolTip</display-name>
+    <name>mkChangedToolTip</name>
+    <function-class>se.vgregion.verticalprio.el.Util</function-class>
+    <function-signature>java.lang.String mkChangedToolTip(java.lang.Object, java.lang.Object)</function-signature>
+  </function>
+  
+  
+  <function>
+    <description>Is a certain instance null or 'empty'?</description>
+    <display-name>isEmpty</display-name>
+    <name>isEmpty</name>
+    <function-class>se.vgregion.verticalprio.el.Util</function-class>
+    <function-signature>java.lang.Boolean isEmpty(java.lang.Object)</function-signature>
+  </function>
+  
+  <function>
+    <description>Convert from return to br </description>
+    <display-name>convert2br</display-name>
+    <name>convert2br</name>
+    <function-class>se.vgregion.verticalprio.el.Util</function-class>
+    <function-signature>java.lang.String convert2br(java.lang.String)</function-signature>
+  </function>
+  
+  <function>
+    <description>Exports to csv format</description>
+    <display-name>toCsvTable</display-name>
+    <name>toCsvTable</name>
+    <function-class>se.vgregion.verticalprio.el.Util</function-class>
+    <function-signature>java.lang.String toCsvTable(java.util.List, java.util.List, se.vgregion.verticalprio.entity.User)</function-signature>
+  </function>
+  
+</taglib>
