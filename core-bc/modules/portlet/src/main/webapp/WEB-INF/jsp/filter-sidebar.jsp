@@ -15,7 +15,7 @@
 	<div class="column-controls">
 	    <ul class="clearfix">
 	        <li class="column-control column-control-hide"><a href="" title="G&ouml;m kolumnen med sektorsr&aring;d."><span>G&ouml;m</span></a></li>
-	        <li class="column-control column-control-show aui-helper-hidden"><a href="" title="Visa kolumnen med sektorsr&aring;d."><span>Visa</span></a></li>
+	        <li class="column-control column-control-show hide"><a href="" title="Visa kolumnen med sektorsr&aring;d."><span>Visa</span></a></li>
 	    </ul>
 	</div>
 	

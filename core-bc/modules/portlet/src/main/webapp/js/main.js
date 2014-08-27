@@ -64,12 +64,12 @@ AUI().ready(
 
 		    // Setup tooltips for column show/hide triggers
 		    try {
-                columnTriggerTooltip = new A.Tooltip({
+                columnTriggerTooltip = new A.TooltipDelegate({
                     trigger: '.column-control a',
                     align: { points: [ 'tl', 'br' ] },
                     width: '200px',
                     title: true
-                }).render();
+                });
 		    } catch(e2) {
 		        alert('on init columnTriggerTooltip: ' + e2.message);
 		    }
@@ -125,9 +125,6 @@ AUI().ready(
 			initVariables();
 			columnFilterNavInner.addClass('filter-sidebar-collapsed');
 			
-			// Hide tooltip if shown
-			columnTriggerTooltip.hide();
-			
 			runFloatButtons();
 		}
 		// END - Handling of column hide anim start event
@@ -141,8 +138,6 @@ AUI().ready(
 			columnShowTrigger.hide();
 			columnHideTrigger.show();
 			
-			// Hide tooltip if shown
-			columnTriggerTooltip.hide();
 			runFloatButtons();
 		}
 		// END - Handling of column show anim end event
@@ -245,6 +240,10 @@ function initCodeAndTextAlignment() {
   }
 
   function indexOfCssClassTd(table, cssText) {
+    if (table === null) {
+        return -1;
+    }
+
     var rows = table['rows'];
     if (!rows) return -1;
     if (rows.length < 3) return -1;
