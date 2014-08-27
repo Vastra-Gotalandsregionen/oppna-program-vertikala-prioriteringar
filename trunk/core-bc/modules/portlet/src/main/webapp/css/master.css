@@ -50,11 +50,7 @@ h4 {
 	overflow: hidden;
 }
 
-.help-block {
-	height: 635px;
-}
-
- /*--- Grid skeleton ----------------------*/
+/*--- Grid skeleton ----------------------*/
 
 #layout {
     padding-left:250px; /* "left col" width */ 
@@ -491,6 +487,15 @@ input.text-input {
 
 .sector-node {
   margin-left: 10px;
+}
+
+.sector-node label {
+    display: inline;
+    font-size: 12px;
+}
+
+.sector-node input[type="submit"] {
+    margin-bottom: 0;
 }
 
 .sector-node label span {

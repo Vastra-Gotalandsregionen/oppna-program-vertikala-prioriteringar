@@ -25,7 +25,7 @@ AUI().ready(
 					var newTitle = currentTitle.replace(/\n/g, '<br />');
 					currentTitle = newTitle;
 					
-					this.addClass('tooltip');
+					this.addClass('vp-tooltip');
 					this.set('title', currentTitle);
 				}
 				
@@ -34,13 +34,15 @@ AUI().ready(
 			});
 			
             try {
-                tableHeaderTooltips = new A.Tooltip({
-                    //trigger: '.main-content table th span.tooltip',
-                    trigger: '.enhancedToolTip span.tooltip',
-                    align: { points: [ 'tc', 'bc' ] },
-                    width: '300px',
-                    title: true
-                }).render();
+                if (A.all('.enhancedToolTip span.vp-tooltip').size() > 0) {
+
+                    tableHeaderTooltips = new A.TooltipDelegate({
+                        trigger: '.enhancedToolTip span.vp-tooltip',
+                        align: { points: [ 'tc', 'bc' ] },
+                        width: '300px',
+                        title: true
+                    });
+                }
             } catch (eee) {
                 if (window['console']) console.log('Initiating tool tips failed.', eee);
                 alert('Init toolTips failed with ' + eee.message);
